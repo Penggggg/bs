@@ -18,6 +18,11 @@
   "homepage": "https://github.com/Penggggg/bs#readme",
   "dependencies": {
     "antd": "^2.8.2",
+    "koa": "^2.2.0",
+    "koa-bodyparser": "^4.2.0",
+    "koa-logs-full": "0.0.8",
+    "koa-router": "^7.0.1",
+    "mongoose": "^4.9.1",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
     "react-router": "^3.0.1",
@@ -25,6 +30,8 @@
     "superagent": "^3.5.1"
   },
   "devDependencies": {
+    "@types/mongoose": "^4.7.8",
+    "@types/node": "^7.0.8",
     "@types/react": "^15.0.17",
     "@types/react-dom": "^0.14.23",
     "@types/react-router": "^3.0.8",

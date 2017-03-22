@@ -1,0 +1,406 @@
+[37mStarted POST   /api/v1/login for ::ffff:127.0.0.1at Wed Mar 22 2017 15:48:30 GMT+0800 (中国标准时间)[39m
+[37m  [35mquery[37m:{}[39m
+[37mCompleted in 22ms  404
+
+[39m
+[37mStarted POST   /api/v1/login for ::ffff:127.0.0.1at Wed Mar 22 2017 15:49:39 GMT+0800 (中国标准时间)[39m
+[37m  [35mquery[37m:{}[39m
+[37mCompleted in 44ms  404
+
+[39m
+[37mStarted POST   /api/v1/login for ::ffff:127.0.0.1at Wed Mar 22 2017 15:50:32 GMT+0800 (中国标准时间)[39m
+[37m  [35mquery[37m:{}[39m
+[37mCompleted in 5ms  404
+
+[39m
+[37mStarted POST   /api/v1/login for ::ffff:127.0.0.1at Wed Mar 22 2017 15:52:42 GMT+0800 (中国标准时间)[39m
+[37m  [35mquery[37m:{}[39m
+[37mCompleted in 2ms  404
+
+[39m
+[37mStarted POST   /api/v1/login for ::ffff:127.0.0.1at Wed Mar 22 2017 16:00:54 GMT+0800 (中国标准时间)[39m
+[37m  [35mquery[37m:{}[39m
+[37mCompleted in 2ms  404
+
+[39m
+[37mStarted POST   /api/v1/login for ::ffff:127.0.0.1at Wed Mar 22 2017 16:06:02 GMT+0800 (中国标准时间)[39m
+[37m  [35mquery[37m:{}[39m
+[37mCompleted in 2ms  404
+
+[39m
+[37mStarted POST   /api/v1/login for ::ffff:127.0.0.1at Wed Mar 22 2017 16:10:16 GMT+0800 (中国标准时间)[39m
+[37m  [35mquery[37m:{}[39m
+[37mCompleted in 3ms  404
+
+[39m
+[37mStarted POST   /api/v1/login for ::ffff:127.0.0.1at Wed Mar 22 2017 16:20:01 GMT+0800 (中国标准时间)[39m
+[37m  [35mquery[37m:{}[39m
+[31m  TypeError: Cannot read property 'query' of undefined
+      at Object.<anonymous> (C:\Users\zhiqiang\Desktop\bs\controller\auth\login.js:42:25)
+      at step (C:\Users\zhiqiang\Desktop\bs\controller\auth\login.js:32:23)
+      at Object.next (C:\Users\zhiqiang\Desktop\bs\controller\auth\login.js:13:53)
+      at C:\Users\zhiqiang\Desktop\bs\controller\auth\login.js:7:71
+      at __awaiter (C:\Users\zhiqiang\Desktop\bs\controller\auth\login.js:3:12)
+      at exports.login (C:\Users\zhiqiang\Desktop\bs\controller\auth\login.js:39:41)
+      at dispatch (C:\Users\zhiqiang\Desktop\bs\node_modules\koa-compose\index.js:44:32)
+      at next (C:\Users\zhiqiang\Desktop\bs\node_modules\koa-compose\index.js:45:18)
+      at C:\Users\zhiqiang\Desktop\bs\node_modules\koa-router\lib\router.js:321:16
+      at dispatch (C:\Users\zhiqiang\Desktop\bs\node_modules\koa-compose\index.js:44:32)
+
+[39m
+[37mStarted POST   /api/v1/login for ::ffff:127.0.0.1at Wed Mar 22 2017 16:20:16 GMT+0800 (中国标准时间)[39m
+[37m  [35mquery[37m:{}[39m
+[37mCompleted in 58ms  404
+
+[39m
+[37mStarted POST   /api/v1/login for ::ffff:127.0.0.1at Wed Mar 22 2017 16:20:33 GMT+0800 (中国标准时间)[39m
+[37m  [35mquery[37m:{}[39m
+[37mCompleted in 62ms  404
+
+[39m
+[37mStarted POST   /api/v1/login for ::ffff:127.0.0.1at Wed Mar 22 2017 16:28:54 GMT+0800 (中国标准时间)[39m
+[37m  [35mquery[37m:{}[39m
+[37mCompleted in 53ms  404
+
+[39m
+[37mStarted POST   /api/v1/login for ::ffff:127.0.0.1at Wed Mar 22 2017 16:29:37 GMT+0800 (中国标准时间)[39m
+[37m  [35mquery[37m:{}[39m
+[37mCompleted in 67ms  404
+
+[39m
+[37mStarted POST   /api/v1/login for ::ffff:127.0.0.1at Wed Mar 22 2017 16:32:37 GMT+0800 (中国标准时间)[39m
+[37m  [35mquery[37m:{}[39m
+[37mCompleted in 50ms  404
+
+[39m
+[37mStarted POST   /api/v1/login for ::ffff:127.0.0.1at Wed Mar 22 2017 16:32:53 GMT+0800 (中国标准时间)[39m
+[37m  [35mquery[37m:{}[39m
+[37mCompleted in 58ms  404
+
+[39m
+[37mStarted POST   /api/v1/login for ::ffff:127.0.0.1at Wed Mar 22 2017 16:33:36 GMT+0800 (中国标准时间)[39m
+[37m  [35mquery[37m:{}[39m
+[37mCompleted in 68ms  404
+
+[39m
+[37mStarted POST   /api/v1/login for ::ffff:127.0.0.1at Wed Mar 22 2017 18:05:45 GMT+0800 (中国标准时间)[39m
+[37m  [35mquery[37m:{}[39m
+[31m  TypeError: _this.find is not a function
+      at C:\Users\zhiqiang\Desktop\bs\model\schemas\user.schema.js:31:23
+      at Function.fetch (C:\Users\zhiqiang\Desktop\bs\model\schemas\user.schema.js:30:33)
+      at Object.<anonymous> (C:\Users\zhiqiang\Desktop\bs\controller\auth\login.js:46:59)
+      at step (C:\Users\zhiqiang\Desktop\bs\controller\auth\login.js:32:23)
+      at Object.next (C:\Users\zhiqiang\Desktop\bs\controller\auth\login.js:13:53)
+      at C:\Users\zhiqiang\Desktop\bs\controller\auth\login.js:7:71
+      at __awaiter (C:\Users\zhiqiang\Desktop\bs\controller\auth\login.js:3:12)
+      at exports.login (C:\Users\zhiqiang\Desktop\bs\controller\auth\login.js:40:41)
+      at dispatch (C:\Users\zhiqiang\Desktop\bs\node_modules\koa-compose\index.js:44:32)
+      at next (C:\Users\zhiqiang\Desktop\bs\node_modules\koa-compose\index.js:45:18)
+      at C:\Users\zhiqiang\Desktop\bs\node_modules\koa-router\lib\router.js:321:16
+      at dispatch (C:\Users\zhiqiang\Desktop\bs\node_modules\koa-compose\index.js:44:32)
+      at C:\Users\zhiqiang\Desktop\bs\node_modules\koa-compose\index.js:36:12
+      at dispatch (C:\Users\zhiqiang\Desktop\bs\node_modules\koa-router\lib\router.js:326:31)
+      at dispatch (C:\Users\zhiqiang\Desktop\bs\node_modules\koa-compose\index.js:44:32)
+      at next (C:\Users\zhiqiang\Desktop\bs\node_modules\koa-compose\index.js:45:18)
+
+[39m
+[37mStarted POST   /api/v1/login for ::ffff:127.0.0.1at Wed Mar 22 2017 18:06:16 GMT+0800 (中国标准时间)[39m
+[37m  [35mquery[37m:{}[39m
+[31m  TypeError: _this.find is not a function
+      at C:\Users\zhiqiang\Desktop\bs\model\schemas\user.schema.js:32:23
+      at Function.fetch (C:\Users\zhiqiang\Desktop\bs\model\schemas\user.schema.js:30:33)
+      at Object.<anonymous> (C:\Users\zhiqiang\Desktop\bs\controller\auth\login.js:46:59)
+      at step (C:\Users\zhiqiang\Desktop\bs\controller\auth\login.js:32:23)
+      at Object.next (C:\Users\zhiqiang\Desktop\bs\controller\auth\login.js:13:53)
+      at C:\Users\zhiqiang\Desktop\bs\controller\auth\login.js:7:71
+      at __awaiter (C:\Users\zhiqiang\Desktop\bs\controller\auth\login.js:3:12)
+      at exports.login (C:\Users\zhiqiang\Desktop\bs\controller\auth\login.js:40:41)
+      at dispatch (C:\Users\zhiqiang\Desktop\bs\node_modules\koa-compose\index.js:44:32)
+      at next (C:\Users\zhiqiang\Desktop\bs\node_modules\koa-compose\index.js:45:18)
+      at C:\Users\zhiqiang\Desktop\bs\node_modules\koa-router\lib\router.js:321:16
+      at dispatch (C:\Users\zhiqiang\Desktop\bs\node_modules\koa-compose\index.js:44:32)
+      at C:\Users\zhiqiang\Desktop\bs\node_modules\koa-compose\index.js:36:12
+      at dispatch (C:\Users\zhiqiang\Desktop\bs\node_modules\koa-router\lib\router.js:326:31)
+      at dispatch (C:\Users\zhiqiang\Desktop\bs\node_modules\koa-compose\index.js:44:32)
+      at next (C:\Users\zhiqiang\Desktop\bs\node_modules\koa-compose\index.js:45:18)
+
+[39m
+[37mStarted POST   /api/v1/login for ::ffff:127.0.0.1at Wed Mar 22 2017 18:51:05 GMT+0800 (中国标准时间)[39m
+[37m  [35mquery[37m:{}[39m
+[31m  TypeError: _this.find is not a function
+      at C:\Users\zhiqiang\Desktop\bs\model\schemas\user.schema.js:31:23
+      at Function.fetch (C:\Users\zhiqiang\Desktop\bs\model\schemas\user.schema.js:30:33)
+      at Object.<anonymous> (C:\Users\zhiqiang\Desktop\bs\controller\auth\login.js:46:59)
+      at step (C:\Users\zhiqiang\Desktop\bs\controller\auth\login.js:32:23)
+      at Object.next (C:\Users\zhiqiang\Desktop\bs\controller\auth\login.js:13:53)
+      at C:\Users\zhiqiang\Desktop\bs\controller\auth\login.js:7:71
+      at __awaiter (C:\Users\zhiqiang\Desktop\bs\controller\auth\login.js:3:12)
+      at exports.login (C:\Users\zhiqiang\Desktop\bs\controller\auth\login.js:40:41)
+      at dispatch (C:\Users\zhiqiang\Desktop\bs\node_modules\koa-compose\index.js:44:32)
+      at next (C:\Users\zhiqiang\Desktop\bs\node_modules\koa-compose\index.js:45:18)
+      at C:\Users\zhiqiang\Desktop\bs\node_modules\koa-router\lib\router.js:321:16
+      at dispatch (C:\Users\zhiqiang\Desktop\bs\node_modules\koa-compose\index.js:44:32)
+      at C:\Users\zhiqiang\Desktop\bs\node_modules\koa-compose\index.js:36:12
+      at dispatch (C:\Users\zhiqiang\Desktop\bs\node_modules\koa-router\lib\router.js:326:31)
+      at dispatch (C:\Users\zhiqiang\Desktop\bs\node_modules\koa-compose\index.js:44:32)
+      at next (C:\Users\zhiqiang\Desktop\bs\node_modules\koa-compose\index.js:45:18)
+
+[39m
+[37mStarted POST   /api/v1/login for ::ffff:127.0.0.1at Wed Mar 22 2017 19:03:33 GMT+0800 (中国标准时间)[39m
+[37m  [35mquery[37m:{}[39m
+[37mCompleted in 67ms  404
+
+[39m
+[37mStarted POST   /api/v1/login for ::ffff:127.0.0.1at Wed Mar 22 2017 19:05:00 GMT+0800 (中国标准时间)[39m
+[37m  [35mquery[37m:{}[39m
+[37mCompleted in 58ms  404
+
+[39m
+[37mStarted POST   /api/v1/login for ::ffff:127.0.0.1at Wed Mar 22 2017 19:18:38 GMT+0800 (中国标准时间)[39m
+[37m  [35mquery[37m:{}[39m
+[37mCompleted in 51ms  404
+
+[39m
+[37mStarted POST   /api/v1/login for ::ffff:127.0.0.1at Wed Mar 22 2017 19:29:22 GMT+0800 (中国标准时间)[39m
+[37m  [35mquery[37m:{}[39m
+[31m  TypeError: Cannot read property 'find' of undefined
+      at C:\Users\zhiqiang\Desktop\bs\model\schemas\user.schema.js:32:13
+      at Function.exports.UserSchema.statics.fetch (C:\Users\zhiqiang\Desktop\bs\model\schemas\user.schema.js:30:12)
+      at Object.<anonymous> (C:\Users\zhiqiang\Desktop\bs\controller\auth\login.js:46:59)
+      at step (C:\Users\zhiqiang\Desktop\bs\controller\auth\login.js:32:23)
+      at Object.next (C:\Users\zhiqiang\Desktop\bs\controller\auth\login.js:13:53)
+      at C:\Users\zhiqiang\Desktop\bs\controller\auth\login.js:7:71
+      at __awaiter (C:\Users\zhiqiang\Desktop\bs\controller\auth\login.js:3:12)
+      at exports.login (C:\Users\zhiqiang\Desktop\bs\controller\auth\login.js:40:41)
+      at dispatch (C:\Users\zhiqiang\Desktop\bs\node_modules\koa-compose\index.js:44:32)
+      at next (C:\Users\zhiqiang\Desktop\bs\node_modules\koa-compose\index.js:45:18)
+      at C:\Users\zhiqiang\Desktop\bs\node_modules\koa-router\lib\router.js:321:16
+      at dispatch (C:\Users\zhiqiang\Desktop\bs\node_modules\koa-compose\index.js:44:32)
+      at C:\Users\zhiqiang\Desktop\bs\node_modules\koa-compose\index.js:36:12
+      at dispatch (C:\Users\zhiqiang\Desktop\bs\node_modules\koa-router\lib\router.js:326:31)
+      at dispatch (C:\Users\zhiqiang\Desktop\bs\node_modules\koa-compose\index.js:44:32)
+      at next (C:\Users\zhiqiang\Desktop\bs\node_modules\koa-compose\index.js:45:18)
+
+[39m
+[37mStarted POST   /api/v1/login for ::ffff:127.0.0.1at Wed Mar 22 2017 19:35:59 GMT+0800 (中国标准时间)[39m
+[37m  [35mquery[37m:{}[39m
+[37mCompleted in 45ms  404
+
+[39m
+[37mStarted POST   /api/v1/login for ::ffff:127.0.0.1at Wed Mar 22 2017 19:36:22 GMT+0800 (中国标准时间)[39m
+[37m  [35mquery[37m:{}[39m
+[37mCompleted in 51ms  404
+
+[39m
+[37mStarted POST   /api/v1/login for ::ffff:127.0.0.1at Wed Mar 22 2017 19:36:26 GMT+0800 (中国标准时间)[39m
+[37m  [35mquery[37m:{}[39m
+[37mCompleted in 5ms  404
+
+[39m
+[37mStarted POST   /api/v1/login for ::ffff:127.0.0.1at Wed Mar 22 2017 19:36:46 GMT+0800 (中国标准时间)[39m
+[37m  [35mquery[37m:{}[39m
+[37mCompleted in 56ms  404
+
+[39m
+[37mStarted POST   /api/v1/login for ::ffff:127.0.0.1at Wed Mar 22 2017 19:37:02 GMT+0800 (中国标准时间)[39m
+[37m  [35mquery[37m:{}[39m
+[37mCompleted in 45ms  404
+
+[39m
+[37mStarted POST   /api/v1/login for ::ffff:127.0.0.1at Wed Mar 22 2017 19:37:40 GMT+0800 (中国标准时间)[39m
+[37m  [35mquery[37m:{}[39m
+[37mCompleted in 60ms  404
+
+[39m
+[37mStarted POST   /api/v1/login for ::ffff:127.0.0.1at Wed Mar 22 2017 19:38:01 GMT+0800 (中国标准时间)[39m
+[37m  [35mquery[37m:{}[39m
+[37mCompleted in 65ms  404
+
+[39m
+[37mStarted POST   /api/v1/login for ::ffff:127.0.0.1at Wed Mar 22 2017 19:38:53 GMT+0800 (中国标准时间)[39m
+[37m  [35mquery[37m:{}[39m
+[37mCompleted in 61ms  404
+
+[39m
+[37mStarted POST   /api/v1/login for ::ffff:127.0.0.1at Wed Mar 22 2017 19:39:42 GMT+0800 (中国标准时间)[39m
+[37m  [35mquery[37m:{}[39m
+[37mCompleted in 47ms  404
+
+[39m
+[37mStarted POST   /api/v1/login for ::ffff:127.0.0.1at Wed Mar 22 2017 19:40:02 GMT+0800 (中国标准时间)[39m
+[37m  [35mquery[37m:{}[39m
+[37mCompleted in 49ms  404
+
+[39m
+[37mStarted POST   /api/v1/login for ::ffff:127.0.0.1at Wed Mar 22 2017 19:43:21 GMT+0800 (中国标准时间)[39m
+[37m  [35mquery[37m:{}[39m
+[37mCompleted in 49ms  404
+
+[39m
+[37mStarted POST   /api/v1/login for ::ffff:127.0.0.1at Wed Mar 22 2017 19:43:47 GMT+0800 (中国标准时间)[39m
+[37m  [35mquery[37m:{}[39m
+[37mCompleted in 77ms  404
+
+[39m
+[37mStarted POST   /api/v1/login for ::ffff:127.0.0.1at Wed Mar 22 2017 21:35:28 GMT+0800 (中国标准时间)[39m
+[37m  [35mquery[37m:{}[39m
+[37mCompleted in 50ms  404
+
+[39m
+[37mStarted POST   /api/v1/login for ::ffff:127.0.0.1at Wed Mar 22 2017 21:39:48 GMT+0800 (中国标准时间)[39m
+[37m  [35mquery[37m:{}[39m
+[37mCompleted in 50ms  404
+
+[39m
+[37mStarted POST   /api/v1/login for ::ffff:127.0.0.1at Wed Mar 22 2017 21:40:44 GMT+0800 (中国标准时间)[39m
+[37m  [35mquery[37m:{}[39m
+[37mCompleted in 80ms  404
+
+[39m
+[37mStarted POST   /api/v1/login for ::ffff:127.0.0.1at Wed Mar 22 2017 21:41:19 GMT+0800 (中国标准时间)[39m
+[37m  [35mquery[37m:{}[39m
+[37mCompleted in 71ms  404
+
+[39m
+[37mStarted POST   /api/v1/login for ::ffff:127.0.0.1at Wed Mar 22 2017 21:43:31 GMT+0800 (中国标准时间)[39m
+[37m  [35mquery[37m:{}[39m
+[31m  TypeError: _this.find is not a function
+      at C:\Users\zhiqiang\Desktop\bs\model\schemas\user.schema.js:19:15
+      at Function.exports.UserSchema.statics.fetch (C:\Users\zhiqiang\Desktop\bs\model\schemas\user.schema.js:18:12)
+      at Object.<anonymous> (C:\Users\zhiqiang\Desktop\bs\controller\auth\login.js:46:59)
+      at step (C:\Users\zhiqiang\Desktop\bs\controller\auth\login.js:32:23)
+      at Object.next (C:\Users\zhiqiang\Desktop\bs\controller\auth\login.js:13:53)
+      at C:\Users\zhiqiang\Desktop\bs\controller\auth\login.js:7:71
+      at __awaiter (C:\Users\zhiqiang\Desktop\bs\controller\auth\login.js:3:12)
+      at exports.login (C:\Users\zhiqiang\Desktop\bs\controller\auth\login.js:40:41)
+      at dispatch (C:\Users\zhiqiang\Desktop\bs\node_modules\koa-compose\index.js:44:32)
+      at next (C:\Users\zhiqiang\Desktop\bs\node_modules\koa-compose\index.js:45:18)
+      at C:\Users\zhiqiang\Desktop\bs\node_modules\koa-router\lib\router.js:321:16
+      at dispatch (C:\Users\zhiqiang\Desktop\bs\node_modules\koa-compose\index.js:44:32)
+      at C:\Users\zhiqiang\Desktop\bs\node_modules\koa-compose\index.js:36:12
+      at dispatch (C:\Users\zhiqiang\Desktop\bs\node_modules\koa-router\lib\router.js:326:31)
+      at dispatch (C:\Users\zhiqiang\Desktop\bs\node_modules\koa-compose\index.js:44:32)
+      at next (C:\Users\zhiqiang\Desktop\bs\node_modules\koa-compose\index.js:45:18)
+
+[39m
+[37mStarted POST   /api/v1/login for ::ffff:127.0.0.1at Wed Mar 22 2017 21:50:41 GMT+0800 (中国标准时间)[39m
+[37m  [35mquery[37m:{}[39m
+[37mCompleted in 64ms  404
+
+[39m
+[37mStarted POST   /api/v1/login for ::ffff:127.0.0.1at Wed Mar 22 2017 21:51:28 GMT+0800 (中国标准时间)[39m
+[37m  [35mquery[37m:{}[39m
+[37mCompleted in 73ms  404
+
+[39m
+[37mStarted POST   /api/v1/login for ::ffff:127.0.0.1at Wed Mar 22 2017 21:54:08 GMT+0800 (中国标准时间)[39m
+[37m  [35mquery[37m:{}[39m
+[37mCompleted in 62ms  404
+
+[39m
+[37mStarted POST   /api/v1/login for ::ffff:127.0.0.1at Wed Mar 22 2017 21:57:11 GMT+0800 (中国标准时间)[39m
+[37m  [35mquery[37m:{}[39m
+[37mCompleted in 77ms  404
+
+[39m
+[37mStarted POST   /api/v1/login for ::ffff:127.0.0.1at Wed Mar 22 2017 22:07:11 GMT+0800 (中国标准时间)[39m
+[37m  [35mquery[37m:{}[39m
+[37mCompleted in 79ms  404
+
+[39m
+[37mStarted POST   /api/v1/login for ::ffff:127.0.0.1at Wed Mar 22 2017 22:08:54 GMT+0800 (中国标准时间)[39m
+[37m  [35mquery[37m:{}[39m
+[37mCompleted in 58ms  200
+
+[39m
+[37mStarted POST   /api/v1/login for ::ffff:127.0.0.1at Wed Mar 22 2017 22:09:32 GMT+0800 (中国标准时间)[39m
+[37m  [35mquery[37m:{}[39m
+[37mCompleted in 73ms  404
+
+[39m
+[37mStarted POST   /api/v1/login for ::ffff:127.0.0.1at Wed Mar 22 2017 22:11:11 GMT+0800 (中国标准时间)[39m
+[37m  [35mquery[37m:{}[39m
+[37mCompleted in 16ms  404
+
+[39m
+[37mStarted POST   /api/v1/login for ::ffff:127.0.0.1at Wed Mar 22 2017 22:11:26 GMT+0800 (中国标准时间)[39m
+[37m  [35mquery[37m:{}[39m
+[37mCompleted in 71ms  404
+
+[39m
+[37mStarted POST   /api/v1/login for ::ffff:127.0.0.1at Wed Mar 22 2017 22:12:55 GMT+0800 (中国标准时间)[39m
+[37m  [35mquery[37m:{}[39m
+[37mCompleted in 31ms  404
+
+[39m
+[37mStarted POST   /api/v1/login for ::ffff:127.0.0.1at Wed Mar 22 2017 22:14:29 GMT+0800 (中国标准时间)[39m
+[37m  [35mquery[37m:{}[39m
+[37mCompleted in 80ms  404
+
+[39m
+[37mStarted POST   /api/v1/login for ::ffff:127.0.0.1at Wed Mar 22 2017 22:41:33 GMT+0800 (中国标准时间)[39m
+[37m  [35mquery[37m:{}[39m
+[37mCompleted in 74ms  200
+
+[39m
+[37mStarted POST   /api/v1/login for ::ffff:127.0.0.1at Wed Mar 22 2017 23:03:49 GMT+0800 (中国标准时间)[39m
+[37m  [35mquery[37m:{}[39m
+[37mCompleted in 97ms  200
+
+[39m
+[37mStarted POST   /api/v1/login for ::ffff:127.0.0.1at Wed Mar 22 2017 23:04:57 GMT+0800 (中国标准时间)[39m
+[37m  [35mquery[37m:{}[39m
+[31m  TypeError: Cannot read property 'model' of undefined
+      at new model (C:\Users\zhiqiang\Desktop\bs\node_modules\mongoose\lib\model.js:802:17)
+      at C:\Users\zhiqiang\Desktop\bs\model\schemas\user.schema.js:44:9
+      at Function.exports.UserSchema.statics.save (C:\Users\zhiqiang\Desktop\bs\model\schemas\user.schema.js:43:12)
+      at Object.<anonymous> (C:\Users\zhiqiang\Desktop\bs\controller\auth\login.js:66:59)
+      at step (C:\Users\zhiqiang\Desktop\bs\controller\auth\login.js:32:23)
+      at Object.next (C:\Users\zhiqiang\Desktop\bs\controller\auth\login.js:13:53)
+      at fulfilled (C:\Users\zhiqiang\Desktop\bs\controller\auth\login.js:4:58)
+      at process._tickCallback (internal/process/next_tick.js:109:7)
+
+[39m
+[37mStarted POST   /api/v1/login for ::ffff:127.0.0.1at Wed Mar 22 2017 23:09:44 GMT+0800 (中国标准时间)[39m
+[37m  [35mquery[37m:{}[39m
+[31m  TypeError: Cannot read property 'model' of undefined
+      at new model (C:\Users\zhiqiang\Desktop\bs\node_modules\mongoose\lib\model.js:802:17)
+      at C:\Users\zhiqiang\Desktop\bs\model\schemas\user.schema.js:44:10
+      at Function.exports.UserSchema.statics.save (C:\Users\zhiqiang\Desktop\bs\model\schemas\user.schema.js:42:12)
+      at Object.<anonymous> (C:\Users\zhiqiang\Desktop\bs\controller\auth\login.js:66:59)
+      at step (C:\Users\zhiqiang\Desktop\bs\controller\auth\login.js:32:23)
+      at Object.next (C:\Users\zhiqiang\Desktop\bs\controller\auth\login.js:13:53)
+      at fulfilled (C:\Users\zhiqiang\Desktop\bs\controller\auth\login.js:4:58)
+      at process._tickCallback (internal/process/next_tick.js:109:7)
+
+[39m
+[37mStarted POST   /api/v1/login for ::ffff:127.0.0.1at Wed Mar 22 2017 23:10:00 GMT+0800 (中国标准时间)[39m
+[37m  [35mquery[37m:{}[39m
+[37mCompleted in 103ms  200
+
+[39m
+[37mStarted POST   /api/v1/login for ::ffff:127.0.0.1at Wed Mar 22 2017 23:10:24 GMT+0800 (中国标准时间)[39m
+[37m  [35mquery[37m:{}[39m
+[37mCompleted in 18ms  200
+
+[39m
+[37mStarted POST   /api/v1/login for ::ffff:127.0.0.1at Wed Mar 22 2017 23:15:58 GMT+0800 (中国标准时间)[39m
+[37m  [35mquery[37m:{}[39m
+[37mCompleted in 79ms  200
+
+[39m
+[37mStarted POST   /api/v1/login for ::ffff:127.0.0.1at Wed Mar 22 2017 23:16:01 GMT+0800 (中国标准时间)[39m
+[37m  [35mquery[37m:{}[39m
+[37mCompleted in 50ms  200
+
+[39m
+[37mStarted POST   /api/v1/login for ::ffff:127.0.0.1at Wed Mar 22 2017 23:17:13 GMT+0800 (中国标准时间)[39m
+[37m  [35mquery[37m:{}[39m
+[37mCompleted in 125ms  200
+
+[39m
+[37mStarted POST   /api/v1/login for ::ffff:127.0.0.1at Wed Mar 22 2017 23:17:15 GMT+0800 (中国标准时间)[39m
+[37m  [35mquery[37m:{}[39m
+[37mCompleted in 42ms  200
+
+[39m

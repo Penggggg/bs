@@ -1,9 +1,9 @@
 /**global environment  */
-declare var process:{
-    env: {
-        NODE_ENV: string
-    }
-} 
+// declare var process:{
+//     env: {
+//         NODE_ENV: string
+//     }
+// } 
 
 /**webpack2 import */
 declare var System: {

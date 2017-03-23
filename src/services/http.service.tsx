@@ -27,9 +27,6 @@ class HttpService {
         }).share( )
         
         data$.subscribe( );
-        // .catch( err => {
-        //     console.error( `http error: ${err}` );
-        // });
         
         /**异步事件设置 */
         this.decorateXHR( xhr, data$$ );

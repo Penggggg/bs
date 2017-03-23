@@ -48,21 +48,25 @@ exports.login = function (ctx) { return __awaiter(_this, void 0, void 0, functio
                 setCtx(ctx);
                 /**检查密码配对情况 */
                 if (password !== password2) {
+                    console.log('正查询密码匹配情况');
                     return [2 /*return*/, ctx.body = JSON.stringify({
-                            status: '400',
+                            status: "" + 4001 /* PswNotEqual */,
                             msg: 'psw not equal'
                         })];
                 }
+                /**检查是否已存在 */
+                console.log('正查询用户匹配情况');
                 return [4 /*yield*/, user_model_1.default.findOneByPhone(userPhone)];
             case 1:
                 isExisted = _b.sent();
                 if (isExisted) {
-                    console.log('?');
                     return [2 /*return*/, ctx.body = JSON.stringify({
-                            status: '400',
+                            status: "" + 4002 /* UserExisted */,
                             msg: 'user has been existed'
                         })];
                 }
+                /**储存到数据库 */
+                console.log('正把注册信息储存到数据库');
                 return [4 /*yield*/, user_model_1.default.save(userName, userPhone, password)];
             case 2:
                 result = _b.sent();

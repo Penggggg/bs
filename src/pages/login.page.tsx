@@ -1,12 +1,13 @@
-import { Layout } from 'antd';
 import * as React from 'react';
 import { Observable } from 'rxjs';
 import http from '../services/http.service';
-import { _IPostQueryLogin, IPostLogin_ } from '../interface/api.interface';
-import { Tabs, Tooltip, Input, Icon, Form, Button, Checkbox } from 'antd';
+import myNotify from '../services/notification.service';
+import { Tabs, Tooltip, Input, Icon, Form, Button, Checkbox, Layout } from 'antd';
 
 
 import './login.less';
+import { _IPostQueryLogin, IPostLogin_ } from '../interface/api.interface';
+
 
 const TabPane = Tabs.TabPane;
 const FormItem = Form.Item;
@@ -17,17 +18,19 @@ export default class LoginPage extends React.PureComponent< IProps, IState > {
     constructor( ) {
       super( );
       this.state = {
-        activeKey: "1"
+        activeKey: "1",
+        loginLoading: false
       }
     }
 
     logInSubmit = ( e ) => {
         e.preventDefault( );
+        this.setState({ loginLoading: true })
         this.props.form.validateFields(['userName', 'userPhone', 'password', 'password2'], ( err, values: _IPostQueryLogin ) => {
           if ( !err ) {
             http.post<IPostLogin_>('/api/v1/login', values )
-                .do( a => console.log( a ))
-                .catch( e => Observable.of( e ))
+                .do(this.analyseSubmit)
+                .catch(this.errorSumitHandler)
                 .subscribe( )
           }
         });
@@ -66,10 +69,56 @@ export default class LoginPage extends React.PureComponent< IProps, IState > {
       callback( ); 
     }
 
+    private analyseSubmit = ({ status, msg, user }: IPostLogin_ ) => {
+
+        let { form } = this.props;
+        this.setState({ loginLoading: false })
+        
+        myNotify.open({
+            msg,
+            title: `注册${status === '200' ? '成功' : '失败'}`,
+            type: status === '200' ? 'ok' : 'error'
+        })
+
+        if ( status === '4001') {
+          let psw2 = form.getFieldValue('password2'); 
+          form.setFields({
+              password2:  {
+                  value: psw2,
+                  errors:  [new Error('2次输入的密码不一致')] 
+              }
+          })
+        } else if ( status === '4002' ) {
+          let phone = form.getFieldValue('userPhone'); 
+          form.setFields({
+              userPhone:  {
+                  value: phone,
+                  errors:  [new Error('该手机号已被注册!')] 
+              }
+          })
+        } else if ( status === '200' ) {
+          setTimeout(( ) => {
+              this.setState({
+                 activeKey: '1'
+              })
+              form.resetFields( );
+          }, 2000 )
+        }
+    }
+
+    private errorSumitHandler = ( e ) => {
+        myNotify.open({
+            title: '注册请求错误',
+            msg: `错误：${e}`,
+            type: 'error'
+        });
+        return Observable.of( e )
+    }
+
     render( ) {
       
         const { getFieldDecorator } = this.props.form;
-        let { activeKey } = this.state;
+        let { activeKey, loginLoading } = this.state;
 
         /**注册表单 */
         let loginForm = 
@@ -85,7 +134,7 @@ export default class LoginPage extends React.PureComponent< IProps, IState > {
             {getFieldDecorator('userPhone', {
               rules: [{ required: true, message: 'Please input your phone!' }],
             })(
-              <Input prefix={<Icon type="phone" style={{ fontSize: 16 }} />} placeholder="userPhone" />
+              <Input prefix={<Icon type="phone" style={{ fontSize: 16 }} />} placeholder="userPhone" type="number" />
             )}
           </FormItem>
           <FormItem>
@@ -117,7 +166,7 @@ export default class LoginPage extends React.PureComponent< IProps, IState > {
             <a className="login-form-forgot">Forgot password</a>
           </FormItem>
           <FormItem>          
-            <Button type="primary" htmlType="submit" className="login-form-button" >
+            <Button type="primary" htmlType="submit" className="login-form-button" loading={loginLoading}>
               Log in
             </Button>
           </FormItem>
@@ -162,7 +211,7 @@ export default class LoginPage extends React.PureComponent< IProps, IState > {
                 <p  className="info">产品开发团队协作工具</p>
             </div>
             <div className="form-block">
-                <Tabs defaultActiveKey={ activeKey }>
+                <Tabs activeKey={ activeKey } onTabClick={( e ) => this.setState({ activeKey: `${e}`})} >
                     <TabPane tab="登录" key="1">{ signInForm }</TabPane>
                     <TabPane tab="注册" key="2">{ loginForm }</TabPane>
                 </Tabs>
@@ -177,4 +226,5 @@ interface IProps  {
 
 interface IState {
   activeKey: string
+  loginLoading: boolean
 }

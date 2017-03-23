@@ -11,7 +11,7 @@ export interface _IPostQueryLogin {
 
 /**注册：用户注册结果 */
 export interface IPostLogin_ {
-    msg: 'psw not equal' | 'success' | 'server err' | 'user has been existed'
-    status: '400' | '500' | '200'
+    msg: 'psw not equal' | 'success' | 'server err' | 'user has been existed',
+    status: '4001'| '4002' | '500' | '200',
     user?: _IUser
 }

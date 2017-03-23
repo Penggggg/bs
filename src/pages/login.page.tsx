@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Observable } from 'rxjs';
 import http from '../services/http.service';
 import myNotify from '../services/notification.service';
-import { Tabs, Tooltip, Input, Icon, Form, Button, Checkbox, Layout } from 'antd';
+import { Tabs, Tooltip, Input, Icon, Form, Button, Checkbox, Layout, Modal } from 'antd';
 
 
 import './login.less';
@@ -19,7 +19,8 @@ export default class LoginPage extends React.PureComponent< IProps, IState > {
       super( );
       this.state = {
         activeKey: "1",
-        loginLoading: false
+        loginLoading: false,
+        resetFormShow: false
       }
     }
 
@@ -44,10 +45,28 @@ export default class LoginPage extends React.PureComponent< IProps, IState > {
           }
         });
       }
+    
+    resetSubmit = ( e ) => {
+        e.preventDefault( );
+        this.props.form.validateFields(['resetUserName', 'reseUserPhone',  'resetPsw',  'resetPsw2'], (err, values) => {
+          if (!err) {
+            console.log('Received values of form: ', values);
+          }
+        }); 
+    }
 
     checkPswByRepeat = (rule, value, callback) => {
       const form = this.props.form;
       if (value && value !== form.getFieldValue('password')) {
+        callback('2次输入的密码不一致');
+      } else {
+        callback();
+      }
+    }
+
+    checkResetPswByRepeat = (rule, value, callback) => {
+      const form = this.props.form;
+      if (value && value !== form.getFieldValue('resetPsw')) {
         callback('2次输入的密码不一致');
       } else {
         callback();
@@ -68,6 +87,28 @@ export default class LoginPage extends React.PureComponent< IProps, IState > {
       } 
       callback( ); 
     }
+
+    CheckResetPswByPsw = (rule, value, callback) => {
+      let { form } = this.props;
+      let psw2 = form.getFieldValue('resetPsw2'); 
+      if ( value && psw2 ) {
+          form.setFields({
+            resetPsw2:  {
+              value: psw2,
+              errors: value !== psw2 ? [new Error('2次输入的密码不一致')] : null
+            }
+          })
+          callback( ); 
+      } 
+      callback( ); 
+    }
+
+    resetPsw = ( ) => {
+      this.setState({
+        resetFormShow: true
+      })
+    }
+
 
     private analyseSubmit = ({ status, msg, user }: IPostLogin_ ) => {
 
@@ -118,7 +159,7 @@ export default class LoginPage extends React.PureComponent< IProps, IState > {
     render( ) {
       
         const { getFieldDecorator } = this.props.form;
-        let { activeKey, loginLoading } = this.state;
+        let { activeKey, loginLoading, resetFormShow } = this.state;
 
         /**注册表单 */
         let loginForm = 
@@ -184,7 +225,9 @@ export default class LoginPage extends React.PureComponent< IProps, IState > {
           </FormItem>
           <FormItem>
             {getFieldDecorator('signPsw', {
-              rules: [{ required: true, message: 'Please input your Password!' }],
+              rules: [
+                { required: true, message: 'Please input your Password!' }
+              ]
             })(
               <Input prefix={<Icon type="lock" style={{ fontSize: 16 }} />} type="password" placeholder="Password" />
             )}
@@ -196,7 +239,7 @@ export default class LoginPage extends React.PureComponent< IProps, IState > {
             })(
               <Checkbox>Remember me</Checkbox>
             )}
-            <a className="login-form-forgot">Forgot password</a>
+            <a className="login-form-forgot"  onClick={this.resetPsw}>Forgot password</a>
           </FormItem>
           <FormItem>          
             <Button type="primary" htmlType="submit" className="login-form-button" >
@@ -204,6 +247,45 @@ export default class LoginPage extends React.PureComponent< IProps, IState > {
             </Button>
           </FormItem>
         </Form>;
+
+        /**忘记密码表单 */
+        let resetForm = 
+        <Form className="reset-form">
+            <FormItem >
+                {getFieldDecorator('resetUserName', {
+                  rules: [{ required: true, message: 'Please input your username!' }],
+                })(
+                  <Input prefix={<Icon type="user" style={{ fontSize: 16 }} />} placeholder="Username" />
+                )}
+            </FormItem>
+            <FormItem>
+                {getFieldDecorator('reseUserPhone', {
+                  rules: [{ required: true, message: 'Please input your phone!' }]
+                })(
+                  <Input prefix={<Icon type="phone" style={{ fontSize: 16 }} />} placeholder="userPhone" type="number" />
+                )}
+            </FormItem>
+            <FormItem>
+                {getFieldDecorator('resetPsw', {
+                  rules: [
+                    { required: true, message: 'Please input your Password!' },
+                     { validator: this.CheckResetPswByPsw }
+                  ],
+                })(
+                  <Input prefix={<Icon type="lock" style={{ fontSize: 16 }} />} type="password" placeholder="New Password" />
+                )}
+            </FormItem>
+            <FormItem>
+                {getFieldDecorator('resetPsw2', {
+                  rules: [
+                    { required: true, message: 'Please input your Password right again' },
+                    { validator: this.checkResetPswByRepeat }
+                  ]
+                })(
+                  <Input prefix={<Icon type="lock" style={{ fontSize: 16 }} />} type="password" placeholder="Password Again" />
+                )}
+            </FormItem>
+        </Form>
 
         return <div className="login-page">
             <div className="logo-block">
@@ -216,6 +298,18 @@ export default class LoginPage extends React.PureComponent< IProps, IState > {
                     <TabPane tab="注册" key="2">{ loginForm }</TabPane>
                 </Tabs>
             </div>
+            <Modal  title="Reset Your Password" 
+              onOk={( ) => this.setState({resetFormShow: true})} 
+              visible={ resetFormShow }
+              onCancel={( ) => this.setState({resetFormShow: false})}
+              footer={[
+                <Button key="back" size="large" onClick={( ) => this.setState({resetFormShow: false})} >Cacel</Button>,
+                <Button key="submit" type="primary" size="large" onClick={ this.resetSubmit }>
+                  Submit
+                </Button>,
+              ]} >
+              { resetForm }
+            </Modal>
         </div>
     }
 }
@@ -227,4 +321,5 @@ interface IProps  {
 interface IState {
   activeKey: string
   loginLoading: boolean
+  resetFormShow: boolean
 }

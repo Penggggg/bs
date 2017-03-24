@@ -6,7 +6,7 @@ import { Tabs, Tooltip, Input, Icon, Form, Button, Checkbox, Layout, Modal } fro
 
 
 import './login.less';
-import { _IPostQueryLogin, IPostLogin_ } from '../interface/api.interface';
+import { _IPostQueryLogin, IPostLogin_, _IPostQueryResetPsw, IPostResetPsw_ } from '../interface/api.interface';
 
 
 const TabPane = Tabs.TabPane;
@@ -20,6 +20,7 @@ export default class LoginPage extends React.PureComponent< IProps, IState > {
       this.state = {
         activeKey: "1",
         loginLoading: false,
+        resetLoading: false,
         resetFormShow: false
       }
     }
@@ -29,7 +30,7 @@ export default class LoginPage extends React.PureComponent< IProps, IState > {
         this.setState({ loginLoading: true })
         this.props.form.validateFields(['userName', 'userPhone', 'password', 'password2'], ( err, values: _IPostQueryLogin ) => {
           if ( !err ) {
-            http.post<IPostLogin_>('/api/v1/login', values )
+             http.post<IPostLogin_>('/api/v1/login', values )
                 .do(this.analyseSubmit)
                 .catch(this.errorSumitHandler)
                 .subscribe( )
@@ -48,9 +49,13 @@ export default class LoginPage extends React.PureComponent< IProps, IState > {
     
     resetSubmit = ( e ) => {
         e.preventDefault( );
-        this.props.form.validateFields(['resetUserName', 'reseUserPhone',  'resetPsw',  'resetPsw2'], (err, values) => {
+        this.setState({ resetLoading: true })
+        this.props.form.validateFields(['resetUserName', 'reseUserPhone',  'resetPsw',  'resetPsw2'], (err, values: _IPostQueryResetPsw ) => {
           if (!err) {
-            console.log('Received values of form: ', values);
+             http.post<IPostResetPsw_>('/api/v1/resetpsw', values )
+                .do( this.analyseReset )
+                .catch( this.errorSumitHandler )
+                .subscribe( )
           }
         }); 
     }
@@ -109,6 +114,49 @@ export default class LoginPage extends React.PureComponent< IProps, IState > {
       })
     }
 
+    private analyseReset = ({ status, msg }: IPostResetPsw_ ) => {
+
+      let { form } = this.props;
+      this.setState({ resetLoading: false })
+
+      myNotify.open({
+        msg,
+        title: `重置密码${status === '200'? '成功' : '失败' }`,
+        type: status === '200' ? 'ok' : 'error'
+      })
+
+      if ( status === '4001' ) {
+          let username = form.getFieldValue('resetUserName'); 
+          form.setFields({
+              resetUserName: {
+                value: username,
+                errors: [ new Error('用户不存在!')]
+              }
+          })
+      } else if ( status === '4002' ) {
+          let username = form.getFieldValue('reseUserPhone'); 
+          form.setFields({
+              reseUserPhone: {
+                value: username,
+                errors: [ new Error('手机号码不匹配!')]
+              }
+          })      
+      } else if ( status === '4003' ) {
+          let psw2 = form.getFieldValue('resetPsw2'); 
+          form.setFields({
+              resetPsw2:  {
+                  value: psw2,
+                  errors:  [new Error('2次输入的密码不一致')] 
+              }
+          }) 
+      } else if ( status === '200' ) {
+          setTimeout(( ) => {
+              this.setState({ resetFormShow: false })
+              form.resetFields( );
+          }, 2000 )
+      }
+
+    }
 
     private analyseSubmit = ({ status, msg, user }: IPostLogin_ ) => {
 
@@ -159,7 +207,7 @@ export default class LoginPage extends React.PureComponent< IProps, IState > {
     render( ) {
       
         const { getFieldDecorator } = this.props.form;
-        let { activeKey, loginLoading, resetFormShow } = this.state;
+        let { activeKey, loginLoading, resetLoading, resetFormShow } = this.state;
 
         /**注册表单 */
         let loginForm = 
@@ -321,5 +369,6 @@ interface IProps  {
 interface IState {
   activeKey: string
   loginLoading: boolean
+  resetLoading: boolean
   resetFormShow: boolean
 }

@@ -1,7 +1,8 @@
+import { setCtx } from '../util';
 import UserModel from '../../model/models/user.model';
 import { _IPostQueryLogin, IPostLogin_ } from '../../interface/api.interface';
 
-const enum LoginResult {
+const enum LoginError {
     PswNotEqual = 4001,
     UserExisted
 }
@@ -19,7 +20,7 @@ export let login = async( ctx ) => {
     if ( password !== password2 ) { 
         console.log('正查询密码匹配情况')
         return ctx.body = JSON.stringify({
-            status: `${LoginResult.PswNotEqual}`,
+            status: `${LoginError.PswNotEqual}`,
             msg: 'psw not equal'
         } as IPostLogin_ )
     }
@@ -29,7 +30,7 @@ export let login = async( ctx ) => {
     let isExisted = await UserModel.findOneByPhone( userPhone );
     if ( isExisted ) {
         return ctx.body = JSON.stringify({
-            status: `${LoginResult.UserExisted}`,
+            status: `${LoginError.UserExisted}`,
             msg: 'user has been existed'
         } as IPostLogin_ )
     }
@@ -38,14 +39,10 @@ export let login = async( ctx ) => {
     console.log('正把注册信息储存到数据库')
     let result = await UserModel.save( userName, userPhone, password )
 
+    /**返回 */
     return ctx.body = JSON.stringify( Object.assign({
         status: '200',
         msg: 'success'
     }, { user: result }) as IPostLogin_ );
 }
 
-function setCtx( ctx ) {
-    ctx.set( Object.assign({
-        'Content-Type': 'application/json'
-    }, process.env.NODE_ENV === 'development' ? { 'Access-Control-Allow-Origin': '*' } : { }))
-}

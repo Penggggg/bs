@@ -1,5 +1,4 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 var Koa = require("koa");
 var path = require("path");
 var KoaRouter = require("koa-router");
@@ -27,3 +26,4 @@ app
     .use(router.allowedMethods());
 app.listen(node_config_1.appConfig.nodePort);
 console.log("app is running in " + node_config_1.appConfig.nodePort);
+console.log("app's NODE_ENV is " + process.env.NODE_ENV);

@@ -37,44 +37,54 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var _this = this;
 var util_1 = require("../util");
 var user_model_1 = require("../../model/models/user.model");
-/**用户注册 */
-exports.login = function (ctx) { return __awaiter(_this, void 0, void 0, function () {
-    var _a, userName, userPhone, password, password2, isExisted, result;
+/**忘记密码 */
+exports.resetPsw = function (ctx) { return __awaiter(_this, void 0, void 0, function () {
+    var _a, resetUserName, resetPsw, resetPsw2, reseUserPhone, UserData, result;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
-                _a = ctx.request.body, userName = _a.userName, userPhone = _a.userPhone, password = _a.password, password2 = _a.password2;
+                _a = ctx.request.body, resetUserName = _a.resetUserName, resetPsw = _a.resetPsw, resetPsw2 = _a.resetPsw2, reseUserPhone = _a.reseUserPhone;
                 /**Ctx配置 */
                 util_1.setCtx(ctx);
-                /**检查密码配对情况 */
-                if (password !== password2) {
+                /**查询用户存在 */
+                console.log('正在检查用户是否存在');
+                return [4 /*yield*/, user_model_1.default.findOneByPhone(reseUserPhone)];
+            case 1:
+                UserData = _b.sent();
+                if (!UserData) {
+                    return [2 /*return*/, ctx.body = JSON.stringify({
+                            status: "" + 4001 /* UserNotExisted */,
+                            msg: 'user is not existed'
+                        })];
+                }
+                /**查询phone是否匹配 */
+                console.log('正在检查phone是否匹配');
+                console.log(UserData.phone + " --- " + reseUserPhone);
+                console.log(UserData.name + " --- " + resetUserName);
+                if (UserData && (UserData.phone !== reseUserPhone || resetUserName !== UserData.name)) {
+                    return [2 /*return*/, ctx.body = JSON.stringify({
+                            status: "" + 4002 /* PhoneUnCorrect */,
+                            msg: 'phone not right'
+                        })];
+                }
+                /**检查密码配对 */
+                if (resetPsw !== resetPsw2) {
                     console.log('正查询密码匹配情况');
                     return [2 /*return*/, ctx.body = JSON.stringify({
-                            status: "" + 4001 /* PswNotEqual */,
+                            status: "" + 4003 /* PswNotEqual */,
                             msg: 'psw not equal'
                         })];
                 }
-                /**检查是否已存在 */
-                console.log('正查询用户匹配情况');
-                return [4 /*yield*/, user_model_1.default.findOneByPhone(userPhone)];
-            case 1:
-                isExisted = _b.sent();
-                if (isExisted) {
-                    return [2 /*return*/, ctx.body = JSON.stringify({
-                            status: "" + 4002 /* UserExisted */,
-                            msg: 'user has been existed'
-                        })];
-                }
-                /**储存到数据库 */
-                console.log('正把注册信息储存到数据库');
-                return [4 /*yield*/, user_model_1.default.save(userName, userPhone, password)];
+                /**保存到数据库 */
+                console.log('正把更新信息储存到数据库');
+                return [4 /*yield*/, user_model_1.default.updatePsw(reseUserPhone, resetPsw)];
             case 2:
                 result = _b.sent();
                 /**返回 */
-                return [2 /*return*/, ctx.body = JSON.stringify(Object.assign({
+                return [2 /*return*/, ctx.body = JSON.stringify({
                         status: '200',
                         msg: 'success'
-                    }, { user: result }))];
+                    })];
         }
     });
 }); };

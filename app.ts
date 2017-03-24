@@ -35,3 +35,4 @@ app
 
 app.listen( appConfig.nodePort )
 console.log(`app is running in ${appConfig.nodePort}`)
+console.log(`app's NODE_ENV is ${process.env.NODE_ENV}`)

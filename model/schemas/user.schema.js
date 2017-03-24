@@ -1,5 +1,4 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 var Mongoose = require("mongoose");
 exports.UserSchema = new Mongoose.Schema({
     name: String,
@@ -43,6 +42,13 @@ exports.UserSchema.statics.save = function (name, phone, password) {
         var model = _this.model('User');
         new model({ name: name, phone: phone, password: password })
             .save(function (err) { return returnData(err, resolve, reject, { name: name, phone: phone }); });
+    });
+};
+exports.UserSchema.statics.updatePsw = function (phone, password) {
+    var _this = this;
+    return new Promise(function (resolve, reject) {
+        var model = _this.model('User');
+        model.update({ phone: phone }, { password: password }, function (err) { return returnData(err, resolve, reject); });
     });
 };
 function returnData(err, resolve, reject, result) {

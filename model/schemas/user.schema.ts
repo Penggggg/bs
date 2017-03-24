@@ -45,6 +45,13 @@ UserSchema.statics.save = function( name, phone, password ) {
     })
 }
 
+UserSchema.statics.updatePsw = function( phone, password ) {
+    return new Promise(( resolve, reject ) => {
+        let model = this.model('User');
+        model.update({ phone }, { password }, ( err ) => returnData( err, resolve, reject ))
+    })
+}
+
 
 function returnData ( err, resolve, reject, result? ) {
     if ( err ) { reject( err )}

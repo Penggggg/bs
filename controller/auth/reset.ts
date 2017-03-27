@@ -1,7 +1,7 @@
 import { setCtx } from '../util';
 import UserModel from '../../model/models/user.model';
-
 import { ISUser } from '../../interface/schema.interface';
+
 import { IPostResetPsw_, _IPostQueryResetPsw } from '../../interface/api.interface';
 
 const enum ResetError {
@@ -31,9 +31,7 @@ export let resetPsw = async( ctx ) => {
 
     /**查询phone是否匹配 */
     console.log('正在检查phone是否匹配')
-        console.log(`${UserData.phone} --- ${reseUserPhone}`)
-        console.log(`${UserData.name} --- ${resetUserName}`)
-    if ( UserData && ( UserData.phone !== reseUserPhone || resetUserName !== UserData.name )) {
+    if ( !!UserData && ( UserData.phone !== reseUserPhone || resetUserName !== UserData.name )) {
         return ctx.body = JSON.stringify({
             status: `${ResetError.PhoneUnCorrect}`,
             msg: 'phone not right'

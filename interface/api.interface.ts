@@ -28,3 +28,16 @@ export interface IPostResetPsw_ {
     msg: 'user is not existed' | 'phone not right' | 'psw not equal' | 'server err' | 'success'
     status: '4001' | '4002' | '4003' | '200' | '500'
 }
+
+/**登录：query */
+export interface _IPostQuerySignIn {
+    signPhone: string
+    signPsw: string
+}
+
+/**登录：处理结果 */
+export interface IPostSignIn_ {
+    msg: 'user is not existed' | 'psw not right' | 'server err' | 'success'
+    status: '4001' | '4002' | '200' | '500'
+    user: _IUser
+}

@@ -38,18 +38,18 @@ var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var util_1 = require("../util");
 var user_model_1 = require("../../model/models/user.model");
-/**忘记密码 */
-exports.resetPsw = function (ctx) { return __awaiter(_this, void 0, void 0, function () {
-    var resetUserName, resetPsw, resetPsw2, reseUserPhone, UserData, result, _a;
+/**登录功能 */
+exports.sginIn = function (ctx) { return __awaiter(_this, void 0, void 0, function () {
+    var signPhone, signPsw, UserData, _a;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
-                resetUserName = (_a = ctx.request.body, _a.resetUserName), resetPsw = _a.resetPsw, resetPsw2 = _a.resetPsw2, reseUserPhone = _a.reseUserPhone;
-                /**Ctx配置 */
+                signPhone = (_a = ctx.request.body, _a.signPhone), signPsw = _a.signPsw;
+                /**ctx配置 */
                 util_1.setCtx(ctx);
-                /**查询用户存在 */
+                /**查询用户是否存在 */
                 console.log('正在检查用户是否存在');
-                return [4 /*yield*/, user_model_1.default.findOneByPhone(reseUserPhone)];
+                return [4 /*yield*/, user_model_1.default.findOneByPhone(signPhone)];
             case 1:
                 UserData = _b.sent();
                 if (!UserData) {
@@ -58,31 +58,19 @@ exports.resetPsw = function (ctx) { return __awaiter(_this, void 0, void 0, func
                             msg: 'user is not existed'
                         })];
                 }
-                /**查询phone是否匹配 */
-                console.log('正在检查phone是否匹配');
-                if (!!UserData && (UserData.phone !== reseUserPhone || resetUserName !== UserData.name)) {
+                /**检查密码是否匹配 */
+                console.log('检查密码是否匹配');
+                if (!!UserData && (UserData.password !== signPsw)) {
                     return [2 /*return*/, ctx.body = JSON.stringify({
-                            status: "" + 4002 /* PhoneUnCorrect */,
-                            msg: 'phone not right'
+                            status: "" + 4002 /* PswNotRight */,
+                            msg: 'psw not right'
                         })];
                 }
-                /**检查密码配对 */
-                if (resetPsw !== resetPsw2) {
-                    console.log('正查询密码匹配情况');
-                    return [2 /*return*/, ctx.body = JSON.stringify({
-                            status: "" + 4003 /* PswNotEqual */,
-                            msg: 'psw not equal'
-                        })];
-                }
-                /**保存到数据库 */
-                console.log('正把更新信息储存到数据库');
-                return [4 /*yield*/, user_model_1.default.updatePsw(reseUserPhone, resetPsw)];
-            case 2:
-                result = _b.sent();
                 /**返回 */
                 return [2 /*return*/, ctx.body = JSON.stringify({
+                        msg: 'success',
                         status: '200',
-                        msg: 'success'
+                        user: UserData
                     })];
         }
     });

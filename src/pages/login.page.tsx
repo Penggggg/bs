@@ -6,7 +6,7 @@ import { Tabs, Tooltip, Input, Icon, Form, Button, Checkbox, Layout, Modal } fro
 
 
 import './login.less';
-import { _IPostQueryLogin, IPostLogin_, _IPostQueryResetPsw, IPostResetPsw_ } from '../interface/api.interface';
+import { _IPostQueryLogin, IPostLogin_, _IPostQueryResetPsw, IPostResetPsw_, _IPostQuerySignIn, IPostSignIn_ } from '../interface/api.interface';
 
 
 const TabPane = Tabs.TabPane;
@@ -40,9 +40,12 @@ export default class LoginPage extends React.PureComponent< IProps, IState > {
 
     signInSubmit = ( e ) => {
         e.preventDefault( );
-        this.props.form.validateFields(['signUserName', 'signPsw'], (err, values) => {
+        this.props.form.validateFields(['signPhone', 'signPsw'], (err, values: _IPostQuerySignIn) => {
           if (!err) {
-            console.log('Received values of form: ', values);
+             http.post<IPostSignIn_>('/api/v1/signin', values )
+                .do(this.analyseSignIn)
+                .catch(this.errorSumitHandler)
+                .subscribe( )
           }
         });
       }
@@ -195,6 +198,40 @@ export default class LoginPage extends React.PureComponent< IProps, IState > {
         }
     }
 
+    private analyseSignIn = ({ status, msg, user }: IPostSignIn_ ) => {
+
+        let { form } = this.props;
+
+        myNotify.open({
+            msg,
+            title: `登录${status === '200' ? '成功' : '失败'}`,
+            type: status === '200' ? 'ok' : 'error'
+        })  
+
+        if ( status === '4001') {
+          let phone = form.getFieldValue('signPhone'); 
+          form.setFields({
+              signPhone:  {
+                  value: phone,
+                  errors:  [new Error('该手机号未注册')] 
+              }
+          })
+        } else if ( status === '4002' ) {
+          let value = form.getFieldValue('signPsw'); 
+          form.setFields({
+              signPsw:  {
+                  value,
+                  errors:  [new Error('密码错误!')] 
+              }
+          })
+        }  else if ( status === '200' ) {
+          setTimeout(( ) => {
+              form.resetFields( );
+          }, 2000 )
+        }
+
+    }
+
     private errorSumitHandler = ( e ) => {
         myNotify.open({
             title: '注册请求错误',
@@ -265,10 +302,10 @@ export default class LoginPage extends React.PureComponent< IProps, IState > {
         let signInForm = 
         <Form onSubmit={this.signInSubmit} className="login-form" >
           <FormItem>
-            {getFieldDecorator('signUserName', {
-              rules: [{ required: true, message: 'Please input your username!' }],
+            {getFieldDecorator('signPhone', {
+              rules: [{ required: true, message: 'Please input your phone!' }],
             })(
-              <Input prefix={<Icon type="user" style={{ fontSize: 16 }} />} placeholder="Username" />
+              <Input prefix={<Icon type="phone" style={{ fontSize: 16 }} />} placeholder="phone" />
             )}
           </FormItem>
           <FormItem>

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Observable } from 'rxjs';
 import http from '../services/http.service';
+import Auth from '../services/auth-login.service';
 import myNotify from '../services/notification.service';
 import { Tabs, Tooltip, Input, Icon, Form, Button, Checkbox, Layout, Modal } from 'antd';
 
@@ -227,6 +228,8 @@ class LoginPage extends React.PureComponent< IProps, IState > {
         }  else if ( status === '200' ) {
           setTimeout(( ) => {
               form.resetFields( );
+              /**本地登录 */
+              Auth.signIn( user );
           }, 2000 )
         }
 

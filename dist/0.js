@@ -18,8 +18,9 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
 var rxjs_1 = __webpack_require__(236);
-var http_service_1 = __webpack_require__(1362);
-var notification_service_1 = __webpack_require__(1363);
+var http_service_1 = __webpack_require__(1363);
+var auth_login_service_1 = __webpack_require__(1362);
+var notification_service_1 = __webpack_require__(1365);
 var antd_1 = __webpack_require__(235);
 __webpack_require__(1360);
 var TabPane = antd_1.Tabs.TabPane;
@@ -222,6 +223,8 @@ var LoginPage = (function (_super) {
             else if (status === '200') {
                 setTimeout(function () {
                     form.resetFields();
+                    /**本地登录 */
+                    auth_login_service_1.default.signIn(user);
                 }, 2000);
             }
         };
@@ -2874,13 +2877,55 @@ if(false) {
 
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = {
-    reqURL:  true ? 'http://127.0.0.1:3000' : ''
+    reqURL:  true ? '' : ''
 };
 
 
 /***/ }),
 
 /***/ 1362:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var local_storage_service_1 = __webpack_require__(1364);
+var authLoginService = (function () {
+    function authLoginService() {
+        var _this = this;
+        this.loginName = 'user';
+        this.loginUrl = '/login';
+        /**auth服务：检查是否已经登录 */
+        this.isLogin = function () { return local_storage_service_1.default.getItem(_this.loginName) ? true : false; };
+        /**auth服务：检查并重定向 */
+        this.requireLogin = function (nextState, replace, next) {
+            if (_this.isLogin()) {
+                return next();
+            }
+            else {
+                replace(_this.loginUrl);
+                return next();
+            }
+        };
+        /**auth服务：登录 */
+        this.signIn = function (user) {
+            /**ls储存数据 */
+            local_storage_service_1.default.setItem(_this.loginName, user);
+            /**socket连接 */
+        };
+        /**auth服务：登出 */
+        this.signOut = function () {
+            local_storage_service_1.default.cleanItem(_this.loginName);
+        };
+    }
+    return authLoginService;
+}());
+exports.default = new authLoginService();
+
+
+/***/ }),
+
+/***/ 1363:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2987,7 +3032,38 @@ exports.default = new HttpService();
 
 /***/ }),
 
-/***/ 1363:
+/***/ 1364:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var localStorageService = (function () {
+    function localStorageService() {
+        /**ls服务：根据key获取value */
+        this.getItem = function (key) { return JSON.parse(localStorage.getItem(key)); };
+        /**ls服务：配置key-value */
+        this.setItem = function (key, value) {
+            if (typeof value === 'string') {
+                localStorage.setItem(key, value);
+            }
+            else {
+                localStorage.setItem(key, JSON.stringify(value));
+            }
+        };
+        /**ls服务：清空某项 */
+        this.cleanItem = function (key) { return localStorage.removeItem(key); };
+        /**ls服务：清空全部 */
+        this.cleanAll = function () { return localStorage.clear(); };
+    }
+    return localStorageService;
+}());
+exports.default = new localStorageService();
+
+
+/***/ }),
+
+/***/ 1365:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

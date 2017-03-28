@@ -1,10 +1,11 @@
 import lsService from './local-storage.service';
 import { RouterState } from 'react-router';
+import { _IUser } from '../interface/app.interface';
 
 
 class authLoginService {
 
-    private loginName = 'loginName';
+    private loginName = 'user';
     private loginUrl = '/login';
 
     /**auth服务：检查是否已经登录 */
@@ -21,14 +22,17 @@ class authLoginService {
     }
 
     /**auth服务：登录 */
-    public login = ( ) => new Promise( async ( resolve, reject ) => {
+    public signIn = ( user: _IUser ) => { 
+        /**ls储存数据 */
+        lsService.setItem( this.loginName,  user );
+        /**socket连接 */
+    }
 
-    })
+    /**auth服务：登出 */
+    public signOut = ( ) => { 
+        lsService.cleanItem( this.loginName )
+    }
 
-    /**auth服务：注册 */
-    public signIn = ( username: string, phone: string ,psw: string ) => new Promise( async ( resolve, reject ) => {
-        
-    })
 
 }
 

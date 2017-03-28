@@ -12,8 +12,8 @@ import { _IPostQueryLogin, IPostLogin_, _IPostQueryResetPsw, IPostResetPsw_, _IP
 const TabPane = Tabs.TabPane;
 const FormItem = Form.Item;
 
-@Form.create( )
-export default class LoginPage extends React.PureComponent< IProps, IState > {
+
+class LoginPage extends React.PureComponent< IProps, IState > {
     
     constructor( ) {
       super( );
@@ -398,6 +398,8 @@ export default class LoginPage extends React.PureComponent< IProps, IState > {
         </div>
     }
 }
+
+export default Form.create( )(LoginPage)
 
 interface IProps  {
     form: any

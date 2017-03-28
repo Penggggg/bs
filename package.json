@@ -4,7 +4,8 @@
   "description": "My personal Graduation Project -- iTeam. 我的个人项目-毕业设计之 iTeam",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dev-server --config ./config/webpack.dev.config.js --inline --hot --progress "
+    "start": "webpack-dev-server --config ./config/webpack.dev.config.js --inline --hot --progress ",
+    "watch": "webpack --config ./config/webpack.dev2.config.js --watch"
   },
   "repository": {
     "type": "git",
@@ -22,6 +23,7 @@
     "koa-bodyparser": "^4.2.0",
     "koa-logs-full": "0.0.8",
     "koa-router": "^7.0.1",
+    "koa-static2": "^0.1.8",
     "mongoose": "^4.9.1",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",

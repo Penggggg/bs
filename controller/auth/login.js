@@ -4,7 +4,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
         function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
+        step((generator = generator.apply(thisArg, _arguments)).next());
     });
 };
 var __generator = (this && this.__generator) || function (thisArg, body) {
@@ -35,16 +35,15 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 var _this = this;
-Object.defineProperty(exports, "__esModule", { value: true });
 var util_1 = require("../util");
 var user_model_1 = require("../../model/models/user.model");
 /**用户注册 */
 exports.login = function (ctx) { return __awaiter(_this, void 0, void 0, function () {
-    var userName, userPhone, password, password2, isExisted, result, _a;
+    var _a, userName, userPhone, password, password2, isExisted, result;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
-                userName = (_a = ctx.request.body, _a.userName), userPhone = _a.userPhone, password = _a.password, password2 = _a.password2;
+                _a = ctx.request.body, userName = _a.userName, userPhone = _a.userPhone, password = _a.password, password2 = _a.password2;
                 /**Ctx配置 */
                 util_1.setCtx(ctx);
                 /**检查密码配对情况 */
@@ -68,9 +67,7 @@ exports.login = function (ctx) { return __awaiter(_this, void 0, void 0, functio
                 }
                 /**储存到数据库 */
                 console.log('正把注册信息储存到数据库');
-                return [4 /*yield*/, user_model_1.default.save(userName, userPhone, password)
-                    /**返回 */
-                ];
+                return [4 /*yield*/, user_model_1.default.save(userName, userPhone, password)];
             case 2:
                 result = _b.sent();
                 /**返回 */

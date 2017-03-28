@@ -1,11 +1,11 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 var Koa = require("koa");
 var path = require("path");
 var KoaRouter = require("koa-router");
 var KoaBody = require("koa-bodyparser");
 var KoaLog = require("koa-logs-full");
 var Mongoose = require("mongoose");
+var KoaServer = require("koa-static2");
 var controller_1 = require("./controller");
 var node_config_1 = require("./config/node.config");
 var app = new Koa();
@@ -22,6 +22,7 @@ app
     .use(KoaLog(app, {
     logdir: path.join(__dirname, 'logs')
 }))
+    .use(KoaServer("static", __dirname + '/dist'))
     .use(KoaBody())
     .use(router.routes())
     .use(router.allowedMethods());

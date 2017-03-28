@@ -4,6 +4,7 @@ import * as KoaRouter from 'koa-router';
 import * as KoaBody from 'koa-bodyparser';
 import * as KoaLog from 'koa-logs-full';
 import * as Mongoose from 'mongoose';
+import * as KoaServer from "koa-static2";
 
 import setRouter from './controller';
 import { appConfig } from './config/node.config';
@@ -29,6 +30,7 @@ app
   .use(KoaLog( app,{
       logdir: path.join( __dirname, 'logs')
   }))
+  .use(KoaServer("static", __dirname + '/dist'))
   .use(KoaBody( ))
   .use(router.routes( ))
   .use(router.allowedMethods( ))

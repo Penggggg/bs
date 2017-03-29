@@ -2891,6 +2891,7 @@ exports.default = {
 Object.defineProperty(exports, "__esModule", { value: true });
 var local_storage_service_1 = __webpack_require__(1363);
 var socket_service_1 = __webpack_require__(1365);
+var user_1 = __webpack_require__(1366);
 var authLoginService = (function () {
     function authLoginService() {
         var _this = this;
@@ -2901,6 +2902,7 @@ var authLoginService = (function () {
         this.socketEventSignOut = 'signOutUser';
         this.myLocalStorage = local_storage_service_1.default;
         this.mySocket = socket_service_1.default;
+        this.myUserStore = user_1.default;
         /**auth服务：检查是否已经登录 */
         this.isLogin = function () { return _this.myLocalStorage.getItem(_this.signInName) ? true : false; };
         /**auth服务：检查并重定向 */
@@ -2922,7 +2924,8 @@ var authLoginService = (function () {
             /**socket连接 */
             var a = _this.mySocket.connectNewNsp(_this.socketNspSignIn);
             a.emit("" + _this.socketEventSignIn, { user: user });
-            a.on("" + _this.socketEventSignIn, function (data) { return console.log(data.msg); });
+            /**rx监控 */
+            _this.myUserStore.initSignIn(a, "" + _this.socketEventSignIn);
         };
         /**auth服务：登出 */
         this.signOut = function () {
@@ -2932,6 +2935,8 @@ var authLoginService = (function () {
             /**本地登出 */
             _this.myLocalStorage.cleanItem(_this.signInName);
             _this.mySocket.disconnectNsp(_this.socketNspSignIn);
+            /**rx取消监控 */
+            _this.myUserStore.cacelWatchSignIn();
         };
     }
     return authLoginService;
@@ -3130,6 +3135,48 @@ var socketService = (function () {
     return socketService;
 }());
 exports.default = new socketService();
+
+
+/***/ }),
+
+/***/ 1366:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var notification_service_1 = __webpack_require__(1364);
+var rxjs_1 = __webpack_require__(236);
+var UserStore = (function () {
+    function UserStore() {
+        var _this = this;
+        /**登录状态初始化 */
+        this.initSignIn = function (target, eventName) {
+            var source = rxjs_1.Observable
+                .fromEvent(target, eventName)
+                .map(function (res) { return res.status === '200' ? true : false; });
+            var subject = new rxjs_1.ReplaySubject(1);
+            _this.signIn$ = source.multicast(subject).refCount();
+            _this.watchSignIn();
+        };
+        /**监控登录 */
+        this.watchSignIn = function () {
+            _this.signInSub = _this.signIn$
+                .do(function (isSign) {
+                notification_service_1.default.open({
+                    title: '系统消息',
+                    msg: isSign ? 'socket链接成功' : 'socket服务链接失败',
+                    type: 'ok'
+                });
+            })
+                .subscribe();
+        };
+        /**取消登录监控 */
+        this.cacelWatchSignIn = function () { return _this.signInSub.unsubscribe(); };
+    }
+    return UserStore;
+}());
+exports.default = new UserStore();
 
 
 /***/ })

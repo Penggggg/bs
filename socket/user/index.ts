@@ -4,6 +4,7 @@ import { _ISocketSignIn, ISocketSignIn_, _ISocketSignOut } from '../../interface
 class UserSocket {
 
     private nameSpace = 'user';
+    
     private eventSignIn = 'signInUser';
     private eventSignOut = 'signOutUser';
 

@@ -2,6 +2,7 @@
 import { RouterState } from 'react-router';
 import lsService from './local-storage.service';
 import socketService from './socket.service';
+import userStore from '../store/user';
 
 import { _IUser } from '../interface/app.interface';
 import { _ISocketSignIn, ISocketSignIn_, _ISocketSignOut } from '../interface/socket.interface';
@@ -19,9 +20,11 @@ class authLoginService {
 
     private myLocalStorage = lsService;
     private mySocket = socketService;
+
+    private myUserStore = userStore;
     
     constructor( ) {
-        
+
     }
 
 
@@ -48,7 +51,9 @@ class authLoginService {
         /**socket连接 */
         let a = this.mySocket.connectNewNsp( this.socketNspSignIn )
         a.emit(`${this.socketEventSignIn}`, { user } as _ISocketSignIn);
-        a.on(`${this.socketEventSignIn}`, ( data: ISocketSignIn_ ) => console.log( data.msg ));
+        /**rx监控 */
+        this.myUserStore.initSignIn( a, `${this.socketEventSignIn}` )
+
     }
 
     /**auth服务：登出 */
@@ -59,6 +64,8 @@ class authLoginService {
         /**本地登出 */
         this.myLocalStorage.cleanItem( this.signInName );        
         this.mySocket.disconnectNsp( this.socketNspSignIn );
+        /**rx取消监控 */
+        this.myUserStore.cacelWatchSignIn( );
     }
 
 

@@ -9,3 +9,6 @@
 declare var System: {
     import: ( filename: string ) => Promise<any>
 }
+
+/**socket.io client */
+declare var io: any

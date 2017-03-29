@@ -2890,13 +2890,18 @@ exports.default = {
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var local_storage_service_1 = __webpack_require__(1364);
+var socket_service_1 = __webpack_require__(1366);
 var authLoginService = (function () {
     function authLoginService() {
         var _this = this;
-        this.loginName = 'user';
+        this.signInName = 'user';
         this.loginUrl = '/login';
+        this.socketNspSignIn = 'user';
+        this.socketEventSignIn = 'signInUser';
+        this.myLocalStorage = local_storage_service_1.default;
+        this.mySocket = socket_service_1.default;
         /**auth服务：检查是否已经登录 */
-        this.isLogin = function () { return local_storage_service_1.default.getItem(_this.loginName) ? true : false; };
+        this.isLogin = function () { return _this.myLocalStorage.getItem(_this.signInName) ? true : false; };
         /**auth服务：检查并重定向 */
         this.requireLogin = function (nextState, replace, next) {
             if (_this.isLogin()) {
@@ -2907,15 +2912,20 @@ var authLoginService = (function () {
                 return next();
             }
         };
+        /**auth服务：用户信息 */
+        this.userData = function () { return _this.myLocalStorage.getItem(_this.signInName); };
         /**auth服务：登录 */
         this.signIn = function (user) {
             /**ls储存数据 */
-            local_storage_service_1.default.setItem(_this.loginName, user);
+            _this.myLocalStorage.setItem(_this.signInName, user);
             /**socket连接 */
+            var a = _this.mySocket.connectNewNsp(_this.socketNspSignIn);
+            a.emit("" + _this.socketEventSignIn, { user: user });
         };
         /**auth服务：登出 */
         this.signOut = function () {
-            local_storage_service_1.default.cleanItem(_this.loginName);
+            _this.myLocalStorage.cleanItem(_this.signInName);
+            _this.mySocket.disconnectNsp(_this.socketNspSignIn);
         };
     }
     return authLoginService;
@@ -3040,8 +3050,6 @@ exports.default = new HttpService();
 Object.defineProperty(exports, "__esModule", { value: true });
 var localStorageService = (function () {
     function localStorageService() {
-        /**ls服务：根据key获取value */
-        this.getItem = function (key) { return JSON.parse(localStorage.getItem(key)); };
         /**ls服务：配置key-value */
         this.setItem = function (key, value) {
             if (typeof value === 'string') {
@@ -3056,6 +3064,10 @@ var localStorageService = (function () {
         /**ls服务：清空全部 */
         this.cleanAll = function () { return localStorage.clear(); };
     }
+    /**ls服务：根据key获取value */
+    localStorageService.prototype.getItem = function (key) {
+        return JSON.parse(localStorage.getItem(key));
+    };
     return localStorageService;
 }());
 exports.default = new localStorageService();
@@ -3085,6 +3097,33 @@ var NotificationService = (function () {
     return NotificationService;
 }());
 exports.default = new NotificationService();
+
+
+/***/ }),
+
+/***/ 1366:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var socketService = (function () {
+    function socketService() {
+        this.connectedUrl = 'http://localhost';
+        this.connectedNameSpace = {};
+    }
+    socketService.prototype.connectNewNsp = function (name) {
+        var socketClient = io(this.connectedUrl + "/" + name);
+        this.connectedNameSpace[name] = socketClient;
+        return socketClient;
+    };
+    socketService.prototype.disconnectNsp = function (name) {
+        this.connectedNameSpace[name].disconnect();
+        delete this.connectedNameSpace[name];
+    };
+    return socketService;
+}());
+exports.default = new socketService();
 
 
 /***/ })

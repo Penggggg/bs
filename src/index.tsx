@@ -3,8 +3,6 @@ import * as ReactDom from 'react-dom';
 import { Router, hashHistory } from 'react-router';
 import routes from './pages';
 
-import './index.d'
-
 class App extends React.PureComponent<{ }, { }> {
 
     constructor( ) {super( );}

@@ -2,7 +2,9 @@
 class localStorageService {
 
     /**ls服务：根据key获取value */
-    public getItem = ( key: string ) => JSON.parse(localStorage.getItem( key ))
+    public getItem<T> ( key: string ): T {
+        return JSON.parse(localStorage.getItem( key ))
+    }
 
     /**ls服务：配置key-value */
     public setItem = ( key: string, value: string | Object ) => {

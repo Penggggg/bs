@@ -20,7 +20,6 @@ var React = __webpack_require__(0);
 var ReactDom = __webpack_require__(12);
 var react_router_1 = __webpack_require__(151);
 var pages_1 = __webpack_require__(538);
-__webpack_require__(537);
 var App = (function (_super) {
     __extends(App, _super);
     function App() {
@@ -32,19 +31,6 @@ var App = (function (_super) {
     return App;
 }(React.PureComponent));
 ReactDom.render(React.createElement(App, null), document.querySelector('#app'));
-
-
-/***/ }),
-
-/***/ 537:
-/***/ (function(module, exports) {
-
-/**global environment  */
-// declare var process:{
-//     env: {
-//         NODE_ENV: string
-//     }
-// } 
 
 
 /***/ }),

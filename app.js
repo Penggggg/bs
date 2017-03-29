@@ -12,9 +12,9 @@ var controller_1 = require("./controller");
 var node_config_1 = require("./config/node.config");
 var app = new Koa();
 var router = new KoaRouter();
-var server = http.createServer(app.callback());
+var server = http.createServer(app.callback()).listen(node_config_1.appConfig.socketPort);
 var io = SocketIo(server);
-var db = Mongoose.connect("mongodb://127.0.0.1/" + node_config_1.appConfig.dbTarget);
+var db = Mongoose.connect(node_config_1.appConfig.dbIp + "/" + node_config_1.appConfig.dbTarget);
 ;
 controller_1.default(router);
 db.connection.on('error', function (e) {
@@ -23,12 +23,24 @@ db.connection.on('error', function (e) {
 db.connection.on('open', function () {
     console.log("mongodb\u8FDE\u63A5\u6210\u529F: " + node_config_1.appConfig.dbTarget + "\u6570\u636E\u5E93");
 });
-io.on('connection', function (socket) {
-    socket.emit('news', { hello: 'world' });
-    console.log('!!!!!!!!!!!!!!');
-    socket.on('my other event', function (data) {
+// io
+//     .of('/chat')
+//     .on('connection', function (socket) {
+//         // socket.broadcast.emit('news', { hello: 'world' });
+//         socket.join('cat')
+//         socket.broadcast.in('cat').emit('news', { room: 'cat-1' });
+//         socket.join('dog')
+//         socket.broadcast.in('dog').emit('news', { room: 'dog-1' });
+//         socket.emit('news', {hello: 'chat'})
+//         socket.on('signIn', function (data) {
+//             console.log(data);
+//         }); 
+//     });
+io
+    .of('/user')
+    .on('connection', function (socket) {
+    socket.on('signInUser', function (data) {
         console.log(data);
-        console.log('???');
     });
 });
 app

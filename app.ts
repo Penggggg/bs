@@ -14,9 +14,9 @@ import { appConfig } from './config/node.config';
 
 const app = new Koa( );
 const router = new KoaRouter( );
-const server = http.createServer(app.callback( ))
+const server = http.createServer(app.callback( )).listen(appConfig.socketPort)
 const io = SocketIo( server );
-const db = Mongoose.connect(`mongodb://127.0.0.1/${appConfig.dbTarget}`);;
+const db = Mongoose.connect(`${appConfig.dbIp}/${appConfig.dbTarget}`);;
 
 
 
@@ -29,14 +29,27 @@ db.connection.on('open', ( ) => {
     console.log(`mongodb连接成功: ${appConfig.dbTarget}数据库`)
 });
 
-io.on('connection', function (socket) {
-    socket.emit('news', { hello: 'world' });
-    console.log('!!!!!!!!!!!!!!')
-    socket.on('my other event', function (data) {
-        console.log(data);
-        console.log('???')
+// io
+//     .of('/chat')
+//     .on('connection', function (socket) {
+//         // socket.broadcast.emit('news', { hello: 'world' });
+//         socket.join('cat')
+//         socket.broadcast.in('cat').emit('news', { room: 'cat-1' });
+//         socket.join('dog')
+//         socket.broadcast.in('dog').emit('news', { room: 'dog-1' });
+//         socket.emit('news', {hello: 'chat'})
+//         socket.on('signIn', function (data) {
+//             console.log(data);
+//         }); 
+//     });
+
+io
+    .of('/user')
+    .on('connection', function (socket) {
+        socket.on('signInUser', function (data) {
+            console.log(data);
+        }); 
     });
-});
 
 
 app

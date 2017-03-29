@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Document</title>
-    <link rel="stylesheet" type="text/css" href="https://unpkg.com/antd/dist/antd.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/antd.min.css">
 </head>
 <body>
     
@@ -14,12 +14,5 @@
 <script src="/static/vendor.js"></script>
 <script src="/static/app.js"></script>
 <script src="/static/socket.io.js"></script>
-<script>
-  var socket = io('http://localhost');
-  socket.on('news', function (data) {
-    console.log(data);
-    socket.emit('my other event', { my: 'data' });
-  });
-</script>
 </body>
 </html>

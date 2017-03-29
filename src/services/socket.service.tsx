@@ -5,11 +5,11 @@ import { _IUser } from '../interface/app.interface';
 class socketService {
 
     private connectedUrl = 'http://localhost'; 
-    private connectedNameSpace: {
+    public connectedNameSpace: {
         [ key: string ]: SocketIO.Socket
     } = {  }
 
-    public connectNewNsp( name: string ) {
+    public connectNewNsp( name: string ): SocketIO.Socket {
         let socketClient = io(`${this.connectedUrl}/${name}`);
         this.connectedNameSpace[name] = socketClient;
         return socketClient

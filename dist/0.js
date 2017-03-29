@@ -1,6 +1,6 @@
 webpackJsonp([0],{
 
-/***/ 1351:
+/***/ 1350:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -18,11 +18,11 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
 var rxjs_1 = __webpack_require__(236);
-var http_service_1 = __webpack_require__(1363);
-var auth_login_service_1 = __webpack_require__(1362);
-var notification_service_1 = __webpack_require__(1365);
+var http_service_1 = __webpack_require__(1362);
+var auth_login_service_1 = __webpack_require__(1361);
+var notification_service_1 = __webpack_require__(1364);
 var antd_1 = __webpack_require__(235);
-__webpack_require__(1360);
+__webpack_require__(1359);
 var TabPane = antd_1.Tabs.TabPane;
 var FormItem = antd_1.Form.Item;
 var LoginPage = (function (_super) {
@@ -334,7 +334,7 @@ exports.default = antd_1.Form.create()(LoginPage);
 
 /***/ }),
 
-/***/ 1352:
+/***/ 1351:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -456,7 +456,7 @@ function fromByteArray (uint8) {
 
 /***/ }),
 
-/***/ 1353:
+/***/ 1352:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -470,9 +470,9 @@ function fromByteArray (uint8) {
 
 
 
-var base64 = __webpack_require__(1352)
-var ieee754 = __webpack_require__(1357)
-var isArray = __webpack_require__(1354)
+var base64 = __webpack_require__(1351)
+var ieee754 = __webpack_require__(1356)
+var isArray = __webpack_require__(1353)
 
 exports.Buffer = Buffer
 exports.SlowBuffer = SlowBuffer
@@ -2254,7 +2254,7 @@ function isnan (val) {
 
 /***/ }),
 
-/***/ 1354:
+/***/ 1353:
 /***/ (function(module, exports) {
 
 var toString = {}.toString;
@@ -2266,10 +2266,10 @@ module.exports = Array.isArray || function (arr) {
 
 /***/ }),
 
-/***/ 1355:
+/***/ 1354:
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(1356)(undefined);
+exports = module.exports = __webpack_require__(1355)(undefined);
 // imports
 
 
@@ -2281,7 +2281,7 @@ exports.push([module.i, ".login-page {\n  position: relative;\n  text-align: cen
 
 /***/ }),
 
-/***/ 1356:
+/***/ 1355:
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(Buffer) {/*
@@ -2360,11 +2360,11 @@ function toComment(sourceMap) {
   return '/*# ' + data + ' */';
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1353).Buffer))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1352).Buffer))
 
 /***/ }),
 
-/***/ 1357:
+/***/ 1356:
 /***/ (function(module, exports) {
 
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
@@ -2455,7 +2455,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 
 /***/ }),
 
-/***/ 1358:
+/***/ 1357:
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -2487,7 +2487,7 @@ var stylesInDom = {},
 	singletonElement = null,
 	singletonCounter = 0,
 	styleElementsInsertedAtTop = [],
-	fixUrls = __webpack_require__(1359);
+	fixUrls = __webpack_require__(1358);
 
 module.exports = function(list, options) {
 	if(typeof DEBUG !== "undefined" && DEBUG) {
@@ -2747,7 +2747,7 @@ function updateLink(linkElement, options, obj) {
 
 /***/ }),
 
-/***/ 1359:
+/***/ 1358:
 /***/ (function(module, exports) {
 
 
@@ -2843,16 +2843,16 @@ module.exports = function (css) {
 
 /***/ }),
 
-/***/ 1360:
+/***/ 1359:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1355);
+var content = __webpack_require__(1354);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(1358)(content, {});
+var update = __webpack_require__(1357)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -2870,7 +2870,7 @@ if(false) {
 
 /***/ }),
 
-/***/ 1361:
+/***/ 1360:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2883,14 +2883,14 @@ exports.default = {
 
 /***/ }),
 
-/***/ 1362:
+/***/ 1361:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var local_storage_service_1 = __webpack_require__(1364);
-var socket_service_1 = __webpack_require__(1366);
+var local_storage_service_1 = __webpack_require__(1363);
+var socket_service_1 = __webpack_require__(1365);
 var authLoginService = (function () {
     function authLoginService() {
         var _this = this;
@@ -2898,6 +2898,7 @@ var authLoginService = (function () {
         this.loginUrl = '/login';
         this.socketNspSignIn = 'user';
         this.socketEventSignIn = 'signInUser';
+        this.socketEventSignOut = 'signOutUser';
         this.myLocalStorage = local_storage_service_1.default;
         this.mySocket = socket_service_1.default;
         /**auth服务：检查是否已经登录 */
@@ -2921,9 +2922,14 @@ var authLoginService = (function () {
             /**socket连接 */
             var a = _this.mySocket.connectNewNsp(_this.socketNspSignIn);
             a.emit("" + _this.socketEventSignIn, { user: user });
+            a.on("" + _this.socketEventSignIn, function (data) { return console.log(data.msg); });
         };
         /**auth服务：登出 */
         this.signOut = function () {
+            /**服务器登出 */
+            var user = _this.myLocalStorage.getItem(_this.signInName);
+            _this.mySocket.connectedNameSpace[_this.socketNspSignIn].emit("" + _this.socketEventSignOut, { user: user });
+            /**本地登出 */
             _this.myLocalStorage.cleanItem(_this.signInName);
             _this.mySocket.disconnectNsp(_this.socketNspSignIn);
         };
@@ -2935,14 +2941,14 @@ exports.default = new authLoginService();
 
 /***/ }),
 
-/***/ 1363:
+/***/ 1362:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var rxjs_1 = __webpack_require__(236);
-var config_1 = __webpack_require__(1361);
+var config_1 = __webpack_require__(1360);
 var HttpService = (function () {
     function HttpService() {
         this.TIMEOUT = 10000;
@@ -3042,7 +3048,7 @@ exports.default = new HttpService();
 
 /***/ }),
 
-/***/ 1364:
+/***/ 1363:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3075,7 +3081,7 @@ exports.default = new localStorageService();
 
 /***/ }),
 
-/***/ 1365:
+/***/ 1364:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3101,7 +3107,7 @@ exports.default = new NotificationService();
 
 /***/ }),
 
-/***/ 1366:
+/***/ 1365:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

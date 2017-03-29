@@ -2,15 +2,20 @@
 import { RouterState } from 'react-router';
 import lsService from './local-storage.service';
 import socketService from './socket.service';
+
 import { _IUser } from '../interface/app.interface';
+import { _ISocketSignIn, ISocketSignIn_, _ISocketSignOut } from '../interface/socket.interface';
+
 
 
 class authLoginService {
 
     private signInName = 'user';
     private loginUrl = '/login';
+
     private socketNspSignIn = 'user';
-    private socketEventSignIn = 'signInUser'
+    private socketEventSignIn = 'signInUser';
+    private socketEventSignOut = 'signOutUser';
 
     private myLocalStorage = lsService;
     private mySocket = socketService;
@@ -42,13 +47,18 @@ class authLoginService {
         this.myLocalStorage.setItem( this.signInName,  user );
         /**socket连接 */
         let a = this.mySocket.connectNewNsp( this.socketNspSignIn )
-        a.emit(`${this.socketEventSignIn}`, { user })
+        a.emit(`${this.socketEventSignIn}`, { user } as _ISocketSignIn);
+        a.on(`${this.socketEventSignIn}`, ( data: ISocketSignIn_ ) => console.log( data.msg ));
     }
 
     /**auth服务：登出 */
     public signOut = ( ) => { 
-        this.myLocalStorage.cleanItem( this.signInName );
-        this.mySocket.disconnectNsp( this.socketNspSignIn )
+        /**服务器登出 */
+        let user = this.myLocalStorage.getItem( this.signInName );
+        this.mySocket.connectedNameSpace[this.socketNspSignIn].emit(`${this.socketEventSignOut}`, { user } as _ISocketSignOut )
+        /**本地登出 */
+        this.myLocalStorage.cleanItem( this.signInName );        
+        this.mySocket.disconnectNsp( this.socketNspSignIn );
     }
 
 

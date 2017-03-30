@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var UserSocket = (function () {
     function UserSocket() {
         var _this = this;
@@ -38,5 +39,4 @@ var UserSocket = (function () {
     }
     return UserSocket;
 }());
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = new UserSocket();

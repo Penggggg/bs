@@ -4,7 +4,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
         function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments)).next());
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
 var __generator = (this && this.__generator) || function (thisArg, body) {
@@ -35,15 +35,16 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 var _this = this;
+Object.defineProperty(exports, "__esModule", { value: true });
 var util_1 = require("../util");
 var user_model_1 = require("../../model/models/user.model");
 /**登录功能 */
 exports.sginIn = function (ctx) { return __awaiter(_this, void 0, void 0, function () {
-    var _a, signPhone, signPsw, UserData;
+    var signPhone, signPsw, UserData, _a;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
-                _a = ctx.request.body, signPhone = _a.signPhone, signPsw = _a.signPsw;
+                signPhone = (_a = ctx.request.body, _a.signPhone), signPsw = _a.signPsw;
                 /**ctx配置 */
                 util_1.setCtx(ctx);
                 /**查询用户是否存在 */

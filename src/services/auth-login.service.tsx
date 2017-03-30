@@ -52,7 +52,7 @@ class authLoginService {
         let a = this.mySocket.connectNewNsp( this.socketNspSignIn )
         a.emit(`${this.socketEventSignIn}`, { user } as _ISocketSignIn);
         /**rx监控 */
-        this.myUserStore.initSignIn( a, `${this.socketEventSignIn}` )
+        this.myUserStore.signIn.initSignIn( a, `${this.socketEventSignIn}` )
 
     }
 
@@ -65,7 +65,7 @@ class authLoginService {
         this.myLocalStorage.cleanItem( this.signInName );        
         this.mySocket.disconnectNsp( this.socketNspSignIn );
         /**rx取消监控 */
-        this.myUserStore.cacelWatchSignIn( );
+        this.myUserStore.signIn.cacelWatchSignIn( );
     }
 
 

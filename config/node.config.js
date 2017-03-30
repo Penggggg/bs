@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.appConfig = {
     socketPort: 80,
     nodePort: 3000,

@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var Koa = require("koa");
 var path = require("path");
 var http = require("http");

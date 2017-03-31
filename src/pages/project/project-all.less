@@ -1,7 +1,58 @@
 
-.project-all-page {
-    
-    .my-layout {
-        min-height: 500px;
+/**2个大block */
+.project-block-mixin( ) {
+    margin-bottom: 30px;
+}
+
+/**标题 */
+.block-title-mixin( ) {
+    position: relative;
+    h2 {
+        position: relative;
+        font-size: 24px;
+        font-weight: 400;
+        color: #666;
+        padding-bottom: 10px;
     }
+    span {
+        display: block;
+        position: absolute;
+        height: 1px;
+        width: 80%;
+        left: 16%;
+        top: 50%;
+        background: linear-gradient( to right, #d9d9d9, #e9e9e9 );
+    }
+}
+
+/**展示区 */
+.projects-block-mixin( ) {
+    
+}
+
+
+.project-all-page {
+    padding: 30px 100px;
+    
+    .my-project {
+        .project-block-mixin( );
+
+        .title {
+            .block-title-mixin( )
+        }
+
+        .projects-block {
+            .projects-block-mixin( );
+        }
+
+    }
+
+    .all-project {
+        .project-block-mixin( );
+
+        .title {
+            .block-title-mixin( )
+        }
+    }
+
 }

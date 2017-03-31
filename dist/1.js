@@ -25,7 +25,15 @@ var ProjectAllPage = (function (_super) {
     }
     ProjectAllPage.prototype.render = function () {
         return React.createElement("div", { className: "project-all-page" },
-            React.createElement("div", null, "123123"));
+            React.createElement("div", { className: "my-project" },
+                React.createElement("div", { className: "title" },
+                    React.createElement("h2", null, "\u6211\u5DF2\u62E5\u6709\u7684\u9879\u76EE"),
+                    React.createElement("span", null)),
+                React.createElement("div", { className: "projects-block" })),
+            React.createElement("div", { className: "all-project" },
+                React.createElement("div", { className: "title" },
+                    React.createElement("h2", null, "\u5168\u90E8\u7684\u9879\u76EE"),
+                    React.createElement("span", null))));
     };
     return ProjectAllPage;
 }(React.PureComponent));
@@ -2536,7 +2544,7 @@ exports = module.exports = __webpack_require__(1362)(undefined);
 
 
 // module
-exports.push([module.i, ".project-all-page .my-layout {\n  min-height: 500px;\n}\n", ""]);
+exports.push([module.i, "/**2个大block */\n/**标题 */\n/**展示区 */\n.project-all-page {\n  padding: 30px 100px;\n}\n.project-all-page .my-project {\n  margin-bottom: 30px;\n}\n.project-all-page .my-project .title {\n  position: relative;\n}\n.project-all-page .my-project .title h2 {\n  position: relative;\n  font-size: 24px;\n  font-weight: 400;\n  color: #666;\n  padding-bottom: 10px;\n}\n.project-all-page .my-project .title span {\n  display: block;\n  position: absolute;\n  height: 1px;\n  width: 80%;\n  left: 16%;\n  top: 50%;\n  background: linear-gradient(to right, #d9d9d9, #e9e9e9);\n}\n.project-all-page .all-project {\n  margin-bottom: 30px;\n}\n.project-all-page .all-project .title {\n  position: relative;\n}\n.project-all-page .all-project .title h2 {\n  position: relative;\n  font-size: 24px;\n  font-weight: 400;\n  color: #666;\n  padding-bottom: 10px;\n}\n.project-all-page .all-project .title span {\n  display: block;\n  position: absolute;\n  height: 1px;\n  width: 80%;\n  left: 16%;\n  top: 50%;\n  background: linear-gradient(to right, #d9d9d9, #e9e9e9);\n}\n", ""]);
 
 // exports
 

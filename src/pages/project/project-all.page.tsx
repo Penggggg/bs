@@ -10,8 +10,20 @@ export default class ProjectAllPage extends React.PureComponent<{ }, { }> {
 
     render ( ) {
         return <div className="project-all-page">
-            <div>
-                123123
+            <div className="my-project">
+                <div className="title">
+                    <h2>我已拥有的项目</h2>
+                    <span></span>
+                </div>
+                <div className="projects-block">
+
+                </div>
+            </div>
+            <div className="all-project">
+                <div className="title">
+                    <h2>全部的项目</h2>
+                    <span></span>
+                </div>
             </div>
         </div>
     }

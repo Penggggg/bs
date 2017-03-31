@@ -1,6 +1,6 @@
 webpackJsonp([0],{
 
-/***/ 1350:
+/***/ 1356:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -17,12 +17,12 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
-var rxjs_1 = __webpack_require__(235);
-var http_service_1 = __webpack_require__(1363);
-var auth_login_service_1 = __webpack_require__(1362);
-var notification_service_1 = __webpack_require__(1351);
-var antd_1 = __webpack_require__(236);
-__webpack_require__(1360);
+var rxjs_1 = __webpack_require__(153);
+var http_service_1 = __webpack_require__(1368);
+var auth_login_service_1 = __webpack_require__(538);
+var notification_service_1 = __webpack_require__(539);
+var antd_1 = __webpack_require__(152);
+__webpack_require__(1366);
 var TabPane = antd_1.Tabs.TabPane;
 var FormItem = antd_1.Form.Item;
 var LoginPage = (function (_super) {
@@ -43,6 +43,7 @@ var LoginPage = (function (_super) {
         };
         _this.signInSubmit = function (e) {
             e.preventDefault();
+            _this.setState({ signInLoading: true });
             _this.props.form.validateFields(['signPhone', 'signPsw'], function (err, values) {
                 if (!err) {
                     http_service_1.default.post('/api/v1/signin', values)
@@ -197,6 +198,7 @@ var LoginPage = (function (_super) {
         _this.analyseSignIn = function (_a) {
             var status = _a.status, msg = _a.msg, user = _a.user;
             var form = _this.props.form;
+            _this.setState({ signInLoading: false });
             notification_service_1.default.open({
                 msg: msg,
                 title: "\u767B\u5F55" + (status === '200' ? '成功' : '失败'),
@@ -225,6 +227,8 @@ var LoginPage = (function (_super) {
                     form.resetFields();
                     /**本地登录 */
                     auth_login_service_1.default.signIn(user);
+                    /**跳转 */
+                    _this.props.router.push('/project');
                 }, 2000);
             }
         };
@@ -240,6 +244,7 @@ var LoginPage = (function (_super) {
             activeKey: "1",
             loginLoading: false,
             resetLoading: false,
+            signInLoading: false,
             resetFormShow: false
         };
         return _this;
@@ -247,7 +252,7 @@ var LoginPage = (function (_super) {
     LoginPage.prototype.render = function () {
         var _this = this;
         var getFieldDecorator = this.props.form.getFieldDecorator;
-        var _a = this.state, activeKey = _a.activeKey, loginLoading = _a.loginLoading, resetLoading = _a.resetLoading, resetFormShow = _a.resetFormShow;
+        var _a = this.state, activeKey = _a.activeKey, loginLoading = _a.loginLoading, resetLoading = _a.resetLoading, signInLoading = _a.signInLoading, resetFormShow = _a.resetFormShow;
         /**注册表单 */
         var loginForm = React.createElement(antd_1.Form, { onSubmit: this.logInSubmit, className: "login-form" },
             React.createElement(FormItem, { hasFeedback: true }, getFieldDecorator('userName', {
@@ -293,7 +298,7 @@ var LoginPage = (function (_super) {
                 })(React.createElement(antd_1.Checkbox, null, "Remember me")),
                 React.createElement("a", { className: "login-form-forgot", onClick: this.resetPsw }, "Forgot password")),
             React.createElement(FormItem, null,
-                React.createElement(antd_1.Button, { type: "primary", htmlType: "submit", className: "login-form-button" }, "Sign in")));
+                React.createElement(antd_1.Button, { type: "primary", htmlType: "submit", className: "login-form-button", loading: signInLoading }, "Sign in")));
         /**忘记密码表单 */
         var resetForm = React.createElement(antd_1.Form, { className: "reset-form" },
             React.createElement(FormItem, null, getFieldDecorator('resetUserName', {
@@ -334,33 +339,7 @@ exports.default = antd_1.Form.create()(LoginPage);
 
 /***/ }),
 
-/***/ 1351:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var React = __webpack_require__(0);
-var antd_1 = __webpack_require__(236);
-var NotificationService = (function () {
-    function NotificationService() {
-    }
-    NotificationService.prototype.open = function (_a) {
-        var title = _a.title, msg = _a.msg, _b = _a.type, type = _b === void 0 ? 'ok' : _b;
-        antd_1.notification.open({
-            message: title,
-            description: msg,
-            icon: React.createElement(antd_1.Icon, { type: type === 'ok' ? "smile" : "frown", style: { color: '#108ee9' } }),
-        });
-    };
-    return NotificationService;
-}());
-exports.default = new NotificationService();
-
-
-/***/ }),
-
-/***/ 1352:
+/***/ 1358:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -482,7 +461,7 @@ function fromByteArray (uint8) {
 
 /***/ }),
 
-/***/ 1353:
+/***/ 1359:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -496,9 +475,9 @@ function fromByteArray (uint8) {
 
 
 
-var base64 = __webpack_require__(1352)
-var ieee754 = __webpack_require__(1357)
-var isArray = __webpack_require__(1354)
+var base64 = __webpack_require__(1358)
+var ieee754 = __webpack_require__(1363)
+var isArray = __webpack_require__(1360)
 
 exports.Buffer = Buffer
 exports.SlowBuffer = SlowBuffer
@@ -2280,7 +2259,7 @@ function isnan (val) {
 
 /***/ }),
 
-/***/ 1354:
+/***/ 1360:
 /***/ (function(module, exports) {
 
 var toString = {}.toString;
@@ -2292,10 +2271,10 @@ module.exports = Array.isArray || function (arr) {
 
 /***/ }),
 
-/***/ 1355:
+/***/ 1361:
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(1356)(undefined);
+exports = module.exports = __webpack_require__(1362)(undefined);
 // imports
 
 
@@ -2307,7 +2286,7 @@ exports.push([module.i, ".login-page {\n  position: relative;\n  text-align: cen
 
 /***/ }),
 
-/***/ 1356:
+/***/ 1362:
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(Buffer) {/*
@@ -2386,11 +2365,11 @@ function toComment(sourceMap) {
   return '/*# ' + data + ' */';
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1353).Buffer))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1359).Buffer))
 
 /***/ }),
 
-/***/ 1357:
+/***/ 1363:
 /***/ (function(module, exports) {
 
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
@@ -2481,7 +2460,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 
 /***/ }),
 
-/***/ 1358:
+/***/ 1364:
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -2513,7 +2492,7 @@ var stylesInDom = {},
 	singletonElement = null,
 	singletonCounter = 0,
 	styleElementsInsertedAtTop = [],
-	fixUrls = __webpack_require__(1359);
+	fixUrls = __webpack_require__(1365);
 
 module.exports = function(list, options) {
 	if(typeof DEBUG !== "undefined" && DEBUG) {
@@ -2773,7 +2752,7 @@ function updateLink(linkElement, options, obj) {
 
 /***/ }),
 
-/***/ 1359:
+/***/ 1365:
 /***/ (function(module, exports) {
 
 
@@ -2869,23 +2848,23 @@ module.exports = function (css) {
 
 /***/ }),
 
-/***/ 1360:
+/***/ 1366:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1355);
+var content = __webpack_require__(1361);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(1358)(content, {});
+var update = __webpack_require__(1364)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
 	// When the styles change, update the <style> tags
 	if(!content.locals) {
-		module.hot.accept("!!../../node_modules/css-loader/index.js!../../node_modules/less-loader/index.js!./login.less", function() {
-			var newContent = require("!!../../node_modules/css-loader/index.js!../../node_modules/less-loader/index.js!./login.less");
+		module.hot.accept("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./login.less", function() {
+			var newContent = require("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./login.less");
 			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 			update(newContent);
 		});
@@ -2896,7 +2875,7 @@ if(false) {
 
 /***/ }),
 
-/***/ 1361:
+/***/ 1367:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2909,77 +2888,14 @@ exports.default = {
 
 /***/ }),
 
-/***/ 1362:
+/***/ 1368:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var local_storage_service_1 = __webpack_require__(1364);
-var socket_service_1 = __webpack_require__(1365);
-var user_1 = __webpack_require__(1366);
-var authLoginService = (function () {
-    function authLoginService() {
-        var _this = this;
-        this.signInName = 'user';
-        this.loginUrl = '/login';
-        this.socketNspSignIn = 'user';
-        this.socketEventSignIn = 'signInUser';
-        this.socketEventSignOut = 'signOutUser';
-        this.myLocalStorage = local_storage_service_1.default;
-        this.mySocket = socket_service_1.default;
-        this.myUserStore = user_1.default;
-        /**auth服务：检查是否已经登录 */
-        this.isLogin = function () { return _this.myLocalStorage.getItem(_this.signInName) ? true : false; };
-        /**auth服务：检查并重定向 */
-        this.requireLogin = function (nextState, replace, next) {
-            if (_this.isLogin()) {
-                return next();
-            }
-            else {
-                replace(_this.loginUrl);
-                return next();
-            }
-        };
-        /**auth服务：用户信息 */
-        this.userData = function () { return _this.myLocalStorage.getItem(_this.signInName); };
-        /**auth服务：登录 */
-        this.signIn = function (user) {
-            /**ls储存数据 */
-            _this.myLocalStorage.setItem(_this.signInName, user);
-            /**socket连接 */
-            var a = _this.mySocket.connectNewNsp(_this.socketNspSignIn);
-            a.emit("" + _this.socketEventSignIn, { user: user });
-            /**rx监控 */
-            _this.myUserStore.signIn.initSignIn(a, "" + _this.socketEventSignIn);
-        };
-        /**auth服务：登出 */
-        this.signOut = function () {
-            /**服务器登出 */
-            var user = _this.myLocalStorage.getItem(_this.signInName);
-            _this.mySocket.connectedNameSpace[_this.socketNspSignIn].emit("" + _this.socketEventSignOut, { user: user });
-            /**本地登出 */
-            _this.myLocalStorage.cleanItem(_this.signInName);
-            _this.mySocket.disconnectNsp(_this.socketNspSignIn);
-            /**rx取消监控 */
-            _this.myUserStore.signIn.cacelWatchSignIn();
-        };
-    }
-    return authLoginService;
-}());
-exports.default = new authLoginService();
-
-
-/***/ }),
-
-/***/ 1363:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var rxjs_1 = __webpack_require__(235);
-var config_1 = __webpack_require__(1361);
+var rxjs_1 = __webpack_require__(153);
+var config_1 = __webpack_require__(1367);
 var HttpService = (function () {
     function HttpService() {
         this.TIMEOUT = 10000;
@@ -3075,126 +2991,6 @@ var HttpService = (function () {
     return HttpService;
 }());
 exports.default = new HttpService();
-
-
-/***/ }),
-
-/***/ 1364:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var localStorageService = (function () {
-    function localStorageService() {
-        /**ls服务：配置key-value */
-        this.setItem = function (key, value) {
-            if (typeof value === 'string') {
-                localStorage.setItem(key, value);
-            }
-            else {
-                localStorage.setItem(key, JSON.stringify(value));
-            }
-        };
-        /**ls服务：清空某项 */
-        this.cleanItem = function (key) { return localStorage.removeItem(key); };
-        /**ls服务：清空全部 */
-        this.cleanAll = function () { return localStorage.clear(); };
-    }
-    /**ls服务：根据key获取value */
-    localStorageService.prototype.getItem = function (key) {
-        return JSON.parse(localStorage.getItem(key));
-    };
-    return localStorageService;
-}());
-exports.default = new localStorageService();
-
-
-/***/ }),
-
-/***/ 1365:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var socketService = (function () {
-    function socketService() {
-        this.connectedUrl = 'http://localhost';
-        this.connectedNameSpace = {};
-    }
-    socketService.prototype.connectNewNsp = function (name) {
-        var socketClient = io(this.connectedUrl + "/" + name);
-        this.connectedNameSpace[name] = socketClient;
-        return socketClient;
-    };
-    socketService.prototype.disconnectNsp = function (name) {
-        this.connectedNameSpace[name].disconnect();
-        delete this.connectedNameSpace[name];
-    };
-    return socketService;
-}());
-exports.default = new socketService();
-
-
-/***/ }),
-
-/***/ 1366:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var signIn_store_1 = __webpack_require__(1367);
-var UserStore = (function () {
-    function UserStore() {
-        this.signIn = new signIn_store_1.default();
-    }
-    return UserStore;
-}());
-exports.default = new UserStore();
-
-
-/***/ }),
-
-/***/ 1367:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var notification_service_1 = __webpack_require__(1351);
-var rxjs_1 = __webpack_require__(235);
-var UserStoreSignIn = (function () {
-    function UserStoreSignIn() {
-        var _this = this;
-        /**登录状态初始化 */
-        this.initSignIn = function (target, eventName) {
-            var source = rxjs_1.Observable
-                .fromEvent(target, eventName)
-                .map(function (res) { return res.status === '200' ? true : false; });
-            var subject = new rxjs_1.ReplaySubject(1);
-            _this.signIn$ = source.multicast(subject).refCount();
-            _this.watchSignIn();
-        };
-        /**监控登录 */
-        this.watchSignIn = function () {
-            _this.signInSub = _this.signIn$
-                .do(function (isSign) {
-                notification_service_1.default.open({
-                    title: '系统消息',
-                    msg: isSign ? 'socket链接成功' : 'socket服务链接失败',
-                    type: 'ok'
-                });
-            })
-                .subscribe();
-        };
-        /**取消登录监控 */
-        this.cacelWatchSignIn = function () { return _this.signInSub.unsubscribe(); };
-    }
-    return UserStoreSignIn;
-}());
-exports.default = UserStoreSignIn;
 
 
 /***/ })

@@ -15,7 +15,15 @@ export default {
         {
             path: 'login',
             getComponent: ( nextstate: RouterState , cb: Function ) => {
-                System.import('./login.page').then( module => { 
+                System.import('./login/login.page').then( module => { 
+                    cb( null, module.default )}
+                ).catch(( err: Error ) => showMessage( err, './login.page' ))
+            },            
+        },{
+            path: 'project',
+            onEnter: auth.requireLogin,
+            getComponent: ( nextstate: RouterState , cb: Function ) => {
+                System.import('./project/project-all.page').then( module => { 
                     cb( null, module.default )}
                 ).catch(( err: Error ) => showMessage( err, './login.page' ))
             },            

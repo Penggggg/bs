@@ -34,9 +34,11 @@ class authLoginService {
     /**auth服务：检查并重定向 */
     public requireLogin = ( nextState: RouterState, replace: Function, next: Function ) => {
         if ( this.isLogin( )) {
+            console.log(`checking auth: auth ok`)
             return next( );
         } else {
             replace( this.loginUrl );
+            console.log(`checking auth: no ok`)
             return next( );
         }
     }

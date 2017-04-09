@@ -18,6 +18,7 @@ class ProjectAllPage extends React.PureComponent< IProps, IState > {
     
     private formProjectName = 'projectName';
     private formProjectInfo = 'projectInfo';
+    private userData = Auth.userData( );
 
     constructor( ) {
         super( );
@@ -35,8 +36,14 @@ class ProjectAllPage extends React.PureComponent< IProps, IState > {
     private fetchAllProject = ( ) => {
         http
             .get<IGetAllProject_>('/api/v1/all-project')
-            .do( res => console.log( res ))
+            .do( res => this.setState({
+                projectAll: res.data
+            }))
             .subscribe( )
+    }
+
+    private onEnterProject = ( projectID: string ) => {
+        console.log( projectID )
     }
 
 
@@ -66,6 +73,7 @@ class ProjectAllPage extends React.PureComponent< IProps, IState > {
                 dynamicFormShow: false
             });
             this.props.form.resetFields( );
+            this.fetchAllProject( );
         }, 1500 )
     }
 
@@ -73,7 +81,7 @@ class ProjectAllPage extends React.PureComponent< IProps, IState > {
 
         const { getFieldDecorator } = this.props.form;
         let { formProjectName, formProjectInfo } = this;
-        let { dynamicFormShow, formSubmiting } = this.state;
+        let { dynamicFormShow, formSubmiting, projectAll } = this.state;
         
 
         /**新增项目表单 */
@@ -114,15 +122,20 @@ class ProjectAllPage extends React.PureComponent< IProps, IState > {
                     <span></span>
                 </div>
                 <div className="projects-block">
-                    <Card className="project-card" bodyStyle={{ padding: 0, height: '100%'}}>
-                        <div className="image">
-                            <Image alt="example" src="/static/cover-project.jpg" />
-                        </div>
-                        <div className="info">
-                            <h3>Europe Street beat</h3>
-                            <p>www.instagram.com</p>
-                        </div>
-                     </Card>
+                    {
+                         projectAll.map(( project ) => {
+                             if ( this.userData._id !== project.creator ) { return } 
+                             return <Card key={ project._id } className="project-card" bodyStyle={{ padding: 0, height: '100%'}}>
+                                <div className="image" onClick={( ) => this.onEnterProject( project._id )}>
+                                    <Image src={ project.cover } />
+                                </div> 
+                                <div className="info" onClick={( ) => this.onEnterProject( project._id )}>
+                                    <h3>{ project.name }</h3>
+                                    <p>{ project.info }</p>
+                                </div>                     
+                             </Card>                     
+                         })                        
+                    }
                      <Card  className="project-card add-project-card"  bodyStyle={{ padding: 0, height: '100%'}}>
                         <Icon type="plus-circle" className="icon" onClick={( ) => this.setState({ dynamicFormShow: true })} />
                         <p>创建新项目</p>
@@ -135,23 +148,25 @@ class ProjectAllPage extends React.PureComponent< IProps, IState > {
                     <span></span>
                 </div>
                 <div className="projects-block">
-                    <Card  className="project-card" bodyStyle={{ padding: 0, height: '100%'}}>
-                        <div className="image">
-                            <Image alt="example" src="/static/cover-project.jpg" />
-                        </div>
-                        <div className="info">
-                            <h3>Europe Street beat</h3>
-                            <p>www.instagram.com</p>
-                        </div>
-                     </Card>
+                     {
+                         projectAll.map(( project ) => {
+                             return <Card key={ project._id } className="project-card" bodyStyle={{ padding: 0, height: '100%'}}>
+                                <div className="image" onClick={( ) => this.onEnterProject( project._id )}>
+                                    <Image src={ project.cover } />
+                                </div> 
+                                <div className="info" onClick={( ) => this.onEnterProject( project._id )}>
+                                    <h3>{ project.name }</h3>
+                                    <p>{ project.info }</p>
+                                </div>                     
+                             </Card>
+                         })
+                     }
                 </div>
             </div>
-            <Modal  title="创建新项目" 
-              footer={ null }
-              visible={ dynamicFormShow }
-              onCancel={( ) => this.setState({dynamicFormShow: false})}
-              style={{ width: '400px !import', padding: '0 85px' }}>
-                { dynamicForm }
+            <Modal  title="创建新项目"  footer={ null } visible={ dynamicFormShow }
+                onCancel={( ) => this.setState({dynamicFormShow: false})}
+                style={{ width: '400px !import', padding: '0 85px' }}>
+                    { dynamicForm }
             </Modal>
         </div>
     }

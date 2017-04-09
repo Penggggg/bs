@@ -9,6 +9,14 @@ export let PorjectSchema = new Mongoose.Schema({
         type: Mongoose.Schema.Types.ObjectId,
         ref: UserModel
     },
+    leader: [{
+        type: Mongoose.Schema.Types.ObjectId,
+        ref: UserModel 
+    }],
+    member: [{
+        type: Mongoose.Schema.Types.ObjectId,
+        ref: UserModel  
+    }],
     meta: {
         createdTime: {
             type: Date,
@@ -42,9 +50,9 @@ PorjectSchema.statics.findAllWithRef =  function( ) {
 
 PorjectSchema.statics.findAllWithNest =  function( ) {
     return new Promise(( resolve, reject ) => {
-        let that = this;
         this
             .find({ })
+            .populate({ path: 'creator' })
             .exec(( err, data ) => {
                 console.log( data )
             })

@@ -12,8 +12,11 @@ export interface _IUser {
 
 /**项目信息 */
 export interface IProject {
+    _id: string
     name: string
     info: string
-    cover: string,
-    creator: _IUser
+    cover: string
+    creator: _IUser | string
+    member: Array<_IUser>
+    leader: Array<_IUser>
 }

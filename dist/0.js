@@ -30,11 +30,17 @@ var ProjectAllPage = (function (_super) {
         var _this = _super.call(this) || this;
         _this.formProjectName = 'projectName';
         _this.formProjectInfo = 'projectInfo';
+        _this.userData = auth_login_service_1.default.userData();
         _this.fetchAllProject = function () {
             http_service_1.default
                 .get('/api/v1/all-project')
-                .do(function (res) { return console.log(res); })
+                .do(function (res) { return _this.setState({
+                projectAll: res.data
+            }); })
                 .subscribe();
+        };
+        _this.onEnterProject = function (projectID) {
+            console.log(projectID);
         };
         _this.newProjectSubmit = function () {
             var _a = _this, formProjectName = _a.formProjectName, formProjectInfo = _a.formProjectInfo;
@@ -61,6 +67,7 @@ var ProjectAllPage = (function (_super) {
                     dynamicFormShow: false
                 });
                 _this.props.form.resetFields();
+                _this.fetchAllProject();
             }, 1500);
         };
         _this.state = {
@@ -77,7 +84,7 @@ var ProjectAllPage = (function (_super) {
         var _this = this;
         var getFieldDecorator = this.props.form.getFieldDecorator;
         var _a = this, formProjectName = _a.formProjectName, formProjectInfo = _a.formProjectInfo;
-        var _b = this.state, dynamicFormShow = _b.dynamicFormShow, formSubmiting = _b.formSubmiting;
+        var _b = this.state, dynamicFormShow = _b.dynamicFormShow, formSubmiting = _b.formSubmiting, projectAll = _b.projectAll;
         /**新增项目表单 */
         var dynamicForm = React.createElement("div", { className: "modal-resetpsw-form" },
             React.createElement("div", { className: "modal-img" },
@@ -96,12 +103,17 @@ var ProjectAllPage = (function (_super) {
                     React.createElement("h2", null, "\u6211\u5DF2\u62E5\u6709\u7684\u9879\u76EE"),
                     React.createElement("span", null)),
                 React.createElement("div", { className: "projects-block" },
-                    React.createElement(antd_1.Card, { className: "project-card", bodyStyle: { padding: 0, height: '100%' } },
-                        React.createElement("div", { className: "image" },
-                            React.createElement(Image_component_1.default, { alt: "example", src: "/static/cover-project.jpg" })),
-                        React.createElement("div", { className: "info" },
-                            React.createElement("h3", null, "Europe Street beat"),
-                            React.createElement("p", null, "www.instagram.com"))),
+                    projectAll.map(function (project) {
+                        if (_this.userData._id !== project.creator) {
+                            return;
+                        }
+                        return React.createElement(antd_1.Card, { key: project._id, className: "project-card", bodyStyle: { padding: 0, height: '100%' } },
+                            React.createElement("div", { className: "image", onClick: function () { return _this.onEnterProject(project._id); } },
+                                React.createElement(Image_component_1.default, { src: project.cover })),
+                            React.createElement("div", { className: "info", onClick: function () { return _this.onEnterProject(project._id); } },
+                                React.createElement("h3", null, project.name),
+                                React.createElement("p", null, project.info)));
+                    }),
                     React.createElement(antd_1.Card, { className: "project-card add-project-card", bodyStyle: { padding: 0, height: '100%' } },
                         React.createElement(antd_1.Icon, { type: "plus-circle", className: "icon", onClick: function () { return _this.setState({ dynamicFormShow: true }); } }),
                         React.createElement("p", null, "\u521B\u5EFA\u65B0\u9879\u76EE")))),
@@ -109,13 +121,14 @@ var ProjectAllPage = (function (_super) {
                 React.createElement("div", { className: "title" },
                     React.createElement("h2", null, "\u5168\u90E8\u7684\u9879\u76EE"),
                     React.createElement("span", null)),
-                React.createElement("div", { className: "projects-block" },
-                    React.createElement(antd_1.Card, { className: "project-card", bodyStyle: { padding: 0, height: '100%' } },
-                        React.createElement("div", { className: "image" },
-                            React.createElement(Image_component_1.default, { alt: "example", src: "/static/cover-project.jpg" })),
-                        React.createElement("div", { className: "info" },
-                            React.createElement("h3", null, "Europe Street beat"),
-                            React.createElement("p", null, "www.instagram.com"))))),
+                React.createElement("div", { className: "projects-block" }, projectAll.map(function (project) {
+                    return React.createElement(antd_1.Card, { key: project._id, className: "project-card", bodyStyle: { padding: 0, height: '100%' } },
+                        React.createElement("div", { className: "image", onClick: function () { return _this.onEnterProject(project._id); } },
+                            React.createElement(Image_component_1.default, { src: project.cover })),
+                        React.createElement("div", { className: "info", onClick: function () { return _this.onEnterProject(project._id); } },
+                            React.createElement("h3", null, project.name),
+                            React.createElement("p", null, project.info)));
+                }))),
             React.createElement(antd_1.Modal, { title: "创建新项目", footer: null, visible: dynamicFormShow, onCancel: function () { return _this.setState({ dynamicFormShow: false }); }, style: { width: '400px !import', padding: '0 85px' } }, dynamicForm));
     };
     return ProjectAllPage;

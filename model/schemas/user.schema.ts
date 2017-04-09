@@ -54,7 +54,10 @@ UserSchema.statics.updatePsw = function( phone, password ) {
 
 
 function returnData ( err, resolve, reject, result? ) {
-    if ( err ) { reject( err )}
+    if ( err ) { 
+        console.log(`数据库查询错误: ${err}`);
+        reject( err )
+    }
     resolve( result )
 }
 

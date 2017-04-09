@@ -12,7 +12,7 @@
         font-size: 24px;
         font-weight: 400;
         color: #666;
-        padding-bottom: 10px;
+        padding-bottom: 30px;
     }
     span {
         display: block;
@@ -20,7 +20,7 @@
         height: 1px;
         width: 80%;
         left: 16%;
-        top: 50%;
+        top: 30%;
         background: linear-gradient( to right, #d9d9d9, #e9e9e9 );
     }
 }
@@ -28,6 +28,46 @@
 /**展示区 */
 .projects-block-mixin( ) {
     
+}
+
+/**card */
+.project-card-mixin( ) {
+    width: 240px;
+    padding: 0;
+    display: inline-block;
+    margin: 10px 20px 10px;
+    position: relative;
+    cursor: pointer;
+    transition: all ease 0.4s;
+    .image {
+        display: block;
+        width: 100%;
+        img {
+            width: 100%;
+            display: block;
+        }
+    }
+    .info {
+        position: absolute;
+        padding: 10px 16px;
+        background: rgba(0,0,0,0.2);
+        width: 100%;
+        left: 0;
+        bottom: 0px;
+        border-radius: 0 0 4px 4px;
+        h3 {
+            color: #fff;
+        }
+        p {
+            color: #fff;
+        }
+    }
+}
+
+/**card: hover */
+.project-card-hover-mixin( ) {
+    box-shadow: 10px 10px 10px #d9d9d9;
+    border: 1px solid #e9e9e9;
 }
 
 
@@ -43,6 +83,38 @@
 
         .projects-block {
             .projects-block-mixin( );
+
+            .project-card {
+                .project-card-mixin( );
+            }
+
+            .project-card:hover {
+                .project-card-hover-mixin( )
+            }
+
+            .add-project-card {
+                min-height: 126px;
+                text-align: center;
+
+                .icon {
+                    transition: all 0.4s ease;
+                    font-size: 45px;
+                    color: #d9d9d9;
+                    padding: 20px 0;
+                    cursor: pointer;
+                }
+
+                p {
+                    transition: all 0.4s ease;
+                    color: #999;
+                    font-size: 16px;
+                }
+
+                .ant-card-body:hover .icon,
+                .ant-card-body:hover p{
+                    color: #49a9ee
+                }
+            }
         }
 
     }
@@ -52,6 +124,19 @@
 
         .title {
             .block-title-mixin( )
+        }
+
+        .projects-block {
+            .projects-block-mixin( );
+
+            .project-card {
+                .project-card-mixin( );
+            }
+
+            .project-card:hover {
+                .project-card-hover-mixin( )
+            }
+
         }
     }
 

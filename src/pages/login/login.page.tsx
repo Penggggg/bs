@@ -299,7 +299,7 @@ class LoginPage extends React.PureComponent< IProps, IState > {
             })(
               <Checkbox>Remember me</Checkbox>
             )}
-            <a className="login-form-forgot">Forgot password</a>
+            <a className="login-form-forgot" onClick={this.resetPsw}>Forgot password</a>
           </FormItem>
           <FormItem>          
             <Button type="primary" htmlType="submit" className="login-form-button" loading={loginLoading}>
@@ -345,42 +345,45 @@ class LoginPage extends React.PureComponent< IProps, IState > {
 
         /**忘记密码表单 */
         let resetForm = 
-        <Form className="reset-form">
-            <FormItem >
-                {getFieldDecorator('resetUserName', {
-                  rules: [{ required: true, message: 'Please input your username!' }],
-                })(
-                  <Input prefix={<Icon type="user" style={{ fontSize: 16 }} />} placeholder="Username" />
-                )}
-            </FormItem>
-            <FormItem>
-                {getFieldDecorator('reseUserPhone', {
-                  rules: [{ required: true, message: 'Please input your phone!' }]
-                })(
-                  <Input prefix={<Icon type="phone" style={{ fontSize: 16 }} />} placeholder="userPhone" type="number" />
-                )}
-            </FormItem>
-            <FormItem>
-                {getFieldDecorator('resetPsw', {
-                  rules: [
-                    { required: true, message: 'Please input your Password!' },
-                     { validator: this.CheckResetPswByPsw }
-                  ],
-                })(
-                  <Input prefix={<Icon type="lock" style={{ fontSize: 16 }} />} type="password" placeholder="New Password" />
-                )}
-            </FormItem>
-            <FormItem>
-                {getFieldDecorator('resetPsw2', {
-                  rules: [
-                    { required: true, message: 'Please input your Password right again' },
-                    { validator: this.checkResetPswByRepeat }
-                  ]
-                })(
-                  <Input prefix={<Icon type="lock" style={{ fontSize: 16 }} />} type="password" placeholder="Password Again" />
-                )}
-            </FormItem>
-        </Form>
+          <div className="modal-resetpsw-form">
+            <div className="modal-img"><img src="/static/reset-psw.png" alt=""/></div>
+            <Form className="reset-form">
+                <FormItem >
+                    {getFieldDecorator('resetUserName', {
+                      rules: [{ required: true, message: 'Please input your username!' }],
+                    })(
+                      <Input prefix={<Icon type="user" style={{ fontSize: 16 }} />} placeholder="Username" />
+                    )}
+                </FormItem>
+                <FormItem>
+                    {getFieldDecorator('reseUserPhone', {
+                      rules: [{ required: true, message: 'Please input your phone!' }]
+                    })(
+                      <Input prefix={<Icon type="phone" style={{ fontSize: 16 }} />} placeholder="userPhone" type="number" />
+                    )}
+                </FormItem>
+                <FormItem>
+                    {getFieldDecorator('resetPsw', {
+                      rules: [
+                        { required: true, message: 'Please input your Password!' },
+                        { validator: this.CheckResetPswByPsw }
+                      ],
+                    })(
+                      <Input prefix={<Icon type="lock" style={{ fontSize: 16 }} />} type="password" placeholder="New Password" />
+                    )}
+                </FormItem>
+                <FormItem>
+                    {getFieldDecorator('resetPsw2', {
+                      rules: [
+                        { required: true, message: 'Please input your Password right again' },
+                        { validator: this.checkResetPswByRepeat }
+                      ]
+                    })(
+                      <Input prefix={<Icon type="lock" style={{ fontSize: 16 }} />} type="password" placeholder="Password Again" />
+                    )}
+                </FormItem>
+            </Form>
+          </div>
 
         return <div className="login-page">
             <div className="logo-block">
@@ -394,16 +397,17 @@ class LoginPage extends React.PureComponent< IProps, IState > {
                 </Tabs>
             </div>
             <Modal  title="Reset Your Password" 
-              onOk={( ) => this.setState({resetFormShow: true})} 
               visible={ resetFormShow }
+              onOk={( ) => this.setState({resetFormShow: true})} 
               onCancel={( ) => this.setState({resetFormShow: false})}
+              style={{ width: '400px !import', padding: '0 85px', marginTop: '-40px' }}
               footer={[
                 <Button key="back" size="large" onClick={( ) => this.setState({resetFormShow: false})} >Cacel</Button>,
                 <Button key="submit" type="primary" size="large" onClick={ this.resetSubmit }>
                   Submit
                 </Button>,
               ]} >
-              { resetForm }
+                { resetForm }
             </Modal>
         </div>
     }

@@ -17,6 +17,8 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
+var antd_1 = __webpack_require__(152);
+var Image_component_1 = __webpack_require__(1373);
 __webpack_require__(1370);
 var ProjectAllPage = (function (_super) {
     __extends(ProjectAllPage, _super);
@@ -29,11 +31,57 @@ var ProjectAllPage = (function (_super) {
                 React.createElement("div", { className: "title" },
                     React.createElement("h2", null, "\u6211\u5DF2\u62E5\u6709\u7684\u9879\u76EE"),
                     React.createElement("span", null)),
-                React.createElement("div", { className: "projects-block" })),
+                React.createElement("div", { className: "projects-block" },
+                    React.createElement(antd_1.Card, { className: "project-card", bodyStyle: { padding: 0, height: '100%' } },
+                        React.createElement("div", { className: "image" },
+                            React.createElement(Image_component_1.default, { alt: "example", src: "/static/cover-project.jpg" })),
+                        React.createElement("div", { className: "info" },
+                            React.createElement("h3", null, "Europe Street beat"),
+                            React.createElement("p", null, "www.instagram.com"))),
+                    React.createElement(antd_1.Card, { className: "project-card add-project-card", bodyStyle: { padding: 0, height: '100%' } },
+                        React.createElement(antd_1.Icon, { type: "plus-circle", className: "icon" }),
+                        React.createElement("p", null, "\u521B\u5EFA\u65B0\u9879\u76EE")))),
             React.createElement("div", { className: "all-project" },
                 React.createElement("div", { className: "title" },
                     React.createElement("h2", null, "\u5168\u90E8\u7684\u9879\u76EE"),
-                    React.createElement("span", null))));
+                    React.createElement("span", null)),
+                React.createElement("div", { className: "projects-block" },
+                    React.createElement(antd_1.Card, { className: "project-card", bodyStyle: { padding: 0, height: '100%' } },
+                        React.createElement("div", { className: "image" },
+                            React.createElement(Image_component_1.default, { alt: "example", src: "/static/cover-project.jpg" })),
+                        React.createElement("div", { className: "info" },
+                            React.createElement("h3", null, "Europe Street beat"),
+                            React.createElement("p", null, "www.instagram.com"))),
+                    React.createElement(antd_1.Card, { className: "project-card", bodyStyle: { padding: 0, height: '100%' } },
+                        React.createElement("div", { className: "image" },
+                            React.createElement(Image_component_1.default, { alt: "example", src: "/static/cover-project.jpg" })),
+                        React.createElement("div", { className: "info" },
+                            React.createElement("h3", null, "Europe Street beat"),
+                            React.createElement("p", null, "www.instagram.com"))),
+                    React.createElement(antd_1.Card, { className: "project-card", bodyStyle: { padding: 0, height: '100%' } },
+                        React.createElement("div", { className: "image" },
+                            React.createElement(Image_component_1.default, { alt: "example", src: "/static/cover-project.jpg" })),
+                        React.createElement("div", { className: "info" },
+                            React.createElement("h3", null, "Europe Street beat"),
+                            React.createElement("p", null, "www.instagram.com"))),
+                    React.createElement(antd_1.Card, { className: "project-card", bodyStyle: { padding: 0, height: '100%' } },
+                        React.createElement("div", { className: "image" },
+                            React.createElement(Image_component_1.default, { alt: "example", src: "/static/cover-project.jpg" })),
+                        React.createElement("div", { className: "info" },
+                            React.createElement("h3", null, "Europe Street beat"),
+                            React.createElement("p", null, "www.instagram.com"))),
+                    React.createElement(antd_1.Card, { className: "project-card", bodyStyle: { padding: 0, height: '100%' } },
+                        React.createElement("div", { className: "image" },
+                            React.createElement(Image_component_1.default, { alt: "example", src: "/static/cover-project.jpg" })),
+                        React.createElement("div", { className: "info" },
+                            React.createElement("h3", null, "Europe Street beat"),
+                            React.createElement("p", null, "www.instagram.com"))),
+                    React.createElement(antd_1.Card, { className: "project-card", bodyStyle: { padding: 0, height: '100%' } },
+                        React.createElement("div", { className: "image" },
+                            React.createElement(Image_component_1.default, { alt: "example", src: "/static/cover-project.jpg" })),
+                        React.createElement("div", { className: "info" },
+                            React.createElement("h3", null, "Europe Street beat"),
+                            React.createElement("p", null, "www.instagram.com"))))));
     };
     return ProjectAllPage;
 }(React.PureComponent));
@@ -179,7 +227,7 @@ function fromByteArray (uint8) {
 
 
 var base64 = __webpack_require__(1358)
-var ieee754 = __webpack_require__(1363)
+var ieee754 = __webpack_require__(1362)
 var isArray = __webpack_require__(1360)
 
 exports.Buffer = Buffer
@@ -1974,7 +2022,7 @@ module.exports = Array.isArray || function (arr) {
 
 /***/ }),
 
-/***/ 1362:
+/***/ 1361:
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(Buffer) {/*
@@ -2057,7 +2105,7 @@ function toComment(sourceMap) {
 
 /***/ }),
 
-/***/ 1363:
+/***/ 1362:
 /***/ (function(module, exports) {
 
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
@@ -2148,7 +2196,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 
 /***/ }),
 
-/***/ 1364:
+/***/ 1363:
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -2180,7 +2228,7 @@ var stylesInDom = {},
 	singletonElement = null,
 	singletonCounter = 0,
 	styleElementsInsertedAtTop = [],
-	fixUrls = __webpack_require__(1365);
+	fixUrls = __webpack_require__(1364);
 
 module.exports = function(list, options) {
 	if(typeof DEBUG !== "undefined" && DEBUG) {
@@ -2440,7 +2488,7 @@ function updateLink(linkElement, options, obj) {
 
 /***/ }),
 
-/***/ 1365:
+/***/ 1364:
 /***/ (function(module, exports) {
 
 
@@ -2536,15 +2584,15 @@ module.exports = function (css) {
 
 /***/ }),
 
-/***/ 1369:
+/***/ 1367:
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(1362)(undefined);
+exports = module.exports = __webpack_require__(1361)(undefined);
 // imports
 
 
 // module
-exports.push([module.i, "/**2个大block */\n/**标题 */\n/**展示区 */\n.project-all-page {\n  padding: 30px 100px;\n}\n.project-all-page .my-project {\n  margin-bottom: 30px;\n}\n.project-all-page .my-project .title {\n  position: relative;\n}\n.project-all-page .my-project .title h2 {\n  position: relative;\n  font-size: 24px;\n  font-weight: 400;\n  color: #666;\n  padding-bottom: 10px;\n}\n.project-all-page .my-project .title span {\n  display: block;\n  position: absolute;\n  height: 1px;\n  width: 80%;\n  left: 16%;\n  top: 50%;\n  background: linear-gradient(to right, #d9d9d9, #e9e9e9);\n}\n.project-all-page .all-project {\n  margin-bottom: 30px;\n}\n.project-all-page .all-project .title {\n  position: relative;\n}\n.project-all-page .all-project .title h2 {\n  position: relative;\n  font-size: 24px;\n  font-weight: 400;\n  color: #666;\n  padding-bottom: 10px;\n}\n.project-all-page .all-project .title span {\n  display: block;\n  position: absolute;\n  height: 1px;\n  width: 80%;\n  left: 16%;\n  top: 50%;\n  background: linear-gradient(to right, #d9d9d9, #e9e9e9);\n}\n", ""]);
+exports.push([module.i, "/**2个大block */\n/**标题 */\n/**展示区 */\n/**card */\n/**card: hover */\n.project-all-page {\n  padding: 30px 100px;\n}\n.project-all-page .my-project {\n  margin-bottom: 30px;\n}\n.project-all-page .my-project .title {\n  position: relative;\n}\n.project-all-page .my-project .title h2 {\n  position: relative;\n  font-size: 24px;\n  font-weight: 400;\n  color: #666;\n  padding-bottom: 30px;\n}\n.project-all-page .my-project .title span {\n  display: block;\n  position: absolute;\n  height: 1px;\n  width: 80%;\n  left: 16%;\n  top: 30%;\n  background: linear-gradient(to right, #d9d9d9, #e9e9e9);\n}\n.project-all-page .my-project .projects-block .project-card {\n  width: 240px;\n  padding: 0;\n  display: inline-block;\n  margin: 10px 20px 10px;\n  position: relative;\n  cursor: pointer;\n  transition: all ease 0.4s;\n}\n.project-all-page .my-project .projects-block .project-card .image {\n  display: block;\n  width: 100%;\n}\n.project-all-page .my-project .projects-block .project-card .image img {\n  width: 100%;\n  display: block;\n}\n.project-all-page .my-project .projects-block .project-card .info {\n  position: absolute;\n  padding: 10px 16px;\n  background: rgba(0, 0, 0, 0.2);\n  width: 100%;\n  left: 0;\n  bottom: 0px;\n  border-radius: 0 0 4px 4px;\n}\n.project-all-page .my-project .projects-block .project-card .info h3 {\n  color: #fff;\n}\n.project-all-page .my-project .projects-block .project-card .info p {\n  color: #fff;\n}\n.project-all-page .my-project .projects-block .project-card:hover {\n  box-shadow: 10px 10px 10px #d9d9d9;\n  border: 1px solid #e9e9e9;\n}\n.project-all-page .my-project .projects-block .add-project-card {\n  min-height: 126px;\n  text-align: center;\n}\n.project-all-page .my-project .projects-block .add-project-card .icon {\n  transition: all 0.4s ease;\n  font-size: 45px;\n  color: #d9d9d9;\n  padding: 20px 0;\n  cursor: pointer;\n}\n.project-all-page .my-project .projects-block .add-project-card p {\n  transition: all 0.4s ease;\n  color: #999;\n  font-size: 16px;\n}\n.project-all-page .my-project .projects-block .add-project-card .ant-card-body:hover .icon,\n.project-all-page .my-project .projects-block .add-project-card .ant-card-body:hover p {\n  color: #49a9ee;\n}\n.project-all-page .all-project {\n  margin-bottom: 30px;\n}\n.project-all-page .all-project .title {\n  position: relative;\n}\n.project-all-page .all-project .title h2 {\n  position: relative;\n  font-size: 24px;\n  font-weight: 400;\n  color: #666;\n  padding-bottom: 30px;\n}\n.project-all-page .all-project .title span {\n  display: block;\n  position: absolute;\n  height: 1px;\n  width: 80%;\n  left: 16%;\n  top: 30%;\n  background: linear-gradient(to right, #d9d9d9, #e9e9e9);\n}\n.project-all-page .all-project .projects-block .project-card {\n  width: 240px;\n  padding: 0;\n  display: inline-block;\n  margin: 10px 20px 10px;\n  position: relative;\n  cursor: pointer;\n  transition: all ease 0.4s;\n}\n.project-all-page .all-project .projects-block .project-card .image {\n  display: block;\n  width: 100%;\n}\n.project-all-page .all-project .projects-block .project-card .image img {\n  width: 100%;\n  display: block;\n}\n.project-all-page .all-project .projects-block .project-card .info {\n  position: absolute;\n  padding: 10px 16px;\n  background: rgba(0, 0, 0, 0.2);\n  width: 100%;\n  left: 0;\n  bottom: 0px;\n  border-radius: 0 0 4px 4px;\n}\n.project-all-page .all-project .projects-block .project-card .info h3 {\n  color: #fff;\n}\n.project-all-page .all-project .projects-block .project-card .info p {\n  color: #fff;\n}\n.project-all-page .all-project .projects-block .project-card:hover {\n  box-shadow: 10px 10px 10px #d9d9d9;\n  border: 1px solid #e9e9e9;\n}\n", ""]);
 
 // exports
 
@@ -2557,10 +2605,10 @@ exports.push([module.i, "/**2个大block */\n/**标题 */\n/**展示区 */\n.pro
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1369);
+var content = __webpack_require__(1367);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(1364)(content, {});
+var update = __webpack_require__(1363)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -2568,6 +2616,92 @@ if(false) {
 	if(!content.locals) {
 		module.hot.accept("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./project-all.less", function() {
 			var newContent = require("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./project-all.less");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+
+/***/ 1373:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var React = __webpack_require__(0);
+__webpack_require__(1375);
+var Image = (function (_super) {
+    __extends(Image, _super);
+    function Image() {
+        var _this = _super.call(this) || this;
+        _this.onLoadHandler = function () {
+            _this.setState({
+                imgLoaded: true
+            });
+        };
+        _this.state = {
+            imgLoaded: false
+        };
+        return _this;
+    }
+    Image.prototype.render = function () {
+        var imgLoaded = this.state.imgLoaded;
+        var _a = this.props, src = _a.src, _b = _a.alt, alt = _b === void 0 ? '' : _b;
+        return React.createElement("img", { src: src, alt: alt, onLoad: this.onLoadHandler, className: imgLoaded ? "my-img loaded" : "my-img" });
+    };
+    return Image;
+}(React.PureComponent));
+exports.default = Image;
+
+
+/***/ }),
+
+/***/ 1374:
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(1361)(undefined);
+// imports
+
+
+// module
+exports.push([module.i, ".my-img {\n  opacity: 0;\n  transition: all 0.4s ease;\n}\n.my-img.loaded {\n  opacity: 1;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ 1375:
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(1374);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(1363)(content, {});
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./Image.less", function() {
+			var newContent = require("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./Image.less");
 			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 			update(newContent);
 		});

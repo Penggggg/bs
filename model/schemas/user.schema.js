@@ -54,6 +54,7 @@ exports.UserSchema.statics.updatePsw = function (phone, password) {
 };
 function returnData(err, resolve, reject, result) {
     if (err) {
+        console.log("\u6570\u636E\u5E93\u67E5\u8BE2\u9519\u8BEF: " + err);
         reject(err);
     }
     resolve(result);

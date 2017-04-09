@@ -18,11 +18,11 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
 var rxjs_1 = __webpack_require__(153);
-var http_service_1 = __webpack_require__(1368);
+var http_service_1 = __webpack_require__(1372);
 var auth_login_service_1 = __webpack_require__(538);
 var notification_service_1 = __webpack_require__(539);
 var antd_1 = __webpack_require__(152);
-__webpack_require__(1366);
+__webpack_require__(1369);
 var TabPane = antd_1.Tabs.TabPane;
 var FormItem = antd_1.Form.Item;
 var LoginPage = (function (_super) {
@@ -278,7 +278,7 @@ var LoginPage = (function (_super) {
                     valuePropName: 'checked',
                     initialValue: true,
                 })(React.createElement(antd_1.Checkbox, null, "Remember me")),
-                React.createElement("a", { className: "login-form-forgot" }, "Forgot password")),
+                React.createElement("a", { className: "login-form-forgot", onClick: this.resetPsw }, "Forgot password")),
             React.createElement(FormItem, null,
                 React.createElement(antd_1.Button, { type: "primary", htmlType: "submit", className: "login-form-button", loading: loginLoading }, "Log in")));
         /**登录表单 */
@@ -300,25 +300,28 @@ var LoginPage = (function (_super) {
             React.createElement(FormItem, null,
                 React.createElement(antd_1.Button, { type: "primary", htmlType: "submit", className: "login-form-button", loading: signInLoading }, "Sign in")));
         /**忘记密码表单 */
-        var resetForm = React.createElement(antd_1.Form, { className: "reset-form" },
-            React.createElement(FormItem, null, getFieldDecorator('resetUserName', {
-                rules: [{ required: true, message: 'Please input your username!' }],
-            })(React.createElement(antd_1.Input, { prefix: React.createElement(antd_1.Icon, { type: "user", style: { fontSize: 16 } }), placeholder: "Username" }))),
-            React.createElement(FormItem, null, getFieldDecorator('reseUserPhone', {
-                rules: [{ required: true, message: 'Please input your phone!' }]
-            })(React.createElement(antd_1.Input, { prefix: React.createElement(antd_1.Icon, { type: "phone", style: { fontSize: 16 } }), placeholder: "userPhone", type: "number" }))),
-            React.createElement(FormItem, null, getFieldDecorator('resetPsw', {
-                rules: [
-                    { required: true, message: 'Please input your Password!' },
-                    { validator: this.CheckResetPswByPsw }
-                ],
-            })(React.createElement(antd_1.Input, { prefix: React.createElement(antd_1.Icon, { type: "lock", style: { fontSize: 16 } }), type: "password", placeholder: "New Password" }))),
-            React.createElement(FormItem, null, getFieldDecorator('resetPsw2', {
-                rules: [
-                    { required: true, message: 'Please input your Password right again' },
-                    { validator: this.checkResetPswByRepeat }
-                ]
-            })(React.createElement(antd_1.Input, { prefix: React.createElement(antd_1.Icon, { type: "lock", style: { fontSize: 16 } }), type: "password", placeholder: "Password Again" }))));
+        var resetForm = React.createElement("div", { className: "modal-resetpsw-form" },
+            React.createElement("div", { className: "modal-img" },
+                React.createElement("img", { src: "/static/reset-psw.png", alt: "" })),
+            React.createElement(antd_1.Form, { className: "reset-form" },
+                React.createElement(FormItem, null, getFieldDecorator('resetUserName', {
+                    rules: [{ required: true, message: 'Please input your username!' }],
+                })(React.createElement(antd_1.Input, { prefix: React.createElement(antd_1.Icon, { type: "user", style: { fontSize: 16 } }), placeholder: "Username" }))),
+                React.createElement(FormItem, null, getFieldDecorator('reseUserPhone', {
+                    rules: [{ required: true, message: 'Please input your phone!' }]
+                })(React.createElement(antd_1.Input, { prefix: React.createElement(antd_1.Icon, { type: "phone", style: { fontSize: 16 } }), placeholder: "userPhone", type: "number" }))),
+                React.createElement(FormItem, null, getFieldDecorator('resetPsw', {
+                    rules: [
+                        { required: true, message: 'Please input your Password!' },
+                        { validator: this.CheckResetPswByPsw }
+                    ],
+                })(React.createElement(antd_1.Input, { prefix: React.createElement(antd_1.Icon, { type: "lock", style: { fontSize: 16 } }), type: "password", placeholder: "New Password" }))),
+                React.createElement(FormItem, null, getFieldDecorator('resetPsw2', {
+                    rules: [
+                        { required: true, message: 'Please input your Password right again' },
+                        { validator: this.checkResetPswByRepeat }
+                    ]
+                })(React.createElement(antd_1.Input, { prefix: React.createElement(antd_1.Icon, { type: "lock", style: { fontSize: 16 } }), type: "password", placeholder: "Password Again" })))));
         return React.createElement("div", { className: "login-page" },
             React.createElement("div", { className: "logo-block" },
                 React.createElement("h1", { className: "title" }, "iTeam"),
@@ -327,7 +330,7 @@ var LoginPage = (function (_super) {
                 React.createElement(antd_1.Tabs, { activeKey: activeKey, onTabClick: function (e) { return _this.setState({ activeKey: "" + e }); } },
                     React.createElement(TabPane, { tab: "登录", key: "1" }, signInForm),
                     React.createElement(TabPane, { tab: "注册", key: "2" }, loginForm))),
-            React.createElement(antd_1.Modal, { title: "Reset Your Password", onOk: function () { return _this.setState({ resetFormShow: true }); }, visible: resetFormShow, onCancel: function () { return _this.setState({ resetFormShow: false }); }, footer: [
+            React.createElement(antd_1.Modal, { title: "Reset Your Password", visible: resetFormShow, onOk: function () { return _this.setState({ resetFormShow: true }); }, onCancel: function () { return _this.setState({ resetFormShow: false }); }, style: { width: '400px !import', padding: '0 85px', marginTop: '-40px' }, footer: [
                     React.createElement(antd_1.Button, { key: "back", size: "large", onClick: function () { return _this.setState({ resetFormShow: false }); } }, "Cacel"),
                     React.createElement(antd_1.Button, { key: "submit", type: "primary", size: "large", onClick: this.resetSubmit }, "Submit"),
                 ] }, resetForm));
@@ -476,7 +479,7 @@ function fromByteArray (uint8) {
 
 
 var base64 = __webpack_require__(1358)
-var ieee754 = __webpack_require__(1363)
+var ieee754 = __webpack_require__(1362)
 var isArray = __webpack_require__(1360)
 
 exports.Buffer = Buffer
@@ -2274,21 +2277,6 @@ module.exports = Array.isArray || function (arr) {
 /***/ 1361:
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(1362)(undefined);
-// imports
-
-
-// module
-exports.push([module.i, ".login-page {\n  position: relative;\n  text-align: center;\n  padding-top: 100px;\n}\n.login-page .logo-block {\n  padding-bottom: 20px;\n}\n.login-page .logo-block .title {\n  font-size: 60px;\n}\n.login-page .logo-block .info {\n  font-size: 20px;\n}\n.login-page .form-block {\n  position: absolute;\n  width: 25%;\n  left: 50%;\n  transform: translate(-50%, 0);\n}\n.login-page .login-form button {\n  width: 80%;\n}\n.login-page .reset-form {\n  width: 80%;\n}\n", ""]);
-
-// exports
-
-
-/***/ }),
-
-/***/ 1362:
-/***/ (function(module, exports, __webpack_require__) {
-
 /* WEBPACK VAR INJECTION */(function(Buffer) {/*
 	MIT License http://www.opensource.org/licenses/mit-license.php
 	Author Tobias Koppers @sokra
@@ -2369,7 +2357,7 @@ function toComment(sourceMap) {
 
 /***/ }),
 
-/***/ 1363:
+/***/ 1362:
 /***/ (function(module, exports) {
 
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
@@ -2460,7 +2448,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 
 /***/ }),
 
-/***/ 1364:
+/***/ 1363:
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -2492,7 +2480,7 @@ var stylesInDom = {},
 	singletonElement = null,
 	singletonCounter = 0,
 	styleElementsInsertedAtTop = [],
-	fixUrls = __webpack_require__(1365);
+	fixUrls = __webpack_require__(1364);
 
 module.exports = function(list, options) {
 	if(typeof DEBUG !== "undefined" && DEBUG) {
@@ -2752,7 +2740,7 @@ function updateLink(linkElement, options, obj) {
 
 /***/ }),
 
-/***/ 1365:
+/***/ 1364:
 /***/ (function(module, exports) {
 
 
@@ -2851,13 +2839,28 @@ module.exports = function (css) {
 /***/ 1366:
 /***/ (function(module, exports, __webpack_require__) {
 
+exports = module.exports = __webpack_require__(1361)(undefined);
+// imports
+
+
+// module
+exports.push([module.i, ".login-page {\n  position: relative;\n  text-align: center;\n  padding-top: 100px;\n}\n.login-page .logo-block {\n  padding-bottom: 20px;\n}\n.login-page .logo-block .title {\n  font-size: 60px;\n}\n.login-page .logo-block .info {\n  font-size: 20px;\n}\n.login-page .form-block {\n  position: absolute;\n  width: 25%;\n  left: 50%;\n  transform: translate(-50%, 0);\n}\n.login-page .login-form button {\n  width: 80%;\n}\n.login-page .reset-form {\n  width: 80%;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ 1369:
+/***/ (function(module, exports, __webpack_require__) {
+
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1361);
+var content = __webpack_require__(1366);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(1364)(content, {});
+var update = __webpack_require__(1363)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -2875,7 +2878,7 @@ if(false) {
 
 /***/ }),
 
-/***/ 1367:
+/***/ 1371:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2888,14 +2891,14 @@ exports.default = {
 
 /***/ }),
 
-/***/ 1368:
+/***/ 1372:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var rxjs_1 = __webpack_require__(153);
-var config_1 = __webpack_require__(1367);
+var config_1 = __webpack_require__(1371);
 var HttpService = (function () {
     function HttpService() {
         this.TIMEOUT = 10000;

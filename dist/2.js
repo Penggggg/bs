@@ -18,7 +18,7 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
 var antd_1 = __webpack_require__(152);
-__webpack_require__(1372);
+__webpack_require__(1368);
 var Header = antd_1.Layout.Header, Content = antd_1.Layout.Content, Footer = antd_1.Layout.Footer;
 var AppPage = (function (_super) {
     __extends(AppPage, _super);
@@ -213,7 +213,7 @@ function fromByteArray (uint8) {
 
 
 var base64 = __webpack_require__(1358)
-var ieee754 = __webpack_require__(1363)
+var ieee754 = __webpack_require__(1362)
 var isArray = __webpack_require__(1360)
 
 exports.Buffer = Buffer
@@ -2008,7 +2008,7 @@ module.exports = Array.isArray || function (arr) {
 
 /***/ }),
 
-/***/ 1362:
+/***/ 1361:
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(Buffer) {/*
@@ -2091,7 +2091,7 @@ function toComment(sourceMap) {
 
 /***/ }),
 
-/***/ 1363:
+/***/ 1362:
 /***/ (function(module, exports) {
 
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
@@ -2182,7 +2182,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 
 /***/ }),
 
-/***/ 1364:
+/***/ 1363:
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -2214,7 +2214,7 @@ var stylesInDom = {},
 	singletonElement = null,
 	singletonCounter = 0,
 	styleElementsInsertedAtTop = [],
-	fixUrls = __webpack_require__(1365);
+	fixUrls = __webpack_require__(1364);
 
 module.exports = function(list, options) {
 	if(typeof DEBUG !== "undefined" && DEBUG) {
@@ -2474,7 +2474,7 @@ function updateLink(linkElement, options, obj) {
 
 /***/ }),
 
-/***/ 1365:
+/***/ 1364:
 /***/ (function(module, exports) {
 
 
@@ -2570,31 +2570,31 @@ module.exports = function (css) {
 
 /***/ }),
 
-/***/ 1371:
+/***/ 1365:
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(1362)(undefined);
+exports = module.exports = __webpack_require__(1361)(undefined);
 // imports
 
 
 // module
-exports.push([module.i, "* {\n  font-size: 14px;\n}\ndiv {\n  box-sizing: border-box;\n}\n.app-page .my-layout .my-header {\n  padding: 0;\n  background: #fff;\n}\n.app-page .my-layout .my-header .ant-row {\n  border-bottom: 1px solid #e9e9e9;\n}\n.app-page .my-layout .my-header .my-logo {\n  padding: 0 10px 0 100px;\n  color: #666;\n  display: inline-block;\n  font-size: 26px;\n  color: #108ee9;\n}\n.app-page .my-layout .my-header .my-logo small {\n  font-size: 16px;\n  font-weight: 600;\n  color: #666;\n  padding-left: 10px;\n}\n.app-page .my-layout .my-header .my-logo span i {\n  padding-right: 10px;\n  font-size: 26px;\n  color: #108ee9;\n  font-size: 30px;\n  font-weight: 100;\n}\n.app-page .my-layout .my-header .my-menu {\n  border: 0;\n  padding-right: 50px;\n  line-height: 64px;\n}\n.app-page .my-layout .my-header .my-menu li {\n  padding: 0 15px;\n}\n.app-page .my-layout .my-header .my-menu img {\n  width: 30px;\n  height: 30px;\n  border-radius: 50%;\n  vertical-align: middle;\n}\n", ""]);
+exports.push([module.i, "* {\n  font-size: 14px;\n}\ndiv {\n  box-sizing: border-box;\n}\n.app-page .my-layout .my-header {\n  padding: 0;\n  background: #fff;\n}\n.app-page .my-layout .my-header .ant-row {\n  border-bottom: 1px solid #e9e9e9;\n}\n.app-page .my-layout .my-header .my-logo {\n  padding: 0 10px 0 100px;\n  color: #666;\n  display: inline-block;\n  font-size: 26px;\n  color: #108ee9;\n}\n.app-page .my-layout .my-header .my-logo small {\n  font-size: 16px;\n  font-weight: 600;\n  color: #666;\n  padding-left: 10px;\n}\n.app-page .my-layout .my-header .my-logo span i {\n  padding-right: 10px;\n  font-size: 26px;\n  color: #108ee9;\n  font-size: 30px;\n  font-weight: 100;\n}\n.app-page .my-layout .my-header .my-menu {\n  border: 0;\n  padding-right: 50px;\n  line-height: 64px;\n}\n.app-page .my-layout .my-header .my-menu li {\n  padding: 0 15px;\n}\n.app-page .my-layout .my-header .my-menu img {\n  width: 30px;\n  height: 30px;\n  border-radius: 50%;\n  vertical-align: middle;\n}\n/**ant - modal */\n.modal-resetpsw-form .modal-img {\n  text-align: center;\n  padding: 10px 0 20px;\n}\n.modal-resetpsw-form .modal-img img {\n  width: 65%;\n}\n", ""]);
 
 // exports
 
 
 /***/ }),
 
-/***/ 1372:
+/***/ 1368:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1371);
+var content = __webpack_require__(1365);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(1364)(content, {});
+var update = __webpack_require__(1363)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {

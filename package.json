@@ -33,6 +33,8 @@
     "superagent": "^3.5.1"
   },
   "devDependencies": {
+    "@types/koa": "^2.0.39",
+    "@types/koa-bodyparser": "^3.0.23",
     "@types/mongoose": "^4.7.8",
     "@types/node": "^7.0.8",
     "@types/react": "^15.0.17",

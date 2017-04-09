@@ -34,34 +34,23 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
-var fs = require("fs");
-var login_1 = require("./auth/login");
-var reset_1 = require("./auth/reset");
-var signin_1 = require("./auth/signin");
-var create_project_1 = require("./project/create-project");
-var query_project_1 = require("./project/query-project");
-exports.default = function (router) {
-    /**首页 */
-    router.get('/', getIndex);
-    /**权限模块：注册功能 */
-    router.post('/api/v1/login', login_1.login);
-    /**权限模块：重置密码功能 */
-    router.post('/api/v1/resetpsw', reset_1.resetPsw);
-    /**权限模块：登录功能 */
-    router.post('/api/v1/signin', signin_1.sginIn);
-    /**项目模块：新增项目 */
-    router.post('/api/v1/create-project', create_project_1.createProject);
-    /**项目模块：返回所有项目 */
-    router.get('/api/v1/all-project', query_project_1.allProject);
-};
-function getIndex(ctx) {
-    return __awaiter(this, void 0, void 0, function () {
-        var a;
-        return __generator(this, function (_a) {
-            a = fs.readFileSync('./dist/index.html', 'utf8');
-            ctx.body = a;
-            return [2 /*return*/];
-        });
+var project_model_1 = require("../../model/models/project.model");
+exports.createProject = function (ctx) { return __awaiter(_this, void 0, void 0, function () {
+    var projectName, projectInfo, creatorID, a, _a;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
+            case 0:
+                projectName = (_a = ctx.request.body, _a.projectName), projectInfo = _a.projectInfo, creatorID = _a.creatorID;
+                return [4 /*yield*/, project_model_1.default.save(projectName, projectInfo, creatorID)];
+            case 1:
+                a = _b.sent();
+                ctx.body = {
+                    msg: 'success',
+                    status: '200'
+                };
+                return [2 /*return*/];
+        }
     });
-}
+}); };

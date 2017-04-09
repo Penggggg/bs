@@ -10,9 +10,33 @@ class HttpService {
         return new XMLHttpRequest( );
     }
     
-    // public get<T>( url: string, opt: object ): T {
+    public get<T>( url: string, opt?: object ): Observable<T> {
 
-    // }
+        /**变量声明 */
+        let data$$: Observer<T>;
+        let xhr = this.getXhr( );
+
+        /**数据源 */
+        let data$: Observable<any> = Observable.create(( observer ) => {
+             data$$ = observer;
+        }).share( )
+
+        data$.subscribe( );
+
+        /**异步事件设置 */
+        this.decorateXHR( xhr, data$$ );    
+
+        /**整合查询串 */
+        url += this.turnObjToQuery( opt );
+
+        /**开启xhr */
+        xhr.open( 'GEt', `${clientConfig.reqURL}${url}`, true );
+
+        xhr.send( );
+        console.info(`sending http-GET: ${url}`);
+
+        return data$;
+    }
 
     public post<T>( url: string, queryOpt: Object ): Observable<T> {
   
@@ -32,14 +56,18 @@ class HttpService {
         this.decorateXHR( xhr, data$$ );
 
         /**拼接查村串 */
-        postBody = queryOpt ? this.setPostBody( queryOpt ) : '';
+        // postBody = queryOpt ? this.setPostBody( queryOpt ) : '';
 
         /**开启xhr */
         xhr.open( 'POST', `${clientConfig.reqURL}${url}`, true );
-        xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-        console.info(`sending http-POST: ${url}`);
 
-        xhr.send( postBody );
+        // xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+        // xhr.send( postBody );
+
+        xhr.setRequestHeader("Content-type","application/json");
+        xhr.send(JSON.stringify( queryOpt ));
+
+        console.info(`sending http-POST: ${url}`);
 
         return data$;
     }
@@ -107,7 +135,8 @@ class HttpService {
         return url.substring(0,url.length-1);
     }
 
-    private setPostBody( query: Object ): string {
+    private turnObjToQuery( query: Object ): string {
+        if ( !query ) return '';
         let body = '';
         Object.keys( query ).map( key => {
             body += `${key}=${query[key]}&`

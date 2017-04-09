@@ -1,4 +1,4 @@
-import { _IUser } from './app.interface';
+import { _IUser, IProject } from './app.interface';
 
 /**注册：用户注册 */
 export interface _IPostQueryLogin {
@@ -40,4 +40,22 @@ export interface IPostSignIn_ {
     msg: 'user is not existed' | 'psw not right' | 'server err' | 'success'
     status: '4001' | '4002' | '200' | '500'
     user: _IUser
+}
+
+/**新增项目：query */
+export interface _IPostQueryCreateProject {
+    projectName: string
+    projectInfo: string
+    creatorID: string
+}
+
+/**新建项目：结果 */
+export interface IPostCreateProject_ {
+    msg: 'success' | 'server error',
+    status: '200' | '500'
+}
+
+/**所有项目：结果 */
+export interface IGetAllProject_ {
+    data: Array<IProject>
 }

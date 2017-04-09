@@ -34,6 +34,7 @@ var ProjectAllPage = (function (_super) {
         _this.fetchAllProject = function () {
             http_service_1.default
                 .get('/api/v1/all-project')
+                .do(function (res) { return console.log(res); })
                 .do(function (res) { return _this.setState({
                 projectAll: res.data
             }); })
@@ -104,7 +105,7 @@ var ProjectAllPage = (function (_super) {
                     React.createElement("span", null)),
                 React.createElement("div", { className: "projects-block" },
                     projectAll.map(function (project) {
-                        if (_this.userData._id !== project.creator) {
+                        if (_this.userData._id !== project.creator._id) {
                             return;
                         }
                         return React.createElement(antd_1.Card, { key: project._id, className: "project-card", bodyStyle: { padding: 0, height: '100%' } },

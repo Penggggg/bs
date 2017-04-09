@@ -36,6 +36,7 @@ class ProjectAllPage extends React.PureComponent< IProps, IState > {
     private fetchAllProject = ( ) => {
         http
             .get<IGetAllProject_>('/api/v1/all-project')
+            .do( res => console.log( res ))
             .do( res => this.setState({
                 projectAll: res.data
             }))
@@ -124,7 +125,7 @@ class ProjectAllPage extends React.PureComponent< IProps, IState > {
                 <div className="projects-block">
                     {
                          projectAll.map(( project ) => {
-                             if ( this.userData._id !== project.creator ) { return } 
+                             if ( this.userData._id !== project.creator._id ) { return } 
                              return <Card key={ project._id } className="project-card" bodyStyle={{ padding: 0, height: '100%'}}>
                                 <div className="image" onClick={( ) => this.onEnterProject( project._id )}>
                                     <Image src={ project.cover } />

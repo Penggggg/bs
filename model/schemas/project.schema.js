@@ -1,22 +1,21 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var Mongoose = require("mongoose");
-var user_model_1 = require("../models/user.model");
 exports.PorjectSchema = new Mongoose.Schema({
     name: String,
     info: String,
     cover: String,
     creator: {
         type: Mongoose.Schema.Types.ObjectId,
-        ref: user_model_1.default
+        ref: 'User'
     },
     leader: [{
             type: Mongoose.Schema.Types.ObjectId,
-            ref: user_model_1.default
+            ref: 'User'
         }],
     member: [{
             type: Mongoose.Schema.Types.ObjectId,
-            ref: user_model_1.default
+            ref: 'User'
         }],
     meta: {
         createdTime: {
@@ -50,10 +49,8 @@ exports.PorjectSchema.statics.findAllWithNest = function () {
     return new Promise(function (resolve, reject) {
         _this
             .find({})
-            .populate({ path: 'creator' })
-            .exec(function (err, data) {
-            console.log(data);
-        });
+            .populate('creator')
+            .exec(function (err, data) { return returnData(err, resolve, reject, data); });
     });
 };
 exports.PorjectSchema.statics.save = function (name, info, userID) {

@@ -7,15 +7,15 @@ export let PorjectSchema = new Mongoose.Schema({
     cover: String,
     creator: {
         type: Mongoose.Schema.Types.ObjectId,
-        ref: UserModel
+        ref: 'User'
     },
     leader: [{
         type: Mongoose.Schema.Types.ObjectId,
-        ref: UserModel 
+        ref: 'User'
     }],
     member: [{
         type: Mongoose.Schema.Types.ObjectId,
-        ref: UserModel  
+        ref: 'User'
     }],
     meta: {
         createdTime: {
@@ -52,10 +52,8 @@ PorjectSchema.statics.findAllWithNest =  function( ) {
     return new Promise(( resolve, reject ) => {
         this
             .find({ })
-            .populate({ path: 'creator' })
-            .exec(( err, data ) => {
-                console.log( data )
-            })
+            .populate('creator')
+            .exec(( err, data ) => returnData( err, resolve, reject, data ))
     })
 }
 

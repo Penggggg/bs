@@ -7,9 +7,7 @@ const enum CreateError { }
 
 export let allProject = async ( ctx: Koa.Context ) => {
     
-    let data = await ProjectModel.findAllWithRef( );
-
-    ProjectModel.findAllWithNest( );
+    let data = await ProjectModel.findAllWithNest( );
 
 
     ctx.body = {

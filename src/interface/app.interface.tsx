@@ -16,7 +16,7 @@ export interface IProject {
     name: string
     info: string
     cover: string
-    creator: _IUser | string
+    creator: _IUser
     member: Array<_IUser>
     leader: Array<_IUser>
 }

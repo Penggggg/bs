@@ -15,7 +15,7 @@ import { _ISocketSignIn, ISocketSignIn_, _ISocketSignOut } from '../interface/so
 
 
 class authLoginService {
-
+    
     private signInName = 'user';
     private loginUrl = '/login';
 
@@ -44,61 +44,12 @@ class authLoginService {
     public requireLogin = ( nextState: RouterState, replace: Function, next: Function ) => {
         if ( this.isLogin( )) {
             console.log(`checking auth: 已登录`)
-            if( nextState.location.pathname.indexOf('/project/') === 0 ) {
-                this.requireMember( replace, next )
-            } else {
-                return next( );
-            }
+
         } else {
             replace( this.loginUrl );
             console.log(`checking auth: 未登录`)
-            return next( );
         }
-    }
-
-    /**auth项目权限服务：检查是否属于该项目成员 */
-    private requireMember = ( replace:Function, next: Function ) => {
-        console.log('项目权限判断中..');
-        let sub = this.myUserStore.data.userData$
-            .combineLatest(this.myProjectStore.data.data$)
-            .do( res => {
-                console.log('????')
-                let userID = res[0]._id;
-                /**creator判断 */
-                if ( userID === res[1].creator._id ) {
-                    this.myProjectStore.role.save('creator');
-                    return next( );
-                }
-                /**leader判断 */
-                let isLeader = res[1].leader.some(( leader ) => {
-                    if ( leader._id === userID ) {
-                        this.myProjectStore.role.save('leader');
-                        next( );
-                        return true;
-                    }
-                    return false;
-                })
-                /**member判断 */
-                if ( !isLeader ) {
-                    res[1].member.some(( member ) => {
-                        if ( member._id === userID ) {
-                            this.myProjectStore.role.save('member');
-                            next( );
-                            return true;
-                        }
-                        return false;
-                    })
-                }
-                /**没有权限 */
-                Modal.warning({
-                    title: 'Warning',
-                    content: '您没有该项目的权限！请先申请权限'
-                })
-                replace('/projects');
-                return next( );
-            })
-            .subscribe( );
-        sub.unsubscribe( );
+        return next( );
     }
 
 
@@ -133,3 +84,5 @@ class authLoginService {
 }
 
 export default new authLoginService( );
+
+

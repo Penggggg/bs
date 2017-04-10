@@ -1,14 +1,14 @@
 import { Observable, Observer, Subject, ReplaySubject, Subscription } from 'rxjs';
 
-type TRole = 'creator'|'leader'|'member';
+type Role = 'creator'|'leader'|'member';
 
-export default class ProjectRole {
+export default class ProjecRole {
 
 
-    private data$$: Observer<TRole>;
-    public data$: Observable<TRole>;
+    private data$$: Observer<Role>;
+    public data$: Observable<Role>;
 
-    public save( role: TRole ) {
+    public save( role: Role ) {
         if ( this.data$ === undefined ) {
             this.init( role )
         } else {
@@ -16,7 +16,7 @@ export default class ProjectRole {
         }
     }
 
-    private init( role: TRole ) {
+    private init( role: Role ) {
         let subject = new ReplaySubject( 1 );
         let source = Observable.create(( observer ) => {
             this.data$$ = observer;
@@ -24,6 +24,7 @@ export default class ProjectRole {
         })
 
         this.data$ = source.multicast( subject ).refCount( );
+        this.data$.subscribe( );
     }
 
 }

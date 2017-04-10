@@ -21,8 +21,8 @@ export default class ProjectData {
             this.data$$ = observer;
             observer.next( project );
         })
-
         this.data$ = source.multicast( subject ).refCount( );
+        this.data$.subscribe( );
     }
 
 }

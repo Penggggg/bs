@@ -8,7 +8,6 @@ export default class UserData {
     public userData$: Observable<_IUser>;
 
     public save = ( user: _IUser ) => {
-
         /**首次保存 */
         if ( this.userData$ === undefined ) {
             this.init( user );

@@ -1,6 +1,6 @@
 webpackJsonp([0],{
 
-/***/ 1358:
+/***/ 1361:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -17,21 +17,25 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
-var http_service_1 = __webpack_require__(1368);
+var http_service_1 = __webpack_require__(1371);
 var auth_login_service_1 = __webpack_require__(538);
-var project_1 = __webpack_require__(1379);
+var project_1 = __webpack_require__(540);
+var user_1 = __webpack_require__(1354);
 var notification_service_1 = __webpack_require__(539);
-var antd_1 = __webpack_require__(153);
-var Image_component_1 = __webpack_require__(1377);
-__webpack_require__(1376);
+var antd_1 = __webpack_require__(114);
+var Image_component_1 = __webpack_require__(1380);
+__webpack_require__(1379);
 var FormItem = antd_1.Form.Item;
 var ProjectAllPage = (function (_super) {
     __extends(ProjectAllPage, _super);
     function ProjectAllPage() {
         var _this = _super.call(this) || this;
+        _this.watchingRole = false;
         _this.formProjectName = 'projectName';
         _this.formProjectInfo = 'projectInfo';
         _this.userData = auth_login_service_1.default.userData();
+        _this.userStore = user_1.default;
+        _this.projectStore = project_1.default;
         _this.fetchAllProject = function () {
             http_service_1.default
                 .get('/api/v1/all-project')
@@ -41,8 +45,59 @@ var ProjectAllPage = (function (_super) {
                 .subscribe();
         };
         _this.onEnterProject = function (project) {
-            project_1.default.data.save(project);
-            _this.props.router.push("/project/" + project._id);
+            /**保存project数据 */
+            _this.projectStore.data.save(project);
+            if (!_this.watchingRole) {
+                _this.watchingRole = true;
+                _this.watchRole();
+            }
+        };
+        _this.watchRole = function () {
+            console.log('???');
+            _this.projectSub = _this.projectStore.data.data$
+                .combineLatest(_this.userStore.data.userData$)
+                .distinct()
+                .do(function (res) {
+                console.log('权限判断中...');
+                var isLeader = false;
+                var isMember = false;
+                var isCreator = false;
+                var userID = res[1]._id;
+                /**creator判断 */
+                if (userID === res[0].creator._id) {
+                    isCreator = true;
+                    _this.projectStore.role.save('creator');
+                    _this.props.router.push("/project/" + res[0]._id);
+                }
+                /**leader判断 */
+                isLeader = res[0].leader.some(function (leader) {
+                    if (userID === leader._id) {
+                        _this.projectStore.role.save('leader');
+                        _this.props.router.push("/project/" + res[0]._id);
+                        return true;
+                    }
+                    return false;
+                });
+                /**member判断 */
+                if (!isLeader) {
+                    isMember = res[0].member.some(function (member) {
+                        if (userID === member._id) {
+                            _this.projectStore.role.save('member');
+                            _this.props.router.push("/project/" + res[0]._id);
+                            return true;
+                        }
+                        return false;
+                    });
+                }
+                /**没有权限 */
+                if (!(isCreator || isLeader || isMember)) {
+                    antd_1.Modal.warning({
+                        title: 'Warning',
+                        content: '您没有该项目的权限！请先申请权限'
+                    });
+                }
+            })
+                .subscribe();
         };
         _this.renderToJsx = function (project) {
             return React.createElement(antd_1.Card, { key: project._id, className: "project-card", bodyStyle: { padding: 0, height: '100%' } },
@@ -89,6 +144,9 @@ var ProjectAllPage = (function (_super) {
     }
     ProjectAllPage.prototype.componentDidMount = function () {
         this.fetchAllProject();
+    };
+    ProjectAllPage.prototype.componentWillUnmount = function () {
+        this.projectSub.unsubscribe();
     };
     ProjectAllPage.prototype.render = function () {
         var _this = this;
@@ -149,7 +207,7 @@ exports.default = antd_1.Form.create()(ProjectAllPage);
 
 /***/ }),
 
-/***/ 1360:
+/***/ 1363:
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(Buffer) {/*
@@ -228,11 +286,11 @@ function toComment(sourceMap) {
   return '/*# ' + data + ' */';
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1363).Buffer))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1366).Buffer))
 
 /***/ }),
 
-/***/ 1361:
+/***/ 1364:
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -264,7 +322,7 @@ var stylesInDom = {},
 	singletonElement = null,
 	singletonCounter = 0,
 	styleElementsInsertedAtTop = [],
-	fixUrls = __webpack_require__(1366);
+	fixUrls = __webpack_require__(1369);
 
 module.exports = function(list, options) {
 	if(typeof DEBUG !== "undefined" && DEBUG) {
@@ -524,7 +582,7 @@ function updateLink(linkElement, options, obj) {
 
 /***/ }),
 
-/***/ 1362:
+/***/ 1365:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -646,7 +704,7 @@ function fromByteArray (uint8) {
 
 /***/ }),
 
-/***/ 1363:
+/***/ 1366:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -660,9 +718,9 @@ function fromByteArray (uint8) {
 
 
 
-var base64 = __webpack_require__(1362)
-var ieee754 = __webpack_require__(1365)
-var isArray = __webpack_require__(1364)
+var base64 = __webpack_require__(1365)
+var ieee754 = __webpack_require__(1368)
+var isArray = __webpack_require__(1367)
 
 exports.Buffer = Buffer
 exports.SlowBuffer = SlowBuffer
@@ -2444,7 +2502,7 @@ function isnan (val) {
 
 /***/ }),
 
-/***/ 1364:
+/***/ 1367:
 /***/ (function(module, exports) {
 
 var toString = {}.toString;
@@ -2456,7 +2514,7 @@ module.exports = Array.isArray || function (arr) {
 
 /***/ }),
 
-/***/ 1365:
+/***/ 1368:
 /***/ (function(module, exports) {
 
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
@@ -2547,7 +2605,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 
 /***/ }),
 
-/***/ 1366:
+/***/ 1369:
 /***/ (function(module, exports) {
 
 
@@ -2643,7 +2701,7 @@ module.exports = function (css) {
 
 /***/ }),
 
-/***/ 1367:
+/***/ 1370:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2656,14 +2714,14 @@ exports.default = {
 
 /***/ }),
 
-/***/ 1368:
+/***/ 1371:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var rxjs_1 = __webpack_require__(113);
-var config_1 = __webpack_require__(1367);
+var rxjs_1 = __webpack_require__(75);
+var config_1 = __webpack_require__(1370);
 var HttpService = (function () {
     function HttpService() {
         this.TIMEOUT = 10000;
@@ -2786,10 +2844,10 @@ exports.default = new HttpService();
 
 /***/ }),
 
-/***/ 1369:
+/***/ 1372:
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(1360)(undefined);
+exports = module.exports = __webpack_require__(1363)(undefined);
 // imports
 
 
@@ -2801,10 +2859,10 @@ exports.push([module.i, ".my-img {\n  opacity: 0;\n  transition: all 0.4s ease;\
 
 /***/ }),
 
-/***/ 1372:
+/***/ 1375:
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(1360)(undefined);
+exports = module.exports = __webpack_require__(1363)(undefined);
 // imports
 
 
@@ -2816,16 +2874,16 @@ exports.push([module.i, "/**2个大block */\n/**标题 */\n/**展示区 */\n/**c
 
 /***/ }),
 
-/***/ 1373:
+/***/ 1376:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1369);
+var content = __webpack_require__(1372);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(1361)(content, {});
+var update = __webpack_require__(1364)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -2843,16 +2901,16 @@ if(false) {
 
 /***/ }),
 
-/***/ 1376:
+/***/ 1379:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1372);
+var content = __webpack_require__(1375);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(1361)(content, {});
+var update = __webpack_require__(1364)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -2870,7 +2928,7 @@ if(false) {
 
 /***/ }),
 
-/***/ 1377:
+/***/ 1380:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2887,7 +2945,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
-__webpack_require__(1373);
+__webpack_require__(1376);
 var Image = (function (_super) {
     __extends(Image, _super);
     function Image() {

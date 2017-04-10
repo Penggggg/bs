@@ -1,7 +1,9 @@
 import * as React from 'react';
+import { Subscription } from 'rxjs';
 import http from '../../services/http.service';
 import Auth from '../../services/auth-login.service';
 import ProjectStore from '../../store/project';
+import UserStore from '../../store/user';
 import Notifycation from '../../services/notification.service';
 import { Card, Icon, Modal, Button, Form, Input } from 'antd';
 import Image from '../../component/Image/Image.component';
@@ -17,9 +19,16 @@ const FormItem = Form.Item;
 
 class ProjectAllPage extends React.PureComponent< IProps, IState > {
     
+
+    private projectSub: Subscription;
+
+    private watchingRole = false;
     private formProjectName = 'projectName';
     private formProjectInfo = 'projectInfo';
     private userData = Auth.userData( );
+
+    private userStore = UserStore;
+    private projectStore = ProjectStore;
 
     constructor( ) {
         super( );
@@ -34,6 +43,10 @@ class ProjectAllPage extends React.PureComponent< IProps, IState > {
         this.fetchAllProject( );
     }
 
+    componentWillUnmount( ) {
+        this.projectSub.unsubscribe( );
+    }
+
     private fetchAllProject = ( ) => {
         http
             .get<IGetAllProject_>('/api/v1/all-project')
@@ -44,8 +57,65 @@ class ProjectAllPage extends React.PureComponent< IProps, IState > {
     }
 
     private onEnterProject = ( project: IProject ) => {
-         ProjectStore.data.save( project );
-         this.props.router.push(`/project/${project._id}`);
+        /**保存project数据 */
+        this.projectStore.data.save( project );
+        if ( !this.watchingRole ) {
+            this.watchingRole = true;
+            this.watchRole( );
+        }
+    }
+
+    private watchRole = ( ) => {
+        console.log('???')
+        this.projectSub = this.projectStore.data.data$
+            .combineLatest(this.userStore.data.userData$)
+            .distinct( )
+            .do( res => {
+                console.log('权限判断中...')
+
+                let isLeader = false;
+                let isMember = false;
+                let isCreator = false;
+
+                let userID = res[1]._id;
+
+                /**creator判断 */
+                if ( userID === res[0].creator._id ) {
+                    isCreator = true;
+                    this.projectStore.role.save('creator');
+                    this.props.router.push(`/project/${res[0]._id}`)
+                }
+
+                /**leader判断 */
+                isLeader = res[0].leader.some(( leader ) => {
+                    if ( userID === leader._id ) {
+                        this.projectStore.role.save('leader');
+                        this.props.router.push(`/project/${res[0]._id}`);
+                        return true;
+                    }
+                    return false;
+                })
+
+                /**member判断 */
+                if( !isLeader ) {
+                    isMember = res[0].member.some(( member ) => {
+                        if ( userID === member._id ) {
+                            this.projectStore.role.save('member');
+                            this.props.router.push(`/project/${res[0]._id}`);
+                            return true;             
+                        }
+                        return false;
+                    })
+                }
+                /**没有权限 */
+                if (!( isCreator || isLeader || isMember )) {
+                    Modal.warning({
+                        title: 'Warning',
+                        content: '您没有该项目的权限！请先申请权限'
+                    })
+                }
+            })
+            .subscribe( )
     }
 
     private renderToJsx = ( project: IProject ) => {

@@ -1,4 +1,4 @@
-webpackJsonp([3],{
+webpackJsonp([4],{
 
 /***/ 1347:
 /***/ (function(module, exports, __webpack_require__) {
@@ -18,7 +18,7 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
 var ReactDom = __webpack_require__(12);
-var react_router_1 = __webpack_require__(151);
+var react_router_1 = __webpack_require__(152);
 var pages_1 = __webpack_require__(537);
 var App = (function (_super) {
     __extends(App, _super);
@@ -101,14 +101,31 @@ exports.default = new socketService();
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var signIn_store_1 = __webpack_require__(1351);
-var UserStore = (function () {
-    function UserStore() {
-        this.signIn = new signIn_store_1.default();
+var rxjs_1 = __webpack_require__(113);
+var UserData = (function () {
+    function UserData() {
+        var _this = this;
+        this.save = function (user) {
+            /**首次保存 */
+            if (_this.userData$ === undefined) {
+                _this.init(user);
+            }
+            else {
+                _this.userData$$.next(user);
+            }
+        };
+        this.init = function (user) {
+            var subject = new rxjs_1.ReplaySubject(1);
+            var source = rxjs_1.Observable.create(function (observer) {
+                _this.userData$$ = observer;
+                observer.next(user);
+            });
+            _this.userData$ = source.multicast(subject).refCount();
+        };
     }
-    return UserStore;
+    return UserData;
 }());
-exports.default = new UserStore();
+exports.default = UserData;
 
 
 /***/ }),
@@ -119,10 +136,30 @@ exports.default = new UserStore();
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+var signIn_store_1 = __webpack_require__(1352);
+var data_store_1 = __webpack_require__(1350);
+var UserStore = (function () {
+    function UserStore() {
+        this.signIn = new signIn_store_1.default();
+        this.data = new data_store_1.default();
+    }
+    return UserStore;
+}());
+exports.default = new UserStore();
+
+
+/***/ }),
+
+/***/ 1352:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
 var notification_service_1 = __webpack_require__(539);
-var rxjs_1 = __webpack_require__(153);
-var UserStoreSignIn = (function () {
-    function UserStoreSignIn() {
+var rxjs_1 = __webpack_require__(113);
+var UserSignIn = (function () {
+    function UserSignIn() {
         var _this = this;
         /**登录状态初始化 */
         this.initSignIn = function (target, eventName) {
@@ -165,9 +202,97 @@ var UserStoreSignIn = (function () {
             _this.connectionSub.unsubscribe();
         };
     }
-    return UserStoreSignIn;
+    return UserSignIn;
 }());
-exports.default = UserStoreSignIn;
+exports.default = UserSignIn;
+
+
+/***/ }),
+
+/***/ 1378:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var rxjs_1 = __webpack_require__(113);
+var ProjectData = (function () {
+    function ProjectData() {
+    }
+    ProjectData.prototype.save = function (project) {
+        if (this.data$ === undefined) {
+            this.init(project);
+        }
+        else {
+            this.data$$.next(project);
+        }
+    };
+    ProjectData.prototype.init = function (project) {
+        var _this = this;
+        var subject = new rxjs_1.ReplaySubject(1);
+        var source = rxjs_1.Observable.create(function (observer) {
+            _this.data$$ = observer;
+            observer.next(project);
+        });
+        this.data$ = source.multicast(subject).refCount();
+    };
+    return ProjectData;
+}());
+exports.default = ProjectData;
+
+
+/***/ }),
+
+/***/ 1379:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var role_store_1 = __webpack_require__(1380);
+var data_store_1 = __webpack_require__(1378);
+var ProjectStore = (function () {
+    function ProjectStore() {
+        this.role = new role_store_1.default();
+        this.data = new data_store_1.default();
+    }
+    return ProjectStore;
+}());
+exports.default = new ProjectStore();
+
+
+/***/ }),
+
+/***/ 1380:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var rxjs_1 = __webpack_require__(113);
+var ProjectRole = (function () {
+    function ProjectRole() {
+    }
+    ProjectRole.prototype.save = function (role) {
+        if (this.data$ === undefined) {
+            this.init(role);
+        }
+        else {
+            this.data$$.next(role);
+        }
+    };
+    ProjectRole.prototype.init = function (role) {
+        var _this = this;
+        var subject = new rxjs_1.ReplaySubject(1);
+        var source = rxjs_1.Observable.create(function (observer) {
+            _this.data$$ = observer;
+            observer.next(role);
+        });
+        this.data$ = source.multicast(subject).refCount();
+    };
+    return ProjectRole;
+}());
+exports.default = ProjectRole;
 
 
 /***/ }),
@@ -182,7 +307,7 @@ var auth_login_service_1 = __webpack_require__(538);
 exports.default = {
     path: '/',
     getComponent: function (nextstate, cb) {
-        __webpack_require__.e/* import() */(2).then(__webpack_require__.bind(null, 1355)).then(function (module) {
+        __webpack_require__.e/* import() */(2).then(__webpack_require__.bind(null, 1356)).then(function (module) {
             cb(null, module.default);
         }).catch(function (err) { return showMessage(err, './app.page'); });
     },
@@ -190,18 +315,26 @@ exports.default = {
         {
             path: 'login',
             getComponent: function (nextstate, cb) {
-                __webpack_require__.e/* import() */(1).then(__webpack_require__.bind(null, 1356)).then(function (module) {
+                __webpack_require__.e/* import() */(1).then(__webpack_require__.bind(null, 1357)).then(function (module) {
                     cb(null, module.default);
                 }).catch(function (err) { return showMessage(err, './login.page'); });
             },
         }, {
-            path: 'project',
+            path: 'projects',
             onEnter: auth_login_service_1.default.requireLogin,
             getComponent: function (nextstate, cb) {
-                __webpack_require__.e/* import() */(0).then(__webpack_require__.bind(null, 1357)).then(function (module) {
+                __webpack_require__.e/* import() */(0).then(__webpack_require__.bind(null, 1358)).then(function (module) {
                     cb(null, module.default);
-                }).catch(function (err) { return showMessage(err, './login.page'); });
-            },
+                }).catch(function (err) { return showMessage(err, './project-all.page'); });
+            }
+        }, {
+            path: 'project/:id',
+            onEnter: auth_login_service_1.default.requireLogin,
+            getComponent: function (nextstate, cb) {
+                __webpack_require__.e/* import() */(3).then(__webpack_require__.bind(null, 1359)).then(function (module) {
+                    cb(null, module.default);
+                }).catch(function (err) { return showMessage(err, './project.page'); });
+            }
         }
     ]
 };
@@ -218,9 +351,11 @@ function showMessage(err, pageName) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+var antd_1 = __webpack_require__(153);
 var local_storage_service_1 = __webpack_require__(1348);
 var socket_service_1 = __webpack_require__(1349);
-var user_1 = __webpack_require__(1350);
+var user_1 = __webpack_require__(1351);
+var project_1 = __webpack_require__(1379);
 var authLoginService = (function () {
     function authLoginService() {
         var _this = this;
@@ -232,22 +367,72 @@ var authLoginService = (function () {
         this.myLocalStorage = local_storage_service_1.default;
         this.mySocket = socket_service_1.default;
         this.myUserStore = user_1.default;
+        this.myProjectStore = project_1.default;
+        /**auth服务：用户信息 */
+        this.userData = function () { return _this.myLocalStorage.getItem(_this.signInName); };
         /**auth服务：检查是否已经登录 */
         this.isLogin = function () { return _this.myLocalStorage.getItem(_this.signInName) ? true : false; };
-        /**auth服务：检查并重定向 */
+        /**auth登录服务：检查并重定向 */
         this.requireLogin = function (nextState, replace, next) {
             if (_this.isLogin()) {
-                console.log("checking auth: auth ok");
-                return next();
+                console.log("checking auth: \u5DF2\u767B\u5F55");
+                if (nextState.location.pathname.indexOf('/project/') === 0) {
+                    _this.requireMember(replace, next);
+                }
+                else {
+                    return next();
+                }
             }
             else {
                 replace(_this.loginUrl);
-                console.log("checking auth: no ok");
+                console.log("checking auth: \u672A\u767B\u5F55");
                 return next();
             }
         };
-        /**auth服务：用户信息 */
-        this.userData = function () { return _this.myLocalStorage.getItem(_this.signInName); };
+        /**auth项目权限服务：检查是否属于该项目成员 */
+        this.requireMember = function (replace, next) {
+            console.log('项目权限判断中..');
+            var sub = _this.myUserStore.data.userData$
+                .combineLatest(_this.myProjectStore.data.data$)
+                .do(function (res) {
+                console.log('????');
+                var userID = res[0]._id;
+                /**creator判断 */
+                if (userID === res[1].creator._id) {
+                    _this.myProjectStore.role.save('creator');
+                    return next();
+                }
+                /**leader判断 */
+                var isLeader = res[1].leader.some(function (leader) {
+                    if (leader._id === userID) {
+                        _this.myProjectStore.role.save('leader');
+                        next();
+                        return true;
+                    }
+                    return false;
+                });
+                /**member判断 */
+                if (!isLeader) {
+                    res[1].member.some(function (member) {
+                        if (member._id === userID) {
+                            _this.myProjectStore.role.save('member');
+                            next();
+                            return true;
+                        }
+                        return false;
+                    });
+                }
+                /**没有权限 */
+                antd_1.Modal.warning({
+                    title: 'Warning',
+                    content: '您没有该项目的权限！请先申请权限'
+                });
+                replace('/projects');
+                return next();
+            })
+                .subscribe();
+            sub.unsubscribe();
+        };
         /**auth服务：登录 */
         this.signIn = function (user) {
             /**ls储存数据 */
@@ -257,6 +442,8 @@ var authLoginService = (function () {
             a.emit("" + _this.socketEventSignIn, { user: user });
             /**rx监控 */
             _this.myUserStore.signIn.initSignIn(a, "" + _this.socketEventSignIn);
+            /**rx存数据 */
+            _this.myUserStore.data.save(user);
         };
         /**auth服务：登出 */
         this.signOut = function () {
@@ -284,7 +471,7 @@ exports.default = new authLoginService();
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
-var antd_1 = __webpack_require__(152);
+var antd_1 = __webpack_require__(153);
 var NotificationService = (function () {
     function NotificationService() {
     }

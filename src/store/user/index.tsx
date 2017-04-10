@@ -1,8 +1,10 @@
-import UserStoreSignIn from './signIn.store';
+import UserSignIn from './signIn.store';
+import UserData from './data.store';
 
 class UserStore {
 
-    public signIn = new UserStoreSignIn( );
+    public signIn = new UserSignIn( );
+    public data = new UserData( );
 
 }
 

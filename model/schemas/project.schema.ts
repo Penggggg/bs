@@ -48,11 +48,11 @@ PorjectSchema.statics.findAllWithRef =  function( ) {
 }
 
 
-PorjectSchema.statics.findAllWithNest =  function( ) {
+PorjectSchema.statics.findAllWithNest =  function( select ) {
     return new Promise(( resolve, reject ) => {
         this
-            .find({ })
-            .populate('creator')
+            .find({ }, ['name', 'info', 'cover', 'creator', 'leader', 'member'])
+            .populate('creator', select )
             .exec(( err, data ) => returnData( err, resolve, reject, data ))
     })
 }

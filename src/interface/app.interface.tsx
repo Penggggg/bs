@@ -5,8 +5,9 @@ export interface _IUser {
     _id: string
     name: string,
     phone: string,
-    meta: {
+    meta?: {
         createdTime: string
+        updatedTime: string
     }
 }
 
@@ -19,4 +20,8 @@ export interface IProject {
     creator: _IUser
     member: Array<_IUser>
     leader: Array<_IUser>
+    meta?: {
+        createdTime: string
+        updatedTime: string
+    }
 }

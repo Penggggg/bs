@@ -3,7 +3,7 @@ import { Observable, Observer, Subject, ReplaySubject, Subscription } from 'rxjs
 
 import { ISocketSignIn_ } from '../../interface/socket.interface';
 
-export default class UserStoreSignIn {
+export default class UserSignIn {
     
     /**登录状态 */
     public signIn$: Observable<boolean>;

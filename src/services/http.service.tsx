@@ -1,10 +1,10 @@
-import { Observable, Observer } from 'rxjs';
+import { Observable, Observer, Subscription } from 'rxjs';
 import clientConfig from './../config';
 
 class HttpService {
 
     private TIMEOUT = 10000;
-    
+    private sub: Subscription;
 
     private getXhr( ) {
         return new XMLHttpRequest( );
@@ -21,7 +21,7 @@ class HttpService {
              data$$ = observer;
         }).share( )
 
-        data$.subscribe( );
+        this.sub = data$.subscribe( );
 
         /**异步事件设置 */
         this.decorateXHR( xhr, data$$ );    
@@ -96,7 +96,7 @@ class HttpService {
 
             /**准备就绪 */
             if ( readyState === 4 ) {
-
+                this.sub.unsubscribe( );
                 /**成功：2**、3** */
                 if ( status.indexOf('2') === 0 || status.indexOf('3') === 0 ) {
                     let resObj = { };
@@ -125,6 +125,7 @@ class HttpService {
     private closeConnection( xhr: XMLHttpRequest, data$$: Observer<any> ) {
         xhr.abort( );
         data$$.complete( );
+        this.sub.unsubscribe( );
     }
 
     private setGetUrlWithQuery( url: string, query: Object ): string {

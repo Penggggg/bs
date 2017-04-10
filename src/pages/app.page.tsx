@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Layout, Menu, Breadcrumb, Row, Col, Icon, Input  } from 'antd';
 import { RouteComponentProps } from 'react-router';
 
+import Auth  from '../services/auth-login.service';
 import './app.less'
 
 const { Header, Content, Footer } = Layout;
@@ -19,6 +20,16 @@ export default class AppPage extends React.PureComponent< RouteComponentProps<{}
     componentWillMount( ) {
        let { pathname } = this.props.location;
        this.analyseShowBar( pathname );
+       this.initStore( )
+    }
+
+    private initStore = ( ) => {
+        if ( process.env.NODE_ENV === 'development') {
+            console.log(`是否已本地登录：${Auth.isLogin( )}`)
+        }
+        if (Auth.isLogin( )) {
+            Auth.signIn(Auth.userData( ));
+        }
     }
 
     componentWillReceiveProps( newProps ) {

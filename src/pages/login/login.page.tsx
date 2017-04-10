@@ -236,7 +236,7 @@ class LoginPage extends React.PureComponent< IProps, IState > {
               /**本地登录 */
               Auth.signIn( user );
               /**跳转 */
-              this.props.router.push('/project')
+              this.props.router.push('/projects')
           }, 2000 )
         }
 

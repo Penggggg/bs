@@ -44,12 +44,12 @@ exports.PorjectSchema.statics.findAllWithRef = function () {
         _this.find({}, function (err, data) { return returnData(err, resolve, reject, data); });
     });
 };
-exports.PorjectSchema.statics.findAllWithNest = function () {
+exports.PorjectSchema.statics.findAllWithNest = function (select) {
     var _this = this;
     return new Promise(function (resolve, reject) {
         _this
-            .find({})
-            .populate('creator')
+            .find({}, ['name', 'info', 'cover', 'creator', 'leader', 'member'])
+            .populate('creator', select)
             .exec(function (err, data) { return returnData(err, resolve, reject, data); });
     });
 };

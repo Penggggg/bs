@@ -1,6 +1,6 @@
 webpackJsonp([1],{
 
-/***/ 1356:
+/***/ 1357:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -17,12 +17,12 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
-var rxjs_1 = __webpack_require__(153);
-var http_service_1 = __webpack_require__(1366);
+var rxjs_1 = __webpack_require__(113);
+var http_service_1 = __webpack_require__(1368);
 var auth_login_service_1 = __webpack_require__(538);
 var notification_service_1 = __webpack_require__(539);
-var antd_1 = __webpack_require__(152);
-__webpack_require__(1373);
+var antd_1 = __webpack_require__(153);
+__webpack_require__(1375);
 var TabPane = antd_1.Tabs.TabPane;
 var FormItem = antd_1.Form.Item;
 var LoginPage = (function (_super) {
@@ -228,7 +228,7 @@ var LoginPage = (function (_super) {
                     /**本地登录 */
                     auth_login_service_1.default.signIn(user);
                     /**跳转 */
-                    _this.props.router.push('/project');
+                    _this.props.router.push('/projects');
                 }, 2000);
             }
         };
@@ -342,7 +342,7 @@ exports.default = antd_1.Form.create()(LoginPage);
 
 /***/ }),
 
-/***/ 1358:
+/***/ 1360:
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(Buffer) {/*
@@ -421,11 +421,11 @@ function toComment(sourceMap) {
   return '/*# ' + data + ' */';
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1361).Buffer))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1363).Buffer))
 
 /***/ }),
 
-/***/ 1359:
+/***/ 1361:
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -457,7 +457,7 @@ var stylesInDom = {},
 	singletonElement = null,
 	singletonCounter = 0,
 	styleElementsInsertedAtTop = [],
-	fixUrls = __webpack_require__(1364);
+	fixUrls = __webpack_require__(1366);
 
 module.exports = function(list, options) {
 	if(typeof DEBUG !== "undefined" && DEBUG) {
@@ -717,7 +717,7 @@ function updateLink(linkElement, options, obj) {
 
 /***/ }),
 
-/***/ 1360:
+/***/ 1362:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -839,7 +839,7 @@ function fromByteArray (uint8) {
 
 /***/ }),
 
-/***/ 1361:
+/***/ 1363:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -853,9 +853,9 @@ function fromByteArray (uint8) {
 
 
 
-var base64 = __webpack_require__(1360)
-var ieee754 = __webpack_require__(1363)
-var isArray = __webpack_require__(1362)
+var base64 = __webpack_require__(1362)
+var ieee754 = __webpack_require__(1365)
+var isArray = __webpack_require__(1364)
 
 exports.Buffer = Buffer
 exports.SlowBuffer = SlowBuffer
@@ -2637,7 +2637,7 @@ function isnan (val) {
 
 /***/ }),
 
-/***/ 1362:
+/***/ 1364:
 /***/ (function(module, exports) {
 
 var toString = {}.toString;
@@ -2649,7 +2649,7 @@ module.exports = Array.isArray || function (arr) {
 
 /***/ }),
 
-/***/ 1363:
+/***/ 1365:
 /***/ (function(module, exports) {
 
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
@@ -2740,7 +2740,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 
 /***/ }),
 
-/***/ 1364:
+/***/ 1366:
 /***/ (function(module, exports) {
 
 
@@ -2836,7 +2836,7 @@ module.exports = function (css) {
 
 /***/ }),
 
-/***/ 1365:
+/***/ 1367:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2849,14 +2849,14 @@ exports.default = {
 
 /***/ }),
 
-/***/ 1366:
+/***/ 1368:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var rxjs_1 = __webpack_require__(153);
-var config_1 = __webpack_require__(1365);
+var rxjs_1 = __webpack_require__(113);
+var config_1 = __webpack_require__(1367);
 var HttpService = (function () {
     function HttpService() {
         this.TIMEOUT = 10000;
@@ -2872,7 +2872,7 @@ var HttpService = (function () {
         var data$ = rxjs_1.Observable.create(function (observer) {
             data$$ = observer;
         }).share();
-        data$.subscribe();
+        this.sub = data$.subscribe();
         /**异步事件设置 */
         this.decorateXHR(xhr, data$$);
         /**整合查询串 */
@@ -2926,6 +2926,7 @@ var HttpService = (function () {
             var status = "" + xhr.status;
             /**准备就绪 */
             if (readyState === 4) {
+                _this.sub.unsubscribe();
                 /**成功：2**、3** */
                 if (status.indexOf('2') === 0 || status.indexOf('3') === 0) {
                     var resObj = {};
@@ -2953,6 +2954,7 @@ var HttpService = (function () {
     HttpService.prototype.closeConnection = function (xhr, data$$) {
         xhr.abort();
         data$$.complete();
+        this.sub.unsubscribe();
     };
     HttpService.prototype.setGetUrlWithQuery = function (url, query) {
         url += '?';
@@ -2977,10 +2979,10 @@ exports.default = new HttpService();
 
 /***/ }),
 
-/***/ 1369:
+/***/ 1371:
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(1358)(undefined);
+exports = module.exports = __webpack_require__(1360)(undefined);
 // imports
 
 
@@ -2992,16 +2994,16 @@ exports.push([module.i, ".login-page {\n  position: relative;\n  text-align: cen
 
 /***/ }),
 
-/***/ 1373:
+/***/ 1375:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1369);
+var content = __webpack_require__(1371);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(1359)(content, {});
+var update = __webpack_require__(1361)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {

@@ -1,6 +1,6 @@
 webpackJsonp([0],{
 
-/***/ 1357:
+/***/ 1358:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -17,12 +17,13 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
-var http_service_1 = __webpack_require__(1366);
+var http_service_1 = __webpack_require__(1368);
 var auth_login_service_1 = __webpack_require__(538);
+var project_1 = __webpack_require__(1379);
 var notification_service_1 = __webpack_require__(539);
-var antd_1 = __webpack_require__(152);
-var Image_component_1 = __webpack_require__(1375);
-__webpack_require__(1374);
+var antd_1 = __webpack_require__(153);
+var Image_component_1 = __webpack_require__(1377);
+__webpack_require__(1376);
 var FormItem = antd_1.Form.Item;
 var ProjectAllPage = (function (_super) {
     __extends(ProjectAllPage, _super);
@@ -34,14 +35,22 @@ var ProjectAllPage = (function (_super) {
         _this.fetchAllProject = function () {
             http_service_1.default
                 .get('/api/v1/all-project')
-                .do(function (res) { return console.log(res); })
                 .do(function (res) { return _this.setState({
                 projectAll: res.data
             }); })
                 .subscribe();
         };
-        _this.onEnterProject = function (projectID) {
-            console.log(projectID);
+        _this.onEnterProject = function (project) {
+            project_1.default.data.save(project);
+            _this.props.router.push("/project/" + project._id);
+        };
+        _this.renderToJsx = function (project) {
+            return React.createElement(antd_1.Card, { key: project._id, className: "project-card", bodyStyle: { padding: 0, height: '100%' } },
+                React.createElement("div", { className: "image", onClick: function () { return _this.onEnterProject(project); } },
+                    React.createElement(Image_component_1.default, { src: project.cover })),
+                React.createElement("div", { className: "info", onClick: function () { return _this.onEnterProject(project); } },
+                    React.createElement("h3", null, project.name),
+                    React.createElement("p", null, project.info)));
         };
         _this.newProjectSubmit = function () {
             var _a = _this, formProjectName = _a.formProjectName, formProjectInfo = _a.formProjectInfo;
@@ -105,15 +114,23 @@ var ProjectAllPage = (function (_super) {
                     React.createElement("span", null)),
                 React.createElement("div", { className: "projects-block" },
                     projectAll.map(function (project) {
-                        if (_this.userData._id !== project.creator._id) {
-                            return;
+                        if (_this.userData._id === project.creator._id) {
+                            return _this.renderToJsx(project);
                         }
-                        return React.createElement(antd_1.Card, { key: project._id, className: "project-card", bodyStyle: { padding: 0, height: '100%' } },
-                            React.createElement("div", { className: "image", onClick: function () { return _this.onEnterProject(project._id); } },
-                                React.createElement(Image_component_1.default, { src: project.cover })),
-                            React.createElement("div", { className: "info", onClick: function () { return _this.onEnterProject(project._id); } },
-                                React.createElement("h3", null, project.name),
-                                React.createElement("p", null, project.info)));
+                        project.leader.some(function (leader) {
+                            if (_this.userData._id === leader._id) {
+                                _this.renderToJsx(project);
+                                return true;
+                            }
+                            return false;
+                        });
+                        project.member.some(function (member) {
+                            if (_this.userData._id === member._id) {
+                                _this.renderToJsx(project);
+                                return true;
+                            }
+                            return false;
+                        });
                     }),
                     React.createElement(antd_1.Card, { className: "project-card add-project-card", bodyStyle: { padding: 0, height: '100%' } },
                         React.createElement(antd_1.Icon, { type: "plus-circle", className: "icon", onClick: function () { return _this.setState({ dynamicFormShow: true }); } }),
@@ -122,14 +139,7 @@ var ProjectAllPage = (function (_super) {
                 React.createElement("div", { className: "title" },
                     React.createElement("h2", null, "\u5168\u90E8\u7684\u9879\u76EE"),
                     React.createElement("span", null)),
-                React.createElement("div", { className: "projects-block" }, projectAll.map(function (project) {
-                    return React.createElement(antd_1.Card, { key: project._id, className: "project-card", bodyStyle: { padding: 0, height: '100%' } },
-                        React.createElement("div", { className: "image", onClick: function () { return _this.onEnterProject(project._id); } },
-                            React.createElement(Image_component_1.default, { src: project.cover })),
-                        React.createElement("div", { className: "info", onClick: function () { return _this.onEnterProject(project._id); } },
-                            React.createElement("h3", null, project.name),
-                            React.createElement("p", null, project.info)));
-                }))),
+                React.createElement("div", { className: "projects-block" }, projectAll.map(this.renderToJsx))),
             React.createElement(antd_1.Modal, { title: "创建新项目", footer: null, visible: dynamicFormShow, onCancel: function () { return _this.setState({ dynamicFormShow: false }); }, style: { width: '400px !import', padding: '0 85px' } }, dynamicForm));
     };
     return ProjectAllPage;
@@ -139,7 +149,7 @@ exports.default = antd_1.Form.create()(ProjectAllPage);
 
 /***/ }),
 
-/***/ 1358:
+/***/ 1360:
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(Buffer) {/*
@@ -218,11 +228,11 @@ function toComment(sourceMap) {
   return '/*# ' + data + ' */';
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1361).Buffer))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1363).Buffer))
 
 /***/ }),
 
-/***/ 1359:
+/***/ 1361:
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -254,7 +264,7 @@ var stylesInDom = {},
 	singletonElement = null,
 	singletonCounter = 0,
 	styleElementsInsertedAtTop = [],
-	fixUrls = __webpack_require__(1364);
+	fixUrls = __webpack_require__(1366);
 
 module.exports = function(list, options) {
 	if(typeof DEBUG !== "undefined" && DEBUG) {
@@ -514,7 +524,7 @@ function updateLink(linkElement, options, obj) {
 
 /***/ }),
 
-/***/ 1360:
+/***/ 1362:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -636,7 +646,7 @@ function fromByteArray (uint8) {
 
 /***/ }),
 
-/***/ 1361:
+/***/ 1363:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -650,9 +660,9 @@ function fromByteArray (uint8) {
 
 
 
-var base64 = __webpack_require__(1360)
-var ieee754 = __webpack_require__(1363)
-var isArray = __webpack_require__(1362)
+var base64 = __webpack_require__(1362)
+var ieee754 = __webpack_require__(1365)
+var isArray = __webpack_require__(1364)
 
 exports.Buffer = Buffer
 exports.SlowBuffer = SlowBuffer
@@ -2434,7 +2444,7 @@ function isnan (val) {
 
 /***/ }),
 
-/***/ 1362:
+/***/ 1364:
 /***/ (function(module, exports) {
 
 var toString = {}.toString;
@@ -2446,7 +2456,7 @@ module.exports = Array.isArray || function (arr) {
 
 /***/ }),
 
-/***/ 1363:
+/***/ 1365:
 /***/ (function(module, exports) {
 
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
@@ -2537,7 +2547,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 
 /***/ }),
 
-/***/ 1364:
+/***/ 1366:
 /***/ (function(module, exports) {
 
 
@@ -2633,7 +2643,7 @@ module.exports = function (css) {
 
 /***/ }),
 
-/***/ 1365:
+/***/ 1367:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2646,14 +2656,14 @@ exports.default = {
 
 /***/ }),
 
-/***/ 1366:
+/***/ 1368:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var rxjs_1 = __webpack_require__(153);
-var config_1 = __webpack_require__(1365);
+var rxjs_1 = __webpack_require__(113);
+var config_1 = __webpack_require__(1367);
 var HttpService = (function () {
     function HttpService() {
         this.TIMEOUT = 10000;
@@ -2669,7 +2679,7 @@ var HttpService = (function () {
         var data$ = rxjs_1.Observable.create(function (observer) {
             data$$ = observer;
         }).share();
-        data$.subscribe();
+        this.sub = data$.subscribe();
         /**异步事件设置 */
         this.decorateXHR(xhr, data$$);
         /**整合查询串 */
@@ -2723,6 +2733,7 @@ var HttpService = (function () {
             var status = "" + xhr.status;
             /**准备就绪 */
             if (readyState === 4) {
+                _this.sub.unsubscribe();
                 /**成功：2**、3** */
                 if (status.indexOf('2') === 0 || status.indexOf('3') === 0) {
                     var resObj = {};
@@ -2750,6 +2761,7 @@ var HttpService = (function () {
     HttpService.prototype.closeConnection = function (xhr, data$$) {
         xhr.abort();
         data$$.complete();
+        this.sub.unsubscribe();
     };
     HttpService.prototype.setGetUrlWithQuery = function (url, query) {
         url += '?';
@@ -2774,10 +2786,10 @@ exports.default = new HttpService();
 
 /***/ }),
 
-/***/ 1367:
+/***/ 1369:
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(1358)(undefined);
+exports = module.exports = __webpack_require__(1360)(undefined);
 // imports
 
 
@@ -2789,10 +2801,10 @@ exports.push([module.i, ".my-img {\n  opacity: 0;\n  transition: all 0.4s ease;\
 
 /***/ }),
 
-/***/ 1370:
+/***/ 1372:
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(1358)(undefined);
+exports = module.exports = __webpack_require__(1360)(undefined);
 // imports
 
 
@@ -2804,16 +2816,16 @@ exports.push([module.i, "/**2个大block */\n/**标题 */\n/**展示区 */\n/**c
 
 /***/ }),
 
-/***/ 1371:
+/***/ 1373:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1367);
+var content = __webpack_require__(1369);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(1359)(content, {});
+var update = __webpack_require__(1361)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -2831,16 +2843,16 @@ if(false) {
 
 /***/ }),
 
-/***/ 1374:
+/***/ 1376:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1370);
+var content = __webpack_require__(1372);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(1359)(content, {});
+var update = __webpack_require__(1361)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -2858,7 +2870,7 @@ if(false) {
 
 /***/ }),
 
-/***/ 1375:
+/***/ 1377:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2875,7 +2887,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
-__webpack_require__(1371);
+__webpack_require__(1373);
 var Image = (function (_super) {
     __extends(Image, _super);
     function Image() {

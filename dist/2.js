@@ -1,6 +1,6 @@
 webpackJsonp([2],{
 
-/***/ 1355:
+/***/ 1356:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -17,13 +17,22 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
-var antd_1 = __webpack_require__(152);
-__webpack_require__(1372);
+var antd_1 = __webpack_require__(153);
+var auth_login_service_1 = __webpack_require__(538);
+__webpack_require__(1374);
 var Header = antd_1.Layout.Header, Content = antd_1.Layout.Content, Footer = antd_1.Layout.Footer;
 var AppPage = (function (_super) {
     __extends(AppPage, _super);
     function AppPage() {
         var _this = _super.call(this) || this;
+        _this.initStore = function () {
+            if (true) {
+                console.log("\u662F\u5426\u5DF2\u672C\u5730\u767B\u5F55\uFF1A" + auth_login_service_1.default.isLogin());
+            }
+            if (auth_login_service_1.default.isLogin()) {
+                auth_login_service_1.default.signIn(auth_login_service_1.default.userData());
+            }
+        };
         _this.state = {
             showBar: true
         };
@@ -32,6 +41,7 @@ var AppPage = (function (_super) {
     AppPage.prototype.componentWillMount = function () {
         var pathname = this.props.location.pathname;
         this.analyseShowBar(pathname);
+        this.initStore();
     };
     AppPage.prototype.componentWillReceiveProps = function (newProps) {
         var pathname = newProps.location.pathname;
@@ -76,7 +86,7 @@ exports.default = AppPage;
 
 /***/ }),
 
-/***/ 1358:
+/***/ 1360:
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(Buffer) {/*
@@ -155,11 +165,11 @@ function toComment(sourceMap) {
   return '/*# ' + data + ' */';
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1361).Buffer))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1363).Buffer))
 
 /***/ }),
 
-/***/ 1359:
+/***/ 1361:
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -191,7 +201,7 @@ var stylesInDom = {},
 	singletonElement = null,
 	singletonCounter = 0,
 	styleElementsInsertedAtTop = [],
-	fixUrls = __webpack_require__(1364);
+	fixUrls = __webpack_require__(1366);
 
 module.exports = function(list, options) {
 	if(typeof DEBUG !== "undefined" && DEBUG) {
@@ -451,7 +461,7 @@ function updateLink(linkElement, options, obj) {
 
 /***/ }),
 
-/***/ 1360:
+/***/ 1362:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -573,7 +583,7 @@ function fromByteArray (uint8) {
 
 /***/ }),
 
-/***/ 1361:
+/***/ 1363:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -587,9 +597,9 @@ function fromByteArray (uint8) {
 
 
 
-var base64 = __webpack_require__(1360)
-var ieee754 = __webpack_require__(1363)
-var isArray = __webpack_require__(1362)
+var base64 = __webpack_require__(1362)
+var ieee754 = __webpack_require__(1365)
+var isArray = __webpack_require__(1364)
 
 exports.Buffer = Buffer
 exports.SlowBuffer = SlowBuffer
@@ -2371,7 +2381,7 @@ function isnan (val) {
 
 /***/ }),
 
-/***/ 1362:
+/***/ 1364:
 /***/ (function(module, exports) {
 
 var toString = {}.toString;
@@ -2383,7 +2393,7 @@ module.exports = Array.isArray || function (arr) {
 
 /***/ }),
 
-/***/ 1363:
+/***/ 1365:
 /***/ (function(module, exports) {
 
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
@@ -2474,7 +2484,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 
 /***/ }),
 
-/***/ 1364:
+/***/ 1366:
 /***/ (function(module, exports) {
 
 
@@ -2570,10 +2580,10 @@ module.exports = function (css) {
 
 /***/ }),
 
-/***/ 1368:
+/***/ 1370:
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(1358)(undefined);
+exports = module.exports = __webpack_require__(1360)(undefined);
 // imports
 
 
@@ -2585,16 +2595,16 @@ exports.push([module.i, "* {\n  font-size: 14px;\n}\ndiv {\n  box-sizing: border
 
 /***/ }),
 
-/***/ 1372:
+/***/ 1374:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1368);
+var content = __webpack_require__(1370);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(1359)(content, {});
+var update = __webpack_require__(1361)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {

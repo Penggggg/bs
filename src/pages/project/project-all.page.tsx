@@ -1,6 +1,7 @@
 import * as React from 'react';
 import http from '../../services/http.service';
 import Auth from '../../services/auth-login.service';
+import ProjectStore from '../../store/project';
 import Notifycation from '../../services/notification.service';
 import { Card, Icon, Modal, Button, Form, Input } from 'antd';
 import Image from '../../component/Image/Image.component';
@@ -36,15 +37,27 @@ class ProjectAllPage extends React.PureComponent< IProps, IState > {
     private fetchAllProject = ( ) => {
         http
             .get<IGetAllProject_>('/api/v1/all-project')
-            .do( res => console.log( res ))
             .do( res => this.setState({
                 projectAll: res.data
             }))
             .subscribe( )
     }
 
-    private onEnterProject = ( projectID: string ) => {
-        console.log( projectID )
+    private onEnterProject = ( project: IProject ) => {
+         ProjectStore.data.save( project );
+         this.props.router.push(`/project/${project._id}`);
+    }
+
+    private renderToJsx = ( project: IProject ) => {
+        return <Card key={ project._id } className="project-card" bodyStyle={{ padding: 0, height: '100%'}}>
+            <div className="image" onClick={( ) => this.onEnterProject( project )}>
+                <Image src={ project.cover } />
+            </div> 
+            <div className="info" onClick={( ) => this.onEnterProject( project )}>
+                 <h3>{ project.name }</h3>
+                 <p>{ project.info }</p>
+           </div>                     
+      </Card>
     }
 
 
@@ -125,16 +138,23 @@ class ProjectAllPage extends React.PureComponent< IProps, IState > {
                 <div className="projects-block">
                     {
                          projectAll.map(( project ) => {
-                             if ( this.userData._id !== project.creator._id ) { return } 
-                             return <Card key={ project._id } className="project-card" bodyStyle={{ padding: 0, height: '100%'}}>
-                                <div className="image" onClick={( ) => this.onEnterProject( project._id )}>
-                                    <Image src={ project.cover } />
-                                </div> 
-                                <div className="info" onClick={( ) => this.onEnterProject( project._id )}>
-                                    <h3>{ project.name }</h3>
-                                    <p>{ project.info }</p>
-                                </div>                     
-                             </Card>                     
+                             if ( this.userData._id === project.creator._id ) {
+                                 return this.renderToJsx( project )
+                             } 
+                             project.leader.some(( leader ) => {
+                                 if ( this.userData._id === leader._id ) {
+                                    this.renderToJsx( project );
+                                    return true;
+                                 }
+                                 return false;
+                             })
+                             project.member.some(( member ) => {
+                                 if ( this.userData._id === member._id ) {
+                                    this.renderToJsx( project );
+                                    return true;
+                                 }
+                                 return false;
+                             })              
                          })                        
                     }
                      <Card  className="project-card add-project-card"  bodyStyle={{ padding: 0, height: '100%'}}>
@@ -150,17 +170,7 @@ class ProjectAllPage extends React.PureComponent< IProps, IState > {
                 </div>
                 <div className="projects-block">
                      {
-                         projectAll.map(( project ) => {
-                             return <Card key={ project._id } className="project-card" bodyStyle={{ padding: 0, height: '100%'}}>
-                                <div className="image" onClick={( ) => this.onEnterProject( project._id )}>
-                                    <Image src={ project.cover } />
-                                </div> 
-                                <div className="info" onClick={( ) => this.onEnterProject( project._id )}>
-                                    <h3>{ project.name }</h3>
-                                    <p>{ project.info }</p>
-                                </div>                     
-                             </Card>
-                         })
+                         projectAll.map( this.renderToJsx )
                      }
                 </div>
             </div>

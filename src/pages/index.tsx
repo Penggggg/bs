@@ -20,13 +20,21 @@ export default {
                 ).catch(( err: Error ) => showMessage( err, './login.page' ))
             },            
         },{
-            path: 'project',
+            path: 'projects',
             onEnter: auth.requireLogin,
             getComponent: ( nextstate: RouterState , cb: Function ) => {
                 System.import('./project/project-all.page').then( module => { 
                     cb( null, module.default )}
-                ).catch(( err: Error ) => showMessage( err, './login.page' ))
-            },            
+                ).catch(( err: Error ) => showMessage( err, './project-all.page' ))
+            }           
+        },{
+            path: 'project/:id',
+            onEnter: auth.requireLogin,
+            getComponent: ( nextstate: RouterState , cb: Function ) => {
+                System.import('./project/project.page').then( module => { 
+                    cb( null, module.default )}
+                ).catch(( err: Error ) => showMessage( err, './project.page' ))
+            }  
         }
     ]
 }

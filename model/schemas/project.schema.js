@@ -53,6 +53,15 @@ exports.PorjectSchema.statics.findAllWithNest = function (select) {
             .exec(function (err, data) { return returnData(err, resolve, reject, data); });
     });
 };
+exports.PorjectSchema.statics.findDetailByIdWithNest = function (id, select) {
+    var _this = this;
+    return new Promise(function (resolve, reject) {
+        _this
+            .find({ _id: id })
+            .populate('creator', select)
+            .exec(function (err, data) { return returnData(err, resolve, reject, data); });
+    });
+};
 exports.PorjectSchema.statics.save = function (name, info, userID) {
     var _this = this;
     return new Promise(function (resolve, reject) {

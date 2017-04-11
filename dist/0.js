@@ -53,7 +53,6 @@ var ProjectAllPage = (function (_super) {
             }
         };
         _this.watchRole = function () {
-            console.log('???');
             _this.projectSub = _this.projectStore.data.data$
                 .combineLatest(_this.userStore.data.userData$)
                 .debounceTime(500)

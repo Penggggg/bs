@@ -57,6 +57,15 @@ PorjectSchema.statics.findAllWithNest =  function( select ) {
     })
 }
 
+PorjectSchema.statics.findDetailByIdWithNest = function( id, select ) {
+    return new Promise(( resolve, reject ) => {
+        this
+            .find({ _id: id })
+            .populate('creator', select )
+            .exec(( err, data ) => returnData( err, resolve, reject, data ))
+    })
+}
+
 
 PorjectSchema.statics.save = function( name, info, userID ) {
     return new Promise(( resolve, reject ) => {

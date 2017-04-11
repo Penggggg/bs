@@ -3,7 +3,7 @@ import { login } from './auth/login';
 import { resetPsw } from './auth/reset';
 import { sginIn } from './auth/signin';
 import { createProject } from './project/create-project';
-import { allProject } from './project/query-project';
+import { allProject, projectDetail } from './project/query-project';
 
 
 export default ( router ) => {
@@ -22,6 +22,8 @@ export default ( router ) => {
     router.post('/api/v1/create-project', createProject )
     /**项目模块：返回所有项目 */
     router.get('/api/v1/all-project', allProject )
+    /**项目模块：返回项目详情 */
+    router.get('/api/v1/project/:id', projectDetail )
 }
 
 

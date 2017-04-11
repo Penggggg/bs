@@ -51,3 +51,17 @@ exports.allProject = function (ctx) { return __awaiter(_this, void 0, void 0, fu
         }
     });
 }); };
+exports.projectDetail = function (ctx) { return __awaiter(_this, void 0, void 0, function () {
+    var id, data;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                id = ctx.params.id;
+                return [4 /*yield*/, project_model_1.default.findDetailByIdWithNest(id, '_id name')];
+            case 1:
+                data = _a.sent();
+                ctx.body = data[0];
+                return [2 /*return*/];
+        }
+    });
+}); };

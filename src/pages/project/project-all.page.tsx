@@ -66,7 +66,6 @@ class ProjectAllPage extends React.PureComponent< IProps, IState > {
     }
 
     private watchRole = ( ) => {
-        console.log('???')
         this.projectSub = this.projectStore.data.data$
             .combineLatest(this.userStore.data.userData$)
             .debounceTime( 500 )

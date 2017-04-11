@@ -54,6 +54,8 @@ exports.default = function (router) {
     router.post('/api/v1/create-project', create_project_1.createProject);
     /**项目模块：返回所有项目 */
     router.get('/api/v1/all-project', query_project_1.allProject);
+    /**项目模块：返回项目详情 */
+    router.get('/api/v1/project/:id', query_project_1.projectDetail);
 };
 function getIndex(ctx) {
     return __awaiter(this, void 0, void 0, function () {

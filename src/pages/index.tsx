@@ -34,7 +34,54 @@ export default {
                 System.import('./project/project.page').then( module => { 
                     cb( null, module.default )}
                 ).catch(( err: Error ) => showMessage( err, './project.page' ))
-            }  
+            },
+            childRoutes: [
+                {
+                    path: 'tasks',
+                    onEnter: auth.requireLogin,
+                    getComponent: ( nextstate: RouterState , cb: Function ) => {
+                        System.import('./project/task/project-tasks.page').then( module => { 
+                            cb( null, module.default )}
+                        ).catch(( err: Error ) => showMessage( err, './project-tasks.page' ))
+                    }            
+                },
+                {
+                    path: 'shares',
+                    onEnter: auth.requireLogin,
+                    getComponent: ( nextstate: RouterState , cb: Function ) => {
+                        System.import('./project/share/project-shares.page').then( module => { 
+                            cb( null, module.default )}
+                        ).catch(( err: Error ) => showMessage( err, './project-shares.page' ))
+                    }            
+                },
+                {
+                    path: 'chats',
+                    onEnter: auth.requireLogin,
+                    getComponent: ( nextstate: RouterState , cb: Function ) => {
+                        System.import('./project/chat/project-chat.page').then( module => { 
+                            cb( null, module.default )}
+                        ).catch(( err: Error ) => showMessage( err, './project-chat.page' ))
+                    }            
+                },
+                {
+                    path: 'files',
+                    onEnter: auth.requireLogin,
+                    getComponent: ( nextstate: RouterState , cb: Function ) => {
+                        System.import('./project/file/project-files.page').then( module => { 
+                            cb( null, module.default )}
+                        ).catch(( err: Error ) => showMessage( err, './project-files.page' ))
+                    }            
+                },
+                {
+                    path: 'schedules',
+                    onEnter: auth.requireLogin,
+                    getComponent: ( nextstate: RouterState , cb: Function ) => {
+                        System.import('./project/schedule/project-schedules.page').then( module => { 
+                            cb( null, module.default )}
+                        ).catch(( err: Error ) => showMessage( err, './project-schedules.page' ))
+                    }            
+                },
+            ]  
         }
     ]
 }

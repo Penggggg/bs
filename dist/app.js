@@ -269,7 +269,7 @@ var auth_login_service_1 = __webpack_require__(538);
 exports.default = {
     path: '/',
     getComponent: function (nextstate, cb) {
-        __webpack_require__.e/* import() */(2).then(__webpack_require__.bind(null, 1359)).then(function (module) {
+        __webpack_require__.e/* import() */(10).then(__webpack_require__.bind(null, 1359)).then(function (module) {
             cb(null, module.default);
         }).catch(function (err) { return showMessage(err, './app.page'); });
     },
@@ -277,7 +277,7 @@ exports.default = {
         {
             path: 'login',
             getComponent: function (nextstate, cb) {
-                __webpack_require__.e/* import() */(1).then(__webpack_require__.bind(null, 1360)).then(function (module) {
+                __webpack_require__.e/* import() */(9).then(__webpack_require__.bind(null, 1360)).then(function (module) {
                     cb(null, module.default);
                 }).catch(function (err) { return showMessage(err, './login.page'); });
             },
@@ -285,7 +285,7 @@ exports.default = {
             path: 'projects',
             onEnter: auth_login_service_1.default.requireLogin,
             getComponent: function (nextstate, cb) {
-                __webpack_require__.e/* import() */(0).then(__webpack_require__.bind(null, 1361)).then(function (module) {
+                __webpack_require__.e/* import() */(8).then(__webpack_require__.bind(null, 1361)).then(function (module) {
                     cb(null, module.default);
                 }).catch(function (err) { return showMessage(err, './project-all.page'); });
             }
@@ -293,10 +293,57 @@ exports.default = {
             path: 'project/:id',
             onEnter: auth_login_service_1.default.requireLogin,
             getComponent: function (nextstate, cb) {
-                __webpack_require__.e/* import() */(3).then(__webpack_require__.bind(null, 1362)).then(function (module) {
+                __webpack_require__.e/* import() */(7).then(__webpack_require__.bind(null, 1362)).then(function (module) {
                     cb(null, module.default);
                 }).catch(function (err) { return showMessage(err, './project.page'); });
-            }
+            },
+            childRoutes: [
+                {
+                    path: 'tasks',
+                    onEnter: auth_login_service_1.default.requireLogin,
+                    getComponent: function (nextstate, cb) {
+                        __webpack_require__.e/* import() */(12).then(__webpack_require__.bind(null, 1389)).then(function (module) {
+                            cb(null, module.default);
+                        }).catch(function (err) { return showMessage(err, './project-tasks.page'); });
+                    }
+                },
+                {
+                    path: 'shares',
+                    onEnter: auth_login_service_1.default.requireLogin,
+                    getComponent: function (nextstate, cb) {
+                        __webpack_require__.e/* import() */(13).then(__webpack_require__.bind(null, 1388)).then(function (module) {
+                            cb(null, module.default);
+                        }).catch(function (err) { return showMessage(err, './project-shares.page'); });
+                    }
+                },
+                {
+                    path: 'chats',
+                    onEnter: auth_login_service_1.default.requireLogin,
+                    getComponent: function (nextstate, cb) {
+                        __webpack_require__.e/* import() */(17).then(__webpack_require__.bind(null, 1390)).then(function (module) {
+                            cb(null, module.default);
+                        }).catch(function (err) { return showMessage(err, './project-chat.page'); });
+                    }
+                },
+                {
+                    path: 'files',
+                    onEnter: auth_login_service_1.default.requireLogin,
+                    getComponent: function (nextstate, cb) {
+                        __webpack_require__.e/* import() */(14).then(__webpack_require__.bind(null, 1391)).then(function (module) {
+                            cb(null, module.default);
+                        }).catch(function (err) { return showMessage(err, './project-files.page'); });
+                    }
+                },
+                {
+                    path: 'schedules',
+                    onEnter: auth_login_service_1.default.requireLogin,
+                    getComponent: function (nextstate, cb) {
+                        __webpack_require__.e/* import() */(0).then(__webpack_require__.bind(null, 1392)).then(function (module) {
+                            cb(null, module.default);
+                        }).catch(function (err) { return showMessage(err, './project-schedules.page'); });
+                    }
+                },
+            ]
         }
     ]
 };

@@ -1,6 +1,6 @@
 webpackJsonp([1],{
 
-/***/ 1360:
+/***/ 1361:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -17,327 +17,191 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
-var rxjs_1 = __webpack_require__(75);
 var http_service_1 = __webpack_require__(1371);
 var auth_login_service_1 = __webpack_require__(538);
+var project_1 = __webpack_require__(540);
+var user_1 = __webpack_require__(541);
 var notification_service_1 = __webpack_require__(539);
 var antd_1 = __webpack_require__(153);
-__webpack_require__(1378);
-var TabPane = antd_1.Tabs.TabPane;
+var Image_component_1 = __webpack_require__(1380);
+__webpack_require__(1379);
 var FormItem = antd_1.Form.Item;
-var LoginPage = (function (_super) {
-    __extends(LoginPage, _super);
-    function LoginPage() {
+var ProjectAllPage = (function (_super) {
+    __extends(ProjectAllPage, _super);
+    function ProjectAllPage() {
         var _this = _super.call(this) || this;
-        _this.logInSubmit = function (e) {
-            e.preventDefault();
-            _this.setState({ loginLoading: true });
-            _this.props.form.validateFields(['userName', 'userPhone', 'password', 'password2'], function (err, values) {
-                if (!err) {
-                    http_service_1.default.post('/api/v1/login', values)
-                        .do(_this.analyseSubmit)
-                        .catch(_this.errorSumitHandler)
-                        .subscribe();
+        _this.watchingRole = false;
+        _this.formProjectName = 'projectName';
+        _this.formProjectInfo = 'projectInfo';
+        _this.userData = auth_login_service_1.default.userData();
+        _this.userStore = user_1.default;
+        _this.projectStore = project_1.default;
+        _this.fetchAllProject = function () {
+            http_service_1.default
+                .get('/api/v1/all-project')
+                .do(function (res) { return _this.setState({
+                projectAll: res.data
+            }); })
+                .subscribe();
+        };
+        _this.onEnterProject = function (project) {
+            /**保存project数据 */
+            _this.projectStore.data.save(project);
+            if (!_this.watchingRole) {
+                _this.watchingRole = true;
+                _this.watchRole();
+            }
+        };
+        _this.watchRole = function () {
+            _this.projectSub = _this.projectStore.data.data$
+                .combineLatest(_this.userStore.data.userData$)
+                .debounceTime(500)
+                .do(function (res) {
+                console.log('权限判断中...');
+                var isLeader = false;
+                var isMember = false;
+                var isCreator = false;
+                var userID = res[1]._id;
+                /**creator判断 */
+                if (userID === res[0].creator._id) {
+                    isCreator = true;
+                    _this.projectStore.role.save('creator');
+                    _this.props.router.push("/project/" + res[0]._id + "/tasks");
                 }
-            });
-        };
-        _this.signInSubmit = function (e) {
-            e.preventDefault();
-            _this.setState({ signInLoading: true });
-            _this.props.form.validateFields(['signPhone', 'signPsw'], function (err, values) {
-                if (!err) {
-                    http_service_1.default.post('/api/v1/signin', values)
-                        .do(_this.analyseSignIn)
-                        .catch(_this.errorSumitHandler)
-                        .subscribe();
-                }
-            });
-        };
-        _this.resetSubmit = function (e) {
-            e.preventDefault();
-            _this.setState({ resetLoading: true });
-            _this.props.form.validateFields(['resetUserName', 'reseUserPhone', 'resetPsw', 'resetPsw2'], function (err, values) {
-                if (!err) {
-                    http_service_1.default.post('/api/v1/resetpsw', values)
-                        .do(_this.analyseReset)
-                        .catch(_this.errorSumitHandler)
-                        .subscribe();
-                }
-            });
-        };
-        _this.checkPswByRepeat = function (rule, value, callback) {
-            var form = _this.props.form;
-            if (value && value !== form.getFieldValue('password')) {
-                callback('2次输入的密码不一致');
-            }
-            else {
-                callback();
-            }
-        };
-        _this.checkResetPswByRepeat = function (rule, value, callback) {
-            var form = _this.props.form;
-            if (value && value !== form.getFieldValue('resetPsw')) {
-                callback('2次输入的密码不一致');
-            }
-            else {
-                callback();
-            }
-        };
-        _this.CheckPswByPsw = function (rule, value, callback) {
-            var form = _this.props.form;
-            var psw2 = form.getFieldValue('password2');
-            if (value && psw2) {
-                form.setFields({
-                    password2: {
-                        value: psw2,
-                        errors: value !== psw2 ? [new Error('2次输入的密码不一致')] : null
+                /**leader判断 */
+                isLeader = res[0].leader.some(function (leader) {
+                    if (userID === leader._id) {
+                        _this.projectStore.role.save('leader');
+                        _this.props.router.push("/project/" + res[0]._id + "/tasks");
+                        return true;
                     }
+                    return false;
                 });
-                callback();
-            }
-            callback();
-        };
-        _this.CheckResetPswByPsw = function (rule, value, callback) {
-            var form = _this.props.form;
-            var psw2 = form.getFieldValue('resetPsw2');
-            if (value && psw2) {
-                form.setFields({
-                    resetPsw2: {
-                        value: psw2,
-                        errors: value !== psw2 ? [new Error('2次输入的密码不一致')] : null
-                    }
-                });
-                callback();
-            }
-            callback();
-        };
-        _this.resetPsw = function () {
-            _this.setState({
-                resetFormShow: true
-            });
-        };
-        _this.analyseReset = function (_a) {
-            var status = _a.status, msg = _a.msg;
-            var form = _this.props.form;
-            _this.setState({ resetLoading: false });
-            notification_service_1.default.open({
-                msg: msg,
-                title: "\u91CD\u7F6E\u5BC6\u7801" + (status === '200' ? '成功' : '失败'),
-                type: status === '200' ? 'ok' : 'error'
-            });
-            if (status === '4001') {
-                var username = form.getFieldValue('resetUserName');
-                form.setFields({
-                    resetUserName: {
-                        value: username,
-                        errors: [new Error('用户不存在!')]
-                    }
-                });
-            }
-            else if (status === '4002') {
-                var username = form.getFieldValue('reseUserPhone');
-                form.setFields({
-                    reseUserPhone: {
-                        value: username,
-                        errors: [new Error('手机号码不匹配!')]
-                    }
-                });
-            }
-            else if (status === '4003') {
-                var psw2 = form.getFieldValue('resetPsw2');
-                form.setFields({
-                    resetPsw2: {
-                        value: psw2,
-                        errors: [new Error('2次输入的密码不一致')]
-                    }
-                });
-            }
-            else if (status === '200') {
-                setTimeout(function () {
-                    _this.setState({ resetFormShow: false });
-                    form.resetFields();
-                }, 2000);
-            }
-        };
-        _this.analyseSubmit = function (_a) {
-            var status = _a.status, msg = _a.msg, user = _a.user;
-            var form = _this.props.form;
-            _this.setState({ loginLoading: false });
-            notification_service_1.default.open({
-                msg: msg,
-                title: "\u6CE8\u518C" + (status === '200' ? '成功' : '失败'),
-                type: status === '200' ? 'ok' : 'error'
-            });
-            if (status === '4001') {
-                var psw2 = form.getFieldValue('password2');
-                form.setFields({
-                    password2: {
-                        value: psw2,
-                        errors: [new Error('2次输入的密码不一致')]
-                    }
-                });
-            }
-            else if (status === '4002') {
-                var phone = form.getFieldValue('userPhone');
-                form.setFields({
-                    userPhone: {
-                        value: phone,
-                        errors: [new Error('该手机号已被注册!')]
-                    }
-                });
-            }
-            else if (status === '200') {
-                setTimeout(function () {
-                    _this.setState({
-                        activeKey: '1'
+                /**member判断 */
+                if (!isLeader) {
+                    isMember = res[0].member.some(function (member) {
+                        if (userID === member._id) {
+                            _this.projectStore.role.save('member');
+                            _this.props.router.push("/project/" + res[0]._id + "/tasks");
+                            return true;
+                        }
+                        return false;
                     });
-                    form.resetFields();
-                }, 2000);
-            }
+                }
+                /**没有权限 */
+                if (!(isCreator || isLeader || isMember)) {
+                    antd_1.Modal.warning({
+                        title: 'Warning',
+                        content: '您没有该项目的权限！请先申请权限'
+                    });
+                }
+            })
+                .subscribe();
         };
-        _this.analyseSignIn = function (_a) {
-            var status = _a.status, msg = _a.msg, user = _a.user;
-            var form = _this.props.form;
-            _this.setState({ signInLoading: false });
-            notification_service_1.default.open({
-                msg: msg,
-                title: "\u767B\u5F55" + (status === '200' ? '成功' : '失败'),
-                type: status === '200' ? 'ok' : 'error'
-            });
-            if (status === '4001') {
-                var phone = form.getFieldValue('signPhone');
-                form.setFields({
-                    signPhone: {
-                        value: phone,
-                        errors: [new Error('该手机号未注册')]
-                    }
-                });
-            }
-            else if (status === '4002') {
-                var value = form.getFieldValue('signPsw');
-                form.setFields({
-                    signPsw: {
-                        value: value,
-                        errors: [new Error('密码错误!')]
-                    }
-                });
-            }
-            else if (status === '200') {
-                setTimeout(function () {
-                    form.resetFields();
-                    /**本地登录 */
-                    auth_login_service_1.default.signIn(user);
-                    /**跳转 */
-                    _this.props.router.push('/projects');
-                }, 2000);
-            }
+        _this.renderToJsx = function (project) {
+            return React.createElement(antd_1.Card, { key: project._id, className: "project-card", bodyStyle: { padding: 0, height: '100%' } },
+                React.createElement("div", { className: "image", onClick: function () { return _this.onEnterProject(project); } },
+                    React.createElement(Image_component_1.default, { src: project.cover })),
+                React.createElement("div", { className: "info", onClick: function () { return _this.onEnterProject(project); } },
+                    React.createElement("h3", null, project.name),
+                    React.createElement("p", null, project.info)));
         };
-        _this.errorSumitHandler = function (e) {
-            notification_service_1.default.open({
-                title: '注册请求错误',
-                msg: "\u9519\u8BEF\uFF1A" + e,
-                type: 'error'
+        _this.newProjectSubmit = function () {
+            var _a = _this, formProjectName = _a.formProjectName, formProjectInfo = _a.formProjectInfo;
+            _this.props.form.validateFields([formProjectName, formProjectInfo], function (err, values) {
+                if (!err) {
+                    _this.setState({
+                        formSubmiting: true
+                    });
+                    http_service_1.default.post('/api/v1/create-project', Object.assign(values, { creatorID: auth_login_service_1.default.userData()._id }))
+                        .do(_this.analyseProjectSubmit)
+                        .subscribe();
+                }
             });
-            return rxjs_1.Observable.of(e);
+        };
+        _this.analyseProjectSubmit = function (res) {
+            notification_service_1.default.open({
+                title: '系统消息',
+                msg: res.msg,
+                type: res.status === '200' ? 'ok' : 'error'
+            });
+            setTimeout(function () {
+                _this.setState({
+                    formSubmiting: false,
+                    dynamicFormShow: false
+                });
+                _this.props.form.resetFields();
+                _this.fetchAllProject();
+            }, 1500);
         };
         _this.state = {
-            activeKey: "1",
-            loginLoading: false,
-            resetLoading: false,
-            signInLoading: false,
-            resetFormShow: false
+            dynamicFormShow: false,
+            formSubmiting: false,
+            projectAll: []
         };
         return _this;
     }
-    LoginPage.prototype.render = function () {
+    ProjectAllPage.prototype.componentDidMount = function () {
+        this.fetchAllProject();
+    };
+    ProjectAllPage.prototype.componentWillUnmount = function () {
+        this.projectSub.unsubscribe();
+    };
+    ProjectAllPage.prototype.render = function () {
         var _this = this;
         var getFieldDecorator = this.props.form.getFieldDecorator;
-        var _a = this.state, activeKey = _a.activeKey, loginLoading = _a.loginLoading, resetLoading = _a.resetLoading, signInLoading = _a.signInLoading, resetFormShow = _a.resetFormShow;
-        /**注册表单 */
-        var loginForm = React.createElement(antd_1.Form, { onSubmit: this.logInSubmit, className: "login-form" },
-            React.createElement(FormItem, { hasFeedback: true }, getFieldDecorator('userName', {
-                rules: [{ required: true, message: 'Please input your username!' }],
-            })(React.createElement(antd_1.Input, { prefix: React.createElement(antd_1.Icon, { type: "user", style: { fontSize: 16 } }), placeholder: "Username" }))),
-            React.createElement(FormItem, null, getFieldDecorator('userPhone', {
-                rules: [{ required: true, message: 'Please input your phone!' }],
-            })(React.createElement(antd_1.Input, { prefix: React.createElement(antd_1.Icon, { type: "phone", style: { fontSize: 16 } }), placeholder: "userPhone", type: "number" }))),
-            React.createElement(FormItem, null, getFieldDecorator('password', {
-                rules: [
-                    { required: true, message: 'Please input your Password!' },
-                    { validator: this.CheckPswByPsw }
-                ],
-            })(React.createElement(antd_1.Input, { prefix: React.createElement(antd_1.Icon, { type: "lock", style: { fontSize: 16 } }), type: "password", placeholder: "Password" }))),
-            React.createElement(FormItem, null, getFieldDecorator('password2', {
-                rules: [
-                    { required: true, message: 'Please input your Password right again' },
-                    { validator: this.checkPswByRepeat }
-                ],
-            })(React.createElement(antd_1.Input, { prefix: React.createElement(antd_1.Icon, { type: "lock", style: { fontSize: 16 } }), type: "password", placeholder: "Password Again" }))),
-            React.createElement(FormItem, null,
-                getFieldDecorator('remember', {
-                    valuePropName: 'checked',
-                    initialValue: true,
-                })(React.createElement(antd_1.Checkbox, null, "Remember me")),
-                React.createElement("a", { className: "login-form-forgot", onClick: this.resetPsw }, "Forgot password")),
-            React.createElement(FormItem, null,
-                React.createElement(antd_1.Button, { type: "primary", htmlType: "submit", className: "login-form-button", loading: loginLoading }, "Log in")));
-        /**登录表单 */
-        var signInForm = React.createElement(antd_1.Form, { onSubmit: this.signInSubmit, className: "login-form" },
-            React.createElement(FormItem, null, getFieldDecorator('signPhone', {
-                rules: [{ required: true, message: 'Please input your phone!' }],
-            })(React.createElement(antd_1.Input, { prefix: React.createElement(antd_1.Icon, { type: "phone", style: { fontSize: 16 } }), placeholder: "phone" }))),
-            React.createElement(FormItem, null, getFieldDecorator('signPsw', {
-                rules: [
-                    { required: true, message: 'Please input your Password!' }
-                ]
-            })(React.createElement(antd_1.Input, { prefix: React.createElement(antd_1.Icon, { type: "lock", style: { fontSize: 16 } }), type: "password", placeholder: "Password" }))),
-            React.createElement(FormItem, null,
-                getFieldDecorator('signRemember', {
-                    valuePropName: 'checked',
-                    initialValue: true,
-                })(React.createElement(antd_1.Checkbox, null, "Remember me")),
-                React.createElement("a", { className: "login-form-forgot", onClick: this.resetPsw }, "Forgot password")),
-            React.createElement(FormItem, null,
-                React.createElement(antd_1.Button, { type: "primary", htmlType: "submit", className: "login-form-button", loading: signInLoading }, "Sign in")));
-        /**忘记密码表单 */
-        var resetForm = React.createElement("div", { className: "modal-resetpsw-form" },
+        var _a = this, formProjectName = _a.formProjectName, formProjectInfo = _a.formProjectInfo;
+        var _b = this.state, dynamicFormShow = _b.dynamicFormShow, formSubmiting = _b.formSubmiting, projectAll = _b.projectAll;
+        /**新增项目表单 */
+        var dynamicForm = React.createElement("div", { className: "modal-resetpsw-form" },
             React.createElement("div", { className: "modal-img" },
-                React.createElement("img", { src: "/static/reset-psw.png", alt: "" })),
+                React.createElement("img", { src: "/static/reset-psw.png", alt: "" }),
+                React.createElement("p", null, "\u521B\u5EFA\u4E00\u4E2A\u65B0\u9879\u76EE")),
             React.createElement(antd_1.Form, { className: "reset-form" },
-                React.createElement(FormItem, null, getFieldDecorator('resetUserName', {
-                    rules: [{ required: true, message: 'Please input your username!' }],
-                })(React.createElement(antd_1.Input, { prefix: React.createElement(antd_1.Icon, { type: "user", style: { fontSize: 16 } }), placeholder: "Username" }))),
-                React.createElement(FormItem, null, getFieldDecorator('reseUserPhone', {
-                    rules: [{ required: true, message: 'Please input your phone!' }]
-                })(React.createElement(antd_1.Input, { prefix: React.createElement(antd_1.Icon, { type: "phone", style: { fontSize: 16 } }), placeholder: "userPhone", type: "number" }))),
-                React.createElement(FormItem, null, getFieldDecorator('resetPsw', {
-                    rules: [
-                        { required: true, message: 'Please input your Password!' },
-                        { validator: this.CheckResetPswByPsw }
-                    ],
-                })(React.createElement(antd_1.Input, { prefix: React.createElement(antd_1.Icon, { type: "lock", style: { fontSize: 16 } }), type: "password", placeholder: "New Password" }))),
-                React.createElement(FormItem, null, getFieldDecorator('resetPsw2', {
-                    rules: [
-                        { required: true, message: 'Please input your Password right again' },
-                        { validator: this.checkResetPswByRepeat }
-                    ]
-                })(React.createElement(antd_1.Input, { prefix: React.createElement(antd_1.Icon, { type: "lock", style: { fontSize: 16 } }), type: "password", placeholder: "Password Again" })))));
-        return React.createElement("div", { className: "login-page" },
-            React.createElement("div", { className: "logo-block" },
-                React.createElement("h1", { className: "title" }, "iTeam"),
-                React.createElement("p", { className: "info" }, "\u4EA7\u54C1\u5F00\u53D1\u56E2\u961F\u534F\u4F5C\u5DE5\u5177")),
-            React.createElement("div", { className: "form-block" },
-                React.createElement(antd_1.Tabs, { activeKey: activeKey, onTabClick: function (e) { return _this.setState({ activeKey: "" + e }); } },
-                    React.createElement(TabPane, { tab: "登录", key: "1" }, signInForm),
-                    React.createElement(TabPane, { tab: "注册", key: "2" }, loginForm))),
-            React.createElement(antd_1.Modal, { title: "Reset Your Password", visible: resetFormShow, onOk: function () { return _this.setState({ resetFormShow: true }); }, onCancel: function () { return _this.setState({ resetFormShow: false }); }, style: { width: '400px !import', padding: '0 85px', marginTop: '-40px' }, footer: [
-                    React.createElement(antd_1.Button, { key: "back", size: "large", onClick: function () { return _this.setState({ resetFormShow: false }); } }, "Cacel"),
-                    React.createElement(antd_1.Button, { key: "submit", type: "primary", size: "large", onClick: this.resetSubmit }, "Submit"),
-                ] }, resetForm));
+                React.createElement(FormItem, null, getFieldDecorator(formProjectName, {
+                    rules: [{ required: true, message: '项目名称不能为空' }],
+                })(React.createElement(antd_1.Input, { prefix: React.createElement(antd_1.Icon, { type: "file-text", style: { fontSize: 16 } }), placeholder: "项目名称" }))),
+                React.createElement(FormItem, null, getFieldDecorator(formProjectInfo, {})(React.createElement(antd_1.Input, { prefix: React.createElement(antd_1.Icon, { type: "link", style: { fontSize: 16 } }), placeholder: "项目简介（选项）" }))),
+                React.createElement(FormItem, null,
+                    React.createElement(antd_1.Button, { type: "primary", size: 'large', style: { width: '100%' }, loading: formSubmiting, onClick: this.newProjectSubmit }, "\u5B8C\u6210\u5E76\u521B\u5EFA"))));
+        return React.createElement("div", { className: "project-all-page" },
+            React.createElement("div", { className: "my-project" },
+                React.createElement("div", { className: "title" },
+                    React.createElement("h2", null, "\u6211\u5DF2\u62E5\u6709\u7684\u9879\u76EE"),
+                    React.createElement("span", null)),
+                React.createElement("div", { className: "projects-block" },
+                    projectAll.map(function (project) {
+                        if (_this.userData._id === project.creator._id) {
+                            return _this.renderToJsx(project);
+                        }
+                        project.leader.some(function (leader) {
+                            if (_this.userData._id === leader._id) {
+                                _this.renderToJsx(project);
+                                return true;
+                            }
+                            return false;
+                        });
+                        project.member.some(function (member) {
+                            if (_this.userData._id === member._id) {
+                                _this.renderToJsx(project);
+                                return true;
+                            }
+                            return false;
+                        });
+                    }),
+                    React.createElement(antd_1.Card, { className: "project-card add-project-card", bodyStyle: { padding: 0, height: '100%' } },
+                        React.createElement(antd_1.Icon, { type: "plus-circle", className: "icon", onClick: function () { return _this.setState({ dynamicFormShow: true }); } }),
+                        React.createElement("p", null, "\u521B\u5EFA\u65B0\u9879\u76EE")))),
+            React.createElement("div", { className: "all-project" },
+                React.createElement("div", { className: "title" },
+                    React.createElement("h2", null, "\u5168\u90E8\u7684\u9879\u76EE"),
+                    React.createElement("span", null)),
+                React.createElement("div", { className: "projects-block" }, projectAll.map(this.renderToJsx))),
+            React.createElement(antd_1.Modal, { title: "创建新项目", footer: null, visible: dynamicFormShow, onCancel: function () { return _this.setState({ dynamicFormShow: false }); }, style: { width: '400px !import', padding: '0 85px' } }, dynamicForm));
     };
-    return LoginPage;
+    return ProjectAllPage;
 }(React.PureComponent));
-exports.default = antd_1.Form.create()(LoginPage);
+exports.default = antd_1.Form.create()(ProjectAllPage);
 
 
 /***/ }),
@@ -2979,7 +2843,7 @@ exports.default = new HttpService();
 
 /***/ }),
 
-/***/ 1374:
+/***/ 1372:
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1363)(undefined);
@@ -2987,20 +2851,35 @@ exports = module.exports = __webpack_require__(1363)(undefined);
 
 
 // module
-exports.push([module.i, ".login-page {\n  position: relative;\n  text-align: center;\n  padding-top: 100px;\n}\n.login-page .logo-block {\n  padding-bottom: 20px;\n}\n.login-page .logo-block .title {\n  font-size: 60px;\n}\n.login-page .logo-block .info {\n  font-size: 20px;\n}\n.login-page .form-block {\n  position: absolute;\n  width: 25%;\n  left: 50%;\n  transform: translate(-50%, 0);\n}\n.login-page .login-form button {\n  width: 80%;\n}\n.login-page .reset-form {\n  width: 80%;\n}\n", ""]);
+exports.push([module.i, ".my-img {\n  opacity: 0;\n  transition: all 0.4s ease;\n}\n.my-img.loaded {\n  opacity: 1;\n}\n", ""]);
 
 // exports
 
 
 /***/ }),
 
-/***/ 1378:
+/***/ 1375:
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(1363)(undefined);
+// imports
+
+
+// module
+exports.push([module.i, "/**2个大block */\n/**标题 */\n/**展示区 */\n/**card */\n/**card: hover */\n.project-all-page {\n  padding: 30px 100px;\n}\n.project-all-page .my-project {\n  margin-bottom: 30px;\n}\n.project-all-page .my-project .title {\n  position: relative;\n}\n.project-all-page .my-project .title h2 {\n  position: relative;\n  font-size: 24px;\n  font-weight: 400;\n  color: #666;\n  padding-bottom: 30px;\n}\n.project-all-page .my-project .title span {\n  display: block;\n  position: absolute;\n  height: 1px;\n  width: 80%;\n  left: 16%;\n  top: 30%;\n  background: linear-gradient(to right, #d9d9d9, #e9e9e9);\n}\n.project-all-page .my-project .projects-block .project-card {\n  width: 240px;\n  padding: 0;\n  display: inline-block;\n  margin: 10px 20px 10px;\n  position: relative;\n  cursor: pointer;\n  transition: all ease 0.4s;\n}\n.project-all-page .my-project .projects-block .project-card .image {\n  display: block;\n  width: 100%;\n}\n.project-all-page .my-project .projects-block .project-card .image img {\n  width: 100%;\n  display: block;\n}\n.project-all-page .my-project .projects-block .project-card .image p {\n  padding-top: 10px;\n}\n.project-all-page .my-project .projects-block .project-card .info {\n  position: absolute;\n  padding: 10px 16px;\n  background: rgba(0, 0, 0, 0.2);\n  width: 100%;\n  left: 0;\n  bottom: 0px;\n  border-radius: 0 0 4px 4px;\n}\n.project-all-page .my-project .projects-block .project-card .info h3 {\n  color: #fff;\n}\n.project-all-page .my-project .projects-block .project-card .info p {\n  color: #fff;\n}\n.project-all-page .my-project .projects-block .project-card:hover {\n  box-shadow: 10px 10px 10px #d9d9d9;\n  border: 1px solid #e9e9e9;\n}\n.project-all-page .my-project .projects-block .add-project-card {\n  min-height: 126px;\n  text-align: center;\n}\n.project-all-page .my-project .projects-block .add-project-card .icon {\n  transition: all 0.4s ease;\n  font-size: 45px;\n  color: #d9d9d9;\n  padding: 20px 0;\n  cursor: pointer;\n}\n.project-all-page .my-project .projects-block .add-project-card p {\n  transition: all 0.4s ease;\n  color: #999;\n  font-size: 16px;\n}\n.project-all-page .my-project .projects-block .add-project-card .ant-card-body:hover .icon,\n.project-all-page .my-project .projects-block .add-project-card .ant-card-body:hover p {\n  color: #49a9ee;\n}\n.project-all-page .all-project {\n  margin-bottom: 30px;\n}\n.project-all-page .all-project .title {\n  position: relative;\n}\n.project-all-page .all-project .title h2 {\n  position: relative;\n  font-size: 24px;\n  font-weight: 400;\n  color: #666;\n  padding-bottom: 30px;\n}\n.project-all-page .all-project .title span {\n  display: block;\n  position: absolute;\n  height: 1px;\n  width: 80%;\n  left: 16%;\n  top: 30%;\n  background: linear-gradient(to right, #d9d9d9, #e9e9e9);\n}\n.project-all-page .all-project .projects-block .project-card {\n  width: 240px;\n  padding: 0;\n  display: inline-block;\n  margin: 10px 20px 10px;\n  position: relative;\n  cursor: pointer;\n  transition: all ease 0.4s;\n}\n.project-all-page .all-project .projects-block .project-card .image {\n  display: block;\n  width: 100%;\n}\n.project-all-page .all-project .projects-block .project-card .image img {\n  width: 100%;\n  display: block;\n}\n.project-all-page .all-project .projects-block .project-card .image p {\n  padding-top: 10px;\n}\n.project-all-page .all-project .projects-block .project-card .info {\n  position: absolute;\n  padding: 10px 16px;\n  background: rgba(0, 0, 0, 0.2);\n  width: 100%;\n  left: 0;\n  bottom: 0px;\n  border-radius: 0 0 4px 4px;\n}\n.project-all-page .all-project .projects-block .project-card .info h3 {\n  color: #fff;\n}\n.project-all-page .all-project .projects-block .project-card .info p {\n  color: #fff;\n}\n.project-all-page .all-project .projects-block .project-card:hover {\n  box-shadow: 10px 10px 10px #d9d9d9;\n  border: 1px solid #e9e9e9;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ 1376:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1374);
+var content = __webpack_require__(1372);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(1364)(content, {});
@@ -3009,8 +2888,8 @@ if(content.locals) module.exports = content.locals;
 if(false) {
 	// When the styles change, update the <style> tags
 	if(!content.locals) {
-		module.hot.accept("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./login.less", function() {
-			var newContent = require("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./login.less");
+		module.hot.accept("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./Image.less", function() {
+			var newContent = require("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./Image.less");
 			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 			update(newContent);
 		});
@@ -3018,6 +2897,77 @@ if(false) {
 	// When the module is disposed, remove the <style> tags
 	module.hot.dispose(function() { update(); });
 }
+
+/***/ }),
+
+/***/ 1379:
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(1375);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(1364)(content, {});
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./project-all.less", function() {
+			var newContent = require("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./project-all.less");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+
+/***/ 1380:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var React = __webpack_require__(0);
+__webpack_require__(1376);
+var Image = (function (_super) {
+    __extends(Image, _super);
+    function Image() {
+        var _this = _super.call(this) || this;
+        _this.onLoadHandler = function () {
+            _this.setState({
+                imgLoaded: true
+            });
+        };
+        _this.state = {
+            imgLoaded: false
+        };
+        return _this;
+    }
+    Image.prototype.render = function () {
+        var imgLoaded = this.state.imgLoaded;
+        var _a = this.props, src = _a.src, _b = _a.alt, alt = _b === void 0 ? '' : _b;
+        return React.createElement("img", { src: src, alt: alt, onLoad: this.onLoadHandler, className: imgLoaded ? "my-img loaded" : "my-img" });
+    };
+    return Image;
+}(React.PureComponent));
+exports.default = Image;
+
 
 /***/ })
 

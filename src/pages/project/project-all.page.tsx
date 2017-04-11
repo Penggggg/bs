@@ -82,14 +82,14 @@ class ProjectAllPage extends React.PureComponent< IProps, IState > {
                 if ( userID === res[0].creator._id ) {
                     isCreator = true;
                     this.projectStore.role.save('creator');
-                    this.props.router.push(`/project/${res[0]._id}`)
+                    this.props.router.push(`/project/${res[0]._id}/tasks`)
                 }
 
                 /**leader判断 */
                 isLeader = res[0].leader.some(( leader ) => {
                     if ( userID === leader._id ) {
                         this.projectStore.role.save('leader');
-                        this.props.router.push(`/project/${res[0]._id}`);
+                        this.props.router.push(`/project/${res[0]._id}/tasks`);
                         return true;
                     }
                     return false;
@@ -100,7 +100,7 @@ class ProjectAllPage extends React.PureComponent< IProps, IState > {
                     isMember = res[0].member.some(( member ) => {
                         if ( userID === member._id ) {
                             this.projectStore.role.save('member');
-                            this.props.router.push(`/project/${res[0]._id}`);
+                            this.props.router.push(`/project/${res[0]._id}/tasks`);
                             return true;             
                         }
                         return false;

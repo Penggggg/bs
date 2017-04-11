@@ -1,6 +1,6 @@
 webpackJsonp([4],{
 
-/***/ 1348:
+/***/ 1349:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -18,7 +18,7 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
 var ReactDom = __webpack_require__(12);
-var react_router_1 = __webpack_require__(153);
+var react_router_1 = __webpack_require__(152);
 var pages_1 = __webpack_require__(537);
 var App = (function (_super) {
     __extends(App, _super);
@@ -35,7 +35,7 @@ ReactDom.render(React.createElement(App, null), document.querySelector('#app'));
 
 /***/ }),
 
-/***/ 1349:
+/***/ 1350:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -68,7 +68,7 @@ exports.default = new localStorageService();
 
 /***/ }),
 
-/***/ 1350:
+/***/ 1351:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -95,7 +95,7 @@ exports.default = new socketService();
 
 /***/ }),
 
-/***/ 1351:
+/***/ 1352:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -130,7 +130,7 @@ exports.default = ProjectData;
 
 /***/ }),
 
-/***/ 1352:
+/***/ 1353:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -165,7 +165,7 @@ exports.default = ProjecRole;
 
 /***/ }),
 
-/***/ 1353:
+/***/ 1354:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -196,26 +196,6 @@ var UserData = (function () {
     return UserData;
 }());
 exports.default = UserData;
-
-
-/***/ }),
-
-/***/ 1354:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var signIn_store_1 = __webpack_require__(1355);
-var data_store_1 = __webpack_require__(1353);
-var UserStore = (function () {
-    function UserStore() {
-        this.signIn = new signIn_store_1.default();
-        this.data = new data_store_1.default();
-    }
-    return UserStore;
-}());
-exports.default = new UserStore();
 
 
 /***/ }),
@@ -333,9 +313,9 @@ function showMessage(err, pageName) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var local_storage_service_1 = __webpack_require__(1349);
-var socket_service_1 = __webpack_require__(1350);
-var user_1 = __webpack_require__(1354);
+var local_storage_service_1 = __webpack_require__(1350);
+var socket_service_1 = __webpack_require__(1351);
+var user_1 = __webpack_require__(541);
 var project_1 = __webpack_require__(540);
 var authLoginService = (function () {
     function authLoginService() {
@@ -402,7 +382,7 @@ exports.default = new authLoginService();
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
-var antd_1 = __webpack_require__(114);
+var antd_1 = __webpack_require__(153);
 var NotificationService = (function () {
     function NotificationService() {
     }
@@ -427,8 +407,8 @@ exports.default = new NotificationService();
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var role_store_1 = __webpack_require__(1352);
-var data_store_1 = __webpack_require__(1351);
+var role_store_1 = __webpack_require__(1353);
+var data_store_1 = __webpack_require__(1352);
 var ProjectStore = (function () {
     function ProjectStore() {
         this.role = new role_store_1.default();
@@ -439,6 +419,26 @@ var ProjectStore = (function () {
 exports.default = new ProjectStore();
 
 
+/***/ }),
+
+/***/ 541:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var signIn_store_1 = __webpack_require__(1355);
+var data_store_1 = __webpack_require__(1354);
+var UserStore = (function () {
+    function UserStore() {
+        this.signIn = new signIn_store_1.default();
+        this.data = new data_store_1.default();
+    }
+    return UserStore;
+}());
+exports.default = new UserStore();
+
+
 /***/ })
 
-},[1348]);
+},[1349]);

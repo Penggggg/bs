@@ -20,9 +20,9 @@ var React = __webpack_require__(0);
 var http_service_1 = __webpack_require__(1371);
 var auth_login_service_1 = __webpack_require__(538);
 var project_1 = __webpack_require__(540);
-var user_1 = __webpack_require__(1354);
+var user_1 = __webpack_require__(541);
 var notification_service_1 = __webpack_require__(539);
-var antd_1 = __webpack_require__(114);
+var antd_1 = __webpack_require__(153);
 var Image_component_1 = __webpack_require__(1380);
 __webpack_require__(1379);
 var FormItem = antd_1.Form.Item;
@@ -56,7 +56,7 @@ var ProjectAllPage = (function (_super) {
             console.log('???');
             _this.projectSub = _this.projectStore.data.data$
                 .combineLatest(_this.userStore.data.userData$)
-                .distinct()
+                .debounceTime(500)
                 .do(function (res) {
                 console.log('权限判断中...');
                 var isLeader = false;

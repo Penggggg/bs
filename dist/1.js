@@ -21,7 +21,7 @@ var rxjs_1 = __webpack_require__(75);
 var http_service_1 = __webpack_require__(1371);
 var auth_login_service_1 = __webpack_require__(538);
 var notification_service_1 = __webpack_require__(539);
-var antd_1 = __webpack_require__(114);
+var antd_1 = __webpack_require__(153);
 __webpack_require__(1378);
 var TabPane = antd_1.Tabs.TabPane;
 var FormItem = antd_1.Form.Item;

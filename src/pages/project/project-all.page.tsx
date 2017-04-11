@@ -69,7 +69,7 @@ class ProjectAllPage extends React.PureComponent< IProps, IState > {
         console.log('???')
         this.projectSub = this.projectStore.data.data$
             .combineLatest(this.userStore.data.userData$)
-            .distinct( )
+            .debounceTime( 500 )
             .do( res => {
                 console.log('权限判断中...')
 

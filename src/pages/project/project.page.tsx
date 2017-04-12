@@ -2,31 +2,41 @@ import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
 import { Layout, Row, Col, Breadcrumb, Menu, Icon } from 'antd';
 
-import './project.less';
 import http from '../../services/http.service';
 import projectStore from '../../store/project';
+
+import './project.less';
 import { IProject } from '../../interface/app.interface';
 import { ProjectBread } from '../../containers/project/bread.container';
+import { MemberSlider } from '../../containers/project/memberSlider.container';
 
 
 const { Header, Footer, Sider, Content  } = Layout;
 
 export default class ProjectPage extends React.PureComponent< IProps, IState > {
 
+    
+    private ismemberSliderShow = false;
+    private memberSliderClose: Function;
+
     constructor( ) {
         super( );
         this.state = {
-            menuKey: 'tasks'
+            menuKey: 'tasks',
+            showMember: false
         }
     }
 
     componentWillMount( ) {
+        this.setMenuKey( );
+        this.fetchProject( );
+    }
+
+    fetchProject = ( ) => {
         let { id } = this.props.params;
         http.get<IProject>(`/api/v1/project/${id}`)
             .do(e => projectStore.data.save( e ))
             .subscribe( )
-
-        this.setMenuKey( );
     }
 
     setMenuKey = ( ) => {
@@ -48,6 +58,11 @@ export default class ProjectPage extends React.PureComponent< IProps, IState > {
 
     }
 
+    showMember = ( ) => {
+        console.log('???')
+        this.setState({ showMember: !this.state.showMember })
+    }
+
 
     onEnter = ( item ) => {
         let { id } = this.props.params;
@@ -55,8 +70,7 @@ export default class ProjectPage extends React.PureComponent< IProps, IState > {
     }
 
     render( ) {
-        let { menuKey } = this.state;
-        console.log( menuKey )
+        let { menuKey, showMember } = this.state;
         return <div className="project-page">
             <Layout className="my-layout">
                 <Header className="my-header">
@@ -79,7 +93,7 @@ export default class ProjectPage extends React.PureComponent< IProps, IState > {
                             </Menu>
                         </Col>
                         <Col span={6} className="project-detail-block">
-                            <a><Icon type="user"  />成员</a>
+                            <a onClick={this.showMember}><Icon type="user" />成员</a>
                             <a><Icon type="area-chart" />数据</a>
                             <a><Icon type="setting" />设置</a>
                         </Col>
@@ -88,6 +102,7 @@ export default class ProjectPage extends React.PureComponent< IProps, IState > {
                 <Content>
                     { this.props.children }
                 </Content>
+                <MemberSlider show={ showMember } onClose={ this.showMember } />
             </Layout>   
         </div>
     }
@@ -100,5 +115,6 @@ interface IProps extends RouteComponentProps<{ id:string }, { }> {
 }
 
 interface IState {
+    showMember: boolean
     menuKey: 'tasks'| 'shares' | 'files' | 'schedules' | 'chats'
 }

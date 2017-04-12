@@ -1,4 +1,4 @@
-webpackJsonp([4],{
+webpackJsonp([9],{
 
 /***/ 1349:
 /***/ (function(module, exports, __webpack_require__) {
@@ -206,7 +206,7 @@ exports.default = UserData;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var notification_service_1 = __webpack_require__(539);
+var notification_service_1 = __webpack_require__(540);
 var rxjs_1 = __webpack_require__(75);
 var UserSignIn = (function () {
     function UserSignIn() {
@@ -269,7 +269,7 @@ var auth_login_service_1 = __webpack_require__(538);
 exports.default = {
     path: '/',
     getComponent: function (nextstate, cb) {
-        __webpack_require__.e/* import() */(10).then(__webpack_require__.bind(null, 1359)).then(function (module) {
+        __webpack_require__.e/* import() */(3).then(__webpack_require__.bind(null, 1359)).then(function (module) {
             cb(null, module.default);
         }).catch(function (err) { return showMessage(err, './app.page'); });
     },
@@ -277,7 +277,7 @@ exports.default = {
         {
             path: 'login',
             getComponent: function (nextstate, cb) {
-                __webpack_require__.e/* import() */(9).then(__webpack_require__.bind(null, 1360)).then(function (module) {
+                __webpack_require__.e/* import() */(2).then(__webpack_require__.bind(null, 1360)).then(function (module) {
                     cb(null, module.default);
                 }).catch(function (err) { return showMessage(err, './login.page'); });
             },
@@ -285,7 +285,7 @@ exports.default = {
             path: 'projects',
             onEnter: auth_login_service_1.default.requireLogin,
             getComponent: function (nextstate, cb) {
-                __webpack_require__.e/* import() */(8).then(__webpack_require__.bind(null, 1361)).then(function (module) {
+                __webpack_require__.e/* import() */(1).then(__webpack_require__.bind(null, 1363)).then(function (module) {
                     cb(null, module.default);
                 }).catch(function (err) { return showMessage(err, './project-all.page'); });
             }
@@ -293,7 +293,7 @@ exports.default = {
             path: 'project/:id',
             onEnter: auth_login_service_1.default.requireLogin,
             getComponent: function (nextstate, cb) {
-                __webpack_require__.e/* import() */(7).then(__webpack_require__.bind(null, 1362)).then(function (module) {
+                __webpack_require__.e/* import() */(0).then(__webpack_require__.bind(null, 1364)).then(function (module) {
                     cb(null, module.default);
                 }).catch(function (err) { return showMessage(err, './project.page'); });
             },
@@ -302,7 +302,7 @@ exports.default = {
                     path: 'tasks',
                     onEnter: auth_login_service_1.default.requireLogin,
                     getComponent: function (nextstate, cb) {
-                        __webpack_require__.e/* import() */(12).then(__webpack_require__.bind(null, 1389)).then(function (module) {
+                        __webpack_require__.e/* import() */(4).then(__webpack_require__.bind(null, 1367)).then(function (module) {
                             cb(null, module.default);
                         }).catch(function (err) { return showMessage(err, './project-tasks.page'); });
                     }
@@ -311,7 +311,7 @@ exports.default = {
                     path: 'shares',
                     onEnter: auth_login_service_1.default.requireLogin,
                     getComponent: function (nextstate, cb) {
-                        __webpack_require__.e/* import() */(13).then(__webpack_require__.bind(null, 1388)).then(function (module) {
+                        __webpack_require__.e/* import() */(5).then(__webpack_require__.bind(null, 1366)).then(function (module) {
                             cb(null, module.default);
                         }).catch(function (err) { return showMessage(err, './project-shares.page'); });
                     }
@@ -320,7 +320,7 @@ exports.default = {
                     path: 'chats',
                     onEnter: auth_login_service_1.default.requireLogin,
                     getComponent: function (nextstate, cb) {
-                        __webpack_require__.e/* import() */(17).then(__webpack_require__.bind(null, 1390)).then(function (module) {
+                        __webpack_require__.e/* import() */(8).then(__webpack_require__.bind(null, 1361)).then(function (module) {
                             cb(null, module.default);
                         }).catch(function (err) { return showMessage(err, './project-chat.page'); });
                     }
@@ -329,7 +329,7 @@ exports.default = {
                     path: 'files',
                     onEnter: auth_login_service_1.default.requireLogin,
                     getComponent: function (nextstate, cb) {
-                        __webpack_require__.e/* import() */(14).then(__webpack_require__.bind(null, 1391)).then(function (module) {
+                        __webpack_require__.e/* import() */(7).then(__webpack_require__.bind(null, 1362)).then(function (module) {
                             cb(null, module.default);
                         }).catch(function (err) { return showMessage(err, './project-files.page'); });
                     }
@@ -338,7 +338,7 @@ exports.default = {
                     path: 'schedules',
                     onEnter: auth_login_service_1.default.requireLogin,
                     getComponent: function (nextstate, cb) {
-                        __webpack_require__.e/* import() */(0).then(__webpack_require__.bind(null, 1392)).then(function (module) {
+                        __webpack_require__.e/* import() */(6).then(__webpack_require__.bind(null, 1365)).then(function (module) {
                             cb(null, module.default);
                         }).catch(function (err) { return showMessage(err, './project-schedules.page'); });
                     }
@@ -363,7 +363,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var local_storage_service_1 = __webpack_require__(1350);
 var socket_service_1 = __webpack_require__(1351);
 var user_1 = __webpack_require__(541);
-var project_1 = __webpack_require__(540);
+var project_1 = __webpack_require__(539);
 var authLoginService = (function () {
     function authLoginService() {
         var _this = this;
@@ -428,6 +428,26 @@ exports.default = new authLoginService();
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+var role_store_1 = __webpack_require__(1353);
+var data_store_1 = __webpack_require__(1352);
+var ProjectStore = (function () {
+    function ProjectStore() {
+        this.role = new role_store_1.default();
+        this.data = new data_store_1.default();
+    }
+    return ProjectStore;
+}());
+exports.default = new ProjectStore();
+
+
+/***/ }),
+
+/***/ 540:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
 var antd_1 = __webpack_require__(153);
 var NotificationService = (function () {
@@ -444,26 +464,6 @@ var NotificationService = (function () {
     return NotificationService;
 }());
 exports.default = new NotificationService();
-
-
-/***/ }),
-
-/***/ 540:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var role_store_1 = __webpack_require__(1353);
-var data_store_1 = __webpack_require__(1352);
-var ProjectStore = (function () {
-    function ProjectStore() {
-        this.role = new role_store_1.default();
-        this.data = new data_store_1.default();
-    }
-    return ProjectStore;
-}());
-exports.default = new ProjectStore();
 
 
 /***/ }),

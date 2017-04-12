@@ -1,6 +1,6 @@
 webpackJsonp([6],{
 
-/***/ 1389:
+/***/ 1365:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -17,17 +17,17 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
-var ProjectTasksPage = (function (_super) {
-    __extends(ProjectTasksPage, _super);
-    function ProjectTasksPage() {
+var ProjectSchedulesPage = (function (_super) {
+    __extends(ProjectSchedulesPage, _super);
+    function ProjectSchedulesPage() {
         return _super.call(this) || this;
     }
-    ProjectTasksPage.prototype.render = function () {
-        return React.createElement("div", null, "tasks");
+    ProjectSchedulesPage.prototype.render = function () {
+        return React.createElement("div", null, "schedules");
     };
-    return ProjectTasksPage;
+    return ProjectSchedulesPage;
 }(React.PureComponent));
-exports.default = ProjectTasksPage;
+exports.default = ProjectSchedulesPage;
 
 
 /***/ })

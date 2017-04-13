@@ -8,7 +8,6 @@ export let InjectProjectBread = ( Bread ) => {
     class Wrapper extends React.PureComponent< IProps, IState > {
 
         private sub: Subscription;
-        private timer;
 
         constructor( ){
             super( );

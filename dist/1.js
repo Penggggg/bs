@@ -18,13 +18,13 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
 var http_service_1 = __webpack_require__(1376);
-var auth_login_service_1 = __webpack_require__(538);
-var project_1 = __webpack_require__(539);
+var auth_login_service_1 = __webpack_require__(539);
+var project_1 = __webpack_require__(538);
 var user_1 = __webpack_require__(541);
 var notification_service_1 = __webpack_require__(540);
 var antd_1 = __webpack_require__(153);
-var Image_component_1 = __webpack_require__(1388);
-__webpack_require__(1385);
+var Image_component_1 = __webpack_require__(1390);
+__webpack_require__(1387);
 var FormItem = antd_1.Form.Item;
 var ProjectAllPage = (function (_super) {
     __extends(ProjectAllPage, _super);
@@ -2756,7 +2756,7 @@ var HttpService = (function () {
         var data$ = rxjs_1.Observable.create(function (observer) {
             data$$ = observer;
         }).share();
-        data$.subscribe();
+        this.sub = data$.subscribe();
         /**异步事件设置 */
         this.decorateXHR(xhr, data$$);
         /**拼接查村串 */
@@ -2858,7 +2858,7 @@ exports.push([module.i, ".my-img {\n  opacity: 0;\n  transition: all 0.4s ease;\
 
 /***/ }),
 
-/***/ 1380:
+/***/ 1381:
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1368)(undefined);
@@ -2873,7 +2873,7 @@ exports.push([module.i, "/**2个大block */\n/**标题 */\n/**展示区 */\n/**c
 
 /***/ }),
 
-/***/ 1382:
+/***/ 1383:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
@@ -2900,13 +2900,13 @@ if(false) {
 
 /***/ }),
 
-/***/ 1385:
+/***/ 1387:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1380);
+var content = __webpack_require__(1381);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(1369)(content, {});
@@ -2927,7 +2927,7 @@ if(false) {
 
 /***/ }),
 
-/***/ 1388:
+/***/ 1390:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2944,7 +2944,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
-__webpack_require__(1382);
+__webpack_require__(1383);
 var Image = (function (_super) {
     __extends(Image, _super);
     function Image() {

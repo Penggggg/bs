@@ -50,7 +50,7 @@ class HttpService {
              data$$ = observer;
         }).share( )
         
-        data$.subscribe( );
+        this.sub = data$.subscribe( );
         
         /**异步事件设置 */
         this.decorateXHR( xhr, data$$ );

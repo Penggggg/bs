@@ -19,10 +19,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
 var antd_1 = __webpack_require__(153);
 var http_service_1 = __webpack_require__(1376);
-var project_1 = __webpack_require__(539);
-__webpack_require__(1386);
-var bread_container_1 = __webpack_require__(1389);
-var memberSlider_container_1 = __webpack_require__(1394);
+var project_1 = __webpack_require__(538);
+__webpack_require__(1388);
+var bread_container_1 = __webpack_require__(1392);
+var memberSlider_container_1 = __webpack_require__(1393);
 var Header = antd_1.Layout.Header, Footer = antd_1.Layout.Footer, Sider = antd_1.Layout.Sider, Content = antd_1.Layout.Content;
 var ProjectPage = (function (_super) {
     __extends(ProjectPage, _super);
@@ -54,7 +54,6 @@ var ProjectPage = (function (_super) {
             }
         };
         _this.showMember = function () {
-            console.log('???');
             _this.setState({ showMember: !_this.state.showMember });
         };
         _this.onEnter = function (item) {
@@ -2658,7 +2657,7 @@ var HttpService = (function () {
         var data$ = rxjs_1.Observable.create(function (observer) {
             data$$ = observer;
         }).share();
-        data$.subscribe();
+        this.sub = data$.subscribe();
         /**异步事件设置 */
         this.decorateXHR(xhr, data$$);
         /**拼接查村串 */
@@ -2745,7 +2744,37 @@ exports.default = new HttpService();
 
 /***/ }),
 
-/***/ 1381:
+/***/ 1377:
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(1368)(undefined);
+// imports
+
+
+// module
+exports.push([module.i, ".my-img {\n  opacity: 0;\n  transition: all 0.4s ease;\n}\n.my-img.loaded {\n  opacity: 1;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ 1378:
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(1368)(undefined);
+// imports
+
+
+// module
+exports.push([module.i, ".c-Slider {\n  background-color: #f5f5f5;\n  width: 350px;\n  height: 500px;\n  position: absolute;\n  right: 20px;\n  top: 125px;\n  z-index: 10px;\n  transition: all ease 0.4s;\n  transform: translate3d(350px, 0, 0);\n  opacity: 0;\n  border-radius: 8px;\n  box-shadow: 0px 0px 20px 1px #919191;\n}\n.c-Slider .title {\n  text-align: center;\n  position: relative;\n  padding: 10px 25px;\n}\n.c-Slider .title h3 {\n  border-bottom: 1px solid #d9d9d9;\n  padding-bottom: 10px;\n}\n.c-Slider .title i {\n  transition: all ease 0.4s;\n  position: absolute;\n  cursor: pointer;\n  right: 20px;\n  top: 16px;\n}\n.c-Slider .title i:hover {\n  color: #56ABEF;\n}\n.c-Slider .content {\n  padding: 0 25px 20px;\n  height: 450px;\n  overflow: scroll;\n}\n.c-Slider .content ul {\n  padding-top: 15px;\n}\n.c-Slider .content ul li {\n  position: relative;\n  padding-left: 65px;\n  padding-top: 3px;\n  padding-bottom: 18px;\n}\n.c-Slider .content ul li img {\n  width: 50px;\n  border-radius: 50%;\n  position: absolute;\n  left: 0;\n  top: 0;\n}\n.c-Slider .content ul li.btn {\n  cursor: pointer;\n}\n.c-Slider .content ul li.btn i {\n  font-size: 50px;\n  color: #108ee9;\n}\n.c-Slider .content ul li.btn a {\n  position: absolute;\n  top: 20px;\n  left: 62px;\n}\n.c-Slider .content::-webkit-scrollbar {\n  display: none;\n}\n.c-Slider.show {\n  transform: translate3d(0, 0, 0);\n  opacity: 1;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ 1382:
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1368)(undefined);
@@ -2760,13 +2789,67 @@ exports.push([module.i, ".project-page .my-layout {\n  background-color: #fff;\n
 
 /***/ }),
 
-/***/ 1386:
+/***/ 1383:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1381);
+var content = __webpack_require__(1377);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(1369)(content, {});
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./Image.less", function() {
+			var newContent = require("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./Image.less");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+
+/***/ 1384:
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(1378);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(1369)(content, {});
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./Slider.less", function() {
+			var newContent = require("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./Slider.less");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+
+/***/ 1388:
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(1382);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(1369)(content, {});
@@ -2787,7 +2870,7 @@ if(false) {
 
 /***/ }),
 
-/***/ 1387:
+/***/ 1389:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2804,19 +2887,6 @@ exports.default = function (_a) {
                 React.createElement(antd_1.Breadcrumb.Item, { key: key }, bread.name);
     }));
 };
-
-
-/***/ }),
-
-/***/ 1389:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var bread_decorate_1 = __webpack_require__(1390);
-var Bread_component_1 = __webpack_require__(1387);
-exports.ProjectBread = bread_decorate_1.InjectProjectBread(Bread_component_1.default);
 
 
 /***/ }),
@@ -2838,7 +2908,116 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
-var project_1 = __webpack_require__(539);
+__webpack_require__(1383);
+var Image = (function (_super) {
+    __extends(Image, _super);
+    function Image() {
+        var _this = _super.call(this) || this;
+        _this.onLoadHandler = function () {
+            _this.setState({
+                imgLoaded: true
+            });
+        };
+        _this.state = {
+            imgLoaded: false
+        };
+        return _this;
+    }
+    Image.prototype.render = function () {
+        var imgLoaded = this.state.imgLoaded;
+        var _a = this.props, src = _a.src, _b = _a.alt, alt = _b === void 0 ? '' : _b;
+        return React.createElement("img", { src: src, alt: alt, onLoad: this.onLoadHandler, className: imgLoaded ? "my-img loaded" : "my-img" });
+    };
+    return Image;
+}(React.PureComponent));
+exports.default = Image;
+
+
+/***/ }),
+
+/***/ 1391:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var React = __webpack_require__(0);
+var antd_1 = __webpack_require__(153);
+__webpack_require__(1384);
+var Slider = (function (_super) {
+    __extends(Slider, _super);
+    function Slider() {
+        return _super.call(this) || this;
+    }
+    Slider.prototype.render = function () {
+        var _a = this.props, content = _a.content, style = _a.style, title = _a.title, show = _a.show, onClose = _a.onClose;
+        return React.createElement("div", { className: show ? 'c-Slider show' : 'c-Slider', style: style },
+            React.createElement("div", { className: "title" },
+                React.createElement("h3", null, title),
+                React.createElement(antd_1.Icon, { type: "close", onClick: function () { return onClose(); } })),
+            React.createElement("div", { className: "content" }, content));
+    };
+    return Slider;
+}(React.PureComponent));
+exports.default = Slider;
+
+
+/***/ }),
+
+/***/ 1392:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var bread_decorate_1 = __webpack_require__(1394);
+var Bread_component_1 = __webpack_require__(1389);
+exports.ProjectBread = bread_decorate_1.InjectProjectBread(Bread_component_1.default);
+
+
+/***/ }),
+
+/***/ 1393:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var Slider_component_1 = __webpack_require__(1391);
+var member_decorate_1 = __webpack_require__(1395);
+exports.MemberSlider = member_decorate_1.InjectMember(Slider_component_1.default);
+
+
+/***/ }),
+
+/***/ 1394:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var React = __webpack_require__(0);
+var project_1 = __webpack_require__(538);
 exports.InjectProjectBread = function (Bread) {
     var Wrapper = (function (_super) {
         __extends(Wrapper, _super);
@@ -2886,100 +3065,6 @@ exports.InjectProjectBread = function (Bread) {
 
 /***/ }),
 
-/***/ 1391:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var React = __webpack_require__(0);
-var antd_1 = __webpack_require__(153);
-__webpack_require__(1393);
-var Slider = (function (_super) {
-    __extends(Slider, _super);
-    function Slider() {
-        return _super.call(this) || this;
-    }
-    Slider.prototype.render = function () {
-        var _a = this.props, content = _a.content, style = _a.style, title = _a.title, show = _a.show, onClose = _a.onClose;
-        return React.createElement("div", { className: show ? 'c-Slider show' : 'c-Slider', style: style },
-            React.createElement("div", { className: "title" },
-                React.createElement("h3", null, title),
-                React.createElement(antd_1.Icon, { type: "close", onClick: function () { return onClose(); } })),
-            React.createElement("div", { className: "content" }, content));
-    };
-    return Slider;
-}(React.PureComponent));
-exports.default = Slider;
-
-
-/***/ }),
-
-/***/ 1392:
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(1368)(undefined);
-// imports
-
-
-// module
-exports.push([module.i, ".c-Slider {\n  background-color: #f5f5f5;\n  width: 350px;\n  height: 500px;\n  position: absolute;\n  right: 20px;\n  top: 125px;\n  z-index: 10px;\n  transition: all ease 0.4s;\n  transform: translate3d(350px, 0, 0);\n  opacity: 0;\n  border-radius: 8px;\n  box-shadow: 0px 0px 20px 1px #919191;\n}\n.c-Slider .title {\n  text-align: center;\n  position: relative;\n  padding: 10px 25px;\n}\n.c-Slider .title h3 {\n  border-bottom: 1px solid #d9d9d9;\n  padding-bottom: 10px;\n}\n.c-Slider .title i {\n  transition: all ease 0.4s;\n  position: absolute;\n  cursor: pointer;\n  right: 20px;\n  top: 16px;\n}\n.c-Slider .title i:hover {\n  color: #56ABEF;\n}\n.c-Slider .content {\n  padding: 0 25px 20px;\n  height: 450px;\n  overflow: scroll;\n}\n.c-Slider .content::-webkit-scrollbar {\n  display: none;\n}\n.c-Slider.show {\n  transform: translate3d(0, 0, 0);\n  opacity: 1;\n}\n", ""]);
-
-// exports
-
-
-/***/ }),
-
-/***/ 1393:
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(1392);
-if(typeof content === 'string') content = [[module.i, content, '']];
-// add the styles to the DOM
-var update = __webpack_require__(1369)(content, {});
-if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
-if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./Slider.less", function() {
-			var newContent = require("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./Slider.less");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
-	module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
-
-/***/ 1394:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var Slider_component_1 = __webpack_require__(1391);
-var member_decorate_1 = __webpack_require__(1395);
-exports.MemberSlider = member_decorate_1.InjectMember(Slider_component_1.default);
-
-
-/***/ }),
-
 /***/ 1395:
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3005,19 +3090,73 @@ var __assign = (this && this.__assign) || Object.assign || function(t) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
+var antd_1 = __webpack_require__(153);
+var Image_component_1 = __webpack_require__(1390);
+var project_1 = __webpack_require__(538);
+var toString = antd_1.Mention.toString, toEditorState = antd_1.Mention.toEditorState;
 exports.InjectMember = function (Slider) {
     var Wrapper = (function (_super) {
         __extends(Wrapper, _super);
         function Wrapper() {
-            return _super.call(this) || this;
+            var _this = _super.call(this) || this;
+            _this.addNewMember = function () {
+                _this.setState({
+                    showForm: true
+                });
+            };
+            _this.submitHandler = function () {
+            };
+            _this.watchProject = function () {
+                _this.sub = project_1.default.data.data$
+                    .do(function (project) {
+                    var creator = project.creator, member = project.member, leader = project.leader;
+                    _this.setState({
+                        content: React.createElement("div", null,
+                            React.createElement("ul", null,
+                                React.createElement("li", { className: "btn", style: { paddingLeft: 0 }, onClick: _this.addNewMember },
+                                    React.createElement(antd_1.Icon, { type: "plus-circle" }),
+                                    React.createElement("a", null, "\u9080\u8BF7\u65B0\u6210\u5458")),
+                                React.createElement("li", null,
+                                    React.createElement(Image_component_1.default, { src: "/static/touxiang.png" }),
+                                    React.createElement("h3", null, creator.name),
+                                    React.createElement("p", null, creator.phone))))
+                    });
+                })
+                    .subscribe();
+            };
+            _this.state = {
+                content: React.createElement("div", null,
+                    React.createElement("ul", null)),
+                showForm: false
+            };
+            return _this;
         }
         Wrapper.prototype.componentWillMount = function () {
+            var _this = this;
+            var timer = setInterval(function () {
+                if (!!project_1.default.data.data$) {
+                    _this.watchProject();
+                    clearInterval(timer);
+                }
+            }, 30);
         };
         Wrapper.prototype.componentWillUnmount = function () {
+            this.sub.unsubscribe();
         };
         Wrapper.prototype.render = function () {
-            var show = (_a = this.props, _a.show), onClose = _a.onClose;
-            return React.createElement(Slider, __assign({ title: '项目成员', content: React.createElement("div", null, "123123") }, this.props));
+            var _this = this;
+            var content = (_a = this.state, _a.content), showForm = _a.showForm;
+            var form = React.createElement("div", { className: "modal-resetpsw-form" },
+                React.createElement("h3", null, "\u8D26\u53F7\u9080\u8BF7"),
+                React.createElement(antd_1.Mention, { style: { zIndex: 100 }, prefixCls: '@', defaultValue: toEditorState('@afc163'), suggestions: ['afc163', 'benjycui', 'yiminghe', 'RaoHai', '中文', 'にほんご'] }),
+                React.createElement("div", { className: "modal-img" },
+                    React.createElement("img", { src: "/static/jielibang.png", alt: "" })));
+            return React.createElement("div", null,
+                React.createElement(Slider, __assign({ title: '项目成员', content: content }, this.props)),
+                React.createElement(antd_1.Modal, { title: '邀请新成员', visible: showForm, onOk: function () { return _this.setState({ showForm: true }); }, onCancel: function () { return _this.setState({ showForm: false }); }, style: { width: '400px !import', padding: '0 85px', marginTop: '-40px' }, footer: [
+                        React.createElement(antd_1.Button, { key: "back", size: "large", onClick: function () { return _this.setState({ showForm: false }); } }, "Cacel"),
+                        React.createElement(antd_1.Button, { key: "submit", type: "primary", size: "large", onClick: this.submitHandler }, "Submit")
+                    ] }, form));
             var _a;
         };
         return Wrapper;

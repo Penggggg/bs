@@ -26,7 +26,7 @@ export default class AppPage extends React.PureComponent< RouteComponentProps<{}
     private initStore = ( ) => {
         if ( process.env.NODE_ENV === 'development') {
             console.log(`是否已本地登录：${Auth.isLogin( )}`)
-        }
+        }   
         if (Auth.isLogin( )) {
             Auth.signIn(Auth.userData( ));
         }

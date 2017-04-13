@@ -57,7 +57,7 @@ exports.projectDetail = function (ctx) { return __awaiter(_this, void 0, void 0,
         switch (_a.label) {
             case 0:
                 id = ctx.params.id;
-                return [4 /*yield*/, project_model_1.default.findDetailByIdWithNest(id, '_id name')];
+                return [4 /*yield*/, project_model_1.default.findDetailByIdWithNest(id, '_id name phone')];
             case 1:
                 data = _a.sent();
                 ctx.body = data[0];

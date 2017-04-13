@@ -18,6 +18,6 @@ export let allProject = async ( ctx: Koa.Context ) => {
 export let projectDetail = async ( ctx: Koa.Context ) => {
     
     let { id } = ctx.params;
-    let data = await ProjectModel.findDetailByIdWithNest( id, '_id name' );
+    let data = await ProjectModel.findDetailByIdWithNest( id, '_id name phone' );
     ctx.body = data[ 0 ];
 }

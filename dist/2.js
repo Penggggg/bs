@@ -19,10 +19,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
 var rxjs_1 = __webpack_require__(75);
 var http_service_1 = __webpack_require__(1376);
-var auth_login_service_1 = __webpack_require__(538);
+var auth_login_service_1 = __webpack_require__(539);
 var notification_service_1 = __webpack_require__(540);
 var antd_1 = __webpack_require__(153);
-__webpack_require__(1384);
+__webpack_require__(1386);
 var TabPane = antd_1.Tabs.TabPane;
 var FormItem = antd_1.Form.Item;
 var LoginPage = (function (_super) {
@@ -2892,7 +2892,7 @@ var HttpService = (function () {
         var data$ = rxjs_1.Observable.create(function (observer) {
             data$$ = observer;
         }).share();
-        data$.subscribe();
+        this.sub = data$.subscribe();
         /**异步事件设置 */
         this.decorateXHR(xhr, data$$);
         /**拼接查村串 */
@@ -2979,7 +2979,7 @@ exports.default = new HttpService();
 
 /***/ }),
 
-/***/ 1379:
+/***/ 1380:
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1368)(undefined);
@@ -2994,13 +2994,13 @@ exports.push([module.i, ".login-page {\n  position: relative;\n  text-align: cen
 
 /***/ }),
 
-/***/ 1384:
+/***/ 1386:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1379);
+var content = __webpack_require__(1380);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(1369)(content, {});

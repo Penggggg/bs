@@ -15,6 +15,8 @@ import { _ISocketSignIn, ISocketSignIn_, _ISocketSignOut } from '../interface/so
 
 
 class authLoginService {
+
+    private connectedUserSocket: SocketIO.Socket;
     
     private signInName = 'user';
     private loginUrl = '/login';
@@ -58,10 +60,12 @@ class authLoginService {
         /**ls储存数据 */
         this.myLocalStorage.setItem( this.signInName,  user );
         /**socket连接 */
-        let a = this.mySocket.connectNewNsp( this.socketNspSignIn )
-        a.emit(`${this.socketEventSignIn}`, { user } as _ISocketSignIn);
+        this.connectedUserSocket = this.mySocket.connectNewNsp( this.socketNspSignIn )
+        this.connectedUserSocket.emit(
+            `${this.socketEventSignIn}`, 
+            { user, sid: this.connectedUserSocket.id  } as _ISocketSignIn);
         /**rx监控 */
-        this.myUserStore.signIn.initSignIn( a, `${this.socketEventSignIn}` )
+        this.myUserStore.signIn.initSignIn( this.connectedUserSocket, `${this.socketEventSignIn}` )
         /**rx存数据 */
         this.myUserStore.data.save( user );
     }

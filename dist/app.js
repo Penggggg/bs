@@ -265,7 +265,7 @@ exports.default = UserSignIn;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var auth_login_service_1 = __webpack_require__(538);
+var auth_login_service_1 = __webpack_require__(539);
 exports.default = {
     path: '/',
     getComponent: function (nextstate, cb) {
@@ -360,10 +360,30 @@ function showMessage(err, pageName) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+var role_store_1 = __webpack_require__(1353);
+var data_store_1 = __webpack_require__(1352);
+var ProjectStore = (function () {
+    function ProjectStore() {
+        this.role = new role_store_1.default();
+        this.data = new data_store_1.default();
+    }
+    return ProjectStore;
+}());
+exports.default = new ProjectStore();
+
+
+/***/ }),
+
+/***/ 539:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
 var local_storage_service_1 = __webpack_require__(1350);
 var socket_service_1 = __webpack_require__(1351);
 var user_1 = __webpack_require__(541);
-var project_1 = __webpack_require__(539);
+var project_1 = __webpack_require__(538);
 var authLoginService = (function () {
     function authLoginService() {
         var _this = this;
@@ -396,10 +416,10 @@ var authLoginService = (function () {
             /**ls储存数据 */
             _this.myLocalStorage.setItem(_this.signInName, user);
             /**socket连接 */
-            var a = _this.mySocket.connectNewNsp(_this.socketNspSignIn);
-            a.emit("" + _this.socketEventSignIn, { user: user });
+            _this.connectedUserSocket = _this.mySocket.connectNewNsp(_this.socketNspSignIn);
+            _this.connectedUserSocket.emit("" + _this.socketEventSignIn, { user: user, sid: _this.connectedUserSocket.id });
             /**rx监控 */
-            _this.myUserStore.signIn.initSignIn(a, "" + _this.socketEventSignIn);
+            _this.myUserStore.signIn.initSignIn(_this.connectedUserSocket, "" + _this.socketEventSignIn);
             /**rx存数据 */
             _this.myUserStore.data.save(user);
         };
@@ -418,26 +438,6 @@ var authLoginService = (function () {
     return authLoginService;
 }());
 exports.default = new authLoginService();
-
-
-/***/ }),
-
-/***/ 539:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var role_store_1 = __webpack_require__(1353);
-var data_store_1 = __webpack_require__(1352);
-var ProjectStore = (function () {
-    function ProjectStore() {
-        this.role = new role_store_1.default();
-        this.data = new data_store_1.default();
-    }
-    return ProjectStore;
-}());
-exports.default = new ProjectStore();
 
 
 /***/ }),

@@ -59,7 +59,6 @@ export default class ProjectPage extends React.PureComponent< IProps, IState > {
     }
 
     showMember = ( ) => {
-        console.log('???')
         this.setState({ showMember: !this.state.showMember })
     }
 

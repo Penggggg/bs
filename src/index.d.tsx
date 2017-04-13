@@ -12,3 +12,8 @@ declare var System: {
 
 /**socket.io client */
 declare var io: any
+
+
+declare enum MsgType {
+    invitateMember = 1
+} 

@@ -3091,15 +3091,16 @@ var __assign = (this && this.__assign) || Object.assign || function(t) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
 var antd_1 = __webpack_require__(153);
-var Image_component_1 = __webpack_require__(1390);
 var project_1 = __webpack_require__(538);
-var toString = antd_1.Mention.toString, toEditorState = antd_1.Mention.toEditorState;
+var http_service_1 = __webpack_require__(1376);
+var Image_component_1 = __webpack_require__(1390);
 exports.InjectMember = function (Slider) {
     var Wrapper = (function (_super) {
         __extends(Wrapper, _super);
         function Wrapper() {
             var _this = _super.call(this) || this;
             _this.addNewMember = function () {
+                _this.searchUser();
                 _this.setState({
                     showForm: true
                 });
@@ -3124,10 +3125,36 @@ exports.InjectMember = function (Slider) {
                 })
                     .subscribe();
             };
+            _this.searchUser = function (value) {
+                if (value === void 0) { value = ''; }
+                http_service_1.default
+                    .post('/api/v1/all-user', { name: value })
+                    .map(function (res) {
+                    return res.map(function (_a) {
+                        var _id = _a._id, name = _a.name, phone = _a.phone;
+                        return ({
+                            value: name + "-" + _id,
+                            text: name + " ( phone: " + phone + " )"
+                        });
+                    });
+                })
+                    .do(function (res) {
+                    _this.setState({
+                        dataSource: res
+                    });
+                })
+                    .subscribe();
+            };
+            _this.choiceUser = function (value) {
+                var id = value.split('-')[1];
+                console.log(id);
+                console.log(MsgType.invitateMember);
+            };
             _this.state = {
                 content: React.createElement("div", null,
                     React.createElement("ul", null)),
-                showForm: false
+                showForm: false,
+                dataSource: []
             };
             return _this;
         }
@@ -3145,10 +3172,10 @@ exports.InjectMember = function (Slider) {
         };
         Wrapper.prototype.render = function () {
             var _this = this;
-            var content = (_a = this.state, _a.content), showForm = _a.showForm;
+            var content = (_a = this.state, _a.content), showForm = _a.showForm, dataSource = _a.dataSource;
             var form = React.createElement("div", { className: "modal-resetpsw-form" },
                 React.createElement("h3", null, "\u8D26\u53F7\u9080\u8BF7"),
-                React.createElement(antd_1.Mention, { style: { zIndex: 100 }, prefixCls: '@', defaultValue: toEditorState('@afc163'), suggestions: ['afc163', 'benjycui', 'yiminghe', 'RaoHai', '中文', 'にほんご'] }),
+                React.createElement(antd_1.AutoComplete, { dataSource: dataSource, onSelect: this.choiceUser, onChange: this.searchUser, style: { width: '310px', margin: '10px 0px' } }),
                 React.createElement("div", { className: "modal-img" },
                     React.createElement("img", { src: "/static/jielibang.png", alt: "" })));
             return React.createElement("div", null,

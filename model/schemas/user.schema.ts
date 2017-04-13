@@ -25,15 +25,22 @@ UserSchema.pre('save', function( next ){
     next( );
 })
 
-UserSchema.statics.findAll =  function( ) {
+UserSchema.statics.findAll =  function( select ) {
     return new Promise(( resolve, reject ) => {
-        this.find({ }, ( err, data) =>  returnData( err, resolve, reject, data ))
+        this.find({ }, select, ( err, data) =>  returnData( err, resolve, reject, data ))
     })
 }
 
 UserSchema.statics.findOneByPhone = function( phone ) {
     return new Promise(( resolve, reject ) => {
         this.findOne({ phone }, ( err, data ) => returnData( err, resolve, reject, data ))
+    })
+}
+
+UserSchema.statics.findAllByName = function( name, select ) {
+    return new Promise(( resolve, reject ) => {
+        let reg = new RegExp(name);
+        this.find({ name: reg }, select,( err, data ) => returnData( err, resolve, reject, data ))
     })
 }
 

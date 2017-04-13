@@ -25,16 +25,23 @@ exports.UserSchema.pre('save', function (next) {
     }
     next();
 });
-exports.UserSchema.statics.findAll = function () {
+exports.UserSchema.statics.findAll = function (select) {
     var _this = this;
     return new Promise(function (resolve, reject) {
-        _this.find({}, function (err, data) { return returnData(err, resolve, reject, data); });
+        _this.find({}, select, function (err, data) { return returnData(err, resolve, reject, data); });
     });
 };
 exports.UserSchema.statics.findOneByPhone = function (phone) {
     var _this = this;
     return new Promise(function (resolve, reject) {
         _this.findOne({ phone: phone }, function (err, data) { return returnData(err, resolve, reject, data); });
+    });
+};
+exports.UserSchema.statics.findAllByName = function (name, select) {
+    var _this = this;
+    return new Promise(function (resolve, reject) {
+        var reg = new RegExp(name);
+        _this.find({ name: reg }, select, function (err, data) { return returnData(err, resolve, reject, data); });
     });
 };
 exports.UserSchema.statics.save = function (name, phone, password) {

@@ -1,12 +1,16 @@
 import * as React from 'react';
 import * as ReactDom from 'react-dom';
-import { Icon, Modal, Button, Mention } from 'antd';
+import { Icon, Modal, Button, AutoComplete } from 'antd';
 
-import Image from '../../component/Image/Image.component';
+
 import { Subscription } from 'rxjs';
+import { _IUser } from '../../interface/app.interface';
+import { IPostQueryAllUser_ } from '../../interface/api.interface';
 import projectStore from '../../store/project';
 
-const { toString, toEditorState } = Mention;
+import http from '../../services/http.service';
+import Image from '../../component/Image/Image.component';
+
 
 export let InjectMember = ( Slider ) => {
 
@@ -20,7 +24,8 @@ export let InjectMember = ( Slider ) => {
             super( );
             this.state = {
                 content: <div><ul></ul></div>,
-                showForm: false
+                showForm: false,
+                dataSource: [ ]
             }
         }
 
@@ -31,6 +36,7 @@ export let InjectMember = ( Slider ) => {
                     clearInterval( timer );
                 }
             }, 30 )
+        
         }
 
         componentWillUnmount( ) {
@@ -38,6 +44,7 @@ export let InjectMember = ( Slider ) => {
         }
 
         addNewMember = ( ) => {
+            this.searchUser( );
             this.setState({
                 showForm: true
             })
@@ -69,17 +76,41 @@ export let InjectMember = ( Slider ) => {
                 })
                 .subscribe( )
         }
+
+        searchUser = ( value = '' ) => {
+            http
+                .post<Array<_IUser>>('/api/v1/all-user', { name: value } as IPostQueryAllUser_)
+                .map( res => {
+                    return res.map(({ _id, name, phone }) => ({
+                       value: `${name}-${_id}`,
+                       text: `${name} ( phone: ${phone} )`
+                    }))
+                })
+                .do( res => {
+                    this.setState({
+                        dataSource: res
+                    })
+                })
+                .subscribe( )
+        }
+
+        choiceUser = ( value: string ) => {
+            let id = value.split('-')[1];
+            console.log(id);
+            console.log( MsgType.invitateMember )
+        }
         
         render( ) {
 
-            let { content, showForm } = this.state;
+            let { content, showForm, dataSource } = this.state;
+
             let form = <div className="modal-resetpsw-form">
                 <h3>账号邀请</h3>
-                <Mention 
-                    style={{ zIndex: 100 }}
-                    prefixCls='@'
-                    defaultValue={toEditorState('@afc163')}
-                    suggestions={['afc163', 'benjycui', 'yiminghe', 'RaoHai', '中文', 'にほんご']} />
+                <AutoComplete
+                    dataSource={ dataSource }
+                    onSelect={ this.choiceUser }
+                    onChange={ this.searchUser }
+                    style={{ width: '310px', margin: '10px 0px' }} />
                 <div className="modal-img"><img src="/static/jielibang.png" alt=""/></div>
             </div>
 
@@ -108,7 +139,11 @@ export let InjectMember = ( Slider ) => {
 
 interface IState {
     content: JSX.Element,
-    showForm: boolean 
+    showForm: boolean,
+    dataSource: Array<{
+        value: string,
+        text: string
+    }> 
 }
 
 interface IArguments {

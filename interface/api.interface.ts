@@ -59,3 +59,8 @@ export interface IPostCreateProject_ {
 export interface IGetAllProject_ {
     data: Array<IProject>
 }
+
+/**所有符合条件的用户：查询 */
+export interface IPostQueryAllUser_ {
+    name: string
+}

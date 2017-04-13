@@ -3,6 +3,7 @@ import { login } from './auth/login';
 import { resetPsw } from './auth/reset';
 import { sginIn } from './auth/signin';
 import { createProject } from './project/create-project';
+import { fetchAllUserByName } from './user/query.controller';
 import { allProject, projectDetail } from './project/query-project';
 
 
@@ -24,6 +25,9 @@ export default ( router ) => {
     router.get('/api/v1/all-project', allProject )
     /**项目模块：返回项目详情 */
     router.get('/api/v1/project/:id', projectDetail )
+
+    /**用户模块：查询所有符合条件的用户 */
+    router.post('/api/v1/all-user', fetchAllUserByName )
 }
 
 

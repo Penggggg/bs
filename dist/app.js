@@ -285,6 +285,7 @@ var UserData = (function () {
                 observer.next(user);
             });
             _this.userData$ = source.multicast(subject).refCount();
+            _this.userData$.subscribe();
         };
     }
     return UserData;

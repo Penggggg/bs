@@ -54,9 +54,10 @@ declare namespace SOK {
 
         /**消息推送：成员邀请content内容 */
         export interface MsgInviteContent {
-                msgId: string,
-                content: string,
-                title: string
+            msgId: string,
+            content: string,
+            title: string,
+            readed: boolean
         }
 
         /**消息推送：成员邀请 */

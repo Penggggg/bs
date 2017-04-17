@@ -25,7 +25,7 @@ export default class UserData {
         })
 
         this.userData$ = source.multicast( subject ).refCount( );
-
+        this.userData$.subscribe( );
     }
 
 

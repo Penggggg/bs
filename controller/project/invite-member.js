@@ -40,7 +40,7 @@ var index_con_1 = require("../../index.con");
 var socket_1 = require("../../socket");
 var msg_model_1 = require("../../model/models/msg.model");
 exports.inviteMember = function (ctx) { return __awaiter(_this, void 0, void 0, function () {
-    var model, userSocket, fromUID, toUID, PID, content, type, data, _id, content_1, title, result, _a;
+    var model, userSocket, fromUID, toUID, PID, content, type, data, _id, content_1, title, readed, result, _a;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
@@ -61,13 +61,13 @@ exports.inviteMember = function (ctx) { return __awaiter(_this, void 0, void 0, 
                 /**2.用户在线：即时转发 */
                 if (userSocket.checkIsOnline(toUID)) {
                     console.log("\u7528\u6237\u5728\u7EBF\uFF0C\u51C6\u5907\u8F6C\u53D1");
-                    _id = data._id, content_1 = data.content, title = data.title;
+                    _id = data._id, content_1 = data.content, title = data.title, readed = data.readed;
                     userSocket.sendMsgTo(toUID, {
                         type: 1 /* InviteMember */,
                         eventName: "" + index_con_1.CON.socketEvent.msg,
                         content: {
                             msgId: _id,
-                            content: content_1, title: title
+                            content: content_1, title: title, readed: readed
                         }
                     });
                 }

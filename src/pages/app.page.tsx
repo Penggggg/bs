@@ -1,6 +1,8 @@
 import * as React from 'react';
-import { Layout, Menu, Breadcrumb, Row, Col, Icon, Input  } from 'antd';
 import { RouteComponentProps } from 'react-router';
+import { MsgPopBadge } from '../containers/msg/msgListPopBadge.container';
+import { Layout, Menu, Breadcrumb, Row, Col, Icon, Input, Badge , Popover   } from 'antd';
+
 
 import Auth  from '../services/auth-login.service';
 import './app.less'
@@ -62,7 +64,9 @@ export default class AppPage extends React.PureComponent< RouteComponentProps<{}
                                         <Menu.Item key="1">我的</Menu.Item>
                                         <Menu.Item key="2">帮助</Menu.Item>
                                         <Menu.Item key="3"><Icon type="exception" /></Menu.Item>
-                                        <Menu.Item key="4"><Icon type="aliwangwang-o" /></Menu.Item>
+                                        <Menu.Item key="4">
+                                            <MsgPopBadge content={<Icon type="aliwangwang-o" />} />
+                                        </Menu.Item>
                                         <Menu.Item key="5"><img src="/static/touxiang.png" /></Menu.Item>
                                     </Menu>
                                 </Col>

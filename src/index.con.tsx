@@ -6,6 +6,7 @@ export namespace CON {
 
         export const signIn = 'signInUser';
         export const signOut = 'signOutUser';
+        export const msg = 'msg';
     }
 
     /**socket命名空间 */

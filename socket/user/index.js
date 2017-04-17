@@ -52,6 +52,9 @@ var UserSocket = (function () {
             return _this.userSockets[_this.userMapSid[uid]] ? true : false;
         };
         this.sendMsgTo = function (uid, msg) {
+            var socket = _this.userSockets[_this.userMapSid[uid]];
+            socket.emit("" + msg.eventName, { type: msg.type, content: msg.content });
+            console.log('转发成功');
         };
     }
     return UserSocket;

@@ -59,6 +59,7 @@ class authLoginService {
             `${CON.socketEvent.signIn}`,  { user  } as SOK.Req.signIn);
         /**rx监控 */
         this.mySocket.SignIn.watch( this.connectedUserSocket );
+        this.mySocket.Msg.watch( this.connectedUserSocket );
         /**rx存数据 */
         this.myUserStore.data.save( user );
     }
@@ -73,6 +74,7 @@ class authLoginService {
         this.mySocket.disconnectNsp( CON.socketNSP.user );
         /**rx取消监控 */
         this.mySocket.SignIn.cancelWatch( );
+        this.mySocket.Msg.cancelWatch( );
     }
 
 

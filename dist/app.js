@@ -1,6 +1,6 @@
 webpackJsonp([9],{
 
-/***/ 1349:
+/***/ 1350:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -20,7 +20,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
 var ReactDom = __webpack_require__(12);
 var react_router_1 = __webpack_require__(152);
-var pages_1 = __webpack_require__(537);
+var pages_1 = __webpack_require__(539);
 var App = (function (_super) {
     __extends(App, _super);
     function App() {
@@ -36,7 +36,7 @@ ReactDom.render(React.createElement(App, null), document.querySelector('#app'));
 
 /***/ }),
 
-/***/ 1350:
+/***/ 1351:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -75,31 +75,24 @@ exports.default = new localStorageService();
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var rxjs_1 = __webpack_require__(75);
-var ProjectData = (function () {
-    function ProjectData() {
-    }
-    ProjectData.prototype.save = function (project) {
-        if (this.data$ === undefined) {
-            this.init(project);
-        }
-        else {
-            this.data$$.next(project);
-        }
-    };
-    ProjectData.prototype.init = function (project) {
+var rxjs_1 = __webpack_require__(53);
+var index_con_1 = __webpack_require__(237);
+var Msg = (function () {
+    function Msg() {
         var _this = this;
-        var subject = new rxjs_1.ReplaySubject(1);
-        var source = rxjs_1.Observable.create(function (observer) {
-            _this.data$$ = observer;
-            observer.next(project);
-        });
-        this.data$ = source.multicast(subject).refCount();
-        this.data$.subscribe();
-    };
-    return ProjectData;
+        this.watch = function (socket) {
+            _this.sub = rxjs_1.Observable
+                .fromEvent(socket, "" + index_con_1.CON.socketEvent.msg)
+                .do(function (res) { return console.log(res); })
+                .subscribe();
+        };
+        this.cancelWatch = function () {
+            _this.sub.unsubscribe();
+        };
+    }
+    return Msg;
 }());
-exports.default = ProjectData;
+exports.default = new Msg();
 
 
 /***/ }),
@@ -110,165 +103,10 @@ exports.default = ProjectData;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var rxjs_1 = __webpack_require__(75);
-var ProjecRole = (function () {
-    function ProjecRole() {
-    }
-    ProjecRole.prototype.save = function (role) {
-        if (this.data$ === undefined) {
-            this.init(role);
-        }
-        else {
-            this.data$$.next(role);
-        }
-    };
-    ProjecRole.prototype.init = function (role) {
-        var _this = this;
-        var subject = new rxjs_1.ReplaySubject(1);
-        var source = rxjs_1.Observable.create(function (observer) {
-            _this.data$$ = observer;
-            observer.next(role);
-        });
-        this.data$ = source.multicast(subject).refCount();
-        this.data$.subscribe();
-    };
-    return ProjecRole;
-}());
-exports.default = ProjecRole;
-
-
-/***/ }),
-
-/***/ 1354:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var rxjs_1 = __webpack_require__(75);
-var UserData = (function () {
-    function UserData() {
-        var _this = this;
-        this.save = function (user) {
-            /**首次保存 */
-            if (_this.userData$ === undefined) {
-                _this.init(user);
-            }
-            else {
-                _this.userData$$.next(user);
-            }
-        };
-        this.init = function (user) {
-            var subject = new rxjs_1.ReplaySubject(1);
-            var source = rxjs_1.Observable.create(function (observer) {
-                _this.userData$$ = observer;
-                observer.next(user);
-            });
-            _this.userData$ = source.multicast(subject).refCount();
-        };
-    }
-    return UserData;
-}());
-exports.default = UserData;
-
-
-/***/ }),
-
-/***/ 1355:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var rxjs_1 = __webpack_require__(75);
-var UserSignIn = (function () {
-    function UserSignIn() {
-        var _this = this;
-        /**登录状态初始化 */
-        this.initSignIn = function () {
-            var source = rxjs_1.Observable.create(function (o) { _this.signIn$$ = o; });
-            var subject = new rxjs_1.ReplaySubject(1);
-            _this.signIn$ = source.multicast(subject).refCount();
-            _this.signIn$.subscribe();
-        };
-        /**登录状态发射 */
-        this.save = function (isSign) {
-            if (_this.signIn$ === undefined) {
-                _this.initSignIn();
-            }
-            _this.signIn$$.next(isSign);
-        };
-    }
-    return UserSignIn;
-}());
-exports.default = UserSignIn;
-
-
-/***/ }),
-
-/***/ 1396:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var CON;
-(function (CON) {
-    /**socket事件名称 */
-    var socketEvent;
-    (function (socketEvent) {
-        socketEvent.signIn = 'signInUser';
-        socketEvent.signOut = 'signOutUser';
-    })(socketEvent = CON.socketEvent || (CON.socketEvent = {}));
-    /**socket命名空间 */
-    var socketNSP;
-    (function (socketNSP) {
-        socketNSP.user = 'user';
-    })(socketNSP = CON.socketNSP || (CON.socketNSP = {}));
-})(CON = exports.CON || (exports.CON = {}));
-
-
-/***/ }),
-
-/***/ 1397:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var event_signIn_1 = __webpack_require__(1398);
-var socketService = (function () {
-    function socketService() {
-        this.SignIn = event_signIn_1.default;
-        this.connectedUrl = 'http://localhost';
-        this.connectedNameSpace = {};
-    }
-    socketService.prototype.connectNewNsp = function (name) {
-        var socketClient = io(this.connectedUrl + "/" + name);
-        this.connectedNameSpace[name] = socketClient;
-        return socketClient;
-    };
-    socketService.prototype.disconnectNsp = function (name) {
-        this.connectedNameSpace[name].disconnect();
-        delete this.connectedNameSpace[name];
-    };
-    return socketService;
-}());
-exports.default = new socketService();
-
-
-/***/ }),
-
-/***/ 1398:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var notification_service_1 = __webpack_require__(540);
-var rxjs_1 = __webpack_require__(75);
-var user_1 = __webpack_require__(541);
-var index_con_1 = __webpack_require__(1396);
+var notification_service_1 = __webpack_require__(542);
+var rxjs_1 = __webpack_require__(53);
+var user_1 = __webpack_require__(238);
+var index_con_1 = __webpack_require__(237);
 var SignIn = (function () {
     function SignIn() {
         var _this = this;
@@ -313,17 +151,230 @@ exports.default = new SignIn();
 
 /***/ }),
 
-/***/ 537:
+/***/ 1354:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var auth_login_service_1 = __webpack_require__(539);
+var event_signIn_1 = __webpack_require__(1353);
+var event_msg_1 = __webpack_require__(1352);
+var socketService = (function () {
+    function socketService() {
+        this.SignIn = event_signIn_1.default;
+        this.Msg = event_msg_1.default;
+        this.connectedUrl = 'http://localhost';
+        this.connectedNameSpace = {};
+    }
+    socketService.prototype.connectNewNsp = function (name) {
+        var socketClient = io(this.connectedUrl + "/" + name);
+        this.connectedNameSpace[name] = socketClient;
+        return socketClient;
+    };
+    socketService.prototype.disconnectNsp = function (name) {
+        this.connectedNameSpace[name].disconnect();
+        delete this.connectedNameSpace[name];
+    };
+    return socketService;
+}());
+exports.default = new socketService();
+
+
+/***/ }),
+
+/***/ 1355:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var rxjs_1 = __webpack_require__(53);
+var ProjectData = (function () {
+    function ProjectData() {
+    }
+    ProjectData.prototype.save = function (project) {
+        if (this.data$ === undefined) {
+            this.init(project);
+        }
+        else {
+            this.data$$.next(project);
+        }
+    };
+    ProjectData.prototype.init = function (project) {
+        var _this = this;
+        var subject = new rxjs_1.ReplaySubject(1);
+        var source = rxjs_1.Observable.create(function (observer) {
+            _this.data$$ = observer;
+            observer.next(project);
+        });
+        this.data$ = source.multicast(subject).refCount();
+        this.data$.subscribe();
+    };
+    return ProjectData;
+}());
+exports.default = ProjectData;
+
+
+/***/ }),
+
+/***/ 1356:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var rxjs_1 = __webpack_require__(53);
+var ProjecRole = (function () {
+    function ProjecRole() {
+    }
+    ProjecRole.prototype.save = function (role) {
+        if (this.data$ === undefined) {
+            this.init(role);
+        }
+        else {
+            this.data$$.next(role);
+        }
+    };
+    ProjecRole.prototype.init = function (role) {
+        var _this = this;
+        var subject = new rxjs_1.ReplaySubject(1);
+        var source = rxjs_1.Observable.create(function (observer) {
+            _this.data$$ = observer;
+            observer.next(role);
+        });
+        this.data$ = source.multicast(subject).refCount();
+        this.data$.subscribe();
+    };
+    return ProjecRole;
+}());
+exports.default = ProjecRole;
+
+
+/***/ }),
+
+/***/ 1357:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var rxjs_1 = __webpack_require__(53);
+var UserData = (function () {
+    function UserData() {
+        var _this = this;
+        this.save = function (user) {
+            /**首次保存 */
+            if (_this.userData$ === undefined) {
+                _this.init(user);
+            }
+            else {
+                _this.userData$$.next(user);
+            }
+        };
+        this.init = function (user) {
+            var subject = new rxjs_1.ReplaySubject(1);
+            var source = rxjs_1.Observable.create(function (observer) {
+                _this.userData$$ = observer;
+                observer.next(user);
+            });
+            _this.userData$ = source.multicast(subject).refCount();
+        };
+    }
+    return UserData;
+}());
+exports.default = UserData;
+
+
+/***/ }),
+
+/***/ 1358:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var rxjs_1 = __webpack_require__(53);
+var UserSignIn = (function () {
+    function UserSignIn() {
+        var _this = this;
+        /**登录状态初始化 */
+        this.initSignIn = function () {
+            var source = rxjs_1.Observable.create(function (o) { _this.signIn$$ = o; });
+            var subject = new rxjs_1.ReplaySubject(1);
+            _this.signIn$ = source.multicast(subject).refCount();
+            _this.signIn$.subscribe();
+        };
+        /**登录状态发射 */
+        this.save = function (isSign) {
+            if (_this.signIn$ === undefined) {
+                _this.initSignIn();
+            }
+            _this.signIn$$.next(isSign);
+        };
+    }
+    return UserSignIn;
+}());
+exports.default = UserSignIn;
+
+
+/***/ }),
+
+/***/ 237:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var CON;
+(function (CON) {
+    /**socket事件名称 */
+    var socketEvent;
+    (function (socketEvent) {
+        socketEvent.signIn = 'signInUser';
+        socketEvent.signOut = 'signOutUser';
+        socketEvent.msg = 'msg';
+    })(socketEvent = CON.socketEvent || (CON.socketEvent = {}));
+    /**socket命名空间 */
+    var socketNSP;
+    (function (socketNSP) {
+        socketNSP.user = 'user';
+    })(socketNSP = CON.socketNSP || (CON.socketNSP = {}));
+})(CON = exports.CON || (exports.CON = {}));
+
+
+/***/ }),
+
+/***/ 238:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var signIn_store_1 = __webpack_require__(1358);
+var data_store_1 = __webpack_require__(1357);
+var UserStore = (function () {
+    function UserStore() {
+        this.signIn = new signIn_store_1.default();
+        this.data = new data_store_1.default();
+    }
+    return UserStore;
+}());
+exports.default = new UserStore();
+
+
+/***/ }),
+
+/***/ 539:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var auth_login_service_1 = __webpack_require__(541);
 exports.default = {
     path: '/',
     getComponent: function (nextstate, cb) {
-        __webpack_require__.e/* import() */(3).then(__webpack_require__.bind(null, 1359)).then(function (module) {
+        __webpack_require__.e/* import() */(3).then(__webpack_require__.bind(null, 1362)).then(function (module) {
             cb(null, module.default);
         }).catch(function (err) { return showMessage(err, './app.page'); });
     },
@@ -331,7 +382,7 @@ exports.default = {
         {
             path: 'login',
             getComponent: function (nextstate, cb) {
-                __webpack_require__.e/* import() */(2).then(__webpack_require__.bind(null, 1360)).then(function (module) {
+                __webpack_require__.e/* import() */(2).then(__webpack_require__.bind(null, 1363)).then(function (module) {
                     cb(null, module.default);
                 }).catch(function (err) { return showMessage(err, './login.page'); });
             },
@@ -339,7 +390,7 @@ exports.default = {
             path: 'projects',
             onEnter: auth_login_service_1.default.requireLogin,
             getComponent: function (nextstate, cb) {
-                __webpack_require__.e/* import() */(1).then(__webpack_require__.bind(null, 1363)).then(function (module) {
+                __webpack_require__.e/* import() */(1).then(__webpack_require__.bind(null, 1366)).then(function (module) {
                     cb(null, module.default);
                 }).catch(function (err) { return showMessage(err, './project-all.page'); });
             }
@@ -347,7 +398,7 @@ exports.default = {
             path: 'project/:id',
             onEnter: auth_login_service_1.default.requireLogin,
             getComponent: function (nextstate, cb) {
-                __webpack_require__.e/* import() */(0).then(__webpack_require__.bind(null, 1364)).then(function (module) {
+                __webpack_require__.e/* import() */(0).then(__webpack_require__.bind(null, 1367)).then(function (module) {
                     cb(null, module.default);
                 }).catch(function (err) { return showMessage(err, './project.page'); });
             },
@@ -356,7 +407,7 @@ exports.default = {
                     path: 'tasks',
                     onEnter: auth_login_service_1.default.requireLogin,
                     getComponent: function (nextstate, cb) {
-                        __webpack_require__.e/* import() */(4).then(__webpack_require__.bind(null, 1367)).then(function (module) {
+                        __webpack_require__.e/* import() */(4).then(__webpack_require__.bind(null, 1370)).then(function (module) {
                             cb(null, module.default);
                         }).catch(function (err) { return showMessage(err, './project-tasks.page'); });
                     }
@@ -365,7 +416,7 @@ exports.default = {
                     path: 'shares',
                     onEnter: auth_login_service_1.default.requireLogin,
                     getComponent: function (nextstate, cb) {
-                        __webpack_require__.e/* import() */(5).then(__webpack_require__.bind(null, 1366)).then(function (module) {
+                        __webpack_require__.e/* import() */(5).then(__webpack_require__.bind(null, 1369)).then(function (module) {
                             cb(null, module.default);
                         }).catch(function (err) { return showMessage(err, './project-shares.page'); });
                     }
@@ -374,7 +425,7 @@ exports.default = {
                     path: 'chats',
                     onEnter: auth_login_service_1.default.requireLogin,
                     getComponent: function (nextstate, cb) {
-                        __webpack_require__.e/* import() */(8).then(__webpack_require__.bind(null, 1361)).then(function (module) {
+                        __webpack_require__.e/* import() */(8).then(__webpack_require__.bind(null, 1364)).then(function (module) {
                             cb(null, module.default);
                         }).catch(function (err) { return showMessage(err, './project-chat.page'); });
                     }
@@ -383,7 +434,7 @@ exports.default = {
                     path: 'files',
                     onEnter: auth_login_service_1.default.requireLogin,
                     getComponent: function (nextstate, cb) {
-                        __webpack_require__.e/* import() */(7).then(__webpack_require__.bind(null, 1362)).then(function (module) {
+                        __webpack_require__.e/* import() */(7).then(__webpack_require__.bind(null, 1365)).then(function (module) {
                             cb(null, module.default);
                         }).catch(function (err) { return showMessage(err, './project-files.page'); });
                     }
@@ -392,7 +443,7 @@ exports.default = {
                     path: 'schedules',
                     onEnter: auth_login_service_1.default.requireLogin,
                     getComponent: function (nextstate, cb) {
-                        __webpack_require__.e/* import() */(6).then(__webpack_require__.bind(null, 1365)).then(function (module) {
+                        __webpack_require__.e/* import() */(6).then(__webpack_require__.bind(null, 1368)).then(function (module) {
                             cb(null, module.default);
                         }).catch(function (err) { return showMessage(err, './project-schedules.page'); });
                     }
@@ -408,14 +459,14 @@ function showMessage(err, pageName) {
 
 /***/ }),
 
-/***/ 538:
+/***/ 540:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var role_store_1 = __webpack_require__(1353);
-var data_store_1 = __webpack_require__(1352);
+var role_store_1 = __webpack_require__(1356);
+var data_store_1 = __webpack_require__(1355);
 var ProjectStore = (function () {
     function ProjectStore() {
         this.role = new role_store_1.default();
@@ -428,17 +479,17 @@ exports.default = new ProjectStore();
 
 /***/ }),
 
-/***/ 539:
+/***/ 541:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var index_con_1 = __webpack_require__(1396);
-var local_storage_service_1 = __webpack_require__(1350);
-var socket_1 = __webpack_require__(1397);
-var user_1 = __webpack_require__(541);
-var project_1 = __webpack_require__(538);
+var index_con_1 = __webpack_require__(237);
+var local_storage_service_1 = __webpack_require__(1351);
+var socket_1 = __webpack_require__(1354);
+var user_1 = __webpack_require__(238);
+var project_1 = __webpack_require__(540);
 var authLoginService = (function () {
     function authLoginService() {
         var _this = this;
@@ -472,6 +523,7 @@ var authLoginService = (function () {
             _this.connectedUserSocket.emit("" + index_con_1.CON.socketEvent.signIn, { user: user });
             /**rx监控 */
             _this.mySocket.SignIn.watch(_this.connectedUserSocket);
+            _this.mySocket.Msg.watch(_this.connectedUserSocket);
             /**rx存数据 */
             _this.myUserStore.data.save(user);
         };
@@ -485,6 +537,7 @@ var authLoginService = (function () {
             _this.mySocket.disconnectNsp(index_con_1.CON.socketNSP.user);
             /**rx取消监控 */
             _this.mySocket.SignIn.cancelWatch();
+            _this.mySocket.Msg.cancelWatch();
         };
     }
     return authLoginService;
@@ -494,7 +547,7 @@ exports.default = new authLoginService();
 
 /***/ }),
 
-/***/ 540:
+/***/ 542:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -518,26 +571,6 @@ var NotificationService = (function () {
 exports.default = new NotificationService();
 
 
-/***/ }),
-
-/***/ 541:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var signIn_store_1 = __webpack_require__(1355);
-var data_store_1 = __webpack_require__(1354);
-var UserStore = (function () {
-    function UserStore() {
-        this.signIn = new signIn_store_1.default();
-        this.data = new data_store_1.default();
-    }
-    return UserStore;
-}());
-exports.default = new UserStore();
-
-
 /***/ })
 
-},[1349]);
+},[1350]);

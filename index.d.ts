@@ -47,6 +47,13 @@ declare namespace SOK {
             status: '200'
         }
 
+        /**消息推送：成员邀请 */
+        export interface msg {
+            msgId: string,
+            content: string,
+            title: string
+        }
+
     }
 
     export namespace Req {
@@ -91,6 +98,16 @@ declare namespace APP {
             createdTime: string
             updatedTime: string
         }
+    }
+
+    /**消息 */
+    export interface Msg extends API.Query.InviteMember {
+        _id?: string
+        dirty: boolean
+        readed: boolean
+        title: string
+        formType: number
+        replyURL: string
     }
 
 }

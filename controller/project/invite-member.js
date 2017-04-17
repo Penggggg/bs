@@ -36,15 +36,47 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
+var index_con_1 = require("../../index.con");
 var socket_1 = require("../../socket");
+var msg_model_1 = require("../../model/models/msg.model");
 exports.inviteMember = function (ctx) { return __awaiter(_this, void 0, void 0, function () {
-    var userSocket, fromUID, toUID, PID, content, type, _a;
+    var model, userSocket, fromUID, toUID, PID, content, type, data, _id, content_1, title, result, _a;
     return __generator(this, function (_b) {
-        userSocket = socket_1.default.userSocket;
-        fromUID = (_a = ctx.request.body, _a.fromUID), toUID = _a.toUID, PID = _a.PID, content = _a.content, type = _a.type;
-        /**用户在线：即时转发 */
-        if (userSocket.checkIsOnline(toUID)) {
+        switch (_b.label) {
+            case 0:
+                userSocket = socket_1.default.userSocket;
+                fromUID = (_a = ctx.request.body, _a.fromUID), toUID = _a.toUID, PID = _a.PID, content = _a.content, type = _a.type;
+                /**1.消息保存到数据库 */
+                model = {
+                    fromUID: fromUID, toUID: toUID, PID: PID, content: content, type: type,
+                    dirty: false,
+                    readed: false,
+                    title: '项目邀请',
+                    formType: 1 /* InviteMember */,
+                    replyURL: '/api/v1/reply-invite'
+                };
+                return [4 /*yield*/, msg_model_1.default.save(model)];
+            case 1:
+                data = _b.sent();
+                /**2.用户在线：即时转发 */
+                if (userSocket.checkIsOnline(toUID)) {
+                    console.log("\u7528\u6237\u5728\u7EBF\uFF0C\u51C6\u5907\u8F6C\u53D1");
+                    _id = data._id, content_1 = data.content, title = data.title;
+                    userSocket.sendMsgTo(toUID, {
+                        type: 1 /* InviteMember */,
+                        eventName: "" + index_con_1.CON.socketEvent.msg,
+                        content: {
+                            msgId: _id,
+                            content: content_1, title: title
+                        }
+                    });
+                }
+                result = {
+                    msg: 'success',
+                    status: '200'
+                };
+                ctx.body = result;
+                return [2 /*return*/];
         }
-        return [2 /*return*/];
     });
 }); };

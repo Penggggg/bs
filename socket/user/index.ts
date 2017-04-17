@@ -1,5 +1,4 @@
-import { _IUser } from '../../interface/app.interface';
-import { _ISocketSignIn, ISocketSignIn_, _ISocketSignOut } from '../../interface/socket.interface';
+
 
 export default class UserSocket {
 
@@ -30,7 +29,7 @@ export default class UserSocket {
 
     /**登录 */
     private signIn = ( socket: SocketIO.Socket ) => {
-        socket.on(`${this.eventSignIn}`, ({ user }: _ISocketSignIn ) => {
+        socket.on(`${this.eventSignIn}`, ({ user }: SOK.Req.signIn ) => {
             console.log(`用户登录：${user.name}`)
             this.userMapSid[ user._id ] = socket.id;
             this.userSockets[ socket.id ] = socket;
@@ -38,13 +37,13 @@ export default class UserSocket {
         socket.emit(`${this.eventSignIn}`, 
             {   msg: 'success', 
                 status: '200'
-            } as ISocketSignIn_ 
+            } as SOK.Res.signIn 
         )
     }
 
     /**登出 */
     private signOut = ( socket: SocketIO.Socket ) => {
-        socket.on(`${this.eventSignOut}`, ({ user }: _ISocketSignOut ) => {
+        socket.on(`${this.eventSignOut}`, ({ user }: SOK.Req.signOut ) => {
             delete this.userSockets[ socket.id ];
         })
         socket.on('disconnect', ( ) => {
@@ -66,7 +65,11 @@ export default class UserSocket {
         return this.userSockets[this.userMapSid[ uid ]] ? true : false;
     }
 
-    public sendMsgTo = ( uid, msg: { eventName: string, content: object }) => {
+    public sendMsgTo = ( uid, msg: { eventName: string, content: object, type: number }) => {
+
+        let socket = this.userSockets[this.userMapSid[ uid ]];
+        socket.emit(`${msg.eventName}`, { type: msg.type, content: msg.content });
+        console.log('转发成功')
 
     }
 

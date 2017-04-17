@@ -1,10 +1,12 @@
 import { Observable } from 'rxjs';
 import SignIn from './event-signIn';
+import Msg from './event-msg';
 
 
 class socketService {
 
     public SignIn = SignIn;
+    public Msg = Msg;
 
     private connectedUrl = 'http://localhost'; 
     public connectedNameSpace: {

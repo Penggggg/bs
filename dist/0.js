@@ -3120,7 +3120,7 @@ exports.InjectMember = function (Slider) {
                         });
                     }
                     else {
-                        http_service_1.default
+                        var sub_1 = http_service_1.default
                             .post('/api/v1/invite-member', {
                             fromUID: res[0]._id,
                             toUID: choicedUID,
@@ -3128,7 +3128,18 @@ exports.InjectMember = function (Slider) {
                             type: 1 /* InviteMember */,
                             content: res[0].name + "\u8BDA\u610F\u9080\u8BF7\u60A8\u52A0\u5165\u9879\u76EE\u3010" + res[1].name + "\u3011\u3002\u8BF7\u95EE\u60A8\u662F\u5426\u540C\u610F\uFF1F"
                         })
-                            .do(function (res) { return console.log(res); })
+                            .do(function (res) {
+                            notification_service_1.default.open({
+                                title: '系统消息',
+                                msg: res.status === '200' ? '邀请发送成功！' : '邀请发送失败！',
+                                type: res.status === '200' ? 'ok' : 'error'
+                            });
+                            setTimeout(function () {
+                                _this.setState({ showForm: false });
+                                _this.props.onClose();
+                                sub_1.unsubscribe();
+                            }, 1000);
+                        })
                             .subscribe();
                     }
                 })

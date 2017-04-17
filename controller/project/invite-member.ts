@@ -36,7 +36,7 @@ export let inviteMember = async( ctx: Koa.Context ) => {
             content: {
                 msgId: _id, 
                 content, title 
-            } as SOK.Res.msg
+            } as SOK.Res.MsgInviteContent
         })
 
     } 

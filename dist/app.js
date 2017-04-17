@@ -77,13 +77,20 @@ exports.default = new localStorageService();
 Object.defineProperty(exports, "__esModule", { value: true });
 var rxjs_1 = __webpack_require__(53);
 var index_con_1 = __webpack_require__(237);
+var notification_service_1 = __webpack_require__(542);
 var Msg = (function () {
     function Msg() {
         var _this = this;
         this.watch = function (socket) {
             _this.sub = rxjs_1.Observable
                 .fromEvent(socket, "" + index_con_1.CON.socketEvent.msg)
-                .do(function (res) { return console.log(res); })
+                .do(function (res) {
+                var _a = res.content, title = _a.title, content = _a.content;
+                notification_service_1.default.open({
+                    title: "" + title,
+                    msg: "" + content
+                });
+            })
                 .subscribe();
         };
         this.cancelWatch = function () {

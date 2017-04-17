@@ -64,7 +64,7 @@ export let InjectMember = ( Slider ) => {
                             type: 'error'
                         })
                     } else {
-                        http
+                        let sub = http
                             .post<API.Res.InviteMember>('/api/v1/invite-member', {
                                 fromUID: res[0]._id,
                                 toUID: choicedUID,
@@ -72,7 +72,18 @@ export let InjectMember = ( Slider ) => {
                                 type: ENUM.MsgType.InviteMember,
                                 content: `${res[0].name}诚意邀请您加入项目【${res[1].name}】。请问您是否同意？`
                             } as API.Query.InviteMember)
-                            .do( res => console.log( res ))
+                            .do( res => {
+                                Notification.open({
+                                    title: '系统消息',
+                                    msg: res.status === '200' ? '邀请发送成功！':'邀请发送失败！',
+                                    type: res.status === '200' ? 'ok' : 'error'
+                                })
+                                setTimeout(( ) => {
+                                    this.setState({ showForm: false });
+                                    this.props.onClose( );
+                                    sub.unsubscribe( );
+                                }, 1000 );
+                            })
                             .subscribe( )
                     }
                 })

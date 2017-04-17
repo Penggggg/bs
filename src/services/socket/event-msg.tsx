@@ -2,6 +2,7 @@
 import { Observable, Subscription } from 'rxjs';
 
 import { CON } from '../../index.con';
+import Notification from '../../services/notification.service';
 
 
 class Msg {
@@ -11,8 +12,14 @@ class Msg {
     public watch = ( socket: SocketIO.Socket ) => {
         
         this.sub = Observable
-            .fromEvent( socket, `${CON.socketEvent.msg}`)
-            .do( res => console.log( res ))
+            .fromEvent<SOK.Res.MsgInvite>( socket, `${CON.socketEvent.msg}`)
+            .do( res => {
+                let { title, content } = res.content;
+                Notification.open({
+                    title: `${title}`,
+                    msg: `${content}` 
+                })
+            })
             .subscribe( )
     }
 

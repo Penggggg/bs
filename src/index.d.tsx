@@ -41,17 +41,27 @@ declare namespace SOK {
     
     export namespace Res {
 
+        interface Msg {
+            type: number
+        }
+
+
         /**登录 */
         export interface signIn {
             msg: 'success' | 'error',
             status: '200'
         }
 
+        /**消息推送：成员邀请content内容 */
+        export interface MsgInviteContent {
+                msgId: string,
+                content: string,
+                title: string
+        }
+
         /**消息推送：成员邀请 */
-        export interface msg {
-            msgId: string,
-            content: string,
-            title: string
+        export interface MsgInvite extends Msg {
+            content: MsgInviteContent
         }
 
     }

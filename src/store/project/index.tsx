@@ -3,13 +3,9 @@ import ProjectData from './data.store';
 
 class ProjectStore {
 
-    public role;
-    public data;
+    public role = new ProjectRole( );
+    public data = new ProjectData( );
 
-    constructor( ) {
-        this.role = new ProjectRole( );
-        this.data = new ProjectData( );
-    }
 
 }
 

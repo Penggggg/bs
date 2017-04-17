@@ -1,13 +1,11 @@
 import { Observable, Observer, Subject, ReplaySubject, Subscription } from 'rxjs';
 
-import { IProject } from '../../interface/app.interface';
-
 export default class ProjectData {
 
-    private data$$: Observer<IProject>;
-    public data$: Observable<IProject>;
+    private data$$: Observer<APP.Project>;
+    public data$: Observable<APP.Project>;
 
-    public save( project: IProject ) {
+    public save( project: APP.Project ) {
         if ( this.data$ === undefined ) {
             this.init( project )
         } else {

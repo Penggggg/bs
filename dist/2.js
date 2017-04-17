@@ -18,11 +18,11 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
 var rxjs_1 = __webpack_require__(75);
-var http_service_1 = __webpack_require__(1376);
+var http_service_1 = __webpack_require__(1375);
 var auth_login_service_1 = __webpack_require__(539);
 var notification_service_1 = __webpack_require__(540);
 var antd_1 = __webpack_require__(153);
-__webpack_require__(1386);
+__webpack_require__(1387);
 var TabPane = antd_1.Tabs.TabPane;
 var FormItem = antd_1.Form.Item;
 var LoginPage = (function (_super) {
@@ -2842,21 +2842,8 @@ module.exports = function (css) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = {
-    reqURL:  true ? '' : ''
-};
-
-
-/***/ }),
-
-/***/ 1376:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
 var rxjs_1 = __webpack_require__(75);
-var config_1 = __webpack_require__(1375);
+var config_1 = __webpack_require__(1376);
 var HttpService = (function () {
     function HttpService() {
         this.TIMEOUT = 10000;
@@ -2979,7 +2966,20 @@ exports.default = new HttpService();
 
 /***/ }),
 
-/***/ 1380:
+/***/ 1376:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = {
+    reqURL:  true ? '' : ''
+};
+
+
+/***/ }),
+
+/***/ 1382:
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1368)(undefined);
@@ -2994,13 +2994,13 @@ exports.push([module.i, ".login-page {\n  position: relative;\n  text-align: cen
 
 /***/ }),
 
-/***/ 1386:
+/***/ 1387:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1380);
+var content = __webpack_require__(1382);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(1369)(content, {});

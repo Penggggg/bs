@@ -23,6 +23,8 @@ var UserSocket = (function () {
         this.signIn = function (socket) {
             socket.on("" + _this.eventSignIn, function (_a) {
                 var user = _a.user, sid = _a.sid;
+                console.log("\u7528\u6237\u767B\u5F55\uFF1A" + user.name);
+                console.log(sid);
                 _this.userMapSid[user.phone] = sid;
                 _this.userSockets[sid] = socket;
             });
@@ -47,7 +49,11 @@ var UserSocket = (function () {
                 }
             });
         };
+        this.checkIsOnline = function (phone) {
+            console.log(_this.userMapSid);
+            return _this.userSockets[_this.userMapSid[phone]] ? true : false;
+        };
     }
     return UserSocket;
 }());
-exports.default = new UserSocket();
+exports.default = UserSocket;

@@ -1,3 +1,5 @@
+/// <reference path="index.d.ts" />
+
 import * as Koa from 'koa';
 import * as path from 'path';
 import * as http from 'http';
@@ -9,7 +11,7 @@ import * as KoaServer from "koa-static2";
 import * as SocketIo from 'socket.io';
 
 import setRouter from './controller';
-import setSocketServer from './socket';
+import SocketServer from './socket';
 import { appConfig } from './config/node.config';
 
 
@@ -22,7 +24,7 @@ const db = Mongoose.connect(`${appConfig.dbIp}/${appConfig.dbTarget}`);;
 
 
 setRouter( router );
-setSocketServer( io )
+SocketServer.init( io )
 
 
 db.connection.on('error',( e ) => {

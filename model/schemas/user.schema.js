@@ -31,6 +31,12 @@ exports.UserSchema.statics.findAll = function (select) {
         _this.find({}, select, function (err, data) { return returnData(err, resolve, reject, data); });
     });
 };
+exports.UserSchema.statics.findOneByID = function (id) {
+    var _this = this;
+    return new Promise(function (resolve, reject) {
+        _this.findOne({ _id: id }, function (err, data) { return returnData(err, resolve, reject, data); });
+    });
+};
 exports.UserSchema.statics.findOneByPhone = function (phone) {
     var _this = this;
     return new Promise(function (resolve, reject) {

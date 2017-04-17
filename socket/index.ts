@@ -1,10 +1,6 @@
-
-
 import userSocket from './user';
 
-export default ( io: SocketIO.Server ) => {
 
-    userSocket.initIo( io );
 // io
 //     .of('/chat')
 //     .on('connection', function (socket) {
@@ -14,4 +10,15 @@ export default ( io: SocketIO.Server ) => {
 //     });
 
 
+class mySocket {
+
+    public userSocket = new userSocket( );
+
+    public init( io: SocketIO.Server ) {
+        this.userSocket.initIo( io );
+    }
+
 }
+
+
+export default new mySocket( );

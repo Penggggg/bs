@@ -18,9 +18,9 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
 var antd_1 = __webpack_require__(153);
-var http_service_1 = __webpack_require__(1376);
+var http_service_1 = __webpack_require__(1375);
 var project_1 = __webpack_require__(538);
-__webpack_require__(1388);
+__webpack_require__(1389);
 var bread_container_1 = __webpack_require__(1392);
 var memberSlider_container_1 = __webpack_require__(1393);
 var Header = antd_1.Layout.Header, Footer = antd_1.Layout.Footer, Sider = antd_1.Layout.Sider, Content = antd_1.Layout.Content;
@@ -2607,21 +2607,8 @@ module.exports = function (css) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = {
-    reqURL:  true ? '' : ''
-};
-
-
-/***/ }),
-
-/***/ 1376:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
 var rxjs_1 = __webpack_require__(75);
-var config_1 = __webpack_require__(1375);
+var config_1 = __webpack_require__(1376);
 var HttpService = (function () {
     function HttpService() {
         this.TIMEOUT = 10000;
@@ -2744,6 +2731,19 @@ exports.default = new HttpService();
 
 /***/ }),
 
+/***/ 1376:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = {
+    reqURL:  true ? '' : ''
+};
+
+
+/***/ }),
+
 /***/ 1377:
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -2760,36 +2760,6 @@ exports.push([module.i, ".my-img {\n  opacity: 0;\n  transition: all 0.4s ease;\
 /***/ }),
 
 /***/ 1378:
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(1368)(undefined);
-// imports
-
-
-// module
-exports.push([module.i, ".c-Slider {\n  background-color: #f5f5f5;\n  width: 350px;\n  height: 500px;\n  position: absolute;\n  right: 20px;\n  top: 125px;\n  z-index: 10px;\n  transition: all ease 0.4s;\n  transform: translate3d(350px, 0, 0);\n  opacity: 0;\n  border-radius: 8px;\n  box-shadow: 0px 0px 20px 1px #919191;\n}\n.c-Slider .title {\n  text-align: center;\n  position: relative;\n  padding: 10px 25px;\n}\n.c-Slider .title h3 {\n  border-bottom: 1px solid #d9d9d9;\n  padding-bottom: 10px;\n}\n.c-Slider .title i {\n  transition: all ease 0.4s;\n  position: absolute;\n  cursor: pointer;\n  right: 20px;\n  top: 16px;\n}\n.c-Slider .title i:hover {\n  color: #56ABEF;\n}\n.c-Slider .content {\n  padding: 0 25px 20px;\n  height: 450px;\n  overflow: scroll;\n}\n.c-Slider .content ul {\n  padding-top: 15px;\n}\n.c-Slider .content ul li {\n  position: relative;\n  padding-left: 65px;\n  padding-top: 3px;\n  padding-bottom: 18px;\n}\n.c-Slider .content ul li img {\n  width: 50px;\n  border-radius: 50%;\n  position: absolute;\n  left: 0;\n  top: 0;\n}\n.c-Slider .content ul li.btn {\n  cursor: pointer;\n}\n.c-Slider .content ul li.btn i {\n  font-size: 50px;\n  color: #108ee9;\n}\n.c-Slider .content ul li.btn a {\n  position: absolute;\n  top: 20px;\n  left: 62px;\n}\n.c-Slider .content::-webkit-scrollbar {\n  display: none;\n}\n.c-Slider.show {\n  transform: translate3d(0, 0, 0);\n  opacity: 1;\n}\n", ""]);
-
-// exports
-
-
-/***/ }),
-
-/***/ 1382:
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(1368)(undefined);
-// imports
-
-
-// module
-exports.push([module.i, ".project-page .my-layout {\n  background-color: #fff;\n}\n.project-page .my-layout .my-header {\n  height: 50px;\n  margin-top: 6px;\n  line-height: 50px;\n  background-color: #f5f5f5 !important;\n}\n.project-page .my-layout .my-header .bread-block {\n  box-sizing: border-box;\n  padding-left: 35px;\n}\n.project-page .my-layout .my-header .menu-block .ant-menu-horizontal {\n  border: none;\n  background-color: #f5f5f5 !important;\n}\n.project-page .my-layout .my-header .project-detail-block {\n  text-align: right;\n  padding-right: 35px;\n  box-sizing: border-box;\n}\n.project-page .my-layout .my-header .project-detail-block a {\n  color: #666;\n  padding: 0 15px;\n  position: relative;\n  transition: all ease 0.4s;\n}\n.project-page .my-layout .my-header .project-detail-block a i {\n  padding-right: 6px;\n}\n.project-page .my-layout .my-header .project-detail-block a:hover {\n  color: #49a9ee;\n}\n", ""]);
-
-// exports
-
-
-/***/ }),
-
-/***/ 1383:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
@@ -2816,82 +2786,7 @@ if(false) {
 
 /***/ }),
 
-/***/ 1384:
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(1378);
-if(typeof content === 'string') content = [[module.i, content, '']];
-// add the styles to the DOM
-var update = __webpack_require__(1369)(content, {});
-if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
-if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./Slider.less", function() {
-			var newContent = require("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./Slider.less");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
-	module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
-
-/***/ 1388:
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(1382);
-if(typeof content === 'string') content = [[module.i, content, '']];
-// add the styles to the DOM
-var update = __webpack_require__(1369)(content, {});
-if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
-if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./project.less", function() {
-			var newContent = require("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./project.less");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
-	module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
-
-/***/ 1389:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var React = __webpack_require__(0);
-var antd_1 = __webpack_require__(153);
-exports.default = function (_a) {
-    var data = _a.data;
-    return React.createElement(antd_1.Breadcrumb, null, data.map(function (bread, key) {
-        return bread.href ?
-            React.createElement(antd_1.Breadcrumb.Item, { href: bread.href, key: key }, bread.name)
-            :
-                React.createElement(antd_1.Breadcrumb.Item, { key: key }, bread.name);
-    }));
-};
-
-
-/***/ }),
-
-/***/ 1390:
+/***/ 1379:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2908,7 +2803,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
-__webpack_require__(1383);
+__webpack_require__(1378);
 var Image = (function (_super) {
     __extends(Image, _super);
     function Image() {
@@ -2935,6 +2830,111 @@ exports.default = Image;
 
 /***/ }),
 
+/***/ 1380:
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(1368)(undefined);
+// imports
+
+
+// module
+exports.push([module.i, ".c-Slider {\n  background-color: #f5f5f5;\n  width: 350px;\n  height: 500px;\n  position: absolute;\n  right: 20px;\n  top: 125px;\n  z-index: 10px;\n  transition: all ease 0.4s;\n  transform: translate3d(350px, 0, 0);\n  opacity: 0;\n  border-radius: 8px;\n  box-shadow: 0px 0px 20px 1px #919191;\n}\n.c-Slider .title {\n  text-align: center;\n  position: relative;\n  padding: 10px 25px;\n}\n.c-Slider .title h3 {\n  border-bottom: 1px solid #d9d9d9;\n  padding-bottom: 10px;\n}\n.c-Slider .title i {\n  transition: all ease 0.4s;\n  position: absolute;\n  cursor: pointer;\n  right: 20px;\n  top: 16px;\n}\n.c-Slider .title i:hover {\n  color: #56ABEF;\n}\n.c-Slider .content {\n  padding: 0 25px 20px;\n  height: 450px;\n  overflow: scroll;\n}\n.c-Slider .content ul {\n  padding-top: 15px;\n}\n.c-Slider .content ul li {\n  position: relative;\n  padding-left: 65px;\n  padding-top: 3px;\n  padding-bottom: 18px;\n}\n.c-Slider .content ul li img {\n  width: 50px;\n  border-radius: 50%;\n  position: absolute;\n  left: 0;\n  top: 0;\n}\n.c-Slider .content ul li.btn {\n  cursor: pointer;\n}\n.c-Slider .content ul li.btn i {\n  font-size: 50px;\n  color: #108ee9;\n}\n.c-Slider .content ul li.btn a {\n  position: absolute;\n  top: 20px;\n  left: 62px;\n}\n.c-Slider .content::-webkit-scrollbar {\n  display: none;\n}\n.c-Slider.show {\n  transform: translate3d(0, 0, 0);\n  opacity: 1;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ 1384:
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(1368)(undefined);
+// imports
+
+
+// module
+exports.push([module.i, ".project-page .my-layout {\n  background-color: #fff;\n}\n.project-page .my-layout .my-header {\n  height: 50px;\n  margin-top: 6px;\n  line-height: 50px;\n  background-color: #f5f5f5 !important;\n}\n.project-page .my-layout .my-header .bread-block {\n  box-sizing: border-box;\n  padding-left: 35px;\n}\n.project-page .my-layout .my-header .menu-block .ant-menu-horizontal {\n  border: none;\n  background-color: #f5f5f5 !important;\n}\n.project-page .my-layout .my-header .project-detail-block {\n  text-align: right;\n  padding-right: 35px;\n  box-sizing: border-box;\n}\n.project-page .my-layout .my-header .project-detail-block a {\n  color: #666;\n  padding: 0 15px;\n  position: relative;\n  transition: all ease 0.4s;\n}\n.project-page .my-layout .my-header .project-detail-block a i {\n  padding-right: 6px;\n}\n.project-page .my-layout .my-header .project-detail-block a:hover {\n  color: #49a9ee;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ 1385:
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(1380);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(1369)(content, {});
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./Slider.less", function() {
+			var newContent = require("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./Slider.less");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+
+/***/ 1389:
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(1384);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(1369)(content, {});
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./project.less", function() {
+			var newContent = require("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./project.less");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+
+/***/ 1390:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var React = __webpack_require__(0);
+var antd_1 = __webpack_require__(153);
+exports.default = function (_a) {
+    var data = _a.data;
+    return React.createElement(antd_1.Breadcrumb, null, data.map(function (bread, key) {
+        return bread.href ?
+            React.createElement(antd_1.Breadcrumb.Item, { href: bread.href, key: key }, bread.name)
+            :
+                React.createElement(antd_1.Breadcrumb.Item, { key: key }, bread.name);
+    }));
+};
+
+
+/***/ }),
+
 /***/ 1391:
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -2953,7 +2953,7 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
 var antd_1 = __webpack_require__(153);
-__webpack_require__(1384);
+__webpack_require__(1385);
 var Slider = (function (_super) {
     __extends(Slider, _super);
     function Slider() {
@@ -2981,7 +2981,7 @@ exports.default = Slider;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var bread_decorate_1 = __webpack_require__(1394);
-var Bread_component_1 = __webpack_require__(1389);
+var Bread_component_1 = __webpack_require__(1390);
 exports.ProjectBread = bread_decorate_1.InjectProjectBread(Bread_component_1.default);
 
 
@@ -3091,9 +3091,11 @@ var __assign = (this && this.__assign) || Object.assign || function(t) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
 var antd_1 = __webpack_require__(153);
+var user_1 = __webpack_require__(541);
 var project_1 = __webpack_require__(538);
-var http_service_1 = __webpack_require__(1376);
-var Image_component_1 = __webpack_require__(1390);
+var http_service_1 = __webpack_require__(1375);
+var notification_service_1 = __webpack_require__(540);
+var Image_component_1 = __webpack_require__(1379);
 exports.InjectMember = function (Slider) {
     var Wrapper = (function (_super) {
         __extends(Wrapper, _super);
@@ -3106,11 +3108,36 @@ exports.InjectMember = function (Slider) {
                 });
             };
             _this.submitHandler = function () {
+                var choicedUID = _this.choicedUID;
+                var sub = user_1.default.data.userData$
+                    .combineLatest(project_1.default.data.data$)
+                    .do(function (res) {
+                    if (res[0]._id === choicedUID) {
+                        notification_service_1.default.open({
+                            title: '系统消息',
+                            msg: '错误！不能邀请自己！',
+                            type: 'error'
+                        });
+                    }
+                    else {
+                        http_service_1.default
+                            .post('/api/v1/invite-member', {
+                            fromUID: res[0]._id,
+                            toUID: choicedUID,
+                            PID: res[1]._id,
+                            type: 1 /* InviteMember */,
+                            content: res[0].name + "\u8BDA\u610F\u9080\u8BF7\u60A8\u52A0\u5165\u9879\u76EE\u3010" + res[1].name + "\u3011\u3002\u8BF7\u95EE\u60A8\u662F\u5426\u540C\u610F\uFF1F"
+                        })
+                            .do(function (res) { return console.log(res); })
+                            .subscribe();
+                    }
+                })
+                    .subscribe();
             };
             _this.watchProject = function () {
                 _this.sub = project_1.default.data.data$
                     .do(function (project) {
-                    var creator = project.creator, member = project.member, leader = project.leader;
+                    var creator = project.creator, member = project.member, leader = project.leader, _id = project._id;
                     _this.setState({
                         content: React.createElement("div", null,
                             React.createElement("ul", null,
@@ -3134,7 +3161,7 @@ exports.InjectMember = function (Slider) {
                         var _id = _a._id, name = _a.name, phone = _a.phone;
                         return ({
                             value: name + "-" + _id,
-                            text: name + " ( phone: " + phone + " )"
+                            text: name + " - phone: " + phone + " "
                         });
                     });
                 })
@@ -3147,8 +3174,7 @@ exports.InjectMember = function (Slider) {
             };
             _this.choiceUser = function (value) {
                 var id = value.split('-')[1];
-                console.log(id);
-                console.log(MsgType.invitateMember);
+                _this.choicedUID = id;
             };
             _this.state = {
                 content: React.createElement("div", null,

@@ -4,11 +4,13 @@ import { Icon, Modal, Button, AutoComplete } from 'antd';
 
 
 import { Subscription } from 'rxjs';
-import { _IUser } from '../../interface/app.interface';
-import { IPostQueryAllUser_ } from '../../interface/api.interface';
-import projectStore from '../../store/project';
+import { ENUM } from '../../index.con';
 
+
+import userStore from '../../store/user';
+import projectStore from '../../store/project';
 import http from '../../services/http.service';
+import Notification from '../../services/notification.service';
 import Image from '../../component/Image/Image.component';
 
 
@@ -19,6 +21,7 @@ export let InjectMember = ( Slider ) => {
         private dom: Element;
         private container: Element;
         private sub: Subscription;
+        private choicedUID: string;
 
         constructor( ) {
             super( );
@@ -36,7 +39,6 @@ export let InjectMember = ( Slider ) => {
                     clearInterval( timer );
                 }
             }, 30 )
-        
         }
 
         componentWillUnmount( ) {
@@ -51,13 +53,36 @@ export let InjectMember = ( Slider ) => {
         }
 
         submitHandler = ( ) => {
-
+            let { choicedUID } = this;
+            let sub = userStore.data.userData$
+                .combineLatest( projectStore.data.data$ )
+                .do( res => {
+                    if ( res[0]._id === choicedUID ) {
+                        Notification.open({
+                            title: '系统消息',
+                            msg: '错误！不能邀请自己！',
+                            type: 'error'
+                        })
+                    } else {
+                        http
+                            .post<API.Res.InviteMember>('/api/v1/invite-member', {
+                                fromUID: res[0]._id,
+                                toUID: choicedUID,
+                                PID: res[1]._id,
+                                type: ENUM.MsgType.InviteMember,
+                                content: `${res[0].name}诚意邀请您加入项目【${res[1].name}】。请问您是否同意？`
+                            } as API.Query.InviteMember)
+                            .do( res => console.log( res ))
+                            .subscribe( )
+                    }
+                })
+                .subscribe( )
         }
 
         watchProject = ( ) => {
             this.sub = projectStore.data.data$
                 .do( project => {
-                    let { creator, member, leader } = project;
+                    let { creator, member, leader, _id } = project;
                     this.setState({
                         content: <div><ul>
                             <li className="btn" style={{ paddingLeft: 0 }} onClick={ this.addNewMember }>
@@ -79,11 +104,11 @@ export let InjectMember = ( Slider ) => {
 
         searchUser = ( value = '' ) => {
             http
-                .post<Array<_IUser>>('/api/v1/all-user', { name: value } as IPostQueryAllUser_)
+                .post<API.Res.AllUser>('/api/v1/all-user', { name: value } as API.Query.AllUser )
                 .map( res => {
                     return res.map(({ _id, name, phone }) => ({
                        value: `${name}-${_id}`,
-                       text: `${name} ( phone: ${phone} )`
+                       text: `${name} - phone: ${phone} `
                     }))
                 })
                 .do( res => {
@@ -96,8 +121,7 @@ export let InjectMember = ( Slider ) => {
 
         choiceUser = ( value: string ) => {
             let id = value.split('-')[1];
-            console.log(id);
-            console.log( MsgType.invitateMember )
+            this.choicedUID = id;
         }
         
         render( ) {

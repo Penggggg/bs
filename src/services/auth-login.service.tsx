@@ -64,6 +64,7 @@ class authLoginService {
         this.connectedUserSocket.emit(
             `${this.socketEventSignIn}`, 
             { user, sid: this.connectedUserSocket.id  } as _ISocketSignIn);
+            console.log( this.connectedUserSocket.id );;;;;;
         /**rx监控 */
         this.myUserStore.signIn.initSignIn( this.connectedUserSocket, `${this.socketEventSignIn}` )
         /**rx存数据 */

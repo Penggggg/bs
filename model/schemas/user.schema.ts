@@ -31,6 +31,12 @@ UserSchema.statics.findAll =  function( select ) {
     })
 }
 
+UserSchema.statics.findOneByID = function( id ) {
+    return new Promise(( resolve, reject ) => {
+        this.findOne({ _id: id }, ( err, data ) => returnData( err, resolve, reject, data ))
+    })
+}
+
 UserSchema.statics.findOneByPhone = function( phone ) {
     return new Promise(( resolve, reject ) => {
         this.findOne({ phone }, ( err, data ) => returnData( err, resolve, reject, data ))

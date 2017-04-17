@@ -1,5 +1,6 @@
 
 
+
 declare namespace API {
 
     export namespace Res {
@@ -39,6 +40,7 @@ declare namespace API {
 
 }
 
+
 declare namespace APP {
 
     /**用户信息 */
@@ -68,18 +70,3 @@ declare namespace APP {
     }
 
 }
-
-declare namespace SOK {
-    
-}
-
-
-
-
-/**webpack2 import */
-declare var System: {
-    import: ( filename: string ) => Promise<any>
-}
-
-/**socket.io client */
-declare var io: any

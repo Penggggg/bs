@@ -16,6 +16,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
+/// <reference path="./index.d.tsx" />
 var React = __webpack_require__(0);
 var ReactDom = __webpack_require__(12);
 var react_router_1 = __webpack_require__(152);
@@ -418,6 +419,12 @@ var authLoginService = (function () {
             /**socket连接 */
             _this.connectedUserSocket = _this.mySocket.connectNewNsp(_this.socketNspSignIn);
             _this.connectedUserSocket.emit("" + _this.socketEventSignIn, { user: user, sid: _this.connectedUserSocket.id });
+            console.log(_this.connectedUserSocket.id);
+            ;
+            ;
+            ;
+            ;
+            ;
             /**rx监控 */
             _this.myUserStore.signIn.initSignIn(_this.connectedUserSocket, "" + _this.socketEventSignIn);
             /**rx存数据 */

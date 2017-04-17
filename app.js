@@ -1,3 +1,4 @@
+/// <reference path="index.d.ts" />
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var Koa = require("koa");
@@ -19,7 +20,7 @@ var io = SocketIo(server);
 var db = Mongoose.connect(node_config_1.appConfig.dbIp + "/" + node_config_1.appConfig.dbTarget);
 ;
 controller_1.default(router);
-socket_1.default(io);
+socket_1.default.init(io);
 db.connection.on('error', function (e) {
     console.error("\u6570\u636E\u5E93\u8FDE\u63A5\u9519\u8BEF: " + e);
 });

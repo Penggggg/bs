@@ -1,7 +1,7 @@
 import { _IUser } from '../../interface/app.interface';
 import { _ISocketSignIn, ISocketSignIn_, _ISocketSignOut } from '../../interface/socket.interface';
 
-class UserSocket {
+export default class UserSocket {
 
     private nameSpace = 'user';
     
@@ -31,6 +31,8 @@ class UserSocket {
     /**登录 */
     private signIn = ( socket: SocketIO.Socket ) => {
         socket.on(`${this.eventSignIn}`, ({ user, sid }: _ISocketSignIn ) => {
+            console.log(`用户登录：${user.name}`)
+            console.log( sid )
             this.userMapSid[ user.phone ] = sid;
             this.userSockets[ sid ] = socket;
         })
@@ -61,6 +63,11 @@ class UserSocket {
         })
     }
 
+    public checkIsOnline = ( phone: string ) => {
+        console.log( this.userMapSid )
+        return this.userSockets[this.userMapSid[ phone ]] ? true : false;
+    }
+
 }
 
-export default new UserSocket( );
+ 

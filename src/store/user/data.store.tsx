@@ -1,13 +1,13 @@
 import { Observable, Observer, Subject, ReplaySubject, Subscription } from 'rxjs';
 
-import { _IUser } from '../../interface/app.interface';
+
 
 export default class UserData {
 
-    private userData$$: Observer<_IUser>;
-    public userData$: Observable<_IUser>;
+    private userData$$: Observer<APP.User>;
+    public userData$: Observable<APP.User>;
 
-    public save = ( user: _IUser ) => {
+    public save = ( user: APP.User ) => {
         /**首次保存 */
         if ( this.userData$ === undefined ) {
             this.init( user );
@@ -16,7 +16,7 @@ export default class UserData {
         }   
     }
 
-    private init = ( user: _IUser ) => {
+    private init = ( user: APP.User ) => {
 
         let subject = new ReplaySubject( 1 );
         let source = Observable.create(( observer ) => {

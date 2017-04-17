@@ -1,3 +1,4 @@
+/// <reference path="./index.d.tsx" />
 import * as React from 'react';
 import * as ReactDom from 'react-dom';
 import { Router, hashHistory } from 'react-router';

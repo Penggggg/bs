@@ -3102,7 +3102,7 @@ exports.InjectMember = function (Slider) {
         function Wrapper() {
             var _this = _super.call(this) || this;
             _this.addNewMember = function () {
-                _this.searchUser();
+                _this.fetchUser();
                 _this.setState({
                     showForm: true
                 });
@@ -3152,7 +3152,7 @@ exports.InjectMember = function (Slider) {
                 })
                     .subscribe();
             };
-            _this.searchUser = function (value) {
+            _this.fetchUser = function (value) {
                 if (value === void 0) { value = ''; }
                 http_service_1.default
                     .post('/api/v1/all-user', { name: value })
@@ -3175,6 +3175,7 @@ exports.InjectMember = function (Slider) {
             _this.choiceUser = function (value) {
                 var id = value.split('-')[1];
                 _this.choicedUID = id;
+                console.log(id);
             };
             _this.state = {
                 content: React.createElement("div", null,
@@ -3201,7 +3202,7 @@ exports.InjectMember = function (Slider) {
             var content = (_a = this.state, _a.content), showForm = _a.showForm, dataSource = _a.dataSource;
             var form = React.createElement("div", { className: "modal-resetpsw-form" },
                 React.createElement("h3", null, "\u8D26\u53F7\u9080\u8BF7"),
-                React.createElement(antd_1.AutoComplete, { dataSource: dataSource, onSelect: this.choiceUser, onChange: this.searchUser, style: { width: '310px', margin: '10px 0px' } }),
+                React.createElement(antd_1.AutoComplete, { dataSource: dataSource, onSelect: this.choiceUser, onChange: this.fetchUser, style: { width: '310px', margin: '10px 0px' } }),
                 React.createElement("div", { className: "modal-img" },
                     React.createElement("img", { src: "/static/jielibang.png", alt: "" })));
             return React.createElement("div", null,

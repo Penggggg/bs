@@ -1,12 +1,8 @@
 import { _IUser } from './app.interface';
 
-/**scoketid */
-export interface ISocketID {
-    sid: string
-}
 
 /**登录 */
-export interface _ISocketSignIn extends ISocketID {
+export interface _ISocketSignIn {
     user: _IUser
 }
 

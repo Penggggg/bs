@@ -4,9 +4,6 @@ declare namespace API {
 
     export namespace Res {
 
-        /**GET: 所有用户 */
-        export type AllUser = Array<APP.User>
-
         /**POST：项目成员邀请 */
         export interface InviteMember {
             msg: string,
@@ -33,6 +30,35 @@ declare namespace API {
             type: number
             content: string,
             PID: string
+        }
+
+    }
+
+}
+
+
+declare namespace SOK {
+    
+    export namespace Res {
+
+        /**登录 */
+        export interface signIn {
+            msg: 'success' | 'error',
+            status: '200'
+        }
+
+    }
+
+    export namespace Req {
+
+        /**登录 */
+        export interface signIn {
+            user: APP.User
+        }  
+
+        /**登出 */
+        export interface signOut {
+            user: APP.User
         }
 
     }
@@ -69,9 +95,7 @@ declare namespace APP {
 
 }
 
-declare namespace SOK {
-    
-}
+
 
 
 

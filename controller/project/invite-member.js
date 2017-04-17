@@ -37,18 +37,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var socket_1 = require("../../socket");
-var user_model_1 = require("../../model/models/user.model");
 exports.inviteMember = function (ctx) { return __awaiter(_this, void 0, void 0, function () {
-    var fromUID, toUID, PID, content, type, toUser, _a;
+    var userSocket, fromUID, toUID, PID, content, type, _a;
     return __generator(this, function (_b) {
-        switch (_b.label) {
-            case 0:
-                fromUID = (_a = ctx.request.body, _a.fromUID), toUID = _a.toUID, PID = _a.PID, content = _a.content, type = _a.type;
-                return [4 /*yield*/, user_model_1.default.findOneByID(toUID)];
-            case 1:
-                toUser = _b.sent();
-                console.log(socket_1.default.userSocket.checkIsOnline(toUser.phone));
-                return [2 /*return*/];
+        userSocket = socket_1.default.userSocket;
+        fromUID = (_a = ctx.request.body, _a.fromUID), toUID = _a.toUID, PID = _a.PID, content = _a.content, type = _a.type;
+        /**用户在线：即时转发 */
+        if (userSocket.checkIsOnline(toUID)) {
         }
+        return [2 /*return*/];
     });
 }); };

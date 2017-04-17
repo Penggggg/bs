@@ -13,7 +13,7 @@ export default class UserSocket {
         [ key: string ]: SocketIO.Socket
     } = { }
 
-    /**电话-sid */
+    /**uid-sid */
     private userMapSid: {
         [ key: string ]: string
     } = { }
@@ -30,11 +30,10 @@ export default class UserSocket {
 
     /**登录 */
     private signIn = ( socket: SocketIO.Socket ) => {
-        socket.on(`${this.eventSignIn}`, ({ user, sid }: _ISocketSignIn ) => {
+        socket.on(`${this.eventSignIn}`, ({ user }: _ISocketSignIn ) => {
             console.log(`用户登录：${user.name}`)
-            console.log( sid )
-            this.userMapSid[ user.phone ] = sid;
-            this.userSockets[ sid ] = socket;
+            this.userMapSid[ user._id ] = socket.id;
+            this.userSockets[ socket.id ] = socket;
         })
         socket.emit(`${this.eventSignIn}`, 
             {   msg: 'success', 
@@ -63,9 +62,12 @@ export default class UserSocket {
         })
     }
 
-    public checkIsOnline = ( phone: string ) => {
-        console.log( this.userMapSid )
-        return this.userSockets[this.userMapSid[ phone ]] ? true : false;
+    public checkIsOnline = ( uid: string ) => {
+        return this.userSockets[this.userMapSid[ uid ]] ? true : false;
+    }
+
+    public sendMsgTo = ( uid, msg: { eventName: string, content: object }) => {
+
     }
 
 }

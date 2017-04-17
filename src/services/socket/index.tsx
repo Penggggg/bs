@@ -1,8 +1,10 @@
 import { Observable } from 'rxjs';
-import { _IUser } from '../interface/app.interface';
+import SignIn from './event-signIn';
 
 
 class socketService {
+
+    public SignIn = SignIn;
 
     private connectedUrl = 'http://localhost'; 
     public connectedNameSpace: {

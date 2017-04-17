@@ -8,7 +8,7 @@ var UserSocket = (function () {
         this.eventSignOut = 'signOutUser';
         /**sid-socket */
         this.userSockets = {};
-        /**电话-sid */
+        /**uid-sid */
         this.userMapSid = {};
         /**初始化 */
         this.initIo = function (io) {
@@ -22,11 +22,10 @@ var UserSocket = (function () {
         /**登录 */
         this.signIn = function (socket) {
             socket.on("" + _this.eventSignIn, function (_a) {
-                var user = _a.user, sid = _a.sid;
+                var user = _a.user;
                 console.log("\u7528\u6237\u767B\u5F55\uFF1A" + user.name);
-                console.log(sid);
-                _this.userMapSid[user.phone] = sid;
-                _this.userSockets[sid] = socket;
+                _this.userMapSid[user._id] = socket.id;
+                _this.userSockets[socket.id] = socket;
             });
             socket.emit("" + _this.eventSignIn, { msg: 'success',
                 status: '200'
@@ -49,9 +48,10 @@ var UserSocket = (function () {
                 }
             });
         };
-        this.checkIsOnline = function (phone) {
-            console.log(_this.userMapSid);
-            return _this.userSockets[_this.userMapSid[phone]] ? true : false;
+        this.checkIsOnline = function (uid) {
+            return _this.userSockets[_this.userMapSid[uid]] ? true : false;
+        };
+        this.sendMsgTo = function (uid, msg) {
         };
     }
     return UserSocket;

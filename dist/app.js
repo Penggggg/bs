@@ -69,33 +69,6 @@ exports.default = new localStorageService();
 
 /***/ }),
 
-/***/ 1351:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var socketService = (function () {
-    function socketService() {
-        this.connectedUrl = 'http://localhost';
-        this.connectedNameSpace = {};
-    }
-    socketService.prototype.connectNewNsp = function (name) {
-        var socketClient = io(this.connectedUrl + "/" + name);
-        this.connectedNameSpace[name] = socketClient;
-        return socketClient;
-    };
-    socketService.prototype.disconnectNsp = function (name) {
-        this.connectedNameSpace[name].disconnect();
-        delete this.connectedNameSpace[name];
-    };
-    return socketService;
-}());
-exports.default = new socketService();
-
-
-/***/ }),
-
 /***/ 1352:
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -207,25 +180,118 @@ exports.default = UserData;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var notification_service_1 = __webpack_require__(540);
 var rxjs_1 = __webpack_require__(75);
 var UserSignIn = (function () {
     function UserSignIn() {
         var _this = this;
         /**登录状态初始化 */
-        this.initSignIn = function (target, eventName) {
-            var source = rxjs_1.Observable
-                .fromEvent(target, eventName)
-                .map(function (res) { return res.status === '200' ? true : false; });
+        this.initSignIn = function () {
+            var source = rxjs_1.Observable.create(function (o) { _this.signIn$$ = o; });
             var subject = new rxjs_1.ReplaySubject(1);
             _this.signIn$ = source.multicast(subject).refCount();
-            _this.watchSignIn();
-            _this.watchUserSocket(target, 'disconnect');
+            _this.signIn$.subscribe();
         };
-        /**监控链接 */
-        this.watchUserSocket = function (target, eventName) {
-            _this.connectionSub = rxjs_1.Observable
-                .fromEvent(target, eventName)
+        /**登录状态发射 */
+        this.save = function (isSign) {
+            if (_this.signIn$ === undefined) {
+                _this.initSignIn();
+            }
+            _this.signIn$$.next(isSign);
+        };
+    }
+    return UserSignIn;
+}());
+exports.default = UserSignIn;
+
+
+/***/ }),
+
+/***/ 1396:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var CON;
+(function (CON) {
+    /**socket事件名称 */
+    var socketEvent;
+    (function (socketEvent) {
+        socketEvent.signIn = 'signInUser';
+        socketEvent.signOut = 'signOutUser';
+    })(socketEvent = CON.socketEvent || (CON.socketEvent = {}));
+    /**socket命名空间 */
+    var socketNSP;
+    (function (socketNSP) {
+        socketNSP.user = 'user';
+    })(socketNSP = CON.socketNSP || (CON.socketNSP = {}));
+})(CON = exports.CON || (exports.CON = {}));
+
+
+/***/ }),
+
+/***/ 1397:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var event_signIn_1 = __webpack_require__(1398);
+var socketService = (function () {
+    function socketService() {
+        this.SignIn = event_signIn_1.default;
+        this.connectedUrl = 'http://localhost';
+        this.connectedNameSpace = {};
+    }
+    socketService.prototype.connectNewNsp = function (name) {
+        var socketClient = io(this.connectedUrl + "/" + name);
+        this.connectedNameSpace[name] = socketClient;
+        return socketClient;
+    };
+    socketService.prototype.disconnectNsp = function (name) {
+        this.connectedNameSpace[name].disconnect();
+        delete this.connectedNameSpace[name];
+    };
+    return socketService;
+}());
+exports.default = new socketService();
+
+
+/***/ }),
+
+/***/ 1398:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var notification_service_1 = __webpack_require__(540);
+var rxjs_1 = __webpack_require__(75);
+var user_1 = __webpack_require__(541);
+var index_con_1 = __webpack_require__(1396);
+var SignIn = (function () {
+    function SignIn() {
+        var _this = this;
+        this.watch = function (socket) {
+            _this.watchDisconnect(socket);
+            _this.sub = rxjs_1.Observable
+                .fromEvent(socket, "" + index_con_1.CON.socketEvent.signIn)
+                .do(function (res) {
+                user_1.default.signIn.save(res.status === '200' ? true : false);
+            })
+                .filter(function (res) { return res.status === '200'; })
+                .do(function () {
+                notification_service_1.default.open({
+                    title: '系统消息',
+                    msg: 'socket登录成功',
+                    type: 'ok'
+                });
+            })
+                .subscribe();
+        };
+        this.watchDisconnect = function (socket) {
+            _this.sub2 = rxjs_1.Observable
+                .fromEvent(socket, 'disconnect')
                 .do(function () {
                 notification_service_1.default.open({
                     title: '系统消息',
@@ -235,27 +301,14 @@ var UserSignIn = (function () {
             })
                 .subscribe();
         };
-        /**监控登录 */
-        this.watchSignIn = function () {
-            _this.signInSub = _this.signIn$
-                .do(function (isSign) {
-                notification_service_1.default.open({
-                    title: '系统消息',
-                    msg: isSign ? 'socket链接成功' : 'socket服务链接失败',
-                    type: 'ok'
-                });
-            })
-                .subscribe();
-        };
-        /**取消登录监控 */
-        this.cacelWatchSignIn = function () {
-            _this.signInSub.unsubscribe();
-            _this.connectionSub.unsubscribe();
+        this.cancelWatch = function () {
+            _this.sub.unsubscribe();
+            _this.sub2.unsubscribe();
         };
     }
-    return UserSignIn;
+    return SignIn;
 }());
-exports.default = UserSignIn;
+exports.default = new SignIn();
 
 
 /***/ }),
@@ -381,20 +434,18 @@ exports.default = new ProjectStore();
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+var index_con_1 = __webpack_require__(1396);
 var local_storage_service_1 = __webpack_require__(1350);
-var socket_service_1 = __webpack_require__(1351);
+var socket_1 = __webpack_require__(1397);
 var user_1 = __webpack_require__(541);
 var project_1 = __webpack_require__(538);
 var authLoginService = (function () {
     function authLoginService() {
         var _this = this;
         this.signInName = 'user';
-        this.loginUrl = '/login';
         this.socketNspSignIn = 'user';
-        this.socketEventSignIn = 'signInUser';
-        this.socketEventSignOut = 'signOutUser';
         this.myLocalStorage = local_storage_service_1.default;
-        this.mySocket = socket_service_1.default;
+        this.mySocket = socket_1.default;
         this.myUserStore = user_1.default;
         this.myProjectStore = project_1.default;
         /**auth服务：用户信息 */
@@ -407,7 +458,7 @@ var authLoginService = (function () {
                 console.log("checking auth: \u5DF2\u767B\u5F55");
             }
             else {
-                replace(_this.loginUrl);
+                replace('/login');
                 console.log("checking auth: \u672A\u767B\u5F55");
             }
             return next();
@@ -417,16 +468,10 @@ var authLoginService = (function () {
             /**ls储存数据 */
             _this.myLocalStorage.setItem(_this.signInName, user);
             /**socket连接 */
-            _this.connectedUserSocket = _this.mySocket.connectNewNsp(_this.socketNspSignIn);
-            _this.connectedUserSocket.emit("" + _this.socketEventSignIn, { user: user, sid: _this.connectedUserSocket.id });
-            console.log(_this.connectedUserSocket.id);
-            ;
-            ;
-            ;
-            ;
-            ;
+            _this.connectedUserSocket = _this.mySocket.connectNewNsp(index_con_1.CON.socketNSP.user);
+            _this.connectedUserSocket.emit("" + index_con_1.CON.socketEvent.signIn, { user: user });
             /**rx监控 */
-            _this.myUserStore.signIn.initSignIn(_this.connectedUserSocket, "" + _this.socketEventSignIn);
+            _this.mySocket.SignIn.watch(_this.connectedUserSocket);
             /**rx存数据 */
             _this.myUserStore.data.save(user);
         };
@@ -434,12 +479,12 @@ var authLoginService = (function () {
         this.signOut = function () {
             /**服务器登出 */
             var user = _this.myLocalStorage.getItem(_this.signInName);
-            _this.mySocket.connectedNameSpace[_this.socketNspSignIn].emit("" + _this.socketEventSignOut, { user: user });
+            _this.mySocket.connectedNameSpace[index_con_1.CON.socketNSP.user].emit("" + index_con_1.CON.socketEvent.signOut, { user: user });
             /**本地登出 */
             _this.myLocalStorage.cleanItem(_this.signInName);
-            _this.mySocket.disconnectNsp(_this.socketNspSignIn);
+            _this.mySocket.disconnectNsp(index_con_1.CON.socketNSP.user);
             /**rx取消监控 */
-            _this.myUserStore.signIn.cacelWatchSignIn();
+            _this.mySocket.SignIn.cancelWatch();
         };
     }
     return authLoginService;

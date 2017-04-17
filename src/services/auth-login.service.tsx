@@ -1,16 +1,13 @@
 
 import { Modal } from 'antd';
-
 import { RouterState } from 'react-router';
+
+import { CON } from '../index.con';
+
 import lsService from './local-storage.service';
-import socketService from './socket.service';
-
-
+import socketService from './socket';
 import UserStore from '../store/user';
 import ProjectStore from  '../store/project';
-
-import { _IUser } from '../interface/app.interface';
-import { _ISocketSignIn, ISocketSignIn_, _ISocketSignOut } from '../interface/socket.interface';
 
 
 
@@ -19,11 +16,8 @@ class authLoginService {
     private connectedUserSocket: SocketIO.Socket;
     
     private signInName = 'user';
-    private loginUrl = '/login';
 
     private socketNspSignIn = 'user';
-    private socketEventSignIn = 'signInUser';
-    private socketEventSignOut = 'signOutUser';
 
     private myLocalStorage = lsService;
     private mySocket = socketService;
@@ -37,7 +31,7 @@ class authLoginService {
 
 
     /**auth服务：用户信息 */
-    public userData = ( ) => this.myLocalStorage.getItem<_IUser>( this.signInName )
+    public userData = ( ) => this.myLocalStorage.getItem<APP.User>( this.signInName )
 
     /**auth服务：检查是否已经登录 */
     public isLogin = ( ) => this.myLocalStorage.getItem( this.signInName ) ? true : false;
@@ -48,7 +42,7 @@ class authLoginService {
             console.log(`checking auth: 已登录`)
 
         } else {
-            replace( this.loginUrl );
+            replace('/login');
             console.log(`checking auth: 未登录`)
         }
         return next( );
@@ -56,17 +50,15 @@ class authLoginService {
 
 
     /**auth服务：登录 */
-    public signIn = ( user: _IUser ) => { 
+    public signIn = ( user: APP.User ) => { 
         /**ls储存数据 */
         this.myLocalStorage.setItem( this.signInName,  user );
         /**socket连接 */
-        this.connectedUserSocket = this.mySocket.connectNewNsp( this.socketNspSignIn )
+        this.connectedUserSocket = this.mySocket.connectNewNsp( CON.socketNSP.user );
         this.connectedUserSocket.emit(
-            `${this.socketEventSignIn}`, 
-            { user, sid: this.connectedUserSocket.id  } as _ISocketSignIn);
-            console.log( this.connectedUserSocket.id );;;;;;
+            `${CON.socketEvent.signIn}`,  { user  } as SOK.Req.signIn);
         /**rx监控 */
-        this.myUserStore.signIn.initSignIn( this.connectedUserSocket, `${this.socketEventSignIn}` )
+        this.mySocket.SignIn.watch( this.connectedUserSocket );
         /**rx存数据 */
         this.myUserStore.data.save( user );
     }
@@ -75,12 +67,12 @@ class authLoginService {
     public signOut = ( ) => { 
         /**服务器登出 */
         let user = this.myLocalStorage.getItem( this.signInName );
-        this.mySocket.connectedNameSpace[this.socketNspSignIn].emit(`${this.socketEventSignOut}`, { user } as _ISocketSignOut )
+        this.mySocket.connectedNameSpace[CON.socketNSP.user].emit(`${CON.socketEvent.signOut}`, { user } as SOK.Req.signOut )
         /**本地登出 */
         this.myLocalStorage.cleanItem( this.signInName );        
-        this.mySocket.disconnectNsp( this.socketNspSignIn );
+        this.mySocket.disconnectNsp( CON.socketNSP.user );
         /**rx取消监控 */
-        this.myUserStore.signIn.cacelWatchSignIn( );
+        this.mySocket.SignIn.cancelWatch( );
     }
 
 

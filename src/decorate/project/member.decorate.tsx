@@ -46,7 +46,7 @@ export let InjectMember = ( Slider ) => {
         }
 
         addNewMember = ( ) => {
-            this.searchUser( );
+            this.fetchUser( );
             this.setState({
                 showForm: true
             })
@@ -102,9 +102,9 @@ export let InjectMember = ( Slider ) => {
                 .subscribe( )
         }
 
-        searchUser = ( value = '' ) => {
+        fetchUser = ( value = '' ) => {
             http
-                .post<API.Res.AllUser>('/api/v1/all-user', { name: value } as API.Query.AllUser )
+                .post<Array<APP.User>>('/api/v1/all-user', { name: value } as API.Query.AllUser )
                 .map( res => {
                     return res.map(({ _id, name, phone }) => ({
                        value: `${name}-${_id}`,
@@ -122,6 +122,7 @@ export let InjectMember = ( Slider ) => {
         choiceUser = ( value: string ) => {
             let id = value.split('-')[1];
             this.choicedUID = id;
+            console.log( id )
         }
         
         render( ) {
@@ -133,7 +134,7 @@ export let InjectMember = ( Slider ) => {
                 <AutoComplete
                     dataSource={ dataSource }
                     onSelect={ this.choiceUser }
-                    onChange={ this.searchUser }
+                    onChange={ this.fetchUser }
                     style={{ width: '310px', margin: '10px 0px' }} />
                 <div className="modal-img"><img src="/static/jielibang.png" alt=""/></div>
             </div>

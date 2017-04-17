@@ -1,12 +1,8 @@
 
 
-
 declare namespace API {
 
     export namespace Res {
-
-        /**GET: 所有用户 */
-        export type AllUser = Array<APP.User>
 
         /**POST：项目成员邀请 */
         export interface InviteMember {
@@ -41,6 +37,34 @@ declare namespace API {
 }
 
 
+declare namespace SOK {
+    
+    export namespace Res {
+
+        /**登录 */
+        export interface signIn {
+            msg: 'success' | 'error',
+            status: '200'
+        }
+
+    }
+
+    export namespace Req {
+
+        /**登录 */
+        export interface signIn {
+            user: APP.User
+        }  
+
+        /**登出 */
+        export interface signOut {
+            user: APP.User
+        }
+
+    }
+
+}
+
 declare namespace APP {
 
     /**用户信息 */
@@ -70,3 +94,16 @@ declare namespace APP {
     }
 
 }
+
+
+
+
+
+
+/**webpack2 import */
+declare var System: {
+    import: ( filename: string ) => Promise<any>
+}
+
+/**socket.io client */
+declare var io: any

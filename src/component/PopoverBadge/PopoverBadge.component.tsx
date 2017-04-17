@@ -10,14 +10,6 @@ export class PopoverBadge extends React.PureComponent< IProps, { }> {
         super( );
     }
 
-    componentDidMount( ) {
-        this.fetchMsg( );
-    }
-
-    fetchMsg( ) {
-        
-    }
-
     render( ) {
         let { content, popContent, count, placement } = this.props;
         return <Popover content={ popContent } placement={ placement }>

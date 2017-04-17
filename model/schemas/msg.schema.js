@@ -31,6 +31,12 @@ exports.MsgSchema.statics.findAll = function (select) {
         _this.find({}, select, function (err, data) { return returnData(err, resolve, reject, data); });
     });
 };
+exports.MsgSchema.statics.findAllByToUIDAndReaded = function (toUID, readed) {
+    var _this = this;
+    return new Promise(function (resolve, reject) {
+        _this.find({ toUID: toUID, readed: readed }, function (err, data) { return returnData(err, resolve, reject, data); });
+    });
+};
 exports.MsgSchema.statics.save = function (_a) {
     var _this = this;
     var fromUID = _a.fromUID, toUID = _a.toUID, type = _a.type, content = _a.content, PID = _a.PID, dirty = _a.dirty, readed = _a.readed, title = _a.title, formType = _a.formType, replyURL = _a.replyURL;

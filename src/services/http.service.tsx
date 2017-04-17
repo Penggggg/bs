@@ -27,7 +27,7 @@ class HttpService {
         this.decorateXHR( xhr, data$$ );    
 
         /**整合查询串 */
-        url += this.turnObjToQuery( opt );
+        url += `?${this.turnObjToQuery( opt )}` ;
 
         /**开启xhr */
         xhr.open( 'GEt', `${clientConfig.reqURL}${url}`, true );

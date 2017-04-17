@@ -6,6 +6,7 @@ import { inviteMember } from './project/invite-member';
 import { createProject } from './project/create-project';
 import { fetchAllUserByName } from './user/query.controller';
 import { allProject, projectDetail } from './project/query-project';
+import { fetchAllMsgList } from './msg/query-msg';
 
 
 export default ( router ) => {
@@ -33,6 +34,10 @@ export default ( router ) => {
 
     /**用户模块：查询所有符合条件的用户 */
     router.post('/api/v1/all-user', fetchAllUserByName )
+
+
+    /**消息模块：查询所有符合条件的消息 */
+    router.get('/api/v1/msg-list', fetchAllMsgList )
 
 
 }

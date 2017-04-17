@@ -1,6 +1,6 @@
 webpackJsonp([1],{
 
-/***/ 1366:
+/***/ 1362:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -17,191 +17,72 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
-var http_service_1 = __webpack_require__(1378);
-var auth_login_service_1 = __webpack_require__(541);
-var project_1 = __webpack_require__(540);
-var user_1 = __webpack_require__(238);
-var notification_service_1 = __webpack_require__(542);
+var msgListPopBadge_container_1 = __webpack_require__(1396);
 var antd_1 = __webpack_require__(153);
-var Image_component_1 = __webpack_require__(1382);
-__webpack_require__(1391);
-var FormItem = antd_1.Form.Item;
-var ProjectAllPage = (function (_super) {
-    __extends(ProjectAllPage, _super);
-    function ProjectAllPage() {
+var auth_login_service_1 = __webpack_require__(542);
+__webpack_require__(1389);
+var Header = antd_1.Layout.Header, Content = antd_1.Layout.Content, Footer = antd_1.Layout.Footer;
+var AppPage = (function (_super) {
+    __extends(AppPage, _super);
+    function AppPage() {
         var _this = _super.call(this) || this;
-        _this.watchingRole = false;
-        _this.formProjectName = 'projectName';
-        _this.formProjectInfo = 'projectInfo';
-        _this.userData = auth_login_service_1.default.userData();
-        _this.userStore = user_1.default;
-        _this.projectStore = project_1.default;
-        _this.fetchAllProject = function () {
-            http_service_1.default
-                .get('/api/v1/all-project')
-                .do(function (res) { return _this.setState({
-                projectAll: res.data
-            }); })
-                .subscribe();
-        };
-        _this.onEnterProject = function (project) {
-            /**保存project数据 */
-            _this.projectStore.data.save(project);
-            if (!_this.watchingRole) {
-                _this.watchingRole = true;
-                _this.watchRole();
+        _this.initStore = function () {
+            if (true) {
+                console.log("\u662F\u5426\u5DF2\u672C\u5730\u767B\u5F55\uFF1A" + auth_login_service_1.default.isLogin());
+            }
+            if (auth_login_service_1.default.isLogin()) {
+                auth_login_service_1.default.signIn(auth_login_service_1.default.userData());
             }
         };
-        _this.watchRole = function () {
-            _this.projectSub = _this.projectStore.data.data$
-                .combineLatest(_this.userStore.data.userData$)
-                .debounceTime(500)
-                .do(function (res) {
-                console.log('权限判断中...');
-                var isLeader = false;
-                var isMember = false;
-                var isCreator = false;
-                var userID = res[1]._id;
-                /**creator判断 */
-                if (userID === res[0].creator._id) {
-                    isCreator = true;
-                    _this.projectStore.role.save('creator');
-                    _this.props.router.push("/project/" + res[0]._id + "/tasks");
-                }
-                /**leader判断 */
-                isLeader = res[0].leader.some(function (leader) {
-                    if (userID === leader._id) {
-                        _this.projectStore.role.save('leader');
-                        _this.props.router.push("/project/" + res[0]._id + "/tasks");
-                        return true;
-                    }
-                    return false;
-                });
-                /**member判断 */
-                if (!isLeader) {
-                    isMember = res[0].member.some(function (member) {
-                        if (userID === member._id) {
-                            _this.projectStore.role.save('member');
-                            _this.props.router.push("/project/" + res[0]._id + "/tasks");
-                            return true;
-                        }
-                        return false;
-                    });
-                }
-                /**没有权限 */
-                if (!(isCreator || isLeader || isMember)) {
-                    antd_1.Modal.warning({
-                        title: 'Warning',
-                        content: '您没有该项目的权限！请先申请权限'
-                    });
-                }
-            })
-                .subscribe();
-        };
-        _this.renderToJsx = function (project) {
-            return React.createElement(antd_1.Card, { key: project._id, className: "project-card", bodyStyle: { padding: 0, height: '100%' } },
-                React.createElement("div", { className: "image", onClick: function () { return _this.onEnterProject(project); } },
-                    React.createElement(Image_component_1.default, { src: project.cover })),
-                React.createElement("div", { className: "info", onClick: function () { return _this.onEnterProject(project); } },
-                    React.createElement("h3", null, project.name),
-                    React.createElement("p", null, project.info)));
-        };
-        _this.newProjectSubmit = function () {
-            var _a = _this, formProjectName = _a.formProjectName, formProjectInfo = _a.formProjectInfo;
-            _this.props.form.validateFields([formProjectName, formProjectInfo], function (err, values) {
-                if (!err) {
-                    _this.setState({
-                        formSubmiting: true
-                    });
-                    http_service_1.default.post('/api/v1/create-project', Object.assign(values, { creatorID: auth_login_service_1.default.userData()._id }))
-                        .do(_this.analyseProjectSubmit)
-                        .subscribe();
-                }
-            });
-        };
-        _this.analyseProjectSubmit = function (res) {
-            notification_service_1.default.open({
-                title: '系统消息',
-                msg: res.msg,
-                type: res.status === '200' ? 'ok' : 'error'
-            });
-            setTimeout(function () {
-                _this.setState({
-                    formSubmiting: false,
-                    dynamicFormShow: false
-                });
-                _this.props.form.resetFields();
-                _this.fetchAllProject();
-            }, 1500);
-        };
         _this.state = {
-            dynamicFormShow: false,
-            formSubmiting: false,
-            projectAll: []
+            showBar: true
         };
         return _this;
     }
-    ProjectAllPage.prototype.componentDidMount = function () {
-        this.fetchAllProject();
+    AppPage.prototype.componentWillMount = function () {
+        var pathname = this.props.location.pathname;
+        this.analyseShowBar(pathname);
+        this.initStore();
     };
-    ProjectAllPage.prototype.componentWillUnmount = function () {
-        this.projectSub.unsubscribe();
+    AppPage.prototype.componentWillReceiveProps = function (newProps) {
+        var pathname = newProps.location.pathname;
+        this.analyseShowBar(pathname);
     };
-    ProjectAllPage.prototype.render = function () {
-        var _this = this;
-        var getFieldDecorator = this.props.form.getFieldDecorator;
-        var _a = this, formProjectName = _a.formProjectName, formProjectInfo = _a.formProjectInfo;
-        var _b = this.state, dynamicFormShow = _b.dynamicFormShow, formSubmiting = _b.formSubmiting, projectAll = _b.projectAll;
-        /**新增项目表单 */
-        var dynamicForm = React.createElement("div", { className: "modal-resetpsw-form" },
-            React.createElement("div", { className: "modal-img" },
-                React.createElement("img", { src: "/static/reset-psw.png", alt: "" }),
-                React.createElement("p", null, "\u521B\u5EFA\u4E00\u4E2A\u65B0\u9879\u76EE")),
-            React.createElement(antd_1.Form, { className: "reset-form" },
-                React.createElement(FormItem, null, getFieldDecorator(formProjectName, {
-                    rules: [{ required: true, message: '项目名称不能为空' }],
-                })(React.createElement(antd_1.Input, { prefix: React.createElement(antd_1.Icon, { type: "file-text", style: { fontSize: 16 } }), placeholder: "项目名称" }))),
-                React.createElement(FormItem, null, getFieldDecorator(formProjectInfo, {})(React.createElement(antd_1.Input, { prefix: React.createElement(antd_1.Icon, { type: "link", style: { fontSize: 16 } }), placeholder: "项目简介（选项）" }))),
-                React.createElement(FormItem, null,
-                    React.createElement(antd_1.Button, { type: "primary", size: 'large', style: { width: '100%' }, loading: formSubmiting, onClick: this.newProjectSubmit }, "\u5B8C\u6210\u5E76\u521B\u5EFA"))));
-        return React.createElement("div", { className: "project-all-page" },
-            React.createElement("div", { className: "my-project" },
-                React.createElement("div", { className: "title" },
-                    React.createElement("h2", null, "\u6211\u5DF2\u62E5\u6709\u7684\u9879\u76EE"),
-                    React.createElement("span", null)),
-                React.createElement("div", { className: "projects-block" },
-                    projectAll.map(function (project) {
-                        if (_this.userData._id === project.creator._id) {
-                            return _this.renderToJsx(project);
-                        }
-                        project.leader.some(function (leader) {
-                            if (_this.userData._id === leader._id) {
-                                _this.renderToJsx(project);
-                                return true;
-                            }
-                            return false;
-                        });
-                        project.member.some(function (member) {
-                            if (_this.userData._id === member._id) {
-                                _this.renderToJsx(project);
-                                return true;
-                            }
-                            return false;
-                        });
-                    }),
-                    React.createElement(antd_1.Card, { className: "project-card add-project-card", bodyStyle: { padding: 0, height: '100%' } },
-                        React.createElement(antd_1.Icon, { type: "plus-circle", className: "icon", onClick: function () { return _this.setState({ dynamicFormShow: true }); } }),
-                        React.createElement("p", null, "\u521B\u5EFA\u65B0\u9879\u76EE")))),
-            React.createElement("div", { className: "all-project" },
-                React.createElement("div", { className: "title" },
-                    React.createElement("h2", null, "\u5168\u90E8\u7684\u9879\u76EE"),
-                    React.createElement("span", null)),
-                React.createElement("div", { className: "projects-block" }, projectAll.map(this.renderToJsx))),
-            React.createElement(antd_1.Modal, { title: "创建新项目", footer: null, visible: dynamicFormShow, onCancel: function () { return _this.setState({ dynamicFormShow: false }); }, style: { width: '400px !import', padding: '0 85px' } }, dynamicForm));
+    AppPage.prototype.analyseShowBar = function (pathname) {
+        this.setState({
+            showBar: pathname === '/login' ? false : true
+        });
     };
-    return ProjectAllPage;
+    AppPage.prototype.render = function () {
+        var showBar = this.state.showBar;
+        return React.createElement("div", { className: "app-page" }, !!showBar ?
+            React.createElement(antd_1.Layout, { className: "my-layout", style: { minHeight: '600px', background: '#fff' } },
+                React.createElement(Header, { className: "my-header" },
+                    React.createElement(antd_1.Row, null,
+                        React.createElement(antd_1.Col, { span: 18 },
+                            React.createElement("h3", { className: "my-logo" },
+                                React.createElement("span", null,
+                                    React.createElement(antd_1.Icon, { type: "api" })),
+                                "iTeam",
+                                React.createElement("small", null, "\u56E2\u961F\u534F\u4F5C\u5DE5\u5177")),
+                            React.createElement(antd_1.Input.Search, { placeholder: "在个人项目中搜索", style: { width: 200 }, onSearch: function (value) { return console.log(value); } })),
+                        React.createElement(antd_1.Col, { span: 6 },
+                            React.createElement(antd_1.Menu, { theme: "light", mode: "horizontal", className: "my-menu" },
+                                React.createElement(antd_1.Menu.Item, { key: "1" }, "\u6211\u7684"),
+                                React.createElement(antd_1.Menu.Item, { key: "2" }, "\u5E2E\u52A9"),
+                                React.createElement(antd_1.Menu.Item, { key: "3" },
+                                    React.createElement(antd_1.Icon, { type: "exception" })),
+                                React.createElement(antd_1.Menu.Item, { key: "4" },
+                                    React.createElement(msgListPopBadge_container_1.MsgPopBadge, { content: React.createElement(antd_1.Icon, { type: "aliwangwang-o" }) })),
+                                React.createElement(antd_1.Menu.Item, { key: "5" },
+                                    React.createElement("img", { src: "/static/touxiang.png" })))))),
+                React.createElement(Content, { style: {} }, this.props.children))
+            :
+                React.createElement("div", { style: { minHeight: '600px' } }, this.props.children));
+    };
+    return AppPage;
 }(React.PureComponent));
-exports.default = antd_1.Form.create()(ProjectAllPage);
+exports.default = AppPage;
 
 
 /***/ }),
@@ -285,7 +166,7 @@ function toComment(sourceMap) {
   return '/*# ' + data + ' */';
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1374).Buffer))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1375).Buffer))
 
 /***/ }),
 
@@ -321,7 +202,7 @@ var stylesInDom = {},
 	singletonElement = null,
 	singletonCounter = 0,
 	styleElementsInsertedAtTop = [],
-	fixUrls = __webpack_require__(1377);
+	fixUrls = __webpack_require__(1378);
 
 module.exports = function(list, options) {
 	if(typeof DEBUG !== "undefined" && DEBUG) {
@@ -586,6 +467,136 @@ function updateLink(linkElement, options, obj) {
 
 "use strict";
 
+Object.defineProperty(exports, "__esModule", { value: true });
+var rxjs_1 = __webpack_require__(53);
+var config_1 = __webpack_require__(1379);
+var HttpService = (function () {
+    function HttpService() {
+        this.TIMEOUT = 10000;
+    }
+    HttpService.prototype.getXhr = function () {
+        return new XMLHttpRequest();
+    };
+    HttpService.prototype.get = function (url, opt) {
+        /**变量声明 */
+        var data$$;
+        var xhr = this.getXhr();
+        /**数据源 */
+        var data$ = rxjs_1.Observable.create(function (observer) {
+            data$$ = observer;
+        }).share();
+        this.sub = data$.subscribe();
+        /**异步事件设置 */
+        this.decorateXHR(xhr, data$$);
+        /**整合查询串 */
+        url += "?" + this.turnObjToQuery(opt);
+        /**开启xhr */
+        xhr.open('GEt', "" + config_1.default.reqURL + url, true);
+        xhr.send();
+        console.info("sending http-GET: " + url);
+        return data$;
+    };
+    HttpService.prototype.post = function (url, queryOpt) {
+        /**变量声明 */
+        var postBody;
+        var data$$;
+        var xhr = this.getXhr();
+        /**数据源 */
+        var data$ = rxjs_1.Observable.create(function (observer) {
+            data$$ = observer;
+        }).share();
+        this.sub = data$.subscribe();
+        /**异步事件设置 */
+        this.decorateXHR(xhr, data$$);
+        /**拼接查村串 */
+        // postBody = queryOpt ? this.setPostBody( queryOpt ) : '';
+        /**开启xhr */
+        xhr.open('POST', "" + config_1.default.reqURL + url, true);
+        // xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+        // xhr.send( postBody );
+        xhr.setRequestHeader("Content-type", "application/json");
+        xhr.send(JSON.stringify(queryOpt));
+        console.info("sending http-POST: " + url);
+        return data$;
+    };
+    HttpService.prototype.decorateXHR = function (xhr, data$$) {
+        var _this = this;
+        /**异步错误获取 */
+        xhr.onerror = function (err) {
+            data$$.error(err);
+            _this.closeConnection(xhr, data$$);
+        };
+        /**超时设置 */
+        xhr.timeout = this.TIMEOUT;
+        xhr.ontimeout = function ($event) {
+            data$$.error('http请求超时');
+            _this.closeConnection(xhr, data$$);
+        };
+        /**异步状态判断 */
+        xhr.onreadystatechange = function () {
+            /**变量声明 */
+            var readyState = xhr.readyState;
+            var status = "" + xhr.status;
+            /**准备就绪 */
+            if (readyState === 4) {
+                _this.sub.unsubscribe();
+                /**成功：2**、3** */
+                if (status.indexOf('2') === 0 || status.indexOf('3') === 0) {
+                    var resObj = {};
+                    try {
+                        resObj = JSON.parse("" + xhr.responseText);
+                        data$$.next(resObj);
+                    }
+                    catch (e) {
+                        data$$.error(e);
+                        data$$.complete();
+                    }
+                    /**客户端、服务端错误 */
+                }
+                else if (status.indexOf('4') === 0 || status.indexOf('0') === 0 || status.indexOf('5') === 0) {
+                    data$$.error(status);
+                    data$$.complete();
+                }
+                else {
+                    data$$.error(status);
+                    data$$.complete();
+                }
+            }
+        };
+    };
+    HttpService.prototype.closeConnection = function (xhr, data$$) {
+        xhr.abort();
+        data$$.complete();
+        this.sub.unsubscribe();
+    };
+    HttpService.prototype.setGetUrlWithQuery = function (url, query) {
+        url += '?';
+        Object.keys(query).map(function (key) {
+            url += key + "=" + query[key] + "&";
+        });
+        return url.substring(0, url.length - 1);
+    };
+    HttpService.prototype.turnObjToQuery = function (query) {
+        if (!query)
+            return '';
+        var body = '';
+        Object.keys(query).map(function (key) {
+            body += key + "=" + query[key] + "&";
+        });
+        return body;
+    };
+    return HttpService;
+}());
+exports.default = new HttpService();
+
+
+/***/ }),
+
+/***/ 1374:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
 
 exports.byteLength = byteLength
 exports.toByteArray = toByteArray
@@ -703,7 +714,7 @@ function fromByteArray (uint8) {
 
 /***/ }),
 
-/***/ 1374:
+/***/ 1375:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -717,9 +728,9 @@ function fromByteArray (uint8) {
 
 
 
-var base64 = __webpack_require__(1373)
-var ieee754 = __webpack_require__(1376)
-var isArray = __webpack_require__(1375)
+var base64 = __webpack_require__(1374)
+var ieee754 = __webpack_require__(1377)
+var isArray = __webpack_require__(1376)
 
 exports.Buffer = Buffer
 exports.SlowBuffer = SlowBuffer
@@ -2501,7 +2512,7 @@ function isnan (val) {
 
 /***/ }),
 
-/***/ 1375:
+/***/ 1376:
 /***/ (function(module, exports) {
 
 var toString = {}.toString;
@@ -2513,7 +2524,7 @@ module.exports = Array.isArray || function (arr) {
 
 /***/ }),
 
-/***/ 1376:
+/***/ 1377:
 /***/ (function(module, exports) {
 
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
@@ -2604,7 +2615,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 
 /***/ }),
 
-/***/ 1377:
+/***/ 1378:
 /***/ (function(module, exports) {
 
 
@@ -2700,136 +2711,6 @@ module.exports = function (css) {
 
 /***/ }),
 
-/***/ 1378:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var rxjs_1 = __webpack_require__(53);
-var config_1 = __webpack_require__(1379);
-var HttpService = (function () {
-    function HttpService() {
-        this.TIMEOUT = 10000;
-    }
-    HttpService.prototype.getXhr = function () {
-        return new XMLHttpRequest();
-    };
-    HttpService.prototype.get = function (url, opt) {
-        /**变量声明 */
-        var data$$;
-        var xhr = this.getXhr();
-        /**数据源 */
-        var data$ = rxjs_1.Observable.create(function (observer) {
-            data$$ = observer;
-        }).share();
-        this.sub = data$.subscribe();
-        /**异步事件设置 */
-        this.decorateXHR(xhr, data$$);
-        /**整合查询串 */
-        url += this.turnObjToQuery(opt);
-        /**开启xhr */
-        xhr.open('GEt', "" + config_1.default.reqURL + url, true);
-        xhr.send();
-        console.info("sending http-GET: " + url);
-        return data$;
-    };
-    HttpService.prototype.post = function (url, queryOpt) {
-        /**变量声明 */
-        var postBody;
-        var data$$;
-        var xhr = this.getXhr();
-        /**数据源 */
-        var data$ = rxjs_1.Observable.create(function (observer) {
-            data$$ = observer;
-        }).share();
-        this.sub = data$.subscribe();
-        /**异步事件设置 */
-        this.decorateXHR(xhr, data$$);
-        /**拼接查村串 */
-        // postBody = queryOpt ? this.setPostBody( queryOpt ) : '';
-        /**开启xhr */
-        xhr.open('POST', "" + config_1.default.reqURL + url, true);
-        // xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-        // xhr.send( postBody );
-        xhr.setRequestHeader("Content-type", "application/json");
-        xhr.send(JSON.stringify(queryOpt));
-        console.info("sending http-POST: " + url);
-        return data$;
-    };
-    HttpService.prototype.decorateXHR = function (xhr, data$$) {
-        var _this = this;
-        /**异步错误获取 */
-        xhr.onerror = function (err) {
-            data$$.error(err);
-            _this.closeConnection(xhr, data$$);
-        };
-        /**超时设置 */
-        xhr.timeout = this.TIMEOUT;
-        xhr.ontimeout = function ($event) {
-            data$$.error('http请求超时');
-            _this.closeConnection(xhr, data$$);
-        };
-        /**异步状态判断 */
-        xhr.onreadystatechange = function () {
-            /**变量声明 */
-            var readyState = xhr.readyState;
-            var status = "" + xhr.status;
-            /**准备就绪 */
-            if (readyState === 4) {
-                _this.sub.unsubscribe();
-                /**成功：2**、3** */
-                if (status.indexOf('2') === 0 || status.indexOf('3') === 0) {
-                    var resObj = {};
-                    try {
-                        resObj = JSON.parse("" + xhr.responseText);
-                        data$$.next(resObj);
-                    }
-                    catch (e) {
-                        data$$.error(e);
-                        data$$.complete();
-                    }
-                    /**客户端、服务端错误 */
-                }
-                else if (status.indexOf('4') === 0 || status.indexOf('0') === 0 || status.indexOf('5') === 0) {
-                    data$$.error(status);
-                    data$$.complete();
-                }
-                else {
-                    data$$.error(status);
-                    data$$.complete();
-                }
-            }
-        };
-    };
-    HttpService.prototype.closeConnection = function (xhr, data$$) {
-        xhr.abort();
-        data$$.complete();
-        this.sub.unsubscribe();
-    };
-    HttpService.prototype.setGetUrlWithQuery = function (url, query) {
-        url += '?';
-        Object.keys(query).map(function (key) {
-            url += key + "=" + query[key] + "&";
-        });
-        return url.substring(0, url.length - 1);
-    };
-    HttpService.prototype.turnObjToQuery = function (query) {
-        if (!query)
-            return '';
-        var body = '';
-        Object.keys(query).map(function (key) {
-            body += key + "=" + query[key] + "&";
-        });
-        return body;
-    };
-    return HttpService;
-}());
-exports.default = new HttpService();
-
-
-/***/ }),
-
 /***/ 1379:
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -2843,7 +2724,7 @@ exports.default = {
 
 /***/ }),
 
-/***/ 1380:
+/***/ 1384:
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1371)(undefined);
@@ -2851,20 +2732,20 @@ exports = module.exports = __webpack_require__(1371)(undefined);
 
 
 // module
-exports.push([module.i, ".my-img {\n  opacity: 0;\n  transition: all 0.4s ease;\n}\n.my-img.loaded {\n  opacity: 1;\n}\n", ""]);
+exports.push([module.i, "* {\n  font-size: 14px;\n}\ndiv {\n  box-sizing: border-box;\n}\n.app-page .my-layout .my-header {\n  padding: 0;\n  background: #fff;\n}\n.app-page .my-layout .my-header .ant-row {\n  border-bottom: 1px solid #e9e9e9;\n}\n.app-page .my-layout .my-header .my-logo {\n  padding: 0 10px 0 100px;\n  color: #666;\n  display: inline-block;\n  font-size: 26px;\n  color: #108ee9;\n}\n.app-page .my-layout .my-header .my-logo small {\n  font-size: 16px;\n  font-weight: 600;\n  color: #666;\n  padding-left: 10px;\n}\n.app-page .my-layout .my-header .my-logo span i {\n  padding-right: 10px;\n  font-size: 26px;\n  color: #108ee9;\n  font-size: 30px;\n  font-weight: 100;\n}\n.app-page .my-layout .my-header .my-menu {\n  border: 0;\n  padding-right: 50px;\n  line-height: 64px;\n}\n.app-page .my-layout .my-header .my-menu li {\n  padding: 0 15px;\n}\n.app-page .my-layout .my-header .my-menu img {\n  width: 30px;\n  height: 30px;\n  border-radius: 50%;\n  vertical-align: middle;\n}\n/**ant - modal */\n.modal-resetpsw-form .modal-img {\n  text-align: center;\n  padding: 10px 0 15px;\n}\n.modal-resetpsw-form .modal-img img {\n  width: 65%;\n}\n.modal-resetpsw-form .modal-img p {\n  padding-top: 10px;\n}\n", ""]);
 
 // exports
 
 
 /***/ }),
 
-/***/ 1381:
+/***/ 1389:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1380);
+var content = __webpack_require__(1384);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(1372)(content, {});
@@ -2873,8 +2754,8 @@ if(content.locals) module.exports = content.locals;
 if(false) {
 	// When the styles change, update the <style> tags
 	if(!content.locals) {
-		module.hot.accept("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./Image.less", function() {
-			var newContent = require("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./Image.less");
+		module.hot.accept("!!../../node_modules/css-loader/index.js!../../node_modules/less-loader/index.js!./app.less", function() {
+			var newContent = require("!!../../node_modules/css-loader/index.js!../../node_modules/less-loader/index.js!./app.less");
 			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 			update(newContent);
 		});
@@ -2885,7 +2766,7 @@ if(false) {
 
 /***/ }),
 
-/***/ 1382:
+/***/ 1394:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2902,72 +2783,114 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
-__webpack_require__(1381);
-var Image = (function (_super) {
-    __extends(Image, _super);
-    function Image() {
-        var _this = _super.call(this) || this;
-        _this.onLoadHandler = function () {
-            _this.setState({
-                imgLoaded: true
-            });
-        };
-        _this.state = {
-            imgLoaded: false
-        };
-        return _this;
+var antd_1 = __webpack_require__(153);
+var PopoverBadge = (function (_super) {
+    __extends(PopoverBadge, _super);
+    function PopoverBadge() {
+        return _super.call(this) || this;
     }
-    Image.prototype.render = function () {
-        var imgLoaded = this.state.imgLoaded;
-        var _a = this.props, src = _a.src, _b = _a.alt, alt = _b === void 0 ? '' : _b;
-        return React.createElement("img", { src: src, alt: alt, onLoad: this.onLoadHandler, className: imgLoaded ? "my-img loaded" : "my-img" });
+    PopoverBadge.prototype.render = function () {
+        var _a = this.props, content = _a.content, popContent = _a.popContent, count = _a.count, placement = _a.placement;
+        return React.createElement(antd_1.Popover, { content: popContent, placement: placement },
+            React.createElement(antd_1.Badge, { count: count }, content));
     };
-    return Image;
+    return PopoverBadge;
 }(React.PureComponent));
-exports.default = Image;
+exports.PopoverBadge = PopoverBadge;
 
 
 /***/ }),
 
-/***/ 1386:
+/***/ 1396:
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(1371)(undefined);
-// imports
+"use strict";
 
-
-// module
-exports.push([module.i, "/**2个大block */\n/**标题 */\n/**展示区 */\n/**card */\n/**card: hover */\n.project-all-page {\n  padding: 30px 100px;\n}\n.project-all-page .my-project {\n  margin-bottom: 30px;\n}\n.project-all-page .my-project .title {\n  position: relative;\n}\n.project-all-page .my-project .title h2 {\n  position: relative;\n  font-size: 24px;\n  font-weight: 400;\n  color: #666;\n  padding-bottom: 30px;\n}\n.project-all-page .my-project .title span {\n  display: block;\n  position: absolute;\n  height: 1px;\n  width: 80%;\n  left: 16%;\n  top: 30%;\n  background: linear-gradient(to right, #d9d9d9, #e9e9e9);\n}\n.project-all-page .my-project .projects-block .project-card {\n  width: 240px;\n  padding: 0;\n  display: inline-block;\n  margin: 10px 20px 10px;\n  position: relative;\n  cursor: pointer;\n  transition: all ease 0.4s;\n}\n.project-all-page .my-project .projects-block .project-card .image {\n  display: block;\n  width: 100%;\n}\n.project-all-page .my-project .projects-block .project-card .image img {\n  width: 100%;\n  display: block;\n}\n.project-all-page .my-project .projects-block .project-card .image p {\n  padding-top: 10px;\n}\n.project-all-page .my-project .projects-block .project-card .info {\n  position: absolute;\n  padding: 10px 16px;\n  background: rgba(0, 0, 0, 0.2);\n  width: 100%;\n  left: 0;\n  bottom: 0px;\n  border-radius: 0 0 4px 4px;\n}\n.project-all-page .my-project .projects-block .project-card .info h3 {\n  color: #fff;\n}\n.project-all-page .my-project .projects-block .project-card .info p {\n  color: #fff;\n}\n.project-all-page .my-project .projects-block .project-card:hover {\n  box-shadow: 10px 10px 10px #d9d9d9;\n  border: 1px solid #e9e9e9;\n}\n.project-all-page .my-project .projects-block .add-project-card {\n  min-height: 126px;\n  text-align: center;\n}\n.project-all-page .my-project .projects-block .add-project-card .icon {\n  transition: all 0.4s ease;\n  font-size: 45px;\n  color: #d9d9d9;\n  padding: 20px 0;\n  cursor: pointer;\n}\n.project-all-page .my-project .projects-block .add-project-card p {\n  transition: all 0.4s ease;\n  color: #999;\n  font-size: 16px;\n}\n.project-all-page .my-project .projects-block .add-project-card .ant-card-body:hover .icon,\n.project-all-page .my-project .projects-block .add-project-card .ant-card-body:hover p {\n  color: #49a9ee;\n}\n.project-all-page .all-project {\n  margin-bottom: 30px;\n}\n.project-all-page .all-project .title {\n  position: relative;\n}\n.project-all-page .all-project .title h2 {\n  position: relative;\n  font-size: 24px;\n  font-weight: 400;\n  color: #666;\n  padding-bottom: 30px;\n}\n.project-all-page .all-project .title span {\n  display: block;\n  position: absolute;\n  height: 1px;\n  width: 80%;\n  left: 16%;\n  top: 30%;\n  background: linear-gradient(to right, #d9d9d9, #e9e9e9);\n}\n.project-all-page .all-project .projects-block .project-card {\n  width: 240px;\n  padding: 0;\n  display: inline-block;\n  margin: 10px 20px 10px;\n  position: relative;\n  cursor: pointer;\n  transition: all ease 0.4s;\n}\n.project-all-page .all-project .projects-block .project-card .image {\n  display: block;\n  width: 100%;\n}\n.project-all-page .all-project .projects-block .project-card .image img {\n  width: 100%;\n  display: block;\n}\n.project-all-page .all-project .projects-block .project-card .image p {\n  padding-top: 10px;\n}\n.project-all-page .all-project .projects-block .project-card .info {\n  position: absolute;\n  padding: 10px 16px;\n  background: rgba(0, 0, 0, 0.2);\n  width: 100%;\n  left: 0;\n  bottom: 0px;\n  border-radius: 0 0 4px 4px;\n}\n.project-all-page .all-project .projects-block .project-card .info h3 {\n  color: #fff;\n}\n.project-all-page .all-project .projects-block .project-card .info p {\n  color: #fff;\n}\n.project-all-page .all-project .projects-block .project-card:hover {\n  box-shadow: 10px 10px 10px #d9d9d9;\n  border: 1px solid #e9e9e9;\n}\n", ""]);
-
-// exports
+Object.defineProperty(exports, "__esModule", { value: true });
+var PopoverBadge_component_1 = __webpack_require__(1394);
+var msgList_decorate_1 = __webpack_require__(1399);
+exports.MsgPopBadge = msgList_decorate_1.InjectMsgList(PopoverBadge_component_1.PopoverBadge);
 
 
 /***/ }),
 
-/***/ 1391:
+/***/ 1399:
 /***/ (function(module, exports, __webpack_require__) {
 
-// style-loader: Adds some css to the DOM by adding a <style> tag
+"use strict";
 
-// load the styles
-var content = __webpack_require__(1386);
-if(typeof content === 'string') content = [[module.i, content, '']];
-// add the styles to the DOM
-var update = __webpack_require__(1372)(content, {});
-if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
-if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./project-all.less", function() {
-			var newContent = require("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./project-all.less");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
-	module.hot.dispose(function() { update(); });
-}
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __assign = (this && this.__assign) || Object.assign || function(t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+        s = arguments[i];
+        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+            t[p] = s[p];
+    }
+    return t;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var React = __webpack_require__(0);
+var http_service_1 = __webpack_require__(1373);
+var user_1 = __webpack_require__(239);
+exports.InjectMsgList = function (PopoverBadge) {
+    var Wrapper = (function (_super) {
+        __extends(Wrapper, _super);
+        function Wrapper() {
+            var _this = _super.call(this) || this;
+            _this.handleMsgList = function (list) {
+                _this.setState({
+                    count: list.length,
+                    popContent: React.createElement("div", null,
+                        React.createElement("ul", null, list.map(function (msg, key) { return React.createElement("li", { key: key },
+                            React.createElement("h3", null, msg.title),
+                            React.createElement("p", null, msg.content)); })))
+                });
+            };
+            _this.state = {
+                count: 10,
+                popContent: React.createElement("div", null)
+            };
+            return _this;
+        }
+        Wrapper.prototype.componentDidMount = function () {
+            this.fetchMsgList();
+        };
+        Wrapper.prototype.componentWillUnmount = function () {
+        };
+        Wrapper.prototype.fetchMsgList = function () {
+            var _this = this;
+            var sub = user_1.default.data.userData$
+                .do(function (user) {
+                var sub2 = http_service_1.default
+                    .get('/api/v1/msg-list', { toUID: user._id, readed: false })
+                    .do(function (res) {
+                    _this.handleMsgList(res);
+                    setTimeout(function () {
+                        sub.unsubscribe();
+                        sub2.unsubscribe();
+                    }, 16);
+                })
+                    .subscribe();
+            })
+                .subscribe();
+        };
+        Wrapper.prototype.render = function () {
+            return React.createElement(PopoverBadge, __assign({}, this.props, this.state, { placement: "bottom" }));
+        };
+        return Wrapper;
+    }(React.PureComponent));
+    return Wrapper;
+};
+
 
 /***/ })
 

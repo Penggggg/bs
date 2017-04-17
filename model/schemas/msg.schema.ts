@@ -32,6 +32,12 @@ MsgSchema.statics.findAll =  function( select ) {
     })
 }
 
+MsgSchema.statics.findAllByToUIDAndReaded =  function( toUID, readed ) {
+    return new Promise(( resolve, reject ) => {
+        this.find({ toUID, readed }, ( err, data) =>  returnData( err, resolve, reject, data ))
+    })
+}
+
 MsgSchema.statics.save = function({ fromUID, toUID, type, content, PID, dirty, readed, title, formType, replyURL }) {
     return new Promise(( resolve, reject ) => {
         let model = this.model('Msg');

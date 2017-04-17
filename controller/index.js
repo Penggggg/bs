@@ -43,6 +43,7 @@ var invite_member_1 = require("./project/invite-member");
 var create_project_1 = require("./project/create-project");
 var query_controller_1 = require("./user/query.controller");
 var query_project_1 = require("./project/query-project");
+var query_msg_1 = require("./msg/query-msg");
 exports.default = function (router) {
     /**首页 */
     router.get('/', getIndex);
@@ -62,6 +63,8 @@ exports.default = function (router) {
     router.post('/api/v1/invite-member', invite_member_1.inviteMember);
     /**用户模块：查询所有符合条件的用户 */
     router.post('/api/v1/all-user', query_controller_1.fetchAllUserByName);
+    /**消息模块：查询所有符合条件的消息 */
+    router.get('/api/v1/msg-list', query_msg_1.fetchAllMsgList);
 };
 function getIndex(ctx) {
     return __awaiter(this, void 0, void 0, function () {

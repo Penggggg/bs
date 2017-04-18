@@ -14,8 +14,8 @@ export let fetchAllMsgList = async( ctx: Koa.Context ) => {
     /**返回 */
     let result: Array<Partial<APP.Msg>> = [ ];
 
-    result = data.map(({ _id, title, content, readed }) => ({
-        _id, title, content, readed
+    result = data.map(({ _id, title, content, readed, meta }) => ({
+        _id, title, content, readed, meta
     } as APP.Msg ))
 
     ctx.body = result 

@@ -1,8 +1,11 @@
 import * as React from 'react';
 import { Subscription } from 'rxjs';
 
-import http from '../../services/http.service';
+import { Util } from '../../index.con';
 import userStore from '../../store/user';
+import http from '../../services/http.service';
+
+import Image from '../../component/Image/Image.component';
 
 type partialMsgArr = Array<Partial<APP.Msg>>;
 
@@ -15,7 +18,7 @@ export let InjectMsgList = ( PopoverBadge ) => {
         constructor( ) {
             super( );
             this.state = {
-                count: 10,
+                count: 0,
                 popContent: <div></div>
             }
         }
@@ -35,11 +38,9 @@ export let InjectMsgList = ( PopoverBadge ) => {
                     let sub2 = http
                         .get<partialMsgArr>('/api/v1/msg-list', { toUID: user._id, readed: false } as Partial<APP.Msg>)
                         .do( res => {
+                            console.log( res )
                             this.handleMsgList( res )
-                            setTimeout(( ) => {
-                                sub.unsubscribe( );
-                                sub2.unsubscribe( );
-                            }, 16 )
+                            Util.cancelSubscribe( sub, sub2 );
                         })
                         .subscribe( )
                 })
@@ -47,23 +48,26 @@ export let InjectMsgList = ( PopoverBadge ) => {
         }
 
         handleMsgList = ( list: partialMsgArr ) => {
+            let partialList = list.slice( 0, 3 )
             this.setState({
                 count: list.length,
-                popContent: <div>
+                popContent: 
                     <ul>
                         {
-                            list.map(( msg, key ) => <li key={key}>
+                            partialList.map(( msg, key ) => <li key={key}>
+                                <Image src="/static/touxiang.png" />
                                 <h3>{ msg.title }</h3>
                                 <p>{ msg.content }</p>
+                                <span className="time">{(new Date(msg.meta.createdTime)).toLocaleString( )}</span>
                             </li>)
                         }
+                        <a>查看更多</a>
                     </ul>
-                </div>
             })
         }
 
         render( ) {
-            return <PopoverBadge {...this.props} {...this.state} placement="bottom" />
+            return <PopoverBadge {...this.props} {...this.state} placement="bottom" title="消息" className="my-nav-pop" />
         }
 
     }

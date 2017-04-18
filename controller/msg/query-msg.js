@@ -49,9 +49,9 @@ exports.fetchAllMsgList = function (ctx) { return __awaiter(_this, void 0, void 
                 console.log(data);
                 result = [];
                 result = data.map(function (_a) {
-                    var _id = _a._id, title = _a.title, content = _a.content, readed = _a.readed;
+                    var _id = _a._id, title = _a.title, content = _a.content, readed = _a.readed, meta = _a.meta;
                     return ({
-                        _id: _id, title: title, content: content, readed: readed
+                        _id: _id, title: title, content: content, readed: readed, meta: meta
                     });
                 });
                 ctx.body = result;

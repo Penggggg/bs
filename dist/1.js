@@ -2724,6 +2724,92 @@ exports.default = {
 
 /***/ }),
 
+/***/ 1380:
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(1371)(undefined);
+// imports
+
+
+// module
+exports.push([module.i, ".my-img {\n  opacity: 0;\n  transition: all 0.4s ease;\n}\n.my-img.loaded {\n  opacity: 1;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ 1381:
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(1380);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(1372)(content, {});
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./Image.less", function() {
+			var newContent = require("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./Image.less");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+
+/***/ 1382:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var React = __webpack_require__(0);
+__webpack_require__(1381);
+var Image = (function (_super) {
+    __extends(Image, _super);
+    function Image() {
+        var _this = _super.call(this) || this;
+        _this.onLoadHandler = function () {
+            _this.setState({
+                imgLoaded: true
+            });
+        };
+        _this.state = {
+            imgLoaded: false
+        };
+        return _this;
+    }
+    Image.prototype.render = function () {
+        var imgLoaded = this.state.imgLoaded;
+        var _a = this.props, src = _a.src, _b = _a.alt, alt = _b === void 0 ? '' : _b;
+        return React.createElement("img", { src: src, alt: alt, onLoad: this.onLoadHandler, className: imgLoaded ? "my-img loaded" : "my-img" });
+    };
+    return Image;
+}(React.PureComponent));
+exports.default = Image;
+
+
+/***/ }),
+
 /***/ 1384:
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -2784,15 +2870,17 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
 var antd_1 = __webpack_require__(153);
+__webpack_require__(1403);
 var PopoverBadge = (function (_super) {
     __extends(PopoverBadge, _super);
     function PopoverBadge() {
         return _super.call(this) || this;
     }
     PopoverBadge.prototype.render = function () {
-        var _a = this.props, content = _a.content, popContent = _a.popContent, count = _a.count, placement = _a.placement;
-        return React.createElement(antd_1.Popover, { content: popContent, placement: placement },
-            React.createElement(antd_1.Badge, { count: count }, content));
+        var _a = this.props, content = _a.content, popContent = _a.popContent, count = _a.count, placement = _a.placement, title = _a.title, className = _a.className;
+        return React.createElement(antd_1.Popover, { content: popContent, placement: placement, title: title, overlayClassName: className },
+            React.createElement(antd_1.Badge, { count: count },
+                React.createElement("div", null, content)));
     };
     return PopoverBadge;
 }(React.PureComponent));
@@ -2839,24 +2927,30 @@ var __assign = (this && this.__assign) || Object.assign || function(t) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
-var http_service_1 = __webpack_require__(1373);
+var index_con_1 = __webpack_require__(237);
 var user_1 = __webpack_require__(239);
+var http_service_1 = __webpack_require__(1373);
+var Image_component_1 = __webpack_require__(1382);
 exports.InjectMsgList = function (PopoverBadge) {
     var Wrapper = (function (_super) {
         __extends(Wrapper, _super);
         function Wrapper() {
             var _this = _super.call(this) || this;
             _this.handleMsgList = function (list) {
+                var partialList = list.slice(0, 3);
                 _this.setState({
                     count: list.length,
-                    popContent: React.createElement("div", null,
-                        React.createElement("ul", null, list.map(function (msg, key) { return React.createElement("li", { key: key },
+                    popContent: React.createElement("ul", null,
+                        partialList.map(function (msg, key) { return React.createElement("li", { key: key },
+                            React.createElement(Image_component_1.default, { src: "/static/touxiang.png" }),
                             React.createElement("h3", null, msg.title),
-                            React.createElement("p", null, msg.content)); })))
+                            React.createElement("p", null, msg.content),
+                            React.createElement("span", { className: "time" }, (new Date(msg.meta.createdTime)).toLocaleString())); }),
+                        React.createElement("a", null, "\u67E5\u770B\u66F4\u591A"))
                 });
             };
             _this.state = {
-                count: 10,
+                count: 0,
                 popContent: React.createElement("div", null)
             };
             return _this;
@@ -2873,24 +2967,64 @@ exports.InjectMsgList = function (PopoverBadge) {
                 var sub2 = http_service_1.default
                     .get('/api/v1/msg-list', { toUID: user._id, readed: false })
                     .do(function (res) {
+                    console.log(res);
                     _this.handleMsgList(res);
-                    setTimeout(function () {
-                        sub.unsubscribe();
-                        sub2.unsubscribe();
-                    }, 16);
+                    index_con_1.Util.cancelSubscribe(sub, sub2);
                 })
                     .subscribe();
             })
                 .subscribe();
         };
         Wrapper.prototype.render = function () {
-            return React.createElement(PopoverBadge, __assign({}, this.props, this.state, { placement: "bottom" }));
+            return React.createElement(PopoverBadge, __assign({}, this.props, this.state, { placement: "bottom", title: "消息", className: "my-nav-pop" }));
         };
         return Wrapper;
     }(React.PureComponent));
     return Wrapper;
 };
 
+
+/***/ }),
+
+/***/ 1402:
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(1371)(undefined);
+// imports
+
+
+// module
+exports.push([module.i, ".my-nav-pop {\n  width: 320px;\n  top: 65px !important;\n}\n.my-nav-pop .ant-popover-title {\n  text-align: center;\n  font-size: 16px;\n  color: #666;\n}\n.my-nav-pop .ant-popover-inner-content ul li {\n  position: relative;\n  padding: 10px 5px;\n  border-bottom: 1px solid #e9e9e9;\n}\n.my-nav-pop .ant-popover-inner-content ul li img {\n  float: left;\n  width: 40px;\n  height: 40px;\n  margin: 4px 8px 0 0;\n  border-radius: 50%;\n}\n.my-nav-pop .ant-popover-inner-content ul li h3 {\n  padding-bottom: 5px;\n  color: #666;\n}\n.my-nav-pop .ant-popover-inner-content ul li p {\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  color: #666;\n}\n.my-nav-pop .ant-popover-inner-content ul li span.time {\n  position: absolute;\n  right: 15px;\n  top: 5px;\n  color: #666;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ 1403:
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(1402);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(1372)(content, {});
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./index.less", function() {
+			var newContent = require("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./index.less");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
 
 /***/ })
 

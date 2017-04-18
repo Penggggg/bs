@@ -348,6 +348,20 @@ var CON;
         socketNSP.user = 'user';
     })(socketNSP = CON.socketNSP || (CON.socketNSP = {}));
 })(CON = exports.CON || (exports.CON = {}));
+var Util;
+(function (Util) {
+    Util.cancelSubscribe = function () {
+        var subscritions = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            subscritions[_i] = arguments[_i];
+        }
+        setTimeout(function () {
+            subscritions.map(function (sub) {
+                sub.unsubscribe();
+            });
+        }, 16);
+    };
+})(Util = exports.Util || (exports.Util = {}));
 
 
 /***/ }),

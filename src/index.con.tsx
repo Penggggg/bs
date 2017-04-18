@@ -25,3 +25,17 @@ export namespace ENUM {
     }
 
 }
+
+
+export namespace Util {
+
+
+    export let cancelSubscribe = ( ...subscritions ) => {
+        setTimeout(( ) => {
+            subscritions.map(( sub ) => {
+                sub.unsubscribe( );
+            })
+        }, 16 );
+    }
+
+}

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Badge, Popover, Icon   } from 'antd';
 
 import http from '../../services/http.service';
-
+import './index.less'
 
 export class PopoverBadge extends React.PureComponent< IProps, { }> {
 
@@ -11,10 +11,12 @@ export class PopoverBadge extends React.PureComponent< IProps, { }> {
     }
 
     render( ) {
-        let { content, popContent, count, placement } = this.props;
-        return <Popover content={ popContent } placement={ placement }>
+        let { content, popContent, count, placement, title, className } = this.props;
+        return <Popover content={ popContent } placement={ placement } title={ title } overlayClassName={className} >
             <Badge count={ count }>
-                { content }
+                <div>
+                    { content }
+                </div>
             </Badge>
         </Popover >
     }
@@ -24,6 +26,8 @@ export class PopoverBadge extends React.PureComponent< IProps, { }> {
 interface IProps {
     count: number
     placement: any
+    className: string
     content: React.ReactNode
     popContent: React.ReactNode
+    title: React.ReactNode | null
 }

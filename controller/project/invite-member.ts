@@ -29,13 +29,13 @@ export let inviteMember = async( ctx: Koa.Context ) => {
         
         console.log(`用户在线，准备转发`);
 
-        let { _id, content, title, readed } = data;
+        let { _id, content, title, readed, meta } = data;
         userSocket.sendMsgTo( toUID, {
             type: ENUM.MsgType.InviteMember,
             eventName: `${CON.socketEvent.msg}`,
             content: {
                 msgId: _id, 
-                content, title , readed
+                content, title , readed, meta
             } as SOK.Res.MsgInviteContent
         })
 

@@ -120,7 +120,7 @@ declare namespace APP {
         title: string
         formType: number
         replyURL: string
-        meta: {
+        meta?: {
             createdTime: string
         }
     }

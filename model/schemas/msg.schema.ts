@@ -34,7 +34,7 @@ MsgSchema.statics.findAll =  function( select ) {
 
 MsgSchema.statics.findAllByToUIDAndReaded =  function( toUID, readed ) {
     return new Promise(( resolve, reject ) => {
-        this.find({ toUID, readed }, ( err, data) =>  returnData( err, resolve, reject, data ))
+        this.find({ toUID, readed }, null, { sort: [{"_id": -1 }]} ,( err, data) =>  returnData( err, resolve, reject, data ))
     })
 }
 

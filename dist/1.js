@@ -1,6 +1,6 @@
 webpackJsonp([1],{
 
-/***/ 1362:
+/***/ 1364:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -17,10 +17,10 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
-var msgListPopBadge_container_1 = __webpack_require__(1396);
+var msgListPopBadge_container_1 = __webpack_require__(1400);
 var antd_1 = __webpack_require__(153);
 var auth_login_service_1 = __webpack_require__(542);
-__webpack_require__(1389);
+__webpack_require__(1393);
 var Header = antd_1.Layout.Header, Content = antd_1.Layout.Content, Footer = antd_1.Layout.Footer;
 var AppPage = (function (_super) {
     __extends(AppPage, _super);
@@ -87,7 +87,7 @@ exports.default = AppPage;
 
 /***/ }),
 
-/***/ 1371:
+/***/ 1373:
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(Buffer) {/*
@@ -166,11 +166,11 @@ function toComment(sourceMap) {
   return '/*# ' + data + ' */';
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1375).Buffer))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1377).Buffer))
 
 /***/ }),
 
-/***/ 1372:
+/***/ 1374:
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -202,7 +202,7 @@ var stylesInDom = {},
 	singletonElement = null,
 	singletonCounter = 0,
 	styleElementsInsertedAtTop = [],
-	fixUrls = __webpack_require__(1378);
+	fixUrls = __webpack_require__(1380);
 
 module.exports = function(list, options) {
 	if(typeof DEBUG !== "undefined" && DEBUG) {
@@ -462,14 +462,14 @@ function updateLink(linkElement, options, obj) {
 
 /***/ }),
 
-/***/ 1373:
+/***/ 1375:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var rxjs_1 = __webpack_require__(53);
-var config_1 = __webpack_require__(1379);
+var rxjs_1 = __webpack_require__(48);
+var config_1 = __webpack_require__(1381);
 var HttpService = (function () {
     function HttpService() {
         this.TIMEOUT = 10000;
@@ -592,7 +592,7 @@ exports.default = new HttpService();
 
 /***/ }),
 
-/***/ 1374:
+/***/ 1376:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -714,7 +714,7 @@ function fromByteArray (uint8) {
 
 /***/ }),
 
-/***/ 1375:
+/***/ 1377:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -728,9 +728,9 @@ function fromByteArray (uint8) {
 
 
 
-var base64 = __webpack_require__(1374)
-var ieee754 = __webpack_require__(1377)
-var isArray = __webpack_require__(1376)
+var base64 = __webpack_require__(1376)
+var ieee754 = __webpack_require__(1379)
+var isArray = __webpack_require__(1378)
 
 exports.Buffer = Buffer
 exports.SlowBuffer = SlowBuffer
@@ -2512,7 +2512,7 @@ function isnan (val) {
 
 /***/ }),
 
-/***/ 1376:
+/***/ 1378:
 /***/ (function(module, exports) {
 
 var toString = {}.toString;
@@ -2524,7 +2524,7 @@ module.exports = Array.isArray || function (arr) {
 
 /***/ }),
 
-/***/ 1377:
+/***/ 1379:
 /***/ (function(module, exports) {
 
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
@@ -2615,7 +2615,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 
 /***/ }),
 
-/***/ 1378:
+/***/ 1380:
 /***/ (function(module, exports) {
 
 
@@ -2711,7 +2711,7 @@ module.exports = function (css) {
 
 /***/ }),
 
-/***/ 1379:
+/***/ 1381:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2724,10 +2724,10 @@ exports.default = {
 
 /***/ }),
 
-/***/ 1380:
+/***/ 1382:
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(1371)(undefined);
+exports = module.exports = __webpack_require__(1373)(undefined);
 // imports
 
 
@@ -2739,16 +2739,16 @@ exports.push([module.i, ".my-img {\n  opacity: 0;\n  transition: all 0.4s ease;\
 
 /***/ }),
 
-/***/ 1381:
+/***/ 1383:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1380);
+var content = __webpack_require__(1382);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(1372)(content, {});
+var update = __webpack_require__(1374)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -2766,7 +2766,7 @@ if(false) {
 
 /***/ }),
 
-/***/ 1382:
+/***/ 1384:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2783,7 +2783,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
-__webpack_require__(1381);
+__webpack_require__(1383);
 var Image = (function (_super) {
     __extends(Image, _super);
     function Image() {
@@ -2810,10 +2810,25 @@ exports.default = Image;
 
 /***/ }),
 
-/***/ 1384:
+/***/ 1385:
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(1371)(undefined);
+exports = module.exports = __webpack_require__(1373)(undefined);
+// imports
+
+
+// module
+exports.push([module.i, ".my-nav-pop {\n  width: 320px;\n  top: 65px !important;\n}\n.my-nav-pop .ant-popover-title {\n  text-align: center;\n  font-size: 16px;\n  color: #666;\n}\n.my-nav-pop .ant-popover-inner-content ul li {\n  position: relative;\n  padding: 10px 5px;\n  border-bottom: 1px solid #e9e9e9;\n}\n.my-nav-pop .ant-popover-inner-content ul li img {\n  float: left;\n  width: 40px;\n  height: 40px;\n  margin: 4px 8px 0 0;\n  border-radius: 50%;\n}\n.my-nav-pop .ant-popover-inner-content ul li h3 {\n  padding-bottom: 5px;\n  color: #666;\n}\n.my-nav-pop .ant-popover-inner-content ul li p {\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  color: #666;\n}\n.my-nav-pop .ant-popover-inner-content ul li span.time {\n  position: absolute;\n  right: 15px;\n  top: 5px;\n  color: #666;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ 1387:
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(1373)(undefined);
 // imports
 
 
@@ -2825,16 +2840,43 @@ exports.push([module.i, "* {\n  font-size: 14px;\n}\ndiv {\n  box-sizing: border
 
 /***/ }),
 
-/***/ 1389:
+/***/ 1391:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1384);
+var content = __webpack_require__(1385);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(1372)(content, {});
+var update = __webpack_require__(1374)(content, {});
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./index.less", function() {
+			var newContent = require("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./index.less");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+
+/***/ 1393:
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(1387);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(1374)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -2852,7 +2894,7 @@ if(false) {
 
 /***/ }),
 
-/***/ 1394:
+/***/ 1398:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2870,7 +2912,7 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
 var antd_1 = __webpack_require__(153);
-__webpack_require__(1403);
+__webpack_require__(1391);
 var PopoverBadge = (function (_super) {
     __extends(PopoverBadge, _super);
     function PopoverBadge() {
@@ -2889,20 +2931,20 @@ exports.PopoverBadge = PopoverBadge;
 
 /***/ }),
 
-/***/ 1396:
+/***/ 1400:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var PopoverBadge_component_1 = __webpack_require__(1394);
-var msgList_decorate_1 = __webpack_require__(1399);
+var PopoverBadge_component_1 = __webpack_require__(1398);
+var msgList_decorate_1 = __webpack_require__(1403);
 exports.MsgPopBadge = msgList_decorate_1.InjectMsgList(PopoverBadge_component_1.PopoverBadge);
 
 
 /***/ }),
 
-/***/ 1399:
+/***/ 1403:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2927,38 +2969,47 @@ var __assign = (this && this.__assign) || Object.assign || function(t) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
-var index_con_1 = __webpack_require__(237);
+var index_con_1 = __webpack_require__(154);
 var user_1 = __webpack_require__(239);
-var http_service_1 = __webpack_require__(1373);
-var Image_component_1 = __webpack_require__(1382);
+var msg_1 = __webpack_require__(543);
+var http_service_1 = __webpack_require__(1375);
+var Image_component_1 = __webpack_require__(1384);
 exports.InjectMsgList = function (PopoverBadge) {
     var Wrapper = (function (_super) {
         __extends(Wrapper, _super);
         function Wrapper() {
             var _this = _super.call(this) || this;
             _this.handleMsgList = function (list) {
-                var partialList = list.slice(0, 3);
                 _this.setState({
                     count: list.length,
-                    popContent: React.createElement("ul", null,
-                        partialList.map(function (msg, key) { return React.createElement("li", { key: key },
-                            React.createElement(Image_component_1.default, { src: "/static/touxiang.png" }),
-                            React.createElement("h3", null, msg.title),
-                            React.createElement("p", null, msg.content),
-                            React.createElement("span", { className: "time" }, (new Date(msg.meta.createdTime)).toLocaleString())); }),
-                        React.createElement("a", null, "\u67E5\u770B\u66F4\u591A"))
+                    msgList: list
                 });
             };
             _this.state = {
                 count: 0,
-                popContent: React.createElement("div", null)
+                msgList: []
             };
             return _this;
         }
         Wrapper.prototype.componentDidMount = function () {
             this.fetchMsgList();
+            this.watchMsgFromSOK();
         };
         Wrapper.prototype.componentWillUnmount = function () {
+            this.sub.unsubscribe();
+        };
+        Wrapper.prototype.watchMsgFromSOK = function () {
+            var _this = this;
+            this.sub = msg_1.default.data.data$
+                .do(function (res) {
+                var msgList = _this.state.msgList;
+                var b = [res].concat(msgList);
+                _this.setState({
+                    msgList: b.slice(),
+                    count: b.length
+                });
+            })
+                .subscribe();
         };
         Wrapper.prototype.fetchMsgList = function () {
             var _this = this;
@@ -2967,7 +3018,6 @@ exports.InjectMsgList = function (PopoverBadge) {
                 var sub2 = http_service_1.default
                     .get('/api/v1/msg-list', { toUID: user._id, readed: false })
                     .do(function (res) {
-                    console.log(res);
                     _this.handleMsgList(res);
                     index_con_1.Util.cancelSubscribe(sub, sub2);
                 })
@@ -2976,55 +3026,24 @@ exports.InjectMsgList = function (PopoverBadge) {
                 .subscribe();
         };
         Wrapper.prototype.render = function () {
-            return React.createElement(PopoverBadge, __assign({}, this.props, this.state, { placement: "bottom", title: "消息", className: "my-nav-pop" }));
+            var msgList = (_a = this.state, _a.msgList), count = _a.count;
+            var a = msgList.slice();
+            var partialList = a.slice(0, 3);
+            var popContent = React.createElement("ul", null,
+                partialList.map(function (msg, key) { return React.createElement("li", { key: key },
+                    React.createElement(Image_component_1.default, { src: "/static/touxiang.png" }),
+                    React.createElement("h3", null, msg.title),
+                    React.createElement("p", null, msg.content),
+                    React.createElement("span", { className: "time" }, (new Date(msg.meta.createdTime)).toLocaleString())); }),
+                React.createElement("a", null, "\u67E5\u770B\u66F4\u591A"));
+            return React.createElement(PopoverBadge, __assign({}, this.props, { count: count, popContent: popContent, placement: "bottom", title: "消息", className: "my-nav-pop" }));
+            var _a;
         };
         return Wrapper;
     }(React.PureComponent));
     return Wrapper;
 };
 
-
-/***/ }),
-
-/***/ 1402:
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(1371)(undefined);
-// imports
-
-
-// module
-exports.push([module.i, ".my-nav-pop {\n  width: 320px;\n  top: 65px !important;\n}\n.my-nav-pop .ant-popover-title {\n  text-align: center;\n  font-size: 16px;\n  color: #666;\n}\n.my-nav-pop .ant-popover-inner-content ul li {\n  position: relative;\n  padding: 10px 5px;\n  border-bottom: 1px solid #e9e9e9;\n}\n.my-nav-pop .ant-popover-inner-content ul li img {\n  float: left;\n  width: 40px;\n  height: 40px;\n  margin: 4px 8px 0 0;\n  border-radius: 50%;\n}\n.my-nav-pop .ant-popover-inner-content ul li h3 {\n  padding-bottom: 5px;\n  color: #666;\n}\n.my-nav-pop .ant-popover-inner-content ul li p {\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  color: #666;\n}\n.my-nav-pop .ant-popover-inner-content ul li span.time {\n  position: absolute;\n  right: 15px;\n  top: 5px;\n  color: #666;\n}\n", ""]);
-
-// exports
-
-
-/***/ }),
-
-/***/ 1403:
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(1402);
-if(typeof content === 'string') content = [[module.i, content, '']];
-// add the styles to the DOM
-var update = __webpack_require__(1372)(content, {});
-if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
-if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./index.less", function() {
-			var newContent = require("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./index.less");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
-	module.hot.dispose(function() { update(); });
-}
 
 /***/ })
 

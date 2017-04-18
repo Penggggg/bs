@@ -3,6 +3,7 @@ import { Subscription } from 'rxjs';
 
 import { Util } from '../../index.con';
 import userStore from '../../store/user';
+import msgStore from '../../store/msg';
 import http from '../../services/http.service';
 
 import Image from '../../component/Image/Image.component';
@@ -19,16 +20,30 @@ export let InjectMsgList = ( PopoverBadge ) => {
             super( );
             this.state = {
                 count: 0,
-                popContent: <div></div>
+                msgList: [ ] 
             }
         }
 
         componentDidMount( ) {
             this.fetchMsgList( );
+            this.watchMsgFromSOK( );
         }
 
         componentWillUnmount( ) {
+            this.sub.unsubscribe( );
+        }
 
+        watchMsgFromSOK( ) {
+            this.sub = msgStore.data.data$
+                .do( res => {
+                    let { msgList } = this.state;
+                    let b = [ res, ...msgList ]
+                    this.setState({
+                        msgList: [...b],
+                        count: b.length
+                    })
+                })
+                .subscribe( );
         }
 
         fetchMsgList( ) {
@@ -38,7 +53,6 @@ export let InjectMsgList = ( PopoverBadge ) => {
                     let sub2 = http
                         .get<partialMsgArr>('/api/v1/msg-list', { toUID: user._id, readed: false } as Partial<APP.Msg>)
                         .do( res => {
-                            console.log( res )
                             this.handleMsgList( res )
                             Util.cancelSubscribe( sub, sub2 );
                         })
@@ -47,11 +61,20 @@ export let InjectMsgList = ( PopoverBadge ) => {
                 .subscribe( )
         }
 
-        handleMsgList = ( list: partialMsgArr ) => {
-            let partialList = list.slice( 0, 3 )
+        handleMsgList = ( list: Array<Partial<APP.Msg>> ) => {
+            
             this.setState({
                 count: list.length,
-                popContent: 
+                msgList: list
+            })
+        }
+
+        render( ) {
+            let { msgList, count } = this.state;
+            let a = [...msgList]
+            let partialList = a.slice( 0, 3 );
+
+            let popContent = 
                     <ul>
                         {
                             partialList.map(( msg, key ) => <li key={key}>
@@ -63,11 +86,11 @@ export let InjectMsgList = ( PopoverBadge ) => {
                         }
                         <a>查看更多</a>
                     </ul>
-            })
-        }
 
-        render( ) {
-            return <PopoverBadge {...this.props} {...this.state} placement="bottom" title="消息" className="my-nav-pop" />
+            return <PopoverBadge {...this.props} count={ count } popContent={ popContent }
+                        placement="bottom" 
+                        title="消息" 
+                        className="my-nav-pop" />
         }
 
     }
@@ -78,7 +101,7 @@ export let InjectMsgList = ( PopoverBadge ) => {
 
 interface IState {
     count: number
-    popContent: React.ReactNode
+    msgList: Array<Partial<APP.Msg>>
 }
 
 interface Iprops {

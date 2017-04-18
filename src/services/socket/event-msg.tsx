@@ -1,7 +1,8 @@
 
 import { Observable, Subscription } from 'rxjs';
 
-import { CON } from '../../index.con';
+import { CON, ENUM } from '../../index.con';
+import MsgStore from '../../store/msg';
 import Notification from '../../services/notification.service';
 
 
@@ -19,6 +20,10 @@ class Msg {
                     title: `${title}`,
                     msg: `${content}` 
                 })
+            })
+            .filter( res => res.type === ENUM.MsgType.InviteMember )
+            .do( res => {
+                MsgStore.data.save( res.content )
             })
             .subscribe( )
     }

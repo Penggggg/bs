@@ -2,24 +2,10 @@ import { Subscription, Observable, ReplaySubject, Observer } from 'rxjs';
 
 export default class MsgData {
 
-    private data: Array<APP.Msg> = [ ];
-    private data$$: Observer<Array<APP.Msg>>;
-    public data$: Observable<Array<APP.Msg>>;
+    private data$$: Observer<Partial<APP.Msg>>;
+    public data$: Observable<Partial<APP.Msg>>;
 
-    public save = ( msg: APP.Msg | Array<APP.Msg> ) => {
-        if ( this.data$ === undefined ) {
-            this.init( );
-        }
-        if ( Array.isArray( msg )) {
-            this.data.concat( msg );
-        } else {
-            this.data.push( msg );
-        }
-        this.data$$.next( this.data );
-    }
-
-    private init = ( ) => {
-
+    constructor( ) {
         let subject = new ReplaySubject( 1 );
         let source = Observable.create(( o ) => {
             this.data$$ = o;
@@ -27,5 +13,10 @@ export default class MsgData {
         this.data$ = source.multicast( subject ).refCount( );
         this.data$.subscribe( );
     }
+
+    public save = ( msg: Partial<APP.Msg>  ) => {
+        this.data$$.next( msg );
+    }
+
 
 }

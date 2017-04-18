@@ -58,6 +58,9 @@ declare namespace SOK {
             content: string,
             title: string,
             readed: boolean
+            meta: {
+                createdTime: string
+            }
         }
 
         /**消息推送：成员邀请 */
@@ -119,7 +122,7 @@ declare namespace APP {
         title: string
         formType: number
         replyURL: string
-        meta: {
+        meta?: {
             createdTime: string
         }
     }

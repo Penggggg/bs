@@ -46,7 +46,6 @@ exports.fetchAllMsgList = function (ctx) { return __awaiter(_this, void 0, void 
                 return [4 /*yield*/, msg_model_1.default.findAllByToUIDAndReaded(toUID, readed)];
             case 1:
                 data = _b.sent();
-                console.log(data);
                 result = [];
                 result = data.map(function (_a) {
                     var _id = _a._id, title = _a.title, content = _a.content, readed = _a.readed, meta = _a.meta;

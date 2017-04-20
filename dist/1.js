@@ -2992,8 +2992,9 @@ exports.InjectMsgList = function (PopoverBadge) {
             return _this;
         }
         Wrapper.prototype.componentDidMount = function () {
-            this.fetchMsgList();
-            this.watchMsgFromSOK();
+            // this.fetchMsgList( );
+            // this.watchMsgFromSOK( );
+            this.combineFlow();
         };
         Wrapper.prototype.componentWillUnmount = function () {
             this.sub.unsubscribe();
@@ -3025,10 +3026,32 @@ exports.InjectMsgList = function (PopoverBadge) {
             })
                 .subscribe();
         };
+        Wrapper.prototype.combineFlow = function () {
+            var _this = this;
+            var sub = user_1.default.data.userData$
+                .do(function (user) {
+                http_service_1.default
+                    .get('/api/v1/msg-list', { toUID: user._id, readed: false })
+                    .combineLatest(msg_1.default.data.data$)
+                    .do(function (res) {
+                    var msgList = _this.state.msgList;
+                    var fromFetch = res[0], fromSOK = res[1];
+                    if (fromSOK === null) {
+                        _this.handleMsgList(fromFetch);
+                    }
+                    else {
+                        _this.handleMsgList([fromSOK].concat(msgList));
+                    }
+                })
+                    .subscribe();
+            })
+                .subscribe();
+        };
         Wrapper.prototype.render = function () {
             var msgList = (_a = this.state, _a.msgList), count = _a.count;
             var a = msgList.slice();
             var partialList = a.slice(0, 3);
+            console.log("render:" + count);
             var popContent = React.createElement("ul", null,
                 partialList.map(function (msg, key) { return React.createElement("li", { key: key },
                     React.createElement(Image_component_1.default, { src: "/static/touxiang.png" }),

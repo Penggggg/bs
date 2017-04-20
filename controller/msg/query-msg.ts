@@ -9,7 +9,6 @@ export let fetchAllMsgList = async( ctx: Koa.Context ) => {
 
     let data: Array<APP.Msg> = await MsgModel.findAllByToUIDAndReaded( toUID, readed );
 
-    console.log( data )
 
     /**返回 */
     let result: Array<Partial<APP.Msg>> = [ ];

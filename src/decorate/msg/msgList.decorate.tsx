@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 
 import { Util } from '../../index.con';
 import userStore from '../../store/user';
@@ -25,9 +25,11 @@ export let InjectMsgList = ( PopoverBadge ) => {
         }
 
         componentDidMount( ) {
-            this.fetchMsgList( );
-            this.watchMsgFromSOK( );
+            // this.fetchMsgList( );
+            // this.watchMsgFromSOK( );
+            this.combineFlow( );
         }
+        
 
         componentWillUnmount( ) {
             this.sub.unsubscribe( );
@@ -61,8 +63,28 @@ export let InjectMsgList = ( PopoverBadge ) => {
                 .subscribe( )
         }
 
+        combineFlow( ) {
+            let sub = userStore.data.userData$
+                .do( user => {
+                    http
+                        .get<partialMsgArr>('/api/v1/msg-list', { toUID: user._id, readed: false } as Partial<APP.Msg>)
+                        .combineLatest(msgStore.data.data$)
+                        .do( res => {
+                            let { msgList } = this.state;
+                            let [ fromFetch, fromSOK ] = res;
+
+                            if ( fromSOK === null ) {
+                                this.handleMsgList( fromFetch )
+                            } else {
+                                this.handleMsgList([ fromSOK, ...msgList ])
+                            }
+                        })
+                        .subscribe( )
+                }) 
+                .subscribe( )
+        }
+
         handleMsgList = ( list: Array<Partial<APP.Msg>> ) => {
-            
             this.setState({
                 count: list.length,
                 msgList: list
@@ -73,6 +95,7 @@ export let InjectMsgList = ( PopoverBadge ) => {
             let { msgList, count } = this.state;
             let a = [...msgList]
             let partialList = a.slice( 0, 3 );
+            console.log(`render:${count}`)
 
             let popContent = 
                     <ul>

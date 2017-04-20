@@ -9,7 +9,8 @@ export default class MsgData {
         let subject = new ReplaySubject( 1 );
         let source = Observable.create(( o ) => {
             this.data$$ = o;
-        })
+        }).startWith( null )
+
         this.data$ = source.multicast( subject ).refCount( );
         this.data$.subscribe( );
     }

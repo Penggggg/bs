@@ -210,7 +210,7 @@ var MsgData = (function () {
         var subject = new rxjs_1.ReplaySubject(1);
         var source = rxjs_1.Observable.create(function (o) {
             _this.data$$ = o;
-        });
+        }).startWith(null);
         this.data$ = source.multicast(subject).refCount();
         this.data$.subscribe();
     }

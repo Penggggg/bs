@@ -26,15 +26,21 @@ MsgSchema.pre('save', function( next ){
     next( );
 })
 
+MsgSchema.statics.customFind = function( query, fields, options ) {
+    return new Promise(( resolve, reject ) => {
+        this.find( query, fields, options, ( err, data) =>  returnData( err, resolve, reject, data ))
+    })
+}
+
 MsgSchema.statics.findAll =  function( select ) {
     return new Promise(( resolve, reject ) => {
         this.find({ }, select, ( err, data) =>  returnData( err, resolve, reject, data ))
     })
 }
 
-MsgSchema.statics.findAllByToUIDAndReaded =  function( toUID, readed ) {
+MsgSchema.statics.countAll = function( query ) {
     return new Promise(( resolve, reject ) => {
-        this.find({ toUID, readed }, null, { sort: [{"_id": -1 }]} ,( err, data) =>  returnData( err, resolve, reject, data ))
+        this.count( query, ( err, data ) => returnData( err, resolve, reject, data ))
     })
 }
 

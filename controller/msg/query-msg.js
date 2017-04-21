@@ -38,21 +38,37 @@ var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var msg_model_1 = require("../../model/models/msg.model");
 exports.fetchAllMsgList = function (ctx) { return __awaiter(_this, void 0, void 0, function () {
-    var readed, toUID, data, result, _a;
+    var readed, toUID, data, _a;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
                 readed = (_a = ctx.request.query, _a.readed), toUID = _a.toUID;
-                return [4 /*yield*/, msg_model_1.default.findAllByToUIDAndReaded(toUID, readed)];
+                msg_model_1.default.countAll({ toUID: toUID });
+                return [4 /*yield*/, msg_model_1.default.customFind({ readed: readed, toUID: toUID }, ['_id', 'title', 'content', 'readed', 'meta'], { sort: [{ "_id": -1 }], skip: 0, limit: 10 })];
             case 1:
                 data = _b.sent();
-                result = [];
-                result = data.map(function (_a) {
-                    var _id = _a._id, title = _a.title, content = _a.content, readed = _a.readed, meta = _a.meta;
-                    return ({
-                        _id: _id, title: title, content: content, readed: readed, meta: meta
-                    });
-                });
+                /**返回 */
+                ctx.body = data;
+                return [2 /*return*/];
+        }
+    });
+}); };
+exports.fetchFadeMsgList = function (ctx) { return __awaiter(_this, void 0, void 0, function () {
+    var readed, toUID, limit, skip, count, data, result, _a;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
+            case 0:
+                readed = (_a = ctx.request.body, _a.readed), toUID = _a.toUID, limit = _a.limit, skip = _a.skip;
+                return [4 /*yield*/, msg_model_1.default.countAll({ toUID: toUID })];
+            case 1:
+                count = _b.sent();
+                return [4 /*yield*/, msg_model_1.default.customFind({ readed: readed, toUID: toUID }, ['_id', 'title', 'content', 'readed', 'meta'], { sort: [{ "_id": -1 }], skip: skip, limit: limit })];
+            case 2:
+                data = _b.sent();
+                result = {
+                    count: count,
+                    data: data
+                };
                 ctx.body = result;
                 return [2 /*return*/];
         }

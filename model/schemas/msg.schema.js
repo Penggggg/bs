@@ -25,16 +25,22 @@ exports.MsgSchema.pre('save', function (next) {
     }
     next();
 });
+exports.MsgSchema.statics.customFind = function (query, fields, options) {
+    var _this = this;
+    return new Promise(function (resolve, reject) {
+        _this.find(query, fields, options, function (err, data) { return returnData(err, resolve, reject, data); });
+    });
+};
 exports.MsgSchema.statics.findAll = function (select) {
     var _this = this;
     return new Promise(function (resolve, reject) {
         _this.find({}, select, function (err, data) { return returnData(err, resolve, reject, data); });
     });
 };
-exports.MsgSchema.statics.findAllByToUIDAndReaded = function (toUID, readed) {
+exports.MsgSchema.statics.countAll = function (query) {
     var _this = this;
     return new Promise(function (resolve, reject) {
-        _this.find({ toUID: toUID, readed: readed }, null, { sort: [{ "_id": -1 }] }, function (err, data) { return returnData(err, resolve, reject, data); });
+        _this.count(query, function (err, data) { return returnData(err, resolve, reject, data); });
     });
 };
 exports.MsgSchema.statics.save = function (_a) {

@@ -21,10 +21,16 @@ declare namespace API {
             data: Array<APP.Project>
         }
 
+        /**POST：消息列表--伪查询，返回列表长度，及最新的3位数据 */
+        export interface AllMsg {
+            count: number
+            data: Array<Partial<APP.Msg>>
+        }
+
     }
 
     export namespace Req {
-        
+
     }
 
     export namespace Query {
@@ -48,6 +54,12 @@ declare namespace API {
             ProjectName: string
             ProjectInfo: string
             creatorID: string
+        }
+
+        /**POST：消息列表--伪查询，返回列表长度，及最新的3位数据 */
+        export interface AllMsg extends Partial<APP.Msg> {
+            limit: number | null
+            skip: number | null
         }
 
     }

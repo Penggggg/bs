@@ -65,6 +65,8 @@ exports.default = function (router) {
     router.post('/api/v1/all-user', query_controller_1.fetchAllUserByName);
     /**消息模块：查询所有符合条件的消息 */
     router.get('/api/v1/msg-list', query_msg_1.fetchAllMsgList);
+    /**消息模块：所有消息的伪查询 */
+    router.post('/api/v1/msg-list-fade', query_msg_1.fetchFadeMsgList);
 };
 function getIndex(ctx) {
     return __awaiter(this, void 0, void 0, function () {

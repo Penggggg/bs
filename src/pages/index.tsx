@@ -85,6 +85,13 @@ export default {
                     }            
                 },
             ]  
+        },{
+            path: 'msgs',
+            getComponent: ( nextstate: RouterState , cb: Function ) => {
+                System.import('./msg/msg-all.page').then( module => { 
+                    cb( null, module.default )}
+                ).catch(( err: Error ) => showMessage( err, './msg-all.page' ))
+            }      
         }
     ]
 }

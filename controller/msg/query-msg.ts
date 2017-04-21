@@ -7,16 +7,34 @@ export let fetchAllMsgList = async( ctx: Koa.Context ) => {
 
     let { readed, toUID } = ctx.request.query as Partial<APP.Msg>;
 
-    let data: Array<APP.Msg> = await MsgModel.findAllByToUIDAndReaded( toUID, readed );
+    MsgModel.countAll({ toUID })
 
+    let data: Array<Partial<APP.Msg>> = await MsgModel.customFind(
+            { readed, toUID }, 
+            ['_id', 'title', 'content', 'readed', 'meta'], 
+            { sort: [{"_id": -1 }], skip: 0, limit: 10 });
 
     /**返回 */
-    let result: Array<Partial<APP.Msg>> = [ ];
+    ctx.body = data; 
 
-    result = data.map(({ _id, title, content, readed, meta }) => ({
-        _id, title, content, readed, meta
-    } as APP.Msg ))
+}
 
-    ctx.body = result 
+export let fetchFadeMsgList = async( ctx: Koa.Context ) => {
+
+    let { readed, toUID, limit, skip } = ctx.request.body as API.Query.AllMsg;
+
+    let count = await MsgModel.countAll({ toUID });
+
+    let data: Array<Partial<APP.Msg>> = await MsgModel.customFind(
+            { readed, toUID }, 
+            ['_id', 'title', 'content', 'readed', 'meta'], 
+            { sort: [{"_id": -1 }], skip, limit });
+
+    /**返回 */
+    let result: API.Res.AllMsg = {
+        count,
+        data
+    }
+    ctx.body = result;
 
 }

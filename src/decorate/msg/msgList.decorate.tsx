@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Link } from 'react-router'; 
 import { Subscription, Observable } from 'rxjs';
 
 import { Util } from '../../index.con';
@@ -37,16 +38,17 @@ export let InjectMsgList = ( PopoverBadge ) => {
             this.sub = userStore.data.userData$
                 .do( user => {
                     http
-                        .get<partialMsgArr>('/api/v1/msg-list', { toUID: user._id, readed: false } as Partial<APP.Msg>)
+                        .post<API.Res.AllMsg>('/api/v1/msg-list-fade', 
+                            { toUID: user._id, readed: false, limit: 3, skip: 0 } as API.Query.AllMsg )
                         .combineLatest(msgStore.data.data$)
                         .do( res => {
-                            let { msgList } = this.state;
+                            let { msgList, count } = this.state;
                             let [ fromFetch, fromSOK ] = res;
-
+                            
                             if ( fromSOK === null ) {
-                                this.handleMsgList( fromFetch )
+                                this.handleMsgList( fromFetch.data, fromFetch.count )
                             } else {
-                                this.handleMsgList([ fromSOK, ...msgList ])
+                                this.handleMsgList([ fromSOK, ...msgList ], ++count)
                             }
                         })
                         .subscribe( )
@@ -54,9 +56,9 @@ export let InjectMsgList = ( PopoverBadge ) => {
                 .subscribe( )
         }
 
-        handleMsgList = ( list: Array<Partial<APP.Msg>> ) => {
+        handleMsgList = ( list: Array<Partial<APP.Msg>>, count: number ) => {
             this.setState({
-                count: list.length,
+                count,
                 msgList: list
             })
         }
@@ -76,7 +78,7 @@ export let InjectMsgList = ( PopoverBadge ) => {
                                 <span className="time">{(new Date(msg.meta.createdTime)).toLocaleString( )}</span>
                             </li>)
                         }
-                        <a>查看更多</a>
+                        <Link to="/msgs">查看更多</Link>
                     </ul>
 
             return <PopoverBadge {...this.props} count={ count } popContent={ popContent }

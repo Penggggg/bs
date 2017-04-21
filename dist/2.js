@@ -25,6 +25,7 @@ var notification_service_1 = __webpack_require__(238);
 var antd_1 = __webpack_require__(153);
 var Image_component_1 = __webpack_require__(1384);
 __webpack_require__(1395);
+var index_con_1 = __webpack_require__(154);
 var FormItem = antd_1.Form.Item;
 var ProjectAllPage = (function (_super) {
     __extends(ProjectAllPage, _super);
@@ -53,7 +54,7 @@ var ProjectAllPage = (function (_super) {
             }
         };
         _this.watchRole = function () {
-            _this.projectSub = _this.projectStore.data.data$
+            var sub = _this.projectStore.data.data$
                 .combineLatest(_this.userStore.data.userData$)
                 .debounceTime(500)
                 .do(function (res) {
@@ -95,6 +96,7 @@ var ProjectAllPage = (function (_super) {
                         content: '您没有该项目的权限！请先申请权限'
                     });
                 }
+                index_con_1.Util.cancelSubscribe(sub);
             })
                 .subscribe();
         };
@@ -145,7 +147,6 @@ var ProjectAllPage = (function (_super) {
         this.fetchAllProject();
     };
     ProjectAllPage.prototype.componentWillUnmount = function () {
-        this.projectSub.unsubscribe();
     };
     ProjectAllPage.prototype.render = function () {
         var _this = this;

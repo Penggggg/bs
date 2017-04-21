@@ -25,46 +25,16 @@ export let InjectMsgList = ( PopoverBadge ) => {
         }
 
         componentDidMount( ) {
-            // this.fetchMsgList( );
-            // this.watchMsgFromSOK( );
             this.combineFlow( );
         }
         
 
         componentWillUnmount( ) {
-            this.sub.unsubscribe( );
-        }
-
-        watchMsgFromSOK( ) {
-            this.sub = msgStore.data.data$
-                .do( res => {
-                    let { msgList } = this.state;
-                    let b = [ res, ...msgList ]
-                    this.setState({
-                        msgList: [...b],
-                        count: b.length
-                    })
-                })
-                .subscribe( );
-        }
-
-        fetchMsgList( ) {
-            
-            let sub = userStore.data.userData$
-                .do( user => {
-                    let sub2 = http
-                        .get<partialMsgArr>('/api/v1/msg-list', { toUID: user._id, readed: false } as Partial<APP.Msg>)
-                        .do( res => {
-                            this.handleMsgList( res )
-                            Util.cancelSubscribe( sub, sub2 );
-                        })
-                        .subscribe( )
-                })
-                .subscribe( )
+            Util.cancelSubscribe( this.sub )
         }
 
         combineFlow( ) {
-            let sub = userStore.data.userData$
+            this.sub = userStore.data.userData$
                 .do( user => {
                     http
                         .get<partialMsgArr>('/api/v1/msg-list', { toUID: user._id, readed: false } as Partial<APP.Msg>)
@@ -95,7 +65,6 @@ export let InjectMsgList = ( PopoverBadge ) => {
             let { msgList, count } = this.state;
             let a = [...msgList]
             let partialList = a.slice( 0, 3 );
-            console.log(`render:${count}`)
 
             let popContent = 
                     <ul>

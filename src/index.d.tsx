@@ -10,6 +10,17 @@ declare namespace API {
             status: '200' | '500'
         }
 
+        /**POST：新增项目 */
+        export interface CreateProject {
+            msg: 'success' | 'server error',
+            status: '200' | '500'
+        }
+
+        /**GET：项目列表 */
+        export interface AllProject {
+            data: Array<APP.Project>
+        }
+
     }
 
     export namespace Req {
@@ -30,6 +41,13 @@ declare namespace API {
             type: number
             content: string,
             PID: string
+        }
+
+        /**POST：新增项目 */
+        export interface CreateProject {
+            ProjectName: string
+            ProjectInfo: string
+            creatorID: string
         }
 
     }

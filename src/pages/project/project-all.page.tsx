@@ -9,18 +9,16 @@ import { Card, Icon, Modal, Button, Form, Input } from 'antd';
 import Image from '../../component/Image/Image.component';
 
 
-import { IProject } from '../../interface/app.interface';
+
 import './project-all.less';
+import { Util } from '../../index.con';
 import { RouteComponentProps } from 'react-router';
-import { _IPostQueryCreateProject, IPostCreateProject_, IGetAllProject_ } from '../../interface/api.interface';
 
 
 const FormItem = Form.Item;
 
 class ProjectAllPage extends React.PureComponent< IProps, IState > {
     
-
-    private projectSub: Subscription;
 
     private watchingRole = false;
     private formProjectName = 'projectName';
@@ -44,19 +42,19 @@ class ProjectAllPage extends React.PureComponent< IProps, IState > {
     }
 
     componentWillUnmount( ) {
-        this.projectSub.unsubscribe( );
+       
     }
 
     private fetchAllProject = ( ) => {
         http
-            .get<IGetAllProject_>('/api/v1/all-project')
+            .get<API.Res.AllProject>('/api/v1/all-project')
             .do( res => this.setState({
                 projectAll: res.data
             }))
             .subscribe( )
     }
 
-    private onEnterProject = ( project: IProject ) => {
+    private onEnterProject = ( project: APP.Project ) => {
         /**保存project数据 */
         this.projectStore.data.save( project );
         if ( !this.watchingRole ) {
@@ -66,7 +64,7 @@ class ProjectAllPage extends React.PureComponent< IProps, IState > {
     }
 
     private watchRole = ( ) => {
-        this.projectSub = this.projectStore.data.data$
+        let sub = this.projectStore.data.data$
             .combineLatest(this.userStore.data.userData$)
             .debounceTime( 500 )
             .do( res => {
@@ -113,11 +111,12 @@ class ProjectAllPage extends React.PureComponent< IProps, IState > {
                         content: '您没有该项目的权限！请先申请权限'
                     })
                 }
+                Util.cancelSubscribe( sub );
             })
             .subscribe( )
     }
 
-    private renderToJsx = ( project: IProject ) => {
+    private renderToJsx = ( project: APP.Project ) => {
         return <Card key={ project._id } className="project-card" bodyStyle={{ padding: 0, height: '100%'}}>
             <div className="image" onClick={( ) => this.onEnterProject( project )}>
                 <Image src={ project.cover } />
@@ -137,14 +136,14 @@ class ProjectAllPage extends React.PureComponent< IProps, IState > {
                 this.setState({
                     formSubmiting: true
                 })
-                http.post<IPostCreateProject_>('/api/v1/create-project', Object.assign(values, { creatorID: Auth.userData( )._id }))
+                http.post<API.Res.CreateProject>('/api/v1/create-project', Object.assign(values, { creatorID: Auth.userData( )._id }))
                     .do(this.analyseProjectSubmit)
                     .subscribe( )
             }
         })
     }
 
-    private analyseProjectSubmit = ( res: IPostCreateProject_ ) => {
+    private analyseProjectSubmit = ( res: API.Res.CreateProject ) => {
         Notifycation.open({
             title: '系统消息',
             msg: res.msg,
@@ -264,5 +263,5 @@ interface IProps extends RouteComponentProps<{ }, { }> {
 interface IState {
     dynamicFormShow: boolean
     formSubmiting: boolean
-    projectAll: Array<IProject>
+    projectAll: Array<APP.Project>
 }

@@ -2992,43 +2992,14 @@ exports.InjectMsgList = function (PopoverBadge) {
             return _this;
         }
         Wrapper.prototype.componentDidMount = function () {
-            // this.fetchMsgList( );
-            // this.watchMsgFromSOK( );
             this.combineFlow();
         };
         Wrapper.prototype.componentWillUnmount = function () {
-            this.sub.unsubscribe();
-        };
-        Wrapper.prototype.watchMsgFromSOK = function () {
-            var _this = this;
-            this.sub = msg_1.default.data.data$
-                .do(function (res) {
-                var msgList = _this.state.msgList;
-                var b = [res].concat(msgList);
-                _this.setState({
-                    msgList: b.slice(),
-                    count: b.length
-                });
-            })
-                .subscribe();
-        };
-        Wrapper.prototype.fetchMsgList = function () {
-            var _this = this;
-            var sub = user_1.default.data.userData$
-                .do(function (user) {
-                var sub2 = http_service_1.default
-                    .get('/api/v1/msg-list', { toUID: user._id, readed: false })
-                    .do(function (res) {
-                    _this.handleMsgList(res);
-                    index_con_1.Util.cancelSubscribe(sub, sub2);
-                })
-                    .subscribe();
-            })
-                .subscribe();
+            index_con_1.Util.cancelSubscribe(this.sub);
         };
         Wrapper.prototype.combineFlow = function () {
             var _this = this;
-            var sub = user_1.default.data.userData$
+            this.sub = user_1.default.data.userData$
                 .do(function (user) {
                 http_service_1.default
                     .get('/api/v1/msg-list', { toUID: user._id, readed: false })
@@ -3051,7 +3022,6 @@ exports.InjectMsgList = function (PopoverBadge) {
             var msgList = (_a = this.state, _a.msgList), count = _a.count;
             var a = msgList.slice();
             var partialList = a.slice(0, 3);
-            console.log("render:" + count);
             var popContent = React.createElement("ul", null,
                 partialList.map(function (msg, key) { return React.createElement("li", { key: key },
                     React.createElement(Image_component_1.default, { src: "/static/touxiang.png" }),

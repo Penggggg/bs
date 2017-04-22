@@ -34,7 +34,7 @@ export let inviteMember = async( ctx: Koa.Context ) => {
             type: ENUM.MsgType.InviteMember,
             eventName: `${CON.socketEvent.msg}`,
             content: {
-                msgId: _id, 
+                _id: _id, 
                 content, title , readed, meta
             } as SOK.Res.MsgInviteContent
         })

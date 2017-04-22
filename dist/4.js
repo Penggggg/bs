@@ -1,6 +1,6 @@
 webpackJsonp([4],{
 
-/***/ 1366:
+/***/ 1365:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16,104 +16,328 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-__webpack_require__(1397);
 var React = __webpack_require__(0);
+var rxjs_1 = __webpack_require__(48);
+var http_service_1 = __webpack_require__(1376);
+var auth_login_service_1 = __webpack_require__(542);
+var notification_service_1 = __webpack_require__(239);
 var antd_1 = __webpack_require__(153);
-var Image_component_1 = __webpack_require__(1385);
-var index_con_1 = __webpack_require__(154);
-var user_1 = __webpack_require__(239);
-var http_service_1 = __webpack_require__(1381);
-var Header = antd_1.Layout.Header, Footer = antd_1.Layout.Footer, Sider = antd_1.Layout.Sider, Content = antd_1.Layout.Content;
-var msgAllPage = (function (_super) {
-    __extends(msgAllPage, _super);
-    function msgAllPage() {
+__webpack_require__(1396);
+var TabPane = antd_1.Tabs.TabPane;
+var FormItem = antd_1.Form.Item;
+var LoginPage = (function (_super) {
+    __extends(LoginPage, _super);
+    function LoginPage() {
         var _this = _super.call(this) || this;
-        _this.limit = 5;
-        _this.handleChange = function (readed) {
-            _this.setState({
-                currentPage: 1,
-                msgType: readed === 'false' ? '未读消息' : '所有消息'
+        _this.logInSubmit = function (e) {
+            e.preventDefault();
+            _this.setState({ loginLoading: true });
+            _this.props.form.validateFields(['userName', 'userPhone', 'password', 'password2'], function (err, values) {
+                if (!err) {
+                    http_service_1.default.post('/api/v1/login', values)
+                        .do(_this.analyseSubmit)
+                        .catch(_this.errorSumitHandler)
+                        .subscribe();
+                }
             });
-            _this.fetchMsgList(readed === 'false' ? false : true, 1);
         };
-        _this.handleSelect = function (currentPage) {
-            var msgType = _this.state.msgType;
-            _this.setState({
-                currentPage: currentPage
+        _this.signInSubmit = function (e) {
+            e.preventDefault();
+            _this.setState({ signInLoading: true });
+            _this.props.form.validateFields(['signPhone', 'signPsw'], function (err, values) {
+                if (!err) {
+                    http_service_1.default.post('/api/v1/signin', values)
+                        .do(_this.analyseSignIn)
+                        .catch(_this.errorSumitHandler)
+                        .subscribe();
+                }
             });
-            _this.fetchMsgList(msgType === '未读消息' ? false : true, currentPage);
+        };
+        _this.resetSubmit = function (e) {
+            e.preventDefault();
+            _this.setState({ resetLoading: true });
+            _this.props.form.validateFields(['resetUserName', 'reseUserPhone', 'resetPsw', 'resetPsw2'], function (err, values) {
+                if (!err) {
+                    http_service_1.default.post('/api/v1/resetpsw', values)
+                        .do(_this.analyseReset)
+                        .catch(_this.errorSumitHandler)
+                        .subscribe();
+                }
+            });
+        };
+        _this.checkPswByRepeat = function (rule, value, callback) {
+            var form = _this.props.form;
+            if (value && value !== form.getFieldValue('password')) {
+                callback('2次输入的密码不一致');
+            }
+            else {
+                callback();
+            }
+        };
+        _this.checkResetPswByRepeat = function (rule, value, callback) {
+            var form = _this.props.form;
+            if (value && value !== form.getFieldValue('resetPsw')) {
+                callback('2次输入的密码不一致');
+            }
+            else {
+                callback();
+            }
+        };
+        _this.CheckPswByPsw = function (rule, value, callback) {
+            var form = _this.props.form;
+            var psw2 = form.getFieldValue('password2');
+            if (value && psw2) {
+                form.setFields({
+                    password2: {
+                        value: psw2,
+                        errors: value !== psw2 ? [new Error('2次输入的密码不一致')] : null
+                    }
+                });
+                callback();
+            }
+            callback();
+        };
+        _this.CheckResetPswByPsw = function (rule, value, callback) {
+            var form = _this.props.form;
+            var psw2 = form.getFieldValue('resetPsw2');
+            if (value && psw2) {
+                form.setFields({
+                    resetPsw2: {
+                        value: psw2,
+                        errors: value !== psw2 ? [new Error('2次输入的密码不一致')] : null
+                    }
+                });
+                callback();
+            }
+            callback();
+        };
+        _this.resetPsw = function () {
+            _this.setState({
+                resetFormShow: true
+            });
+        };
+        _this.analyseReset = function (_a) {
+            var status = _a.status, msg = _a.msg;
+            var form = _this.props.form;
+            _this.setState({ resetLoading: false });
+            notification_service_1.default.open({
+                msg: msg,
+                title: "\u91CD\u7F6E\u5BC6\u7801" + (status === '200' ? '成功' : '失败'),
+                type: status === '200' ? 'ok' : 'error'
+            });
+            if (status === '4001') {
+                var username = form.getFieldValue('resetUserName');
+                form.setFields({
+                    resetUserName: {
+                        value: username,
+                        errors: [new Error('用户不存在!')]
+                    }
+                });
+            }
+            else if (status === '4002') {
+                var username = form.getFieldValue('reseUserPhone');
+                form.setFields({
+                    reseUserPhone: {
+                        value: username,
+                        errors: [new Error('手机号码不匹配!')]
+                    }
+                });
+            }
+            else if (status === '4003') {
+                var psw2 = form.getFieldValue('resetPsw2');
+                form.setFields({
+                    resetPsw2: {
+                        value: psw2,
+                        errors: [new Error('2次输入的密码不一致')]
+                    }
+                });
+            }
+            else if (status === '200') {
+                setTimeout(function () {
+                    _this.setState({ resetFormShow: false });
+                    form.resetFields();
+                }, 2000);
+            }
+        };
+        _this.analyseSubmit = function (_a) {
+            var status = _a.status, msg = _a.msg, user = _a.user;
+            var form = _this.props.form;
+            _this.setState({ loginLoading: false });
+            notification_service_1.default.open({
+                msg: msg,
+                title: "\u6CE8\u518C" + (status === '200' ? '成功' : '失败'),
+                type: status === '200' ? 'ok' : 'error'
+            });
+            if (status === '4001') {
+                var psw2 = form.getFieldValue('password2');
+                form.setFields({
+                    password2: {
+                        value: psw2,
+                        errors: [new Error('2次输入的密码不一致')]
+                    }
+                });
+            }
+            else if (status === '4002') {
+                var phone = form.getFieldValue('userPhone');
+                form.setFields({
+                    userPhone: {
+                        value: phone,
+                        errors: [new Error('该手机号已被注册!')]
+                    }
+                });
+            }
+            else if (status === '200') {
+                setTimeout(function () {
+                    _this.setState({
+                        activeKey: '1'
+                    });
+                    form.resetFields();
+                }, 2000);
+            }
+        };
+        _this.analyseSignIn = function (_a) {
+            var status = _a.status, msg = _a.msg, user = _a.user;
+            var form = _this.props.form;
+            _this.setState({ signInLoading: false });
+            notification_service_1.default.open({
+                msg: msg,
+                title: "\u767B\u5F55" + (status === '200' ? '成功' : '失败'),
+                type: status === '200' ? 'ok' : 'error'
+            });
+            if (status === '4001') {
+                var phone = form.getFieldValue('signPhone');
+                form.setFields({
+                    signPhone: {
+                        value: phone,
+                        errors: [new Error('该手机号未注册')]
+                    }
+                });
+            }
+            else if (status === '4002') {
+                var value = form.getFieldValue('signPsw');
+                form.setFields({
+                    signPsw: {
+                        value: value,
+                        errors: [new Error('密码错误!')]
+                    }
+                });
+            }
+            else if (status === '200') {
+                setTimeout(function () {
+                    form.resetFields();
+                    /**本地登录 */
+                    auth_login_service_1.default.signIn(user);
+                    /**跳转 */
+                    _this.props.router.push('/projects');
+                }, 2000);
+            }
+        };
+        _this.errorSumitHandler = function (e) {
+            notification_service_1.default.open({
+                title: '注册请求错误',
+                msg: "\u9519\u8BEF\uFF1A" + e,
+                type: 'error'
+            });
+            return rxjs_1.Observable.of(e);
         };
         _this.state = {
-            total: 5,
-            msgList: [],
-            currentPage: 1,
-            msgType: '未读消息'
+            activeKey: "1",
+            loginLoading: false,
+            resetLoading: false,
+            signInLoading: false,
+            resetFormShow: false
         };
         return _this;
     }
-    msgAllPage.prototype.componentDidMount = function () {
-        this.fetchMsgList(false, 1);
-    };
-    msgAllPage.prototype.fetchMsgList = function (readed, currentPage) {
+    LoginPage.prototype.render = function () {
         var _this = this;
-        var toUID;
-        var limit = this.limit;
-        var skip = (currentPage - 1) * limit;
-        var sub = user_1.default.data.userData$
-            .do(function (user) {
-            toUID = user._id;
-            setTimeout(function () { return index_con_1.Util.cancelSubscribe(sub); }, 16);
-        }).subscribe();
-        http_service_1.default
-            .post('/api/v1/msg-list', { toUID: toUID, readed: readed, skip: skip, limit: limit })
-            .do(function (res) {
-            var data = res.data, count = res.count;
-            _this.setState({
-                total: count,
-                msgList: data
-            });
-        })
-            .subscribe();
+        var getFieldDecorator = this.props.form.getFieldDecorator;
+        var _a = this.state, activeKey = _a.activeKey, loginLoading = _a.loginLoading, resetLoading = _a.resetLoading, signInLoading = _a.signInLoading, resetFormShow = _a.resetFormShow;
+        /**注册表单 */
+        var loginForm = React.createElement(antd_1.Form, { onSubmit: this.logInSubmit, className: "login-form" },
+            React.createElement(FormItem, { hasFeedback: true }, getFieldDecorator('userName', {
+                rules: [{ required: true, message: 'Please input your username!' }],
+            })(React.createElement(antd_1.Input, { prefix: React.createElement(antd_1.Icon, { type: "user", style: { fontSize: 16 } }), placeholder: "Username" }))),
+            React.createElement(FormItem, null, getFieldDecorator('userPhone', {
+                rules: [{ required: true, message: 'Please input your phone!' }],
+            })(React.createElement(antd_1.Input, { prefix: React.createElement(antd_1.Icon, { type: "phone", style: { fontSize: 16 } }), placeholder: "userPhone", type: "number" }))),
+            React.createElement(FormItem, null, getFieldDecorator('password', {
+                rules: [
+                    { required: true, message: 'Please input your Password!' },
+                    { validator: this.CheckPswByPsw }
+                ],
+            })(React.createElement(antd_1.Input, { prefix: React.createElement(antd_1.Icon, { type: "lock", style: { fontSize: 16 } }), type: "password", placeholder: "Password" }))),
+            React.createElement(FormItem, null, getFieldDecorator('password2', {
+                rules: [
+                    { required: true, message: 'Please input your Password right again' },
+                    { validator: this.checkPswByRepeat }
+                ],
+            })(React.createElement(antd_1.Input, { prefix: React.createElement(antd_1.Icon, { type: "lock", style: { fontSize: 16 } }), type: "password", placeholder: "Password Again" }))),
+            React.createElement(FormItem, null,
+                getFieldDecorator('remember', {
+                    valuePropName: 'checked',
+                    initialValue: true,
+                })(React.createElement(antd_1.Checkbox, null, "Remember me")),
+                React.createElement("a", { className: "login-form-forgot", onClick: this.resetPsw }, "Forgot password")),
+            React.createElement(FormItem, null,
+                React.createElement(antd_1.Button, { type: "primary", htmlType: "submit", className: "login-form-button", loading: loginLoading }, "Log in")));
+        /**登录表单 */
+        var signInForm = React.createElement(antd_1.Form, { onSubmit: this.signInSubmit, className: "login-form" },
+            React.createElement(FormItem, null, getFieldDecorator('signPhone', {
+                rules: [{ required: true, message: 'Please input your phone!' }],
+            })(React.createElement(antd_1.Input, { prefix: React.createElement(antd_1.Icon, { type: "phone", style: { fontSize: 16 } }), placeholder: "phone" }))),
+            React.createElement(FormItem, null, getFieldDecorator('signPsw', {
+                rules: [
+                    { required: true, message: 'Please input your Password!' }
+                ]
+            })(React.createElement(antd_1.Input, { prefix: React.createElement(antd_1.Icon, { type: "lock", style: { fontSize: 16 } }), type: "password", placeholder: "Password" }))),
+            React.createElement(FormItem, null,
+                getFieldDecorator('signRemember', {
+                    valuePropName: 'checked',
+                    initialValue: true,
+                })(React.createElement(antd_1.Checkbox, null, "Remember me")),
+                React.createElement("a", { className: "login-form-forgot", onClick: this.resetPsw }, "Forgot password")),
+            React.createElement(FormItem, null,
+                React.createElement(antd_1.Button, { type: "primary", htmlType: "submit", className: "login-form-button", loading: signInLoading }, "Sign in")));
+        /**忘记密码表单 */
+        var resetForm = React.createElement("div", { className: "modal-resetpsw-form" },
+            React.createElement("div", { className: "modal-img" },
+                React.createElement("img", { src: "/static/reset-psw.png", alt: "" })),
+            React.createElement(antd_1.Form, { className: "reset-form" },
+                React.createElement(FormItem, null, getFieldDecorator('resetUserName', {
+                    rules: [{ required: true, message: 'Please input your username!' }],
+                })(React.createElement(antd_1.Input, { prefix: React.createElement(antd_1.Icon, { type: "user", style: { fontSize: 16 } }), placeholder: "Username" }))),
+                React.createElement(FormItem, null, getFieldDecorator('reseUserPhone', {
+                    rules: [{ required: true, message: 'Please input your phone!' }]
+                })(React.createElement(antd_1.Input, { prefix: React.createElement(antd_1.Icon, { type: "phone", style: { fontSize: 16 } }), placeholder: "userPhone", type: "number" }))),
+                React.createElement(FormItem, null, getFieldDecorator('resetPsw', {
+                    rules: [
+                        { required: true, message: 'Please input your Password!' },
+                        { validator: this.CheckResetPswByPsw }
+                    ],
+                })(React.createElement(antd_1.Input, { prefix: React.createElement(antd_1.Icon, { type: "lock", style: { fontSize: 16 } }), type: "password", placeholder: "New Password" }))),
+                React.createElement(FormItem, null, getFieldDecorator('resetPsw2', {
+                    rules: [
+                        { required: true, message: 'Please input your Password right again' },
+                        { validator: this.checkResetPswByRepeat }
+                    ]
+                })(React.createElement(antd_1.Input, { prefix: React.createElement(antd_1.Icon, { type: "lock", style: { fontSize: 16 } }), type: "password", placeholder: "Password Again" })))));
+        return React.createElement("div", { className: "login-page" },
+            React.createElement("div", { className: "logo-block" },
+                React.createElement("h1", { className: "title" }, "iTeam"),
+                React.createElement("p", { className: "info" }, "\u4EA7\u54C1\u5F00\u53D1\u56E2\u961F\u534F\u4F5C\u5DE5\u5177")),
+            React.createElement("div", { className: "form-block" },
+                React.createElement(antd_1.Tabs, { activeKey: activeKey, onTabClick: function (e) { return _this.setState({ activeKey: "" + e }); } },
+                    React.createElement(TabPane, { tab: "登录", key: "1" }, signInForm),
+                    React.createElement(TabPane, { tab: "注册", key: "2" }, loginForm))),
+            React.createElement(antd_1.Modal, { title: "Reset Your Password", visible: resetFormShow, onOk: function () { return _this.setState({ resetFormShow: true }); }, onCancel: function () { return _this.setState({ resetFormShow: false }); }, style: { width: '400px !import', padding: '0 85px', marginTop: '-40px' }, footer: [
+                    React.createElement(antd_1.Button, { key: "back", size: "large", onClick: function () { return _this.setState({ resetFormShow: false }); } }, "Cacel"),
+                    React.createElement(antd_1.Button, { key: "submit", type: "primary", size: "large", onClick: this.resetSubmit }, "Submit"),
+                ] }, resetForm));
     };
-    msgAllPage.prototype.render = function () {
-        var _a = this.state, msgType = _a.msgType, total = _a.total, currentPage = _a.currentPage, msgList = _a.msgList;
-        var msgContent = React.createElement("ul", null, msgList.map(function (msg, key) { return React.createElement("li", { key: key },
-            React.createElement("a", { onClick: function () { return console.log(key); } },
-                React.createElement(Image_component_1.default, { src: "/static/touxiang.png" }),
-                React.createElement("h3", null, msg.title),
-                React.createElement("p", null, msg.content),
-                React.createElement("span", { className: "time" }, (new Date(msg.meta.createdTime)).toLocaleString()))); }));
-        return React.createElement("div", { className: "msg-all-page" },
-            React.createElement(antd_1.Layout, null,
-                React.createElement(Header, null,
-                    React.createElement(antd_1.Breadcrumb, null,
-                        React.createElement(antd_1.Breadcrumb.Item, { href: "/#/projects" }, "\u9879\u76EE"),
-                        React.createElement(antd_1.Breadcrumb.Item, null, "\u6211\u7684\u6D88\u606F"))),
-                React.createElement(Content, null,
-                    React.createElement(antd_1.Row, null,
-                        React.createElement(antd_1.Col, { span: 10, className: "msg-list-block" },
-                            React.createElement("div", { className: "msg-list" },
-                                React.createElement("div", { className: "title" },
-                                    React.createElement(antd_1.Select, { defaultValue: "false", style: { width: 120 }, onChange: this.handleChange },
-                                        React.createElement(antd_1.Select.Option, { value: "false" },
-                                            React.createElement(antd_1.Icon, { type: "tag-o" }), " ",
-                                            "\u672A\u8BFB\u6D88\u606F"),
-                                        React.createElement(antd_1.Select.Option, { value: "true" },
-                                            React.createElement(antd_1.Icon, { type: "bell" }), " ",
-                                            "\u6240\u6709\u6D88\u606F")),
-                                    React.createElement("span", { style: { color: '#666' } },
-                                        total,
-                                        "\u6761")),
-                                React.createElement("div", { className: "content" }, msgContent),
-                                React.createElement("div", { className: "page-content" },
-                                    React.createElement(antd_1.Pagination, { simple: true, defaultCurrent: 1, total: total, current: currentPage, defaultPageSize: 5, onChange: this.handleSelect })))),
-                        React.createElement(antd_1.Col, { span: 14, className: "msg-content" },
-                            this.props.children,
-                            "??")))));
-    };
-    return msgAllPage;
+    return LoginPage;
 }(React.PureComponent));
-exports.default = msgAllPage;
+exports.default = antd_1.Form.create()(LoginPage);
 
 
 /***/ }),
@@ -197,7 +421,7 @@ function toComment(sourceMap) {
   return '/*# ' + data + ' */';
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1377).Buffer))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1378).Buffer))
 
 /***/ }),
 
@@ -233,7 +457,7 @@ var stylesInDom = {},
 	singletonElement = null,
 	singletonCounter = 0,
 	styleElementsInsertedAtTop = [],
-	fixUrls = __webpack_require__(1380);
+	fixUrls = __webpack_require__(1381);
 
 module.exports = function(list, options) {
 	if(typeof DEBUG !== "undefined" && DEBUG) {
@@ -498,6 +722,136 @@ function updateLink(linkElement, options, obj) {
 
 "use strict";
 
+Object.defineProperty(exports, "__esModule", { value: true });
+var rxjs_1 = __webpack_require__(48);
+var config_1 = __webpack_require__(1382);
+var HttpService = (function () {
+    function HttpService() {
+        this.TIMEOUT = 10000;
+    }
+    HttpService.prototype.getXhr = function () {
+        return new XMLHttpRequest();
+    };
+    HttpService.prototype.get = function (url, opt) {
+        /**变量声明 */
+        var data$$;
+        var xhr = this.getXhr();
+        /**数据源 */
+        var data$ = rxjs_1.Observable.create(function (observer) {
+            data$$ = observer;
+        }).share();
+        this.sub = data$.subscribe();
+        /**异步事件设置 */
+        this.decorateXHR(xhr, data$$);
+        /**整合查询串 */
+        url += "?" + this.turnObjToQuery(opt);
+        /**开启xhr */
+        xhr.open('GEt', "" + config_1.default.reqURL + url, true);
+        xhr.send();
+        console.info("sending http-GET: " + url);
+        return data$;
+    };
+    HttpService.prototype.post = function (url, queryOpt) {
+        /**变量声明 */
+        var postBody;
+        var data$$;
+        var xhr = this.getXhr();
+        /**数据源 */
+        var data$ = rxjs_1.Observable.create(function (observer) {
+            data$$ = observer;
+        }).share();
+        this.sub = data$.subscribe();
+        /**异步事件设置 */
+        this.decorateXHR(xhr, data$$);
+        /**拼接查村串 */
+        // postBody = queryOpt ? this.setPostBody( queryOpt ) : '';
+        /**开启xhr */
+        xhr.open('POST', "" + config_1.default.reqURL + url, true);
+        // xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+        // xhr.send( postBody );
+        xhr.setRequestHeader("Content-type", "application/json");
+        xhr.send(JSON.stringify(queryOpt));
+        console.info("sending http-POST: " + url);
+        return data$;
+    };
+    HttpService.prototype.decorateXHR = function (xhr, data$$) {
+        var _this = this;
+        /**异步错误获取 */
+        xhr.onerror = function (err) {
+            data$$.error(err);
+            _this.closeConnection(xhr, data$$);
+        };
+        /**超时设置 */
+        xhr.timeout = this.TIMEOUT;
+        xhr.ontimeout = function ($event) {
+            data$$.error('http请求超时');
+            _this.closeConnection(xhr, data$$);
+        };
+        /**异步状态判断 */
+        xhr.onreadystatechange = function () {
+            /**变量声明 */
+            var readyState = xhr.readyState;
+            var status = "" + xhr.status;
+            /**准备就绪 */
+            if (readyState === 4) {
+                _this.sub.unsubscribe();
+                /**成功：2**、3** */
+                if (status.indexOf('2') === 0 || status.indexOf('3') === 0) {
+                    var resObj = {};
+                    try {
+                        resObj = JSON.parse("" + xhr.responseText);
+                        data$$.next(resObj);
+                    }
+                    catch (e) {
+                        data$$.error(e);
+                        data$$.complete();
+                    }
+                    /**客户端、服务端错误 */
+                }
+                else if (status.indexOf('4') === 0 || status.indexOf('0') === 0 || status.indexOf('5') === 0) {
+                    data$$.error(status);
+                    data$$.complete();
+                }
+                else {
+                    data$$.error(status);
+                    data$$.complete();
+                }
+            }
+        };
+    };
+    HttpService.prototype.closeConnection = function (xhr, data$$) {
+        xhr.abort();
+        data$$.complete();
+        this.sub.unsubscribe();
+    };
+    HttpService.prototype.setGetUrlWithQuery = function (url, query) {
+        url += '?';
+        Object.keys(query).map(function (key) {
+            url += key + "=" + query[key] + "&";
+        });
+        return url.substring(0, url.length - 1);
+    };
+    HttpService.prototype.turnObjToQuery = function (query) {
+        if (!query)
+            return '';
+        var body = '';
+        Object.keys(query).map(function (key) {
+            body += key + "=" + query[key] + "&";
+        });
+        return body;
+    };
+    return HttpService;
+}());
+exports.default = new HttpService();
+
+
+/***/ }),
+
+/***/ 1377:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
 
 exports.byteLength = byteLength
 exports.toByteArray = toByteArray
@@ -615,7 +969,7 @@ function fromByteArray (uint8) {
 
 /***/ }),
 
-/***/ 1377:
+/***/ 1378:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -629,9 +983,9 @@ function fromByteArray (uint8) {
 
 
 
-var base64 = __webpack_require__(1376)
-var ieee754 = __webpack_require__(1379)
-var isArray = __webpack_require__(1378)
+var base64 = __webpack_require__(1377)
+var ieee754 = __webpack_require__(1380)
+var isArray = __webpack_require__(1379)
 
 exports.Buffer = Buffer
 exports.SlowBuffer = SlowBuffer
@@ -2413,7 +2767,7 @@ function isnan (val) {
 
 /***/ }),
 
-/***/ 1378:
+/***/ 1379:
 /***/ (function(module, exports) {
 
 var toString = {}.toString;
@@ -2425,7 +2779,7 @@ module.exports = Array.isArray || function (arr) {
 
 /***/ }),
 
-/***/ 1379:
+/***/ 1380:
 /***/ (function(module, exports) {
 
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
@@ -2516,7 +2870,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 
 /***/ }),
 
-/***/ 1380:
+/***/ 1381:
 /***/ (function(module, exports) {
 
 
@@ -2612,136 +2966,6 @@ module.exports = function (css) {
 
 /***/ }),
 
-/***/ 1381:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var rxjs_1 = __webpack_require__(48);
-var config_1 = __webpack_require__(1382);
-var HttpService = (function () {
-    function HttpService() {
-        this.TIMEOUT = 10000;
-    }
-    HttpService.prototype.getXhr = function () {
-        return new XMLHttpRequest();
-    };
-    HttpService.prototype.get = function (url, opt) {
-        /**变量声明 */
-        var data$$;
-        var xhr = this.getXhr();
-        /**数据源 */
-        var data$ = rxjs_1.Observable.create(function (observer) {
-            data$$ = observer;
-        }).share();
-        this.sub = data$.subscribe();
-        /**异步事件设置 */
-        this.decorateXHR(xhr, data$$);
-        /**整合查询串 */
-        url += "?" + this.turnObjToQuery(opt);
-        /**开启xhr */
-        xhr.open('GEt', "" + config_1.default.reqURL + url, true);
-        xhr.send();
-        console.info("sending http-GET: " + url);
-        return data$;
-    };
-    HttpService.prototype.post = function (url, queryOpt) {
-        /**变量声明 */
-        var postBody;
-        var data$$;
-        var xhr = this.getXhr();
-        /**数据源 */
-        var data$ = rxjs_1.Observable.create(function (observer) {
-            data$$ = observer;
-        }).share();
-        this.sub = data$.subscribe();
-        /**异步事件设置 */
-        this.decorateXHR(xhr, data$$);
-        /**拼接查村串 */
-        // postBody = queryOpt ? this.setPostBody( queryOpt ) : '';
-        /**开启xhr */
-        xhr.open('POST', "" + config_1.default.reqURL + url, true);
-        // xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-        // xhr.send( postBody );
-        xhr.setRequestHeader("Content-type", "application/json");
-        xhr.send(JSON.stringify(queryOpt));
-        console.info("sending http-POST: " + url);
-        return data$;
-    };
-    HttpService.prototype.decorateXHR = function (xhr, data$$) {
-        var _this = this;
-        /**异步错误获取 */
-        xhr.onerror = function (err) {
-            data$$.error(err);
-            _this.closeConnection(xhr, data$$);
-        };
-        /**超时设置 */
-        xhr.timeout = this.TIMEOUT;
-        xhr.ontimeout = function ($event) {
-            data$$.error('http请求超时');
-            _this.closeConnection(xhr, data$$);
-        };
-        /**异步状态判断 */
-        xhr.onreadystatechange = function () {
-            /**变量声明 */
-            var readyState = xhr.readyState;
-            var status = "" + xhr.status;
-            /**准备就绪 */
-            if (readyState === 4) {
-                _this.sub.unsubscribe();
-                /**成功：2**、3** */
-                if (status.indexOf('2') === 0 || status.indexOf('3') === 0) {
-                    var resObj = {};
-                    try {
-                        resObj = JSON.parse("" + xhr.responseText);
-                        data$$.next(resObj);
-                    }
-                    catch (e) {
-                        data$$.error(e);
-                        data$$.complete();
-                    }
-                    /**客户端、服务端错误 */
-                }
-                else if (status.indexOf('4') === 0 || status.indexOf('0') === 0 || status.indexOf('5') === 0) {
-                    data$$.error(status);
-                    data$$.complete();
-                }
-                else {
-                    data$$.error(status);
-                    data$$.complete();
-                }
-            }
-        };
-    };
-    HttpService.prototype.closeConnection = function (xhr, data$$) {
-        xhr.abort();
-        data$$.complete();
-        this.sub.unsubscribe();
-    };
-    HttpService.prototype.setGetUrlWithQuery = function (url, query) {
-        url += '?';
-        Object.keys(query).map(function (key) {
-            url += key + "=" + query[key] + "&";
-        });
-        return url.substring(0, url.length - 1);
-    };
-    HttpService.prototype.turnObjToQuery = function (query) {
-        if (!query)
-            return '';
-        var body = '';
-        Object.keys(query).map(function (key) {
-            body += key + "=" + query[key] + "&";
-        });
-        return body;
-    };
-    return HttpService;
-}());
-exports.default = new HttpService();
-
-
-/***/ }),
-
 /***/ 1382:
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -2755,7 +2979,7 @@ exports.default = {
 
 /***/ }),
 
-/***/ 1383:
+/***/ 1389:
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1374)(undefined);
@@ -2763,20 +2987,20 @@ exports = module.exports = __webpack_require__(1374)(undefined);
 
 
 // module
-exports.push([module.i, ".my-img {\n  opacity: 0;\n  transition: all 0.4s ease;\n}\n.my-img.loaded {\n  opacity: 1;\n}\n", ""]);
+exports.push([module.i, ".login-page {\n  position: relative;\n  text-align: center;\n  padding-top: 100px;\n}\n.login-page .logo-block {\n  padding-bottom: 20px;\n}\n.login-page .logo-block .title {\n  font-size: 60px;\n}\n.login-page .logo-block .info {\n  font-size: 20px;\n}\n.login-page .form-block {\n  position: absolute;\n  width: 25%;\n  left: 50%;\n  transform: translate(-50%, 0);\n}\n.login-page .login-form button {\n  width: 80%;\n}\n.login-page .reset-form {\n  width: 80%;\n}\n", ""]);
 
 // exports
 
 
 /***/ }),
 
-/***/ 1384:
+/***/ 1396:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1383);
+var content = __webpack_require__(1389);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(1375)(content, {});
@@ -2785,94 +3009,8 @@ if(content.locals) module.exports = content.locals;
 if(false) {
 	// When the styles change, update the <style> tags
 	if(!content.locals) {
-		module.hot.accept("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./Image.less", function() {
-			var newContent = require("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./Image.less");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
-	module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
-
-/***/ 1385:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var React = __webpack_require__(0);
-__webpack_require__(1384);
-var Image = (function (_super) {
-    __extends(Image, _super);
-    function Image() {
-        var _this = _super.call(this) || this;
-        _this.onLoadHandler = function () {
-            _this.setState({
-                imgLoaded: true
-            });
-        };
-        _this.state = {
-            imgLoaded: false
-        };
-        return _this;
-    }
-    Image.prototype.render = function () {
-        var imgLoaded = this.state.imgLoaded;
-        var _a = this.props, src = _a.src, _b = _a.alt, alt = _b === void 0 ? '' : _b;
-        return React.createElement("img", { src: src, alt: alt, onLoad: this.onLoadHandler, className: imgLoaded ? "my-img loaded" : "my-img" });
-    };
-    return Image;
-}(React.PureComponent));
-exports.default = Image;
-
-
-/***/ }),
-
-/***/ 1390:
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(1374)(undefined);
-// imports
-
-
-// module
-exports.push([module.i, "div {\n  box-sizing: border-box;\n}\n.msg-all-page .ant-layout {\n  background: #fff;\n}\n.msg-all-page .ant-layout .ant-layout-header {\n  height: 50px;\n  line-height: 50px;\n  margin-top: 6px;\n  border-bottom: 1px solid #e9e9e9;\n  background-color: #f5f5f5 !important;\n}\n.msg-all-page .ant-layout .ant-layout-content {\n  padding-bottom: 20px;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block {\n  padding-left: 80px;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list {\n  width: 400px;\n  margin-top: 20px;\n  border-radius: 8px;\n  position: relative;\n  padding: 10px 10px 50px;\n  border: 1px solid #e9e9e9;\n  box-shadow: 0px 5px 40px 5px #d9d9d9;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list .title {\n  padding: 12px 10px;\n  border-bottom: 1px solid #e9e9e9;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list .title .ant-select-selection {\n  border: none;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list .content {\n  height: 400px;\n  overflow: scroll;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list .content ul li {\n  position: relative;\n  padding: 10px 20px 10px 70px;\n  border-bottom: 1px solid #e9e9e9;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list .content ul li img {\n  left: 10px;\n  top: 15px;\n  width: 50px;\n  height: 50px;\n  position: absolute;\n  margin: 4px 8px 0 0;\n  border-radius: 50%;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list .content ul li h3 {\n  padding-bottom: 5px;\n  color: #666;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list .content ul li p {\n  color: #666;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list .content ul li span.time {\n  position: absolute;\n  right: 25px;\n  top: 9px;\n  color: #666;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list .content::-webkit-scrollbar {\n  display: none;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list .page-content {\n  left: 0;\n  bottom: 0px;\n  width: 100%;\n  height: 40px;\n  text-align: center;\n  position: absolute;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list .page-content .ant-pagination {\n  display: inline-block;\n}\n", ""]);
-
-// exports
-
-
-/***/ }),
-
-/***/ 1397:
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(1390);
-if(typeof content === 'string') content = [[module.i, content, '']];
-// add the styles to the DOM
-var update = __webpack_require__(1375)(content, {});
-if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
-if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./msg-all.less", function() {
-			var newContent = require("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./msg-all.less");
+		module.hot.accept("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./login.less", function() {
+			var newContent = require("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./login.less");
 			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 			update(newContent);
 		});

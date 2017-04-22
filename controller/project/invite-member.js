@@ -66,7 +66,7 @@ exports.inviteMember = function (ctx) { return __awaiter(_this, void 0, void 0, 
                         type: 1 /* InviteMember */,
                         eventName: "" + index_con_1.CON.socketEvent.msg,
                         content: {
-                            msgId: _id,
+                            _id: _id,
                             content: content_1, title: title, readed: readed, meta: meta
                         }
                     });

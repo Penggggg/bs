@@ -83,7 +83,7 @@ export let InjectMsgList = ( PopoverBadge ) => {
 
             return <PopoverBadge {...this.props} count={ count } popContent={ popContent }
                         placement="bottom" 
-                        title="消息" 
+                        title="未读消息" 
                         className="my-nav-pop" />
         }
 

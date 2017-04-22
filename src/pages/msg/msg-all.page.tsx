@@ -1,7 +1,8 @@
 import './msg-all.less'
 import * as React from 'react';
+import { Subscription } from 'rxjs';
 import { RouteComponentProps } from 'react-router';
-import { Breadcrumb, Layout, Row, Col, Select, Icon, Card, Pagination   } from 'antd';
+import { Breadcrumb, Layout, Row, Col, Select, Icon, Card, Pagination, Spin, Tag } from 'antd';
 
 
 import Image from '../../component/Image/Image.component';
@@ -15,12 +16,14 @@ const { Header, Footer, Sider, Content } = Layout;
 export default class msgAllPage extends React.PureComponent< IProps, IState > {
 
     private limit = 5;
+    private sub: Subscription;
 
     constructor( ) {
         super( ); 
         this.state = {
-            total: 5,
+            total: 0,
             msgList: [ ],
+            spinning: false,
             currentPage: 1,
             msgType: '未读消息'
         }
@@ -28,9 +31,26 @@ export default class msgAllPage extends React.PureComponent< IProps, IState > {
 
     componentDidMount( ) {
         this.fetchMsgList( false, 1 );
+        this.watchSOK( );
+    }
+
+    componentWillUnmount( ) {
+        this.sub.unsubscribe( );
+    }
+
+    watchSOK( ) {
+        this.sub = msgStore.data.data$
+            .do( res => {
+                let { currentPage, msgType } = this.state;
+                this.fetchMsgList( msgType === '所有消息' ? true : false, currentPage );
+            })
+            .subscribe( )
     }
 
     fetchMsgList( readed: boolean, currentPage: number ) {
+
+        this.setState({ spinning: true })
+
         let toUID: string;
         let { limit } = this;
         let skip = ( currentPage - 1 ) * limit;
@@ -41,14 +61,15 @@ export default class msgAllPage extends React.PureComponent< IProps, IState > {
                 setTimeout(( ) => Util.cancelSubscribe( sub ), 16 );
             }).subscribe( )
 
-        http
+        let sub2 = http
             .post<API.Res.AllMsg>('/api/v1/msg-list', { toUID, readed, skip, limit } as API.Query.AllMsg)
             .do( res => {
-                let { data, count } = res;
                 this.setState({
-                    total: count,
-                    msgList: data
+                    spinning: false,
+                    total: res.count,
+                    msgList: res.data
                 })
+                setTimeout(( ) => Util.cancelSubscribe( sub2 ), 16 );
             })
             .subscribe( );
     }
@@ -72,13 +93,14 @@ export default class msgAllPage extends React.PureComponent< IProps, IState > {
 
     render( ) {
 
-        let { msgType, total, currentPage, msgList } = this.state;
+        let { msgType, total, currentPage, msgList, spinning } = this.state;
 
         let msgContent = <ul>
             {
                 msgList.map(( msg, key ) => <li key={key}>
                     <a onClick={() => console.log(key)}>
                         <Image src="/static/touxiang.png" />
+                        <Tag color="#108ee9" className="my-tag">未读</Tag> 
                         <h3>{ msg.title }</h3>
                         <p>{ msg.content }</p>
                         <span className="time">{(new Date(msg.meta.createdTime)).toLocaleString( )}</span>
@@ -107,7 +129,9 @@ export default class msgAllPage extends React.PureComponent< IProps, IState > {
                                     <span style={{ color: '#666' }}>{ total }条</span>
                                 </div>
                                 <div className="content">
-                                    { msgContent }
+                                    <Spin spinning={ spinning } tip="Loading..."  size="large">
+                                        { msgContent }
+                                    </Spin> 
                                 </div>
                                 <div className="page-content">
                                     <Pagination simple defaultCurrent={ 1 } total={ total } current={ currentPage }
@@ -126,6 +150,7 @@ export default class msgAllPage extends React.PureComponent< IProps, IState > {
 
 interface IState {
     total: number
+    spinning: boolean
     currentPage: number
     msgType: '所有消息' | '未读消息'
     msgList: Array<Partial<APP.Msg>>

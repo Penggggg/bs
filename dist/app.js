@@ -78,7 +78,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var rxjs_1 = __webpack_require__(48);
 var index_con_1 = __webpack_require__(154);
 var msg_1 = __webpack_require__(543);
-var notification_service_1 = __webpack_require__(238);
+var notification_service_1 = __webpack_require__(239);
 var Msg = (function () {
     function Msg() {
         var _this = this;
@@ -115,9 +115,9 @@ exports.default = new Msg();
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var notification_service_1 = __webpack_require__(238);
+var notification_service_1 = __webpack_require__(239);
 var rxjs_1 = __webpack_require__(48);
-var user_1 = __webpack_require__(239);
+var user_1 = __webpack_require__(238);
 var index_con_1 = __webpack_require__(154);
 var SignIn = (function () {
     function SignIn() {
@@ -404,6 +404,26 @@ var Util;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+var signIn_store_1 = __webpack_require__(1360);
+var data_store_1 = __webpack_require__(1359);
+var UserStore = (function () {
+    function UserStore() {
+        this.signIn = new signIn_store_1.default();
+        this.data = new data_store_1.default();
+    }
+    return UserStore;
+}());
+exports.default = new UserStore();
+
+
+/***/ }),
+
+/***/ 239:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
 var antd_1 = __webpack_require__(153);
 var NotificationService = (function () {
@@ -420,26 +440,6 @@ var NotificationService = (function () {
     return NotificationService;
 }());
 exports.default = new NotificationService();
-
-
-/***/ }),
-
-/***/ 239:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var signIn_store_1 = __webpack_require__(1360);
-var data_store_1 = __webpack_require__(1359);
-var UserStore = (function () {
-    function UserStore() {
-        this.signIn = new signIn_store_1.default();
-        this.data = new data_store_1.default();
-    }
-    return UserStore;
-}());
-exports.default = new UserStore();
 
 
 /***/ }),
@@ -462,7 +462,7 @@ exports.default = {
         {
             path: 'login',
             getComponent: function (nextstate, cb) {
-                __webpack_require__.e/* import() */(3).then(__webpack_require__.bind(null, 1365)).then(function (module) {
+                __webpack_require__.e/* import() */(4).then(__webpack_require__.bind(null, 1365)).then(function (module) {
                     cb(null, module.default);
                 }).catch(function (err) { return showMessage(err, './login.page'); });
             },
@@ -532,7 +532,7 @@ exports.default = {
         }, {
             path: 'msgs',
             getComponent: function (nextstate, cb) {
-                __webpack_require__.e/* import() */(4).then(__webpack_require__.bind(null, 1366)).then(function (module) {
+                __webpack_require__.e/* import() */(3).then(__webpack_require__.bind(null, 1366)).then(function (module) {
                     cb(null, module.default);
                 }).catch(function (err) { return showMessage(err, './msg-all.page'); });
             }
@@ -575,7 +575,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var index_con_1 = __webpack_require__(154);
 var local_storage_service_1 = __webpack_require__(1352);
 var socket_1 = __webpack_require__(1355);
-var user_1 = __webpack_require__(239);
+var user_1 = __webpack_require__(238);
 var project_1 = __webpack_require__(541);
 var authLoginService = (function () {
     function authLoginService() {

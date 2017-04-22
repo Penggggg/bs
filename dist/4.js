@@ -16,28 +16,73 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
+__webpack_require__(1397);
 var React = __webpack_require__(0);
 var antd_1 = __webpack_require__(153);
-__webpack_require__(1397);
+var Image_component_1 = __webpack_require__(1385);
+var index_con_1 = __webpack_require__(154);
+var user_1 = __webpack_require__(239);
+var http_service_1 = __webpack_require__(1381);
 var Header = antd_1.Layout.Header, Footer = antd_1.Layout.Footer, Sider = antd_1.Layout.Sider, Content = antd_1.Layout.Content;
 var msgAllPage = (function (_super) {
     __extends(msgAllPage, _super);
     function msgAllPage() {
         var _this = _super.call(this) || this;
-        _this.handleChange = function (noReaded) {
+        _this.limit = 5;
+        _this.handleChange = function (readed) {
             _this.setState({
-                msgType: noReaded === 'true' ? '未读消息' : '所有消息'
+                currentPage: 1,
+                msgType: readed === 'false' ? '未读消息' : '所有消息'
             });
+            _this.fetchMsgList(readed === 'false' ? false : true, 1);
+        };
+        _this.handleSelect = function (currentPage) {
+            var msgType = _this.state.msgType;
+            _this.setState({
+                currentPage: currentPage
+            });
+            _this.fetchMsgList(msgType === '未读消息' ? false : true, currentPage);
         };
         _this.state = {
+            total: 5,
+            msgList: [],
+            currentPage: 1,
             msgType: '未读消息'
         };
         return _this;
     }
     msgAllPage.prototype.componentDidMount = function () {
+        this.fetchMsgList(false, 1);
+    };
+    msgAllPage.prototype.fetchMsgList = function (readed, currentPage) {
+        var _this = this;
+        var toUID;
+        var limit = this.limit;
+        var skip = (currentPage - 1) * limit;
+        var sub = user_1.default.data.userData$
+            .do(function (user) {
+            toUID = user._id;
+            setTimeout(function () { return index_con_1.Util.cancelSubscribe(sub); }, 16);
+        }).subscribe();
+        http_service_1.default
+            .post('/api/v1/msg-list', { toUID: toUID, readed: readed, skip: skip, limit: limit })
+            .do(function (res) {
+            var data = res.data, count = res.count;
+            _this.setState({
+                total: count,
+                msgList: data
+            });
+        })
+            .subscribe();
     };
     msgAllPage.prototype.render = function () {
-        var msgType = this.state.msgType;
+        var _a = this.state, msgType = _a.msgType, total = _a.total, currentPage = _a.currentPage, msgList = _a.msgList;
+        var msgContent = React.createElement("ul", null, msgList.map(function (msg, key) { return React.createElement("li", { key: key },
+            React.createElement("a", { onClick: function () { return console.log(key); } },
+                React.createElement(Image_component_1.default, { src: "/static/touxiang.png" }),
+                React.createElement("h3", null, msg.title),
+                React.createElement("p", null, msg.content),
+                React.createElement("span", { className: "time" }, (new Date(msg.meta.createdTime)).toLocaleString()))); }));
         return React.createElement("div", { className: "msg-all-page" },
             React.createElement(antd_1.Layout, null,
                 React.createElement(Header, null,
@@ -49,16 +94,19 @@ var msgAllPage = (function (_super) {
                         React.createElement(antd_1.Col, { span: 10, className: "msg-list-block" },
                             React.createElement("div", { className: "msg-list" },
                                 React.createElement("div", { className: "title" },
-                                    React.createElement(antd_1.Select, { defaultValue: "true", style: { width: 120 }, onChange: this.handleChange },
-                                        React.createElement(antd_1.Select.Option, { value: "true" },
+                                    React.createElement(antd_1.Select, { defaultValue: "false", style: { width: 120 }, onChange: this.handleChange },
+                                        React.createElement(antd_1.Select.Option, { value: "false" },
                                             React.createElement(antd_1.Icon, { type: "tag-o" }), " ",
                                             "\u672A\u8BFB\u6D88\u606F"),
-                                        React.createElement(antd_1.Select.Option, { value: "false" },
+                                        React.createElement(antd_1.Select.Option, { value: "true" },
                                             React.createElement(antd_1.Icon, { type: "bell" }), " ",
-                                            "\u6240\u6709\u6D88\u606F"))),
-                                React.createElement("div", { className: "content" }),
+                                            "\u6240\u6709\u6D88\u606F")),
+                                    React.createElement("span", { style: { color: '#666' } },
+                                        total,
+                                        "\u6761")),
+                                React.createElement("div", { className: "content" }, msgContent),
                                 React.createElement("div", { className: "page-content" },
-                                    React.createElement(antd_1.Pagination, { defaultCurrent: 1, total: 43, defaultPageSize: 8 })))),
+                                    React.createElement(antd_1.Pagination, { simple: true, defaultCurrent: 1, total: total, current: currentPage, defaultPageSize: 5, onChange: this.handleSelect })))),
                         React.createElement(antd_1.Col, { span: 14, className: "msg-content" },
                             this.props.children,
                             "??")))));
@@ -2564,6 +2612,235 @@ module.exports = function (css) {
 
 /***/ }),
 
+/***/ 1381:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var rxjs_1 = __webpack_require__(48);
+var config_1 = __webpack_require__(1382);
+var HttpService = (function () {
+    function HttpService() {
+        this.TIMEOUT = 10000;
+    }
+    HttpService.prototype.getXhr = function () {
+        return new XMLHttpRequest();
+    };
+    HttpService.prototype.get = function (url, opt) {
+        /**变量声明 */
+        var data$$;
+        var xhr = this.getXhr();
+        /**数据源 */
+        var data$ = rxjs_1.Observable.create(function (observer) {
+            data$$ = observer;
+        }).share();
+        this.sub = data$.subscribe();
+        /**异步事件设置 */
+        this.decorateXHR(xhr, data$$);
+        /**整合查询串 */
+        url += "?" + this.turnObjToQuery(opt);
+        /**开启xhr */
+        xhr.open('GEt', "" + config_1.default.reqURL + url, true);
+        xhr.send();
+        console.info("sending http-GET: " + url);
+        return data$;
+    };
+    HttpService.prototype.post = function (url, queryOpt) {
+        /**变量声明 */
+        var postBody;
+        var data$$;
+        var xhr = this.getXhr();
+        /**数据源 */
+        var data$ = rxjs_1.Observable.create(function (observer) {
+            data$$ = observer;
+        }).share();
+        this.sub = data$.subscribe();
+        /**异步事件设置 */
+        this.decorateXHR(xhr, data$$);
+        /**拼接查村串 */
+        // postBody = queryOpt ? this.setPostBody( queryOpt ) : '';
+        /**开启xhr */
+        xhr.open('POST', "" + config_1.default.reqURL + url, true);
+        // xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+        // xhr.send( postBody );
+        xhr.setRequestHeader("Content-type", "application/json");
+        xhr.send(JSON.stringify(queryOpt));
+        console.info("sending http-POST: " + url);
+        return data$;
+    };
+    HttpService.prototype.decorateXHR = function (xhr, data$$) {
+        var _this = this;
+        /**异步错误获取 */
+        xhr.onerror = function (err) {
+            data$$.error(err);
+            _this.closeConnection(xhr, data$$);
+        };
+        /**超时设置 */
+        xhr.timeout = this.TIMEOUT;
+        xhr.ontimeout = function ($event) {
+            data$$.error('http请求超时');
+            _this.closeConnection(xhr, data$$);
+        };
+        /**异步状态判断 */
+        xhr.onreadystatechange = function () {
+            /**变量声明 */
+            var readyState = xhr.readyState;
+            var status = "" + xhr.status;
+            /**准备就绪 */
+            if (readyState === 4) {
+                _this.sub.unsubscribe();
+                /**成功：2**、3** */
+                if (status.indexOf('2') === 0 || status.indexOf('3') === 0) {
+                    var resObj = {};
+                    try {
+                        resObj = JSON.parse("" + xhr.responseText);
+                        data$$.next(resObj);
+                    }
+                    catch (e) {
+                        data$$.error(e);
+                        data$$.complete();
+                    }
+                    /**客户端、服务端错误 */
+                }
+                else if (status.indexOf('4') === 0 || status.indexOf('0') === 0 || status.indexOf('5') === 0) {
+                    data$$.error(status);
+                    data$$.complete();
+                }
+                else {
+                    data$$.error(status);
+                    data$$.complete();
+                }
+            }
+        };
+    };
+    HttpService.prototype.closeConnection = function (xhr, data$$) {
+        xhr.abort();
+        data$$.complete();
+        this.sub.unsubscribe();
+    };
+    HttpService.prototype.setGetUrlWithQuery = function (url, query) {
+        url += '?';
+        Object.keys(query).map(function (key) {
+            url += key + "=" + query[key] + "&";
+        });
+        return url.substring(0, url.length - 1);
+    };
+    HttpService.prototype.turnObjToQuery = function (query) {
+        if (!query)
+            return '';
+        var body = '';
+        Object.keys(query).map(function (key) {
+            body += key + "=" + query[key] + "&";
+        });
+        return body;
+    };
+    return HttpService;
+}());
+exports.default = new HttpService();
+
+
+/***/ }),
+
+/***/ 1382:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = {
+    reqURL:  true ? '' : ''
+};
+
+
+/***/ }),
+
+/***/ 1383:
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(1374)(undefined);
+// imports
+
+
+// module
+exports.push([module.i, ".my-img {\n  opacity: 0;\n  transition: all 0.4s ease;\n}\n.my-img.loaded {\n  opacity: 1;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ 1384:
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(1383);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(1375)(content, {});
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./Image.less", function() {
+			var newContent = require("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./Image.less");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+
+/***/ 1385:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var React = __webpack_require__(0);
+__webpack_require__(1384);
+var Image = (function (_super) {
+    __extends(Image, _super);
+    function Image() {
+        var _this = _super.call(this) || this;
+        _this.onLoadHandler = function () {
+            _this.setState({
+                imgLoaded: true
+            });
+        };
+        _this.state = {
+            imgLoaded: false
+        };
+        return _this;
+    }
+    Image.prototype.render = function () {
+        var imgLoaded = this.state.imgLoaded;
+        var _a = this.props, src = _a.src, _b = _a.alt, alt = _b === void 0 ? '' : _b;
+        return React.createElement("img", { src: src, alt: alt, onLoad: this.onLoadHandler, className: imgLoaded ? "my-img loaded" : "my-img" });
+    };
+    return Image;
+}(React.PureComponent));
+exports.default = Image;
+
+
+/***/ }),
+
 /***/ 1390:
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -2572,7 +2849,7 @@ exports = module.exports = __webpack_require__(1374)(undefined);
 
 
 // module
-exports.push([module.i, "div {\n  box-sizing: border-box;\n}\n.msg-all-page .ant-layout {\n  background: #fff;\n}\n.msg-all-page .ant-layout .ant-layout-header {\n  height: 50px;\n  line-height: 50px;\n  margin-top: 6px;\n  border-bottom: 1px solid #e9e9e9;\n  background-color: #f5f5f5 !important;\n}\n.msg-all-page .ant-layout .ant-layout-content {\n  padding-bottom: 20px;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block {\n  padding-left: 80px;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list {\n  width: 400px;\n  margin-top: 20px;\n  border-radius: 8px;\n  position: relative;\n  padding: 10px 10px 50px;\n  border: 1px solid #e9e9e9;\n  box-shadow: 0px 5px 40px 5px #d9d9d9;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list .title {\n  padding: 12px 10px;\n  border-bottom: 1px solid #e9e9e9;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list .title h3 {\n  font-size: 18px;\n  color: #666;\n  font-weight: 500;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list .content {\n  height: 400px;\n  overflow: scroll;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list .content::-webkit-scrollbar {\n  display: none;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list .page-content {\n  position: absolute;\n  left: 0;\n  bottom: 5px;\n  width: 100%;\n  height: 40px;\n  padding-left: 40px;\n}\n", ""]);
+exports.push([module.i, "div {\n  box-sizing: border-box;\n}\n.msg-all-page .ant-layout {\n  background: #fff;\n}\n.msg-all-page .ant-layout .ant-layout-header {\n  height: 50px;\n  line-height: 50px;\n  margin-top: 6px;\n  border-bottom: 1px solid #e9e9e9;\n  background-color: #f5f5f5 !important;\n}\n.msg-all-page .ant-layout .ant-layout-content {\n  padding-bottom: 20px;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block {\n  padding-left: 80px;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list {\n  width: 400px;\n  margin-top: 20px;\n  border-radius: 8px;\n  position: relative;\n  padding: 10px 10px 50px;\n  border: 1px solid #e9e9e9;\n  box-shadow: 0px 5px 40px 5px #d9d9d9;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list .title {\n  padding: 12px 10px;\n  border-bottom: 1px solid #e9e9e9;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list .title .ant-select-selection {\n  border: none;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list .content {\n  height: 400px;\n  overflow: scroll;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list .content ul li {\n  position: relative;\n  padding: 10px 20px 10px 70px;\n  border-bottom: 1px solid #e9e9e9;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list .content ul li img {\n  left: 10px;\n  top: 15px;\n  width: 50px;\n  height: 50px;\n  position: absolute;\n  margin: 4px 8px 0 0;\n  border-radius: 50%;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list .content ul li h3 {\n  padding-bottom: 5px;\n  color: #666;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list .content ul li p {\n  color: #666;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list .content ul li span.time {\n  position: absolute;\n  right: 25px;\n  top: 9px;\n  color: #666;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list .content::-webkit-scrollbar {\n  display: none;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list .page-content {\n  left: 0;\n  bottom: 0px;\n  width: 100%;\n  height: 40px;\n  text-align: center;\n  position: absolute;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list .page-content .ant-pagination {\n  display: inline-block;\n}\n", ""]);
 
 // exports
 

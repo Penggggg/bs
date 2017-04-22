@@ -391,7 +391,7 @@ var Util;
             subscritions.map(function (sub) {
                 sub.unsubscribe();
             });
-        }, 16);
+        }, 300);
     };
 })(Util = exports.Util || (exports.Util = {}));
 

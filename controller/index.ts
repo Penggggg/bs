@@ -37,7 +37,7 @@ export default ( router ) => {
 
 
     /**消息模块：查询所有符合条件的消息 */
-    router.get('/api/v1/msg-list', fetchAllMsgList );
+    router.post('/api/v1/msg-list', fetchAllMsgList );
     /**消息模块：所有消息的伪查询 */
     router.post('/api/v1/msg-list-fade', fetchFadeMsgList )
 

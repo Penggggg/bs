@@ -35,7 +35,7 @@ export namespace Util {
             subscritions.map(( sub ) => {
                 sub.unsubscribe( );
             })
-        }, 16 );
+        }, 300 );
     }
 
 }

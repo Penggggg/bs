@@ -1,6 +1,6 @@
 webpackJsonp([2],{
 
-/***/ 1368:
+/***/ 1369:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -17,14 +17,14 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
-var http_service_1 = __webpack_require__(1375);
+var http_service_1 = __webpack_require__(1381);
 var auth_login_service_1 = __webpack_require__(542);
 var project_1 = __webpack_require__(541);
 var user_1 = __webpack_require__(239);
 var notification_service_1 = __webpack_require__(238);
 var antd_1 = __webpack_require__(153);
-var Image_component_1 = __webpack_require__(1384);
-__webpack_require__(1395);
+var Image_component_1 = __webpack_require__(1385);
+__webpack_require__(1398);
 var index_con_1 = __webpack_require__(154);
 var FormItem = antd_1.Form.Item;
 var ProjectAllPage = (function (_super) {
@@ -207,7 +207,7 @@ exports.default = antd_1.Form.create()(ProjectAllPage);
 
 /***/ }),
 
-/***/ 1373:
+/***/ 1374:
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(Buffer) {/*
@@ -290,7 +290,7 @@ function toComment(sourceMap) {
 
 /***/ }),
 
-/***/ 1374:
+/***/ 1375:
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -578,136 +578,6 @@ function updateLink(linkElement, options, obj) {
 	if(oldSrc)
 		URL.revokeObjectURL(oldSrc);
 }
-
-
-/***/ }),
-
-/***/ 1375:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var rxjs_1 = __webpack_require__(48);
-var config_1 = __webpack_require__(1381);
-var HttpService = (function () {
-    function HttpService() {
-        this.TIMEOUT = 10000;
-    }
-    HttpService.prototype.getXhr = function () {
-        return new XMLHttpRequest();
-    };
-    HttpService.prototype.get = function (url, opt) {
-        /**变量声明 */
-        var data$$;
-        var xhr = this.getXhr();
-        /**数据源 */
-        var data$ = rxjs_1.Observable.create(function (observer) {
-            data$$ = observer;
-        }).share();
-        this.sub = data$.subscribe();
-        /**异步事件设置 */
-        this.decorateXHR(xhr, data$$);
-        /**整合查询串 */
-        url += "?" + this.turnObjToQuery(opt);
-        /**开启xhr */
-        xhr.open('GEt', "" + config_1.default.reqURL + url, true);
-        xhr.send();
-        console.info("sending http-GET: " + url);
-        return data$;
-    };
-    HttpService.prototype.post = function (url, queryOpt) {
-        /**变量声明 */
-        var postBody;
-        var data$$;
-        var xhr = this.getXhr();
-        /**数据源 */
-        var data$ = rxjs_1.Observable.create(function (observer) {
-            data$$ = observer;
-        }).share();
-        this.sub = data$.subscribe();
-        /**异步事件设置 */
-        this.decorateXHR(xhr, data$$);
-        /**拼接查村串 */
-        // postBody = queryOpt ? this.setPostBody( queryOpt ) : '';
-        /**开启xhr */
-        xhr.open('POST', "" + config_1.default.reqURL + url, true);
-        // xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-        // xhr.send( postBody );
-        xhr.setRequestHeader("Content-type", "application/json");
-        xhr.send(JSON.stringify(queryOpt));
-        console.info("sending http-POST: " + url);
-        return data$;
-    };
-    HttpService.prototype.decorateXHR = function (xhr, data$$) {
-        var _this = this;
-        /**异步错误获取 */
-        xhr.onerror = function (err) {
-            data$$.error(err);
-            _this.closeConnection(xhr, data$$);
-        };
-        /**超时设置 */
-        xhr.timeout = this.TIMEOUT;
-        xhr.ontimeout = function ($event) {
-            data$$.error('http请求超时');
-            _this.closeConnection(xhr, data$$);
-        };
-        /**异步状态判断 */
-        xhr.onreadystatechange = function () {
-            /**变量声明 */
-            var readyState = xhr.readyState;
-            var status = "" + xhr.status;
-            /**准备就绪 */
-            if (readyState === 4) {
-                _this.sub.unsubscribe();
-                /**成功：2**、3** */
-                if (status.indexOf('2') === 0 || status.indexOf('3') === 0) {
-                    var resObj = {};
-                    try {
-                        resObj = JSON.parse("" + xhr.responseText);
-                        data$$.next(resObj);
-                    }
-                    catch (e) {
-                        data$$.error(e);
-                        data$$.complete();
-                    }
-                    /**客户端、服务端错误 */
-                }
-                else if (status.indexOf('4') === 0 || status.indexOf('0') === 0 || status.indexOf('5') === 0) {
-                    data$$.error(status);
-                    data$$.complete();
-                }
-                else {
-                    data$$.error(status);
-                    data$$.complete();
-                }
-            }
-        };
-    };
-    HttpService.prototype.closeConnection = function (xhr, data$$) {
-        xhr.abort();
-        data$$.complete();
-        this.sub.unsubscribe();
-    };
-    HttpService.prototype.setGetUrlWithQuery = function (url, query) {
-        url += '?';
-        Object.keys(query).map(function (key) {
-            url += key + "=" + query[key] + "&";
-        });
-        return url.substring(0, url.length - 1);
-    };
-    HttpService.prototype.turnObjToQuery = function (query) {
-        if (!query)
-            return '';
-        var body = '';
-        Object.keys(query).map(function (key) {
-            body += key + "=" + query[key] + "&";
-        });
-        return body;
-    };
-    return HttpService;
-}());
-exports.default = new HttpService();
 
 
 /***/ }),
@@ -2837,9 +2707,126 @@ module.exports = function (css) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = {
-    reqURL:  true ? '' : ''
-};
+var rxjs_1 = __webpack_require__(48);
+var config_1 = __webpack_require__(1382);
+var HttpService = (function () {
+    function HttpService() {
+        this.TIMEOUT = 10000;
+    }
+    HttpService.prototype.getXhr = function () {
+        return new XMLHttpRequest();
+    };
+    HttpService.prototype.get = function (url, opt) {
+        /**变量声明 */
+        var data$$;
+        var xhr = this.getXhr();
+        /**数据源 */
+        var data$ = rxjs_1.Observable.create(function (observer) {
+            data$$ = observer;
+        }).share();
+        this.sub = data$.subscribe();
+        /**异步事件设置 */
+        this.decorateXHR(xhr, data$$);
+        /**整合查询串 */
+        url += "?" + this.turnObjToQuery(opt);
+        /**开启xhr */
+        xhr.open('GEt', "" + config_1.default.reqURL + url, true);
+        xhr.send();
+        console.info("sending http-GET: " + url);
+        return data$;
+    };
+    HttpService.prototype.post = function (url, queryOpt) {
+        /**变量声明 */
+        var postBody;
+        var data$$;
+        var xhr = this.getXhr();
+        /**数据源 */
+        var data$ = rxjs_1.Observable.create(function (observer) {
+            data$$ = observer;
+        }).share();
+        this.sub = data$.subscribe();
+        /**异步事件设置 */
+        this.decorateXHR(xhr, data$$);
+        /**拼接查村串 */
+        // postBody = queryOpt ? this.setPostBody( queryOpt ) : '';
+        /**开启xhr */
+        xhr.open('POST', "" + config_1.default.reqURL + url, true);
+        // xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+        // xhr.send( postBody );
+        xhr.setRequestHeader("Content-type", "application/json");
+        xhr.send(JSON.stringify(queryOpt));
+        console.info("sending http-POST: " + url);
+        return data$;
+    };
+    HttpService.prototype.decorateXHR = function (xhr, data$$) {
+        var _this = this;
+        /**异步错误获取 */
+        xhr.onerror = function (err) {
+            data$$.error(err);
+            _this.closeConnection(xhr, data$$);
+        };
+        /**超时设置 */
+        xhr.timeout = this.TIMEOUT;
+        xhr.ontimeout = function ($event) {
+            data$$.error('http请求超时');
+            _this.closeConnection(xhr, data$$);
+        };
+        /**异步状态判断 */
+        xhr.onreadystatechange = function () {
+            /**变量声明 */
+            var readyState = xhr.readyState;
+            var status = "" + xhr.status;
+            /**准备就绪 */
+            if (readyState === 4) {
+                _this.sub.unsubscribe();
+                /**成功：2**、3** */
+                if (status.indexOf('2') === 0 || status.indexOf('3') === 0) {
+                    var resObj = {};
+                    try {
+                        resObj = JSON.parse("" + xhr.responseText);
+                        data$$.next(resObj);
+                    }
+                    catch (e) {
+                        data$$.error(e);
+                        data$$.complete();
+                    }
+                    /**客户端、服务端错误 */
+                }
+                else if (status.indexOf('4') === 0 || status.indexOf('0') === 0 || status.indexOf('5') === 0) {
+                    data$$.error(status);
+                    data$$.complete();
+                }
+                else {
+                    data$$.error(status);
+                    data$$.complete();
+                }
+            }
+        };
+    };
+    HttpService.prototype.closeConnection = function (xhr, data$$) {
+        xhr.abort();
+        data$$.complete();
+        this.sub.unsubscribe();
+    };
+    HttpService.prototype.setGetUrlWithQuery = function (url, query) {
+        url += '?';
+        Object.keys(query).map(function (key) {
+            url += key + "=" + query[key] + "&";
+        });
+        return url.substring(0, url.length - 1);
+    };
+    HttpService.prototype.turnObjToQuery = function (query) {
+        if (!query)
+            return '';
+        var body = '';
+        Object.keys(query).map(function (key) {
+            body += key + "=" + query[key] + "&";
+        });
+        return body;
+    };
+    return HttpService;
+}());
+exports.default = new HttpService();
 
 
 /***/ }),
@@ -2847,7 +2834,20 @@ exports.default = {
 /***/ 1382:
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(1373)(undefined);
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = {
+    reqURL:  true ? '' : ''
+};
+
+
+/***/ }),
+
+/***/ 1383:
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(1374)(undefined);
 // imports
 
 
@@ -2859,16 +2859,16 @@ exports.push([module.i, ".my-img {\n  opacity: 0;\n  transition: all 0.4s ease;\
 
 /***/ }),
 
-/***/ 1383:
+/***/ 1384:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1382);
+var content = __webpack_require__(1383);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(1374)(content, {});
+var update = __webpack_require__(1375)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -2886,7 +2886,7 @@ if(false) {
 
 /***/ }),
 
-/***/ 1384:
+/***/ 1385:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2903,7 +2903,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
-__webpack_require__(1383);
+__webpack_require__(1384);
 var Image = (function (_super) {
     __extends(Image, _super);
     function Image() {
@@ -2930,10 +2930,10 @@ exports.default = Image;
 
 /***/ }),
 
-/***/ 1389:
+/***/ 1391:
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(1373)(undefined);
+exports = module.exports = __webpack_require__(1374)(undefined);
 // imports
 
 
@@ -2945,16 +2945,16 @@ exports.push([module.i, "/**2个大block */\n/**标题 */\n/**展示区 */\n/**c
 
 /***/ }),
 
-/***/ 1395:
+/***/ 1398:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1389);
+var content = __webpack_require__(1391);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(1374)(content, {});
+var update = __webpack_require__(1375)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {

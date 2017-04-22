@@ -1,4 +1,4 @@
-webpackJsonp([9],{
+webpackJsonp([10],{
 
 /***/ 1351:
 /***/ (function(module, exports, __webpack_require__) {
@@ -454,7 +454,7 @@ var auth_login_service_1 = __webpack_require__(542);
 exports.default = {
     path: '/',
     getComponent: function (nextstate, cb) {
-        __webpack_require__.e/* import() */(12).then(__webpack_require__.bind(null, 1364)).then(function (module) {
+        __webpack_require__.e/* import() */(1).then(__webpack_require__.bind(null, 1364)).then(function (module) {
             cb(null, module.default);
         }).catch(function (err) { return showMessage(err, './app.page'); });
     },
@@ -462,7 +462,7 @@ exports.default = {
         {
             path: 'login',
             getComponent: function (nextstate, cb) {
-                __webpack_require__.e/* import() */(14).then(__webpack_require__.bind(null, 1365)).then(function (module) {
+                __webpack_require__.e/* import() */(3).then(__webpack_require__.bind(null, 1365)).then(function (module) {
                     cb(null, module.default);
                 }).catch(function (err) { return showMessage(err, './login.page'); });
             },
@@ -470,7 +470,7 @@ exports.default = {
             path: 'projects',
             onEnter: auth_login_service_1.default.requireLogin,
             getComponent: function (nextstate, cb) {
-                __webpack_require__.e/* import() */(13).then(__webpack_require__.bind(null, 1368)).then(function (module) {
+                __webpack_require__.e/* import() */(2).then(__webpack_require__.bind(null, 1369)).then(function (module) {
                     cb(null, module.default);
                 }).catch(function (err) { return showMessage(err, './project-all.page'); });
             }
@@ -478,7 +478,7 @@ exports.default = {
             path: 'project/:id',
             onEnter: auth_login_service_1.default.requireLogin,
             getComponent: function (nextstate, cb) {
-                __webpack_require__.e/* import() */(11).then(__webpack_require__.bind(null, 1369)).then(function (module) {
+                __webpack_require__.e/* import() */(0).then(__webpack_require__.bind(null, 1370)).then(function (module) {
                     cb(null, module.default);
                 }).catch(function (err) { return showMessage(err, './project.page'); });
             },
@@ -487,7 +487,7 @@ exports.default = {
                     path: 'tasks',
                     onEnter: auth_login_service_1.default.requireLogin,
                     getComponent: function (nextstate, cb) {
-                        __webpack_require__.e/* import() */(15).then(__webpack_require__.bind(null, 1372)).then(function (module) {
+                        __webpack_require__.e/* import() */(5).then(__webpack_require__.bind(null, 1373)).then(function (module) {
                             cb(null, module.default);
                         }).catch(function (err) { return showMessage(err, './project-tasks.page'); });
                     }
@@ -496,7 +496,7 @@ exports.default = {
                     path: 'shares',
                     onEnter: auth_login_service_1.default.requireLogin,
                     getComponent: function (nextstate, cb) {
-                        __webpack_require__.e/* import() */(16).then(__webpack_require__.bind(null, 1371)).then(function (module) {
+                        __webpack_require__.e/* import() */(6).then(__webpack_require__.bind(null, 1372)).then(function (module) {
                             cb(null, module.default);
                         }).catch(function (err) { return showMessage(err, './project-shares.page'); });
                     }
@@ -505,7 +505,7 @@ exports.default = {
                     path: 'chats',
                     onEnter: auth_login_service_1.default.requireLogin,
                     getComponent: function (nextstate, cb) {
-                        __webpack_require__.e/* import() */(19).then(__webpack_require__.bind(null, 1366)).then(function (module) {
+                        __webpack_require__.e/* import() */(9).then(__webpack_require__.bind(null, 1367)).then(function (module) {
                             cb(null, module.default);
                         }).catch(function (err) { return showMessage(err, './project-chat.page'); });
                     }
@@ -514,7 +514,7 @@ exports.default = {
                     path: 'files',
                     onEnter: auth_login_service_1.default.requireLogin,
                     getComponent: function (nextstate, cb) {
-                        __webpack_require__.e/* import() */(18).then(__webpack_require__.bind(null, 1367)).then(function (module) {
+                        __webpack_require__.e/* import() */(8).then(__webpack_require__.bind(null, 1368)).then(function (module) {
                             cb(null, module.default);
                         }).catch(function (err) { return showMessage(err, './project-files.page'); });
                     }
@@ -523,7 +523,7 @@ exports.default = {
                     path: 'schedules',
                     onEnter: auth_login_service_1.default.requireLogin,
                     getComponent: function (nextstate, cb) {
-                        __webpack_require__.e/* import() */(17).then(__webpack_require__.bind(null, 1370)).then(function (module) {
+                        __webpack_require__.e/* import() */(7).then(__webpack_require__.bind(null, 1371)).then(function (module) {
                             cb(null, module.default);
                         }).catch(function (err) { return showMessage(err, './project-schedules.page'); });
                     }
@@ -532,7 +532,7 @@ exports.default = {
         }, {
             path: 'msgs',
             getComponent: function (nextstate, cb) {
-                __webpack_require__.e/* import() */(20).then(__webpack_require__.bind(null, 1406)).then(function (module) {
+                __webpack_require__.e/* import() */(4).then(__webpack_require__.bind(null, 1366)).then(function (module) {
                     cb(null, module.default);
                 }).catch(function (err) { return showMessage(err, './msg-all.page'); });
             }

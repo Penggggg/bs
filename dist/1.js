@@ -17,10 +17,10 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
-var msgListPopBadge_container_1 = __webpack_require__(1400);
+var msgListPopBadge_container_1 = __webpack_require__(1403);
 var antd_1 = __webpack_require__(153);
 var auth_login_service_1 = __webpack_require__(542);
-__webpack_require__(1393);
+__webpack_require__(1395);
 var Header = antd_1.Layout.Header, Content = antd_1.Layout.Content, Footer = antd_1.Layout.Footer;
 var AppPage = (function (_super) {
     __extends(AppPage, _super);
@@ -87,7 +87,7 @@ exports.default = AppPage;
 
 /***/ }),
 
-/***/ 1373:
+/***/ 1374:
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(Buffer) {/*
@@ -170,7 +170,7 @@ function toComment(sourceMap) {
 
 /***/ }),
 
-/***/ 1374:
+/***/ 1375:
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -458,136 +458,6 @@ function updateLink(linkElement, options, obj) {
 	if(oldSrc)
 		URL.revokeObjectURL(oldSrc);
 }
-
-
-/***/ }),
-
-/***/ 1375:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var rxjs_1 = __webpack_require__(48);
-var config_1 = __webpack_require__(1381);
-var HttpService = (function () {
-    function HttpService() {
-        this.TIMEOUT = 10000;
-    }
-    HttpService.prototype.getXhr = function () {
-        return new XMLHttpRequest();
-    };
-    HttpService.prototype.get = function (url, opt) {
-        /**变量声明 */
-        var data$$;
-        var xhr = this.getXhr();
-        /**数据源 */
-        var data$ = rxjs_1.Observable.create(function (observer) {
-            data$$ = observer;
-        }).share();
-        this.sub = data$.subscribe();
-        /**异步事件设置 */
-        this.decorateXHR(xhr, data$$);
-        /**整合查询串 */
-        url += "?" + this.turnObjToQuery(opt);
-        /**开启xhr */
-        xhr.open('GEt', "" + config_1.default.reqURL + url, true);
-        xhr.send();
-        console.info("sending http-GET: " + url);
-        return data$;
-    };
-    HttpService.prototype.post = function (url, queryOpt) {
-        /**变量声明 */
-        var postBody;
-        var data$$;
-        var xhr = this.getXhr();
-        /**数据源 */
-        var data$ = rxjs_1.Observable.create(function (observer) {
-            data$$ = observer;
-        }).share();
-        this.sub = data$.subscribe();
-        /**异步事件设置 */
-        this.decorateXHR(xhr, data$$);
-        /**拼接查村串 */
-        // postBody = queryOpt ? this.setPostBody( queryOpt ) : '';
-        /**开启xhr */
-        xhr.open('POST', "" + config_1.default.reqURL + url, true);
-        // xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-        // xhr.send( postBody );
-        xhr.setRequestHeader("Content-type", "application/json");
-        xhr.send(JSON.stringify(queryOpt));
-        console.info("sending http-POST: " + url);
-        return data$;
-    };
-    HttpService.prototype.decorateXHR = function (xhr, data$$) {
-        var _this = this;
-        /**异步错误获取 */
-        xhr.onerror = function (err) {
-            data$$.error(err);
-            _this.closeConnection(xhr, data$$);
-        };
-        /**超时设置 */
-        xhr.timeout = this.TIMEOUT;
-        xhr.ontimeout = function ($event) {
-            data$$.error('http请求超时');
-            _this.closeConnection(xhr, data$$);
-        };
-        /**异步状态判断 */
-        xhr.onreadystatechange = function () {
-            /**变量声明 */
-            var readyState = xhr.readyState;
-            var status = "" + xhr.status;
-            /**准备就绪 */
-            if (readyState === 4) {
-                _this.sub.unsubscribe();
-                /**成功：2**、3** */
-                if (status.indexOf('2') === 0 || status.indexOf('3') === 0) {
-                    var resObj = {};
-                    try {
-                        resObj = JSON.parse("" + xhr.responseText);
-                        data$$.next(resObj);
-                    }
-                    catch (e) {
-                        data$$.error(e);
-                        data$$.complete();
-                    }
-                    /**客户端、服务端错误 */
-                }
-                else if (status.indexOf('4') === 0 || status.indexOf('0') === 0 || status.indexOf('5') === 0) {
-                    data$$.error(status);
-                    data$$.complete();
-                }
-                else {
-                    data$$.error(status);
-                    data$$.complete();
-                }
-            }
-        };
-    };
-    HttpService.prototype.closeConnection = function (xhr, data$$) {
-        xhr.abort();
-        data$$.complete();
-        this.sub.unsubscribe();
-    };
-    HttpService.prototype.setGetUrlWithQuery = function (url, query) {
-        url += '?';
-        Object.keys(query).map(function (key) {
-            url += key + "=" + query[key] + "&";
-        });
-        return url.substring(0, url.length - 1);
-    };
-    HttpService.prototype.turnObjToQuery = function (query) {
-        if (!query)
-            return '';
-        var body = '';
-        Object.keys(query).map(function (key) {
-            body += key + "=" + query[key] + "&";
-        });
-        return body;
-    };
-    return HttpService;
-}());
-exports.default = new HttpService();
 
 
 /***/ }),
@@ -2717,9 +2587,126 @@ module.exports = function (css) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = {
-    reqURL:  true ? '' : ''
-};
+var rxjs_1 = __webpack_require__(48);
+var config_1 = __webpack_require__(1382);
+var HttpService = (function () {
+    function HttpService() {
+        this.TIMEOUT = 10000;
+    }
+    HttpService.prototype.getXhr = function () {
+        return new XMLHttpRequest();
+    };
+    HttpService.prototype.get = function (url, opt) {
+        /**变量声明 */
+        var data$$;
+        var xhr = this.getXhr();
+        /**数据源 */
+        var data$ = rxjs_1.Observable.create(function (observer) {
+            data$$ = observer;
+        }).share();
+        this.sub = data$.subscribe();
+        /**异步事件设置 */
+        this.decorateXHR(xhr, data$$);
+        /**整合查询串 */
+        url += "?" + this.turnObjToQuery(opt);
+        /**开启xhr */
+        xhr.open('GEt', "" + config_1.default.reqURL + url, true);
+        xhr.send();
+        console.info("sending http-GET: " + url);
+        return data$;
+    };
+    HttpService.prototype.post = function (url, queryOpt) {
+        /**变量声明 */
+        var postBody;
+        var data$$;
+        var xhr = this.getXhr();
+        /**数据源 */
+        var data$ = rxjs_1.Observable.create(function (observer) {
+            data$$ = observer;
+        }).share();
+        this.sub = data$.subscribe();
+        /**异步事件设置 */
+        this.decorateXHR(xhr, data$$);
+        /**拼接查村串 */
+        // postBody = queryOpt ? this.setPostBody( queryOpt ) : '';
+        /**开启xhr */
+        xhr.open('POST', "" + config_1.default.reqURL + url, true);
+        // xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+        // xhr.send( postBody );
+        xhr.setRequestHeader("Content-type", "application/json");
+        xhr.send(JSON.stringify(queryOpt));
+        console.info("sending http-POST: " + url);
+        return data$;
+    };
+    HttpService.prototype.decorateXHR = function (xhr, data$$) {
+        var _this = this;
+        /**异步错误获取 */
+        xhr.onerror = function (err) {
+            data$$.error(err);
+            _this.closeConnection(xhr, data$$);
+        };
+        /**超时设置 */
+        xhr.timeout = this.TIMEOUT;
+        xhr.ontimeout = function ($event) {
+            data$$.error('http请求超时');
+            _this.closeConnection(xhr, data$$);
+        };
+        /**异步状态判断 */
+        xhr.onreadystatechange = function () {
+            /**变量声明 */
+            var readyState = xhr.readyState;
+            var status = "" + xhr.status;
+            /**准备就绪 */
+            if (readyState === 4) {
+                _this.sub.unsubscribe();
+                /**成功：2**、3** */
+                if (status.indexOf('2') === 0 || status.indexOf('3') === 0) {
+                    var resObj = {};
+                    try {
+                        resObj = JSON.parse("" + xhr.responseText);
+                        data$$.next(resObj);
+                    }
+                    catch (e) {
+                        data$$.error(e);
+                        data$$.complete();
+                    }
+                    /**客户端、服务端错误 */
+                }
+                else if (status.indexOf('4') === 0 || status.indexOf('0') === 0 || status.indexOf('5') === 0) {
+                    data$$.error(status);
+                    data$$.complete();
+                }
+                else {
+                    data$$.error(status);
+                    data$$.complete();
+                }
+            }
+        };
+    };
+    HttpService.prototype.closeConnection = function (xhr, data$$) {
+        xhr.abort();
+        data$$.complete();
+        this.sub.unsubscribe();
+    };
+    HttpService.prototype.setGetUrlWithQuery = function (url, query) {
+        url += '?';
+        Object.keys(query).map(function (key) {
+            url += key + "=" + query[key] + "&";
+        });
+        return url.substring(0, url.length - 1);
+    };
+    HttpService.prototype.turnObjToQuery = function (query) {
+        if (!query)
+            return '';
+        var body = '';
+        Object.keys(query).map(function (key) {
+            body += key + "=" + query[key] + "&";
+        });
+        return body;
+    };
+    return HttpService;
+}());
+exports.default = new HttpService();
 
 
 /***/ }),
@@ -2727,7 +2714,20 @@ exports.default = {
 /***/ 1382:
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(1373)(undefined);
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = {
+    reqURL:  true ? '' : ''
+};
+
+
+/***/ }),
+
+/***/ 1383:
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(1374)(undefined);
 // imports
 
 
@@ -2739,16 +2739,16 @@ exports.push([module.i, ".my-img {\n  opacity: 0;\n  transition: all 0.4s ease;\
 
 /***/ }),
 
-/***/ 1383:
+/***/ 1384:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1382);
+var content = __webpack_require__(1383);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(1374)(content, {});
+var update = __webpack_require__(1375)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -2766,7 +2766,7 @@ if(false) {
 
 /***/ }),
 
-/***/ 1384:
+/***/ 1385:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2783,7 +2783,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
-__webpack_require__(1383);
+__webpack_require__(1384);
 var Image = (function (_super) {
     __extends(Image, _super);
     function Image() {
@@ -2810,10 +2810,10 @@ exports.default = Image;
 
 /***/ }),
 
-/***/ 1385:
+/***/ 1386:
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(1373)(undefined);
+exports = module.exports = __webpack_require__(1374)(undefined);
 // imports
 
 
@@ -2825,10 +2825,10 @@ exports.push([module.i, ".my-nav-pop {\n  width: 320px;\n  top: 65px !important;
 
 /***/ }),
 
-/***/ 1387:
+/***/ 1388:
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(1373)(undefined);
+exports = module.exports = __webpack_require__(1374)(undefined);
 // imports
 
 
@@ -2840,16 +2840,16 @@ exports.push([module.i, "* {\n  font-size: 14px;\n}\ndiv {\n  box-sizing: border
 
 /***/ }),
 
-/***/ 1391:
+/***/ 1393:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1385);
+var content = __webpack_require__(1386);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(1374)(content, {});
+var update = __webpack_require__(1375)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -2867,16 +2867,16 @@ if(false) {
 
 /***/ }),
 
-/***/ 1393:
+/***/ 1395:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1387);
+var content = __webpack_require__(1388);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(1374)(content, {});
+var update = __webpack_require__(1375)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -2894,7 +2894,7 @@ if(false) {
 
 /***/ }),
 
-/***/ 1398:
+/***/ 1401:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2912,7 +2912,7 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
 var antd_1 = __webpack_require__(153);
-__webpack_require__(1391);
+__webpack_require__(1393);
 var PopoverBadge = (function (_super) {
     __extends(PopoverBadge, _super);
     function PopoverBadge() {
@@ -2931,20 +2931,20 @@ exports.PopoverBadge = PopoverBadge;
 
 /***/ }),
 
-/***/ 1400:
+/***/ 1403:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var PopoverBadge_component_1 = __webpack_require__(1398);
-var msgList_decorate_1 = __webpack_require__(1403);
+var PopoverBadge_component_1 = __webpack_require__(1401);
+var msgList_decorate_1 = __webpack_require__(1406);
 exports.MsgPopBadge = msgList_decorate_1.InjectMsgList(PopoverBadge_component_1.PopoverBadge);
 
 
 /***/ }),
 
-/***/ 1403:
+/***/ 1406:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2969,19 +2969,20 @@ var __assign = (this && this.__assign) || Object.assign || function(t) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
+var react_router_1 = __webpack_require__(152);
 var index_con_1 = __webpack_require__(154);
 var user_1 = __webpack_require__(239);
 var msg_1 = __webpack_require__(543);
-var http_service_1 = __webpack_require__(1375);
-var Image_component_1 = __webpack_require__(1384);
+var http_service_1 = __webpack_require__(1381);
+var Image_component_1 = __webpack_require__(1385);
 exports.InjectMsgList = function (PopoverBadge) {
     var Wrapper = (function (_super) {
         __extends(Wrapper, _super);
         function Wrapper() {
             var _this = _super.call(this) || this;
-            _this.handleMsgList = function (list) {
+            _this.handleMsgList = function (list, count) {
                 _this.setState({
-                    count: list.length,
+                    count: count,
                     msgList: list
                 });
             };
@@ -3002,17 +3003,18 @@ exports.InjectMsgList = function (PopoverBadge) {
             this.sub = user_1.default.data.userData$
                 .do(function (user) {
                 http_service_1.default
-                    .get('/api/v1/msg-list', { toUID: user._id, readed: false })
+                    .post('/api/v1/msg-list-fade', { toUID: user._id, readed: false, limit: 3, skip: 0 })
                     .combineLatest(msg_1.default.data.data$)
                     .do(function (res) {
-                    var msgList = _this.state.msgList;
+                    var msgList = (_a = _this.state, _a.msgList), count = _a.count;
                     var fromFetch = res[0], fromSOK = res[1];
                     if (fromSOK === null) {
-                        _this.handleMsgList(fromFetch);
+                        _this.handleMsgList(fromFetch.data, fromFetch.count);
                     }
                     else {
-                        _this.handleMsgList([fromSOK].concat(msgList));
+                        _this.handleMsgList([fromSOK].concat(msgList), ++count);
                     }
+                    var _a;
                 })
                     .subscribe();
             })
@@ -3028,7 +3030,7 @@ exports.InjectMsgList = function (PopoverBadge) {
                     React.createElement("h3", null, msg.title),
                     React.createElement("p", null, msg.content),
                     React.createElement("span", { className: "time" }, (new Date(msg.meta.createdTime)).toLocaleString())); }),
-                React.createElement("a", null, "\u67E5\u770B\u66F4\u591A"));
+                React.createElement(react_router_1.Link, { to: "/msgs" }, "\u67E5\u770B\u66F4\u591A"));
             return React.createElement(PopoverBadge, __assign({}, this.props, { count: count, popContent: popContent, placement: "bottom", title: "消息", className: "my-nav-pop" }));
             var _a;
         };

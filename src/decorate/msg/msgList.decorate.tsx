@@ -48,7 +48,7 @@ export let InjectMsgList = ( PopoverBadge ) => {
                             if ( fromSOK === null ) {
                                 this.handleMsgList( fromFetch.data, fromFetch.count )
                             } else {
-                                this.handleMsgList([ fromSOK, ...msgList ], ++count)
+                                this.handleMsgList([ fromSOK, ...msgList ], ++count )
                             }
                         })
                         .subscribe( )

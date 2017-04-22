@@ -159,9 +159,7 @@ declare namespace APP {
 
 }
 
-type mySpread<T> = {
-    [ P in keyof T ]: T[P]
-}
+
 
 
 

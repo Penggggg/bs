@@ -52,7 +52,7 @@ exports.inviteMember = function (ctx) { return __awaiter(_this, void 0, void 0, 
                     dirty: false,
                     readed: false,
                     title: '项目邀请',
-                    formType: 1 /* InviteMember */,
+                    formType: 2 /* twoChoice */,
                     replyURL: '/api/v1/reply-invite'
                 };
                 return [4 /*yield*/, msg_model_1.default.save(model)];

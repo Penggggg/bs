@@ -18,12 +18,14 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 __webpack_require__(1400);
 var React = __webpack_require__(0);
+var antd_1 = __webpack_require__(153);
 var http_service_1 = __webpack_require__(1377);
 var MsgDetailPage = (function (_super) {
     __extends(MsgDetailPage, _super);
     function MsgDetailPage() {
         var _this = _super.call(this) || this;
         _this.state = {
+            spinning: false,
             msgDetail: null
         };
         return _this;
@@ -31,31 +33,42 @@ var MsgDetailPage = (function (_super) {
     MsgDetailPage.prototype.componentDidMount = function () {
         var id = this.props.params.id;
         this.fetchMsgDetail(id);
+        console.log('首次');
     };
     MsgDetailPage.prototype.componentWillReceiveProps = function (np) {
         var id = np.params.id;
         this.fetchMsgDetail(id);
+        console.log('2次');
     };
     MsgDetailPage.prototype.fetchMsgDetail = function (id) {
         var _this = this;
+        this.setState({
+            spinning: true
+        });
         http_service_1.default
             .get('/api/v1/msg-detail', { id: id })
             .do(function (res) {
-            console.log(res);
+            // console.log( res );
             _this.setState({
-                msgDetail: res
+                msgDetail: res,
+                spinning: false
             });
         })
             .subscribe();
     };
     MsgDetailPage.prototype.render = function () {
-        var msgDetail = this.state.msgDetail;
+        var _a = this.state, msgDetail = _a.msgDetail, spinning = _a.spinning;
         return React.createElement("div", { className: "msg-detail-page" }, !!msgDetail &&
             React.createElement("div", { className: "msg-block" },
-                React.createElement("h3", null, msgDetail.title),
-                React.createElement("p", { className: "content" }, msgDetail.content),
-                React.createElement("p", { className: "time" }, (new Date(msgDetail.meta.createdTime)).toLocaleString()),
-                React.createElement("p", { className: "name" }, msgDetail.fromUID.name)));
+                React.createElement(antd_1.Spin, { spinning: spinning, size: "large" },
+                    React.createElement("h3", null, msgDetail.title),
+                    React.createElement("p", { className: "content" }, msgDetail.content),
+                    React.createElement("p", { className: "name" },
+                        "By: ",
+                        msgDetail.fromUID.name),
+                    React.createElement("p", { className: "time" }, (new Date(msgDetail.meta.createdTime)).toLocaleString()),
+                    React.createElement("div", null, msgDetail.formType === 2 /* twoChoice */ &&
+                        React.createElement("div", null)))));
     };
     return MsgDetailPage;
 }(React.PureComponent));
@@ -435,137 +448,6 @@ function updateLink(linkElement, options, obj) {
 	if(oldSrc)
 		URL.revokeObjectURL(oldSrc);
 }
-
-
-/***/ }),
-
-/***/ 1377:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var rxjs_1 = __webpack_require__(48);
-var config_1 = __webpack_require__(1383);
-var HttpService = (function () {
-    function HttpService() {
-        this.TIMEOUT = 10000;
-    }
-    HttpService.prototype.getXhr = function () {
-        return new XMLHttpRequest();
-    };
-    HttpService.prototype.get = function (url, opt) {
-        /**变量声明 */
-        var data$$;
-        var xhr = this.getXhr();
-        /**数据源 */
-        var data$ = rxjs_1.Observable.create(function (observer) {
-            data$$ = observer;
-        }).share();
-        this.sub = data$.subscribe();
-        /**异步事件设置 */
-        this.decorateXHR(xhr, data$$);
-        /**整合查询串 */
-        url += "?" + this.turnObjToQuery(opt);
-        /**开启xhr */
-        xhr.open('GEt', "" + config_1.default.reqURL + url, true);
-        xhr.send();
-        console.info("sending http-GET: " + url);
-        return data$;
-    };
-    HttpService.prototype.post = function (url, queryOpt) {
-        /**变量声明 */
-        var postBody;
-        var data$$;
-        var xhr = this.getXhr();
-        /**数据源 */
-        var data$ = rxjs_1.Observable.create(function (observer) {
-            data$$ = observer;
-        }).share();
-        this.sub = data$.subscribe();
-        /**异步事件设置 */
-        this.decorateXHR(xhr, data$$);
-        /**开启xhr */
-        xhr.open('POST', "" + config_1.default.reqURL + url, true);
-        xhr.setRequestHeader("Content-type", "application/json");
-        if (queryOpt) {
-            xhr.send(JSON.stringify(queryOpt));
-        }
-        else {
-            xhr.send();
-        }
-        console.info("sending http-POST: " + url);
-        return data$;
-    };
-    HttpService.prototype.decorateXHR = function (xhr, data$$) {
-        var _this = this;
-        /**异步错误获取 */
-        xhr.onerror = function (err) {
-            data$$.error(err);
-            _this.closeConnection(xhr, data$$);
-        };
-        /**超时设置 */
-        xhr.timeout = this.TIMEOUT;
-        xhr.ontimeout = function ($event) {
-            data$$.error('http请求超时');
-            _this.closeConnection(xhr, data$$);
-        };
-        /**异步状态判断 */
-        xhr.onreadystatechange = function () {
-            /**变量声明 */
-            var readyState = xhr.readyState;
-            var status = "" + xhr.status;
-            /**准备就绪 */
-            if (readyState === 4) {
-                _this.sub.unsubscribe();
-                /**成功：2**、3** */
-                if (status.indexOf('2') === 0 || status.indexOf('3') === 0) {
-                    var resObj = {};
-                    try {
-                        resObj = JSON.parse("" + xhr.responseText);
-                        data$$.next(resObj);
-                    }
-                    catch (e) {
-                        data$$.error(e);
-                        data$$.complete();
-                    }
-                    /**客户端、服务端错误 */
-                }
-                else if (status.indexOf('4') === 0 || status.indexOf('0') === 0 || status.indexOf('5') === 0) {
-                    data$$.error(status);
-                    data$$.complete();
-                }
-                else {
-                    data$$.error(status);
-                    data$$.complete();
-                }
-            }
-        };
-    };
-    HttpService.prototype.closeConnection = function (xhr, data$$) {
-        xhr.abort();
-        data$$.complete();
-        this.sub.unsubscribe();
-    };
-    HttpService.prototype.setGetUrlWithQuery = function (url, query) {
-        url += '?';
-        Object.keys(query).map(function (key) {
-            url += key + "=" + query[key] + "&";
-        });
-        return url.substring(0, url.length - 1);
-    };
-    HttpService.prototype.turnObjToQuery = function (query) {
-        if (!query)
-            return '';
-        var body = '';
-        Object.keys(query).map(function (key) {
-            body += key + "=" + query[key] + "&";
-        });
-        return body;
-    };
-    return HttpService;
-}());
-exports.default = new HttpService();
 
 
 /***/ }),
@@ -2689,19 +2571,6 @@ module.exports = function (css) {
 
 /***/ }),
 
-/***/ 1383:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = {
-    reqURL:  true ? '' : ''
-};
-
-
-/***/ }),
-
 /***/ 1392:
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -2710,7 +2579,7 @@ exports = module.exports = __webpack_require__(1375)(undefined);
 
 
 // module
-exports.push([module.i, ".msg-detail-page {\n  padding-top: 20px;\n  box-sizing: border-box;\n}\n", ""]);
+exports.push([module.i, ".msg-detail-page {\n  padding-top: 20px;\n  box-sizing: border-box;\n}\n.msg-detail-page .msg-block {\n  width: 70%;\n  overflow: scroll;\n  max-height: 300px;\n}\n.msg-detail-page .msg-block h3 {\n  font-size: 25px;\n  padding-bottom: 10px;\n  border-bottom: 1px solid #e9e9e9;\n}\n.msg-detail-page .msg-block p {\n  font-size: 16px;\n  padding-bottom: 10px;\n}\n.msg-detail-page .msg-block p.content {\n  padding-top: 20px;\n}\n.msg-detail-page .msg-block p.time {\n  text-align: right;\n}\n.msg-detail-page .msg-block p.name {\n  text-align: right;\n}\n.msg-detail-page .msg-block::-webkit-scrollbar {\n  display: none;\n}\n", ""]);
 
 // exports
 

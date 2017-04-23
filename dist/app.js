@@ -76,8 +76,8 @@ exports.default = new localStorageService();
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var rxjs_1 = __webpack_require__(48);
-var index_con_1 = __webpack_require__(154);
 var msg_1 = __webpack_require__(543);
+var index_con_1 = __webpack_require__(154);
 var notification_service_1 = __webpack_require__(239);
 var Msg = (function () {
     function Msg() {
@@ -86,17 +86,16 @@ var Msg = (function () {
             _this.sub = rxjs_1.Observable
                 .fromEvent(socket, "" + index_con_1.CON.socketEvent.msg)
                 .do(function (res) {
-                var _a = res.content, title = _a.title, content = _a.content;
+                /**获取最新数据 */
+                msg_1.default.data.refresh();
+                /**提示 */
                 notification_service_1.default.open({
-                    title: "" + title,
-                    msg: "" + content
+                    title: res.content.title,
+                    msg: res.content.content
                 });
             })
-                .filter(function (res) { return res.type === 1 /* InviteMember */; })
-                .do(function (res) {
-                msg_1.default.data.save(res.content);
-            })
                 .subscribe();
+            setTimeout(function () { return msg_1.default.data.refresh(); }, 200);
         };
         this.cancelWatch = function () {
             _this.sub.unsubscribe();
@@ -201,11 +200,30 @@ exports.default = new socketService();
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var rxjs_1 = __webpack_require__(48);
+var user_1 = __webpack_require__(238);
+var http_service_1 = __webpack_require__(1377);
+var index_con_1 = __webpack_require__(154);
 var MsgData = (function () {
     function MsgData() {
         var _this = this;
         this.save = function (msg) {
             _this.data$$.next(msg);
+        };
+        this.refresh = function () {
+            var uid;
+            var sub = user_1.default.data.userData$
+                .do(function (user) { return uid = user._id; })
+                .do(function () { return setTimeout(function () { return index_con_1.Util.cancelSubscribe(sub); }, 16); })
+                .subscribe();
+            http_service_1.default
+                .post('/api/v1/msg-list-fade', { toUID: uid, readed: false, limit: 3, skip: 0 })
+                .do(function (res) {
+                _this.save({
+                    total: res.count,
+                    data: res.data
+                });
+            })
+                .subscribe();
         };
         var subject = new rxjs_1.ReplaySubject(1);
         var source = rxjs_1.Observable.create(function (o) {
@@ -355,6 +373,150 @@ var UserSignIn = (function () {
     return UserSignIn;
 }());
 exports.default = UserSignIn;
+
+
+/***/ }),
+
+/***/ 1377:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var rxjs_1 = __webpack_require__(48);
+var config_1 = __webpack_require__(1383);
+var HttpService = (function () {
+    function HttpService() {
+        this.TIMEOUT = 10000;
+    }
+    HttpService.prototype.getXhr = function () {
+        return new XMLHttpRequest();
+    };
+    HttpService.prototype.get = function (url, opt) {
+        /**变量声明 */
+        var data$$;
+        var xhr = this.getXhr();
+        /**数据源 */
+        var data$ = rxjs_1.Observable.create(function (observer) {
+            data$$ = observer;
+        }).share();
+        this.sub = data$.subscribe();
+        /**异步事件设置 */
+        this.decorateXHR(xhr, data$$);
+        /**整合查询串 */
+        url += "?" + this.turnObjToQuery(opt);
+        /**开启xhr */
+        xhr.open('GEt', "" + config_1.default.reqURL + url, true);
+        xhr.send();
+        console.info("sending http-GET: " + url);
+        return data$;
+    };
+    HttpService.prototype.post = function (url, queryOpt) {
+        /**变量声明 */
+        var postBody;
+        var data$$;
+        var xhr = this.getXhr();
+        /**数据源 */
+        var data$ = rxjs_1.Observable.create(function (observer) {
+            data$$ = observer;
+        }).share();
+        this.sub = data$.subscribe();
+        /**异步事件设置 */
+        this.decorateXHR(xhr, data$$);
+        /**开启xhr */
+        xhr.open('POST', "" + config_1.default.reqURL + url, true);
+        xhr.setRequestHeader("Content-type", "application/json");
+        if (queryOpt) {
+            xhr.send(JSON.stringify(queryOpt));
+        }
+        else {
+            xhr.send();
+        }
+        console.info("sending http-POST: " + url);
+        return data$;
+    };
+    HttpService.prototype.decorateXHR = function (xhr, data$$) {
+        var _this = this;
+        /**异步错误获取 */
+        xhr.onerror = function (err) {
+            data$$.error(err);
+            _this.closeConnection(xhr, data$$);
+        };
+        /**超时设置 */
+        xhr.timeout = this.TIMEOUT;
+        xhr.ontimeout = function ($event) {
+            data$$.error('http请求超时');
+            _this.closeConnection(xhr, data$$);
+        };
+        /**异步状态判断 */
+        xhr.onreadystatechange = function () {
+            /**变量声明 */
+            var readyState = xhr.readyState;
+            var status = "" + xhr.status;
+            /**准备就绪 */
+            if (readyState === 4) {
+                _this.sub.unsubscribe();
+                /**成功：2**、3** */
+                if (status.indexOf('2') === 0 || status.indexOf('3') === 0) {
+                    var resObj = {};
+                    try {
+                        resObj = JSON.parse("" + xhr.responseText);
+                        data$$.next(resObj);
+                    }
+                    catch (e) {
+                        data$$.error(e);
+                        data$$.complete();
+                    }
+                    /**客户端、服务端错误 */
+                }
+                else if (status.indexOf('4') === 0 || status.indexOf('0') === 0 || status.indexOf('5') === 0) {
+                    data$$.error(status);
+                    data$$.complete();
+                }
+                else {
+                    data$$.error(status);
+                    data$$.complete();
+                }
+            }
+        };
+    };
+    HttpService.prototype.closeConnection = function (xhr, data$$) {
+        xhr.abort();
+        data$$.complete();
+        this.sub.unsubscribe();
+    };
+    HttpService.prototype.setGetUrlWithQuery = function (url, query) {
+        url += '?';
+        Object.keys(query).map(function (key) {
+            url += key + "=" + query[key] + "&";
+        });
+        return url.substring(0, url.length - 1);
+    };
+    HttpService.prototype.turnObjToQuery = function (query) {
+        if (!query)
+            return '';
+        var body = '';
+        Object.keys(query).map(function (key) {
+            body += key + "=" + query[key] + "&";
+        });
+        return body;
+    };
+    return HttpService;
+}());
+exports.default = new HttpService();
+
+
+/***/ }),
+
+/***/ 1383:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = {
+    reqURL:  true ? '' : ''
+};
 
 
 /***/ }),

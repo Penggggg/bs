@@ -35,24 +35,11 @@ export let InjectMsgList = ( PopoverBadge ) => {
         }
 
         combineFlow( ) {
-            this.sub = userStore.data.userData$
-                .do( user => {
-                    http
-                        .post<API.Res.AllMsg, API.Query.AllMsg>('/api/v1/msg-list-fade', 
-                            { toUID: user._id, readed: false, limit: 3, skip: 0 })
-                        .combineLatest(msgStore.data.data$)
-                        .do( res => {
-                            let { msgList, count } = this.state;
-                            let [ fromFetch, fromSOK ] = res;
-                            
-                            if ( fromSOK === null ) {
-                                this.handleMsgList( fromFetch.data, fromFetch.count )
-                            } else {
-                                this.handleMsgList([ fromSOK, ...msgList ], ++count )
-                            }
-                        })
-                        .subscribe( )
-                }) 
+            this.sub = msgStore.data.data$
+                .filter( res => res !== null )
+                .do( res => {
+                    this.handleMsgList( res.data, res.total )
+                })
                 .subscribe( )
         }
 

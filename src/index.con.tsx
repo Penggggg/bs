@@ -24,6 +24,12 @@ export namespace ENUM {
         InviteMember = 1
     }
 
+    export const enum MsgFormType {
+        noForm = 1,
+        twoChoice, 
+        Confirm
+    }
+
 }
 
 

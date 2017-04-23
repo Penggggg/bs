@@ -24,4 +24,24 @@ export namespace ENUM {
         InviteMember = 1
     }
 
+    export const enum MsgFormType {
+        noForm = 1,
+        twoChoice, 
+        Confirm
+    }
+
+}
+
+
+export namespace Util {
+
+
+    export let cancelSubscribe = ( ...subscritions ) => {
+        setTimeout(( ) => {
+            subscritions.map(( sub ) => {
+                sub.unsubscribe( );
+            })
+        }, 300 );
+    }
+
 }

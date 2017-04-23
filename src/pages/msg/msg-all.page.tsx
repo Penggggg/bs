@@ -36,11 +36,12 @@ export default class msgAllPage extends React.PureComponent< IProps, IState > {
                 msgType: '所有消息',
                 selectorValue: 'true'
             })
-            this.fetchMsgList( true , 1 )
+            this.fetchMsgList( true, 1 )
         } else {
             this.fetchMsgList( false, 1 )
         }
-        this.watchSOK( );
+        
+        setTimeout(( ) => this.watchSOK( ), 200 )
     }
 
     componentWillUnmount( ) {
@@ -50,15 +51,16 @@ export default class msgAllPage extends React.PureComponent< IProps, IState > {
     watchSOK( ) {
         this.sub = msgStore.data.data$
             .filter( sok => sok !== null )
+            .skip( 1 )
             .do( res => {
-                let { currentPage, msgType } = this.state;
+                let { currentPage, msgType, msgList } = this.state;
                 this.fetchMsgList( msgType === '所有消息' ? true : false, currentPage );
             })
             .subscribe( )
     }
 
     fetchMsgList( readed: boolean, currentPage: number ) {
-
+        console.log(`fetch: ${readed}`)
         this.setState({ spinning: true })
 
         let toUID: string;
@@ -103,19 +105,19 @@ export default class msgAllPage extends React.PureComponent< IProps, IState > {
     }
 
     onEnter = ( msg: Partial<APP.Msg> , key: number ) => {
-        let { msgList } = this.state;
-        let arr = [ ...msgList ];
         
-        arr[ key ].readed = true;
-        this.setState({
-            msgList: arr
-        })
-        
-        this.props.router.push(`/msgs/${msg._id}`)
+        /**路由推送 */
+        this.props.router.push(`/msgs/${msg._id}`);
+
+        /**右上角badge刷新 */
+        setTimeout(( ) =>{
+            msgStore.data.refresh( );
+        }, 300 )
+
     }
 
     render( ) {
-
+        console.log('render')
         let { msgType, total, currentPage, msgList, spinning, selectorValue } = this.state;
 
         let msgContent = <ul>

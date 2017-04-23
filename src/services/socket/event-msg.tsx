@@ -1,8 +1,11 @@
 
 import { Observable, Subscription } from 'rxjs';
 
-import { CON, ENUM } from '../../index.con';
-import MsgStore from '../../store/msg';
+
+import msgStore from '../../store/msg';
+import userStore from '../../store/user';
+import http from '../../services/http.service';
+import { CON, ENUM, Util } from '../../index.con';
 import Notification from '../../services/notification.service';
 
 
@@ -15,17 +18,17 @@ class Msg {
         this.sub = Observable
             .fromEvent<SOK.Res.MsgInvite>( socket, `${CON.socketEvent.msg}`)
             .do( res => {
-                let { title, content } = res.content;
+                /**获取最新数据 */
+                msgStore.data.refresh( );
+                /**提示 */
                 Notification.open({
-                    title: `${title}`,
-                    msg: `${content}` 
+                    title: res.content.title,
+                    msg: res.content.content
                 })
             })
-            .filter( res => res.type === ENUM.MsgType.InviteMember )
-            .do( res => {
-                MsgStore.data.save( res.content )
-            })
             .subscribe( )
+    
+        setTimeout(( ) => msgStore.data.refresh( ), 200 )
     }
 
     public cancelWatch = ( ) => {

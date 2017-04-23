@@ -17,7 +17,7 @@ export let inviteMember = async( ctx: Koa.Context ) => {
         dirty: false,
         readed: false,
         title: '项目邀请',
-        formType: ENUM.MsgType.InviteMember,
+        formType: ENUM.MsgFormType.twoChoice,
         replyURL: '/api/v1/reply-invite'
     }
 

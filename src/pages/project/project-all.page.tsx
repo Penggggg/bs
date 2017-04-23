@@ -136,7 +136,7 @@ class ProjectAllPage extends React.PureComponent< IProps, IState > {
                 this.setState({
                     formSubmiting: true
                 })
-                http.post<API.Res.CreateProject>('/api/v1/create-project', Object.assign(values, { creatorID: Auth.userData( )._id }))
+                http.post('/api/v1/create-project', Object.assign(values, { creatorID: Auth.userData( )._id }))
                     .do(this.analyseProjectSubmit)
                     .subscribe( )
             }

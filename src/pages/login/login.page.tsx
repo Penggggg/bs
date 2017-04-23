@@ -8,7 +8,6 @@ import { Tabs, Tooltip, Input, Icon, Form, Button, Checkbox, Layout, Modal } fro
 
 
 import './login.less';
-import { _IPostQueryLogin, IPostLogin_, _IPostQueryResetPsw, IPostResetPsw_, _IPostQuerySignIn, IPostSignIn_ } from '../../interface/api.interface';
 
 
 const TabPane = Tabs.TabPane;
@@ -32,9 +31,9 @@ class LoginPage extends React.PureComponent< IProps, IState > {
     logInSubmit = ( e ) => {
         e.preventDefault( );
         this.setState({ loginLoading: true })
-        this.props.form.validateFields(['userName', 'userPhone', 'password', 'password2'], ( err, values: _IPostQueryLogin ) => {
+        this.props.form.validateFields(['userName', 'userPhone', 'password', 'password2'], ( err, values: API.Query.Login ) => {
           if ( !err ) {
-             http.post<IPostLogin_>('/api/v1/login', values )
+             http.post< API.Res.Login, API.Query.Login >('/api/v1/login', values )
                 .do(this.analyseSubmit)
                 .catch(this.errorSumitHandler)
                 .subscribe( )
@@ -45,9 +44,9 @@ class LoginPage extends React.PureComponent< IProps, IState > {
     signInSubmit = ( e ) => {
         e.preventDefault( );
         this.setState({ signInLoading: true });
-        this.props.form.validateFields(['signPhone', 'signPsw'], (err, values: _IPostQuerySignIn) => {
+        this.props.form.validateFields(['signPhone', 'signPsw'], (err, values: API.Query.SignIn) => {
           if (!err) {
-             http.post<IPostSignIn_>('/api/v1/signin', values )
+             http.post< API.Res.SignIn, API.Query.SignIn >('/api/v1/signin', values )
                 .do(this.analyseSignIn)
                 .catch(this.errorSumitHandler)
                 .subscribe( )
@@ -58,9 +57,9 @@ class LoginPage extends React.PureComponent< IProps, IState > {
     resetSubmit = ( e ) => {
         e.preventDefault( );
         this.setState({ resetLoading: true })
-        this.props.form.validateFields(['resetUserName', 'reseUserPhone',  'resetPsw',  'resetPsw2'], (err, values: _IPostQueryResetPsw ) => {
+        this.props.form.validateFields(['resetUserName', 'reseUserPhone',  'resetPsw',  'resetPsw2'], (err, values: API.Query.ResetPsw ) => {
           if (!err) {
-             http.post<IPostResetPsw_>('/api/v1/resetpsw', values )
+             http.post< API.Res.ResetPsw, API.Query.ResetPsw >('/api/v1/resetpsw', values )
                 .do( this.analyseReset )
                 .catch( this.errorSumitHandler )
                 .subscribe( )
@@ -122,7 +121,7 @@ class LoginPage extends React.PureComponent< IProps, IState > {
       })
     }
 
-    private analyseReset = ({ status, msg }: IPostResetPsw_ ) => {
+    private analyseReset = ({ status, msg }: API.Res.ResetPsw ) => {
 
       let { form } = this.props;
       this.setState({ resetLoading: false })
@@ -166,7 +165,7 @@ class LoginPage extends React.PureComponent< IProps, IState > {
 
     }
 
-    private analyseSubmit = ({ status, msg, user }: IPostLogin_ ) => {
+    private analyseSubmit = ({ status, msg, user }: API.Res.Login ) => {
 
         let { form } = this.props;
         this.setState({ loginLoading: false })
@@ -203,7 +202,7 @@ class LoginPage extends React.PureComponent< IProps, IState > {
         }
     }
 
-    private analyseSignIn = ({ status, msg, user }: IPostSignIn_ ) => {
+    private analyseSignIn = ({ status, msg, user }: API.Res.SignIn ) => {
 
         let { form } = this.props;
         this.setState({ signInLoading: false })

@@ -65,13 +65,13 @@ export let InjectMember = ( Slider ) => {
                         })
                     } else {
                         let sub = http
-                            .post<API.Res.InviteMember>('/api/v1/invite-member', {
+                            .post<API.Res.InviteMember, API.Query.InviteMember>('/api/v1/invite-member', {
                                 fromUID: res[0]._id,
                                 toUID: choicedUID,
                                 PID: res[1]._id,
                                 type: ENUM.MsgType.InviteMember,
                                 content: `${res[0].name}诚意邀请您加入项目【${res[1].name}】。请问您是否同意？`
-                            } as API.Query.InviteMember)
+                            })
                             .do( res => {
                                 Notification.open({
                                     title: '系统消息',
@@ -115,7 +115,7 @@ export let InjectMember = ( Slider ) => {
 
         fetchUser = ( value = '' ) => {
             http
-                .post<Array<APP.User>>('/api/v1/all-user', { name: value } as API.Query.AllUser )
+                .post< Array<APP.User>, API.Query.AllUser >('/api/v1/all-user', { name: value })
                 .map( res => {
                     return res.map(({ _id, name, phone }) => ({
                        value: `${name}-${_id}`,

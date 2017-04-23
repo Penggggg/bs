@@ -25,12 +25,21 @@ export default class msgAllPage extends React.PureComponent< IProps, IState > {
             msgList: [ ],
             spinning: false,
             currentPage: 1,
-            msgType: '未读消息'
+            msgType: '未读消息',
+            selectorValue: 'false'
         }
     }
 
     componentDidMount( ) {
-        this.fetchMsgList( false, 1 );
+        if ( !!this.props.children ) {
+            this.setState({
+                msgType: '所有消息',
+                selectorValue: 'true'
+            })
+            this.fetchMsgList( true , 1 )
+        } else {
+            this.fetchMsgList( false, 1 )
+        }
         this.watchSOK( );
     }
 
@@ -63,7 +72,7 @@ export default class msgAllPage extends React.PureComponent< IProps, IState > {
             }).subscribe( )
 
         let sub2 = http
-            .post<API.Res.AllMsg>('/api/v1/msg-list', { toUID, readed, skip, limit } as API.Query.AllMsg)
+            .post< API.Res.AllMsg, API.Query.AllMsg >('/api/v1/msg-list', { toUID, readed, skip, limit })
             .do( res => {
                 this.setState({
                     spinning: false,
@@ -78,6 +87,7 @@ export default class msgAllPage extends React.PureComponent< IProps, IState > {
     handleChange = ( readed: any ) => {
         this.setState({
             currentPage: 1,
+            selectorValue: readed === 'false' ? 'false' : 'true',
             msgType: readed === 'false' ? '未读消息' : '所有消息'
         })
         this.fetchMsgList(  readed === 'false' ? false : true, 1 );
@@ -92,14 +102,26 @@ export default class msgAllPage extends React.PureComponent< IProps, IState > {
         this.fetchMsgList( msgType === '未读消息' ? false : true, currentPage );
     }
 
+    onEnter = ( msg: Partial<APP.Msg> , key: number ) => {
+        let { msgList } = this.state;
+        let arr = [ ...msgList ];
+        
+        arr[ key ].readed = true;
+        this.setState({
+            msgList: arr
+        })
+        
+        this.props.router.push(`/msgs/${msg._id}`)
+    }
+
     render( ) {
 
-        let { msgType, total, currentPage, msgList, spinning } = this.state;
+        let { msgType, total, currentPage, msgList, spinning, selectorValue } = this.state;
 
         let msgContent = <ul>
             {
                 msgList.map(( msg, key ) => <li key={key}>
-                    <a href={`/#/msgs/${msg._id}`}>
+                    <a onClick={( ) => this.onEnter( msg, key )}>
                         <Image src="/static/touxiang.png" />
                         { !msg.readed && <Tag color="#108ee9" className="my-tag">未读</Tag> }
                         <h3>{ msg.title }</h3>
@@ -123,7 +145,7 @@ export default class msgAllPage extends React.PureComponent< IProps, IState > {
                         <Col span={10} className="msg-list-block">
                             <div className="msg-list">
                                 <div className="title">
-                                    <Select defaultValue="false" style={{ width: 120 }} onChange={this.handleChange}>
+                                    <Select defaultValue="false" value={ selectorValue }  style={{ width: 120 }} onChange={this.handleChange}>
                                         <Select.Option value="false"><Icon type="tag-o" />{` `}未读消息</Select.Option>
                                         <Select.Option value="true"><Icon type="bell" />{` `}所有消息</Select.Option>
                                     </Select>
@@ -140,7 +162,8 @@ export default class msgAllPage extends React.PureComponent< IProps, IState > {
                                 </div>
                             </div>
                         </Col>
-                        <Col span={14} className="msg-content">{ this.props.children }</Col>
+                        <Col span={14} className="msg-content">{ this.props.children || 
+                                <h3 className="tips">选择左侧消息，查看消息详情</h3> }</Col>
                     </Row>
                 </Content>
             </Layout>
@@ -154,6 +177,7 @@ interface IState {
     spinning: boolean
     currentPage: number
     msgType: '所有消息' | '未读消息'
+    selectorValue: 'false' | 'true'
     msgList: Array<Partial<APP.Msg>>
 }
 

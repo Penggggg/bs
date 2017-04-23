@@ -4,6 +4,26 @@ declare namespace API {
 
     export namespace Res {
 
+        /**POST：用户登录 */
+        export interface SignIn {
+            msg: 'user is not existed' | 'psw not right' | 'server err' | 'success'
+            status: '4001' | '4002' | '200' | '500'
+            user: APP.User 
+        }
+
+        /**POST：忘记密码 */
+        export interface ResetPsw {
+            msg: 'user is not existed' | 'phone not right' | 'psw not equal' | 'server err' | 'success'
+            status: '4001' | '4002' | '4003' | '200' | '500'
+        }
+
+        /**POST：用户注册 */
+        export interface Login {
+            msg: 'psw not equal' | 'success' | 'server err' | 'user has been existed',
+            status: '4001'| '4002' | '500' | '200',
+            user?: APP.User
+        }
+
         /**POST：项目成员邀请 */
         export interface InviteMember {
             msg: string,
@@ -40,6 +60,28 @@ declare namespace API {
 
     export namespace Query {
 
+        /**POST：用户登录 */
+        export interface SignIn {
+            signPhone: string
+            signPsw: string
+        }
+
+        /**POST：忘记密码 */
+        export interface ResetPsw {
+            resetUserName: string
+            reseUserPhone: string
+            resetPsw: string
+            resetPsw2: string
+        }
+
+        /**POST：用户注册 */
+        export interface Login {
+            userName: string
+            userPhone: string 
+            password: string
+            password2: string        
+        }
+
         /**POST：符合条件的所有用户 */
         export interface AllUser {
             name: string
@@ -69,7 +111,7 @@ declare namespace API {
 
         /**GET：消息详情 */
         export interface MsgDetail {
-            _id: string
+            id: string
         }
 
     }
@@ -155,7 +197,7 @@ declare namespace APP {
     }
 
     /**消息 */
-    export interface Msg extends API.Query.InviteMember {
+    export interface Msg  {
         _id?: string
         dirty: boolean
         readed: boolean
@@ -165,6 +207,11 @@ declare namespace APP {
         meta?: {
             createdTime: string
         }
+        fromUID: Partial<APP.User>
+        toUID: Partial<APP.User>
+        type: number
+        content: string,
+        PID: Partial<APP.Project>
     }
 
 }

@@ -68,7 +68,9 @@ exports.default = function (router) {
     /**消息模块：所有消息的伪查询 */
     router.post('/api/v1/msg-list-fade', query_msg_1.fetchFadeMsgList);
     /**消息模块 */
-    router.get('/api/v1/msg-detail/:_id', query_msg_1.fetchMsgDetail);
+    router.get('/api/v1/msg-detail', query_msg_1.fetchMsgDetail);
+    ;
+    ;
 };
 function getIndex(ctx) {
     return __awaiter(this, void 0, void 0, function () {

@@ -53,4 +53,14 @@ export let fetchFadeMsgList = async( ctx: Koa.Context ) => {
 
 export let fetchMsgDetail = async( ctx: Koa.Context ) => {
 
+    let { id } = ctx.query as API.Query.MsgDetail;
+
+    /**更新数据：readed为true，然后返回最新数据 */
+    let a = await MsgModel.updateReaded( id );
+    let data: Array<APP.Msg> = await MsgModel.findDetailById( id )
+
+    /**返回数据 */
+    let result: API.Res.MsgDetail = data[0];
+    ctx.body = result;
+
 }

@@ -1,6 +1,6 @@
 webpackJsonp([6],{
 
-/***/ 1372:
+/***/ 1374:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -17,17 +17,17 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
-var ProjectSharesPage = (function (_super) {
-    __extends(ProjectSharesPage, _super);
-    function ProjectSharesPage() {
+var ProjectTasksPage = (function (_super) {
+    __extends(ProjectTasksPage, _super);
+    function ProjectTasksPage() {
         return _super.call(this) || this;
     }
-    ProjectSharesPage.prototype.render = function () {
-        return React.createElement("div", null, "share");
+    ProjectTasksPage.prototype.render = function () {
+        return React.createElement("div", null, "tasks");
     };
-    return ProjectSharesPage;
+    return ProjectTasksPage;
 }(React.PureComponent));
-exports.default = ProjectSharesPage;
+exports.default = ProjectTasksPage;
 
 
 /***/ })

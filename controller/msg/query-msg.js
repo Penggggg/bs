@@ -100,7 +100,22 @@ exports.fetchFadeMsgList = function (ctx) { return __awaiter(_this, void 0, void
     });
 }); };
 exports.fetchMsgDetail = function (ctx) { return __awaiter(_this, void 0, void 0, function () {
+    var id, a, data, result;
     return __generator(this, function (_a) {
-        return [2 /*return*/];
+        switch (_a.label) {
+            case 0:
+                id = ctx.query.id;
+                return [4 /*yield*/, msg_model_1.default.updateReaded(id)];
+            case 1:
+                a = _a.sent();
+                return [4 /*yield*/, msg_model_1.default.findDetailById(id)
+                    /**返回数据 */
+                ];
+            case 2:
+                data = _a.sent();
+                result = data[0];
+                ctx.body = result;
+                return [2 /*return*/];
+        }
     });
 }); };

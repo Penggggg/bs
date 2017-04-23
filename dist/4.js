@@ -1,6 +1,6 @@
 webpackJsonp([4],{
 
-/***/ 1365:
+/***/ 1367:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16,333 +16,55 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
+__webpack_require__(1400);
 var React = __webpack_require__(0);
-var rxjs_1 = __webpack_require__(48);
-var http_service_1 = __webpack_require__(1376);
-var auth_login_service_1 = __webpack_require__(542);
-var notification_service_1 = __webpack_require__(239);
-var antd_1 = __webpack_require__(153);
-__webpack_require__(1396);
-var TabPane = antd_1.Tabs.TabPane;
-var FormItem = antd_1.Form.Item;
-var LoginPage = (function (_super) {
-    __extends(LoginPage, _super);
-    function LoginPage() {
+var http_service_1 = __webpack_require__(1377);
+var MsgDetailPage = (function (_super) {
+    __extends(MsgDetailPage, _super);
+    function MsgDetailPage() {
         var _this = _super.call(this) || this;
-        _this.logInSubmit = function (e) {
-            e.preventDefault();
-            _this.setState({ loginLoading: true });
-            _this.props.form.validateFields(['userName', 'userPhone', 'password', 'password2'], function (err, values) {
-                if (!err) {
-                    http_service_1.default.post('/api/v1/login', values)
-                        .do(_this.analyseSubmit)
-                        .catch(_this.errorSumitHandler)
-                        .subscribe();
-                }
-            });
-        };
-        _this.signInSubmit = function (e) {
-            e.preventDefault();
-            _this.setState({ signInLoading: true });
-            _this.props.form.validateFields(['signPhone', 'signPsw'], function (err, values) {
-                if (!err) {
-                    http_service_1.default.post('/api/v1/signin', values)
-                        .do(_this.analyseSignIn)
-                        .catch(_this.errorSumitHandler)
-                        .subscribe();
-                }
-            });
-        };
-        _this.resetSubmit = function (e) {
-            e.preventDefault();
-            _this.setState({ resetLoading: true });
-            _this.props.form.validateFields(['resetUserName', 'reseUserPhone', 'resetPsw', 'resetPsw2'], function (err, values) {
-                if (!err) {
-                    http_service_1.default.post('/api/v1/resetpsw', values)
-                        .do(_this.analyseReset)
-                        .catch(_this.errorSumitHandler)
-                        .subscribe();
-                }
-            });
-        };
-        _this.checkPswByRepeat = function (rule, value, callback) {
-            var form = _this.props.form;
-            if (value && value !== form.getFieldValue('password')) {
-                callback('2次输入的密码不一致');
-            }
-            else {
-                callback();
-            }
-        };
-        _this.checkResetPswByRepeat = function (rule, value, callback) {
-            var form = _this.props.form;
-            if (value && value !== form.getFieldValue('resetPsw')) {
-                callback('2次输入的密码不一致');
-            }
-            else {
-                callback();
-            }
-        };
-        _this.CheckPswByPsw = function (rule, value, callback) {
-            var form = _this.props.form;
-            var psw2 = form.getFieldValue('password2');
-            if (value && psw2) {
-                form.setFields({
-                    password2: {
-                        value: psw2,
-                        errors: value !== psw2 ? [new Error('2次输入的密码不一致')] : null
-                    }
-                });
-                callback();
-            }
-            callback();
-        };
-        _this.CheckResetPswByPsw = function (rule, value, callback) {
-            var form = _this.props.form;
-            var psw2 = form.getFieldValue('resetPsw2');
-            if (value && psw2) {
-                form.setFields({
-                    resetPsw2: {
-                        value: psw2,
-                        errors: value !== psw2 ? [new Error('2次输入的密码不一致')] : null
-                    }
-                });
-                callback();
-            }
-            callback();
-        };
-        _this.resetPsw = function () {
-            _this.setState({
-                resetFormShow: true
-            });
-        };
-        _this.analyseReset = function (_a) {
-            var status = _a.status, msg = _a.msg;
-            var form = _this.props.form;
-            _this.setState({ resetLoading: false });
-            notification_service_1.default.open({
-                msg: msg,
-                title: "\u91CD\u7F6E\u5BC6\u7801" + (status === '200' ? '成功' : '失败'),
-                type: status === '200' ? 'ok' : 'error'
-            });
-            if (status === '4001') {
-                var username = form.getFieldValue('resetUserName');
-                form.setFields({
-                    resetUserName: {
-                        value: username,
-                        errors: [new Error('用户不存在!')]
-                    }
-                });
-            }
-            else if (status === '4002') {
-                var username = form.getFieldValue('reseUserPhone');
-                form.setFields({
-                    reseUserPhone: {
-                        value: username,
-                        errors: [new Error('手机号码不匹配!')]
-                    }
-                });
-            }
-            else if (status === '4003') {
-                var psw2 = form.getFieldValue('resetPsw2');
-                form.setFields({
-                    resetPsw2: {
-                        value: psw2,
-                        errors: [new Error('2次输入的密码不一致')]
-                    }
-                });
-            }
-            else if (status === '200') {
-                setTimeout(function () {
-                    _this.setState({ resetFormShow: false });
-                    form.resetFields();
-                }, 2000);
-            }
-        };
-        _this.analyseSubmit = function (_a) {
-            var status = _a.status, msg = _a.msg, user = _a.user;
-            var form = _this.props.form;
-            _this.setState({ loginLoading: false });
-            notification_service_1.default.open({
-                msg: msg,
-                title: "\u6CE8\u518C" + (status === '200' ? '成功' : '失败'),
-                type: status === '200' ? 'ok' : 'error'
-            });
-            if (status === '4001') {
-                var psw2 = form.getFieldValue('password2');
-                form.setFields({
-                    password2: {
-                        value: psw2,
-                        errors: [new Error('2次输入的密码不一致')]
-                    }
-                });
-            }
-            else if (status === '4002') {
-                var phone = form.getFieldValue('userPhone');
-                form.setFields({
-                    userPhone: {
-                        value: phone,
-                        errors: [new Error('该手机号已被注册!')]
-                    }
-                });
-            }
-            else if (status === '200') {
-                setTimeout(function () {
-                    _this.setState({
-                        activeKey: '1'
-                    });
-                    form.resetFields();
-                }, 2000);
-            }
-        };
-        _this.analyseSignIn = function (_a) {
-            var status = _a.status, msg = _a.msg, user = _a.user;
-            var form = _this.props.form;
-            _this.setState({ signInLoading: false });
-            notification_service_1.default.open({
-                msg: msg,
-                title: "\u767B\u5F55" + (status === '200' ? '成功' : '失败'),
-                type: status === '200' ? 'ok' : 'error'
-            });
-            if (status === '4001') {
-                var phone = form.getFieldValue('signPhone');
-                form.setFields({
-                    signPhone: {
-                        value: phone,
-                        errors: [new Error('该手机号未注册')]
-                    }
-                });
-            }
-            else if (status === '4002') {
-                var value = form.getFieldValue('signPsw');
-                form.setFields({
-                    signPsw: {
-                        value: value,
-                        errors: [new Error('密码错误!')]
-                    }
-                });
-            }
-            else if (status === '200') {
-                setTimeout(function () {
-                    form.resetFields();
-                    /**本地登录 */
-                    auth_login_service_1.default.signIn(user);
-                    /**跳转 */
-                    _this.props.router.push('/projects');
-                }, 2000);
-            }
-        };
-        _this.errorSumitHandler = function (e) {
-            notification_service_1.default.open({
-                title: '注册请求错误',
-                msg: "\u9519\u8BEF\uFF1A" + e,
-                type: 'error'
-            });
-            return rxjs_1.Observable.of(e);
-        };
         _this.state = {
-            activeKey: "1",
-            loginLoading: false,
-            resetLoading: false,
-            signInLoading: false,
-            resetFormShow: false
+            msgDetail: null
         };
         return _this;
     }
-    LoginPage.prototype.render = function () {
-        var _this = this;
-        var getFieldDecorator = this.props.form.getFieldDecorator;
-        var _a = this.state, activeKey = _a.activeKey, loginLoading = _a.loginLoading, resetLoading = _a.resetLoading, signInLoading = _a.signInLoading, resetFormShow = _a.resetFormShow;
-        /**注册表单 */
-        var loginForm = React.createElement(antd_1.Form, { onSubmit: this.logInSubmit, className: "login-form" },
-            React.createElement(FormItem, { hasFeedback: true }, getFieldDecorator('userName', {
-                rules: [{ required: true, message: 'Please input your username!' }],
-            })(React.createElement(antd_1.Input, { prefix: React.createElement(antd_1.Icon, { type: "user", style: { fontSize: 16 } }), placeholder: "Username" }))),
-            React.createElement(FormItem, null, getFieldDecorator('userPhone', {
-                rules: [{ required: true, message: 'Please input your phone!' }],
-            })(React.createElement(antd_1.Input, { prefix: React.createElement(antd_1.Icon, { type: "phone", style: { fontSize: 16 } }), placeholder: "userPhone", type: "number" }))),
-            React.createElement(FormItem, null, getFieldDecorator('password', {
-                rules: [
-                    { required: true, message: 'Please input your Password!' },
-                    { validator: this.CheckPswByPsw }
-                ],
-            })(React.createElement(antd_1.Input, { prefix: React.createElement(antd_1.Icon, { type: "lock", style: { fontSize: 16 } }), type: "password", placeholder: "Password" }))),
-            React.createElement(FormItem, null, getFieldDecorator('password2', {
-                rules: [
-                    { required: true, message: 'Please input your Password right again' },
-                    { validator: this.checkPswByRepeat }
-                ],
-            })(React.createElement(antd_1.Input, { prefix: React.createElement(antd_1.Icon, { type: "lock", style: { fontSize: 16 } }), type: "password", placeholder: "Password Again" }))),
-            React.createElement(FormItem, null,
-                getFieldDecorator('remember', {
-                    valuePropName: 'checked',
-                    initialValue: true,
-                })(React.createElement(antd_1.Checkbox, null, "Remember me")),
-                React.createElement("a", { className: "login-form-forgot", onClick: this.resetPsw }, "Forgot password")),
-            React.createElement(FormItem, null,
-                React.createElement(antd_1.Button, { type: "primary", htmlType: "submit", className: "login-form-button", loading: loginLoading }, "Log in")));
-        /**登录表单 */
-        var signInForm = React.createElement(antd_1.Form, { onSubmit: this.signInSubmit, className: "login-form" },
-            React.createElement(FormItem, null, getFieldDecorator('signPhone', {
-                rules: [{ required: true, message: 'Please input your phone!' }],
-            })(React.createElement(antd_1.Input, { prefix: React.createElement(antd_1.Icon, { type: "phone", style: { fontSize: 16 } }), placeholder: "phone" }))),
-            React.createElement(FormItem, null, getFieldDecorator('signPsw', {
-                rules: [
-                    { required: true, message: 'Please input your Password!' }
-                ]
-            })(React.createElement(antd_1.Input, { prefix: React.createElement(antd_1.Icon, { type: "lock", style: { fontSize: 16 } }), type: "password", placeholder: "Password" }))),
-            React.createElement(FormItem, null,
-                getFieldDecorator('signRemember', {
-                    valuePropName: 'checked',
-                    initialValue: true,
-                })(React.createElement(antd_1.Checkbox, null, "Remember me")),
-                React.createElement("a", { className: "login-form-forgot", onClick: this.resetPsw }, "Forgot password")),
-            React.createElement(FormItem, null,
-                React.createElement(antd_1.Button, { type: "primary", htmlType: "submit", className: "login-form-button", loading: signInLoading }, "Sign in")));
-        /**忘记密码表单 */
-        var resetForm = React.createElement("div", { className: "modal-resetpsw-form" },
-            React.createElement("div", { className: "modal-img" },
-                React.createElement("img", { src: "/static/reset-psw.png", alt: "" })),
-            React.createElement(antd_1.Form, { className: "reset-form" },
-                React.createElement(FormItem, null, getFieldDecorator('resetUserName', {
-                    rules: [{ required: true, message: 'Please input your username!' }],
-                })(React.createElement(antd_1.Input, { prefix: React.createElement(antd_1.Icon, { type: "user", style: { fontSize: 16 } }), placeholder: "Username" }))),
-                React.createElement(FormItem, null, getFieldDecorator('reseUserPhone', {
-                    rules: [{ required: true, message: 'Please input your phone!' }]
-                })(React.createElement(antd_1.Input, { prefix: React.createElement(antd_1.Icon, { type: "phone", style: { fontSize: 16 } }), placeholder: "userPhone", type: "number" }))),
-                React.createElement(FormItem, null, getFieldDecorator('resetPsw', {
-                    rules: [
-                        { required: true, message: 'Please input your Password!' },
-                        { validator: this.CheckResetPswByPsw }
-                    ],
-                })(React.createElement(antd_1.Input, { prefix: React.createElement(antd_1.Icon, { type: "lock", style: { fontSize: 16 } }), type: "password", placeholder: "New Password" }))),
-                React.createElement(FormItem, null, getFieldDecorator('resetPsw2', {
-                    rules: [
-                        { required: true, message: 'Please input your Password right again' },
-                        { validator: this.checkResetPswByRepeat }
-                    ]
-                })(React.createElement(antd_1.Input, { prefix: React.createElement(antd_1.Icon, { type: "lock", style: { fontSize: 16 } }), type: "password", placeholder: "Password Again" })))));
-        return React.createElement("div", { className: "login-page" },
-            React.createElement("div", { className: "logo-block" },
-                React.createElement("h1", { className: "title" }, "iTeam"),
-                React.createElement("p", { className: "info" }, "\u4EA7\u54C1\u5F00\u53D1\u56E2\u961F\u534F\u4F5C\u5DE5\u5177")),
-            React.createElement("div", { className: "form-block" },
-                React.createElement(antd_1.Tabs, { activeKey: activeKey, onTabClick: function (e) { return _this.setState({ activeKey: "" + e }); } },
-                    React.createElement(TabPane, { tab: "登录", key: "1" }, signInForm),
-                    React.createElement(TabPane, { tab: "注册", key: "2" }, loginForm))),
-            React.createElement(antd_1.Modal, { title: "Reset Your Password", visible: resetFormShow, onOk: function () { return _this.setState({ resetFormShow: true }); }, onCancel: function () { return _this.setState({ resetFormShow: false }); }, style: { width: '400px !import', padding: '0 85px', marginTop: '-40px' }, footer: [
-                    React.createElement(antd_1.Button, { key: "back", size: "large", onClick: function () { return _this.setState({ resetFormShow: false }); } }, "Cacel"),
-                    React.createElement(antd_1.Button, { key: "submit", type: "primary", size: "large", onClick: this.resetSubmit }, "Submit"),
-                ] }, resetForm));
+    MsgDetailPage.prototype.componentDidMount = function () {
+        var id = this.props.params.id;
+        this.fetchMsgDetail(id);
     };
-    return LoginPage;
+    MsgDetailPage.prototype.componentWillReceiveProps = function (np) {
+        var id = np.params.id;
+        this.fetchMsgDetail(id);
+    };
+    MsgDetailPage.prototype.fetchMsgDetail = function (id) {
+        var _this = this;
+        http_service_1.default
+            .get('/api/v1/msg-detail', { id: id })
+            .do(function (res) {
+            console.log(res);
+            _this.setState({
+                msgDetail: res
+            });
+        })
+            .subscribe();
+    };
+    MsgDetailPage.prototype.render = function () {
+        var msgDetail = this.state.msgDetail;
+        return React.createElement("div", { className: "msg-detail-page" }, !!msgDetail &&
+            React.createElement("div", { className: "msg-block" },
+                React.createElement("h3", null, msgDetail.title),
+                React.createElement("p", { className: "content" }, msgDetail.content),
+                React.createElement("p", { className: "time" }, (new Date(msgDetail.meta.createdTime)).toLocaleString()),
+                React.createElement("p", { className: "name" }, msgDetail.fromUID.name)));
+    };
+    return MsgDetailPage;
 }(React.PureComponent));
-exports.default = antd_1.Form.create()(LoginPage);
+exports.default = MsgDetailPage;
 
 
 /***/ }),
 
-/***/ 1374:
+/***/ 1375:
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(Buffer) {/*
@@ -421,11 +143,11 @@ function toComment(sourceMap) {
   return '/*# ' + data + ' */';
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1378).Buffer))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1379).Buffer))
 
 /***/ }),
 
-/***/ 1375:
+/***/ 1376:
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -457,7 +179,7 @@ var stylesInDom = {},
 	singletonElement = null,
 	singletonCounter = 0,
 	styleElementsInsertedAtTop = [],
-	fixUrls = __webpack_require__(1381);
+	fixUrls = __webpack_require__(1382);
 
 module.exports = function(list, options) {
 	if(typeof DEBUG !== "undefined" && DEBUG) {
@@ -717,14 +439,14 @@ function updateLink(linkElement, options, obj) {
 
 /***/ }),
 
-/***/ 1376:
+/***/ 1377:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var rxjs_1 = __webpack_require__(48);
-var config_1 = __webpack_require__(1382);
+var config_1 = __webpack_require__(1383);
 var HttpService = (function () {
     function HttpService() {
         this.TIMEOUT = 10000;
@@ -763,14 +485,15 @@ var HttpService = (function () {
         this.sub = data$.subscribe();
         /**异步事件设置 */
         this.decorateXHR(xhr, data$$);
-        /**拼接查村串 */
-        // postBody = queryOpt ? this.setPostBody( queryOpt ) : '';
         /**开启xhr */
         xhr.open('POST', "" + config_1.default.reqURL + url, true);
-        // xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-        // xhr.send( postBody );
         xhr.setRequestHeader("Content-type", "application/json");
-        xhr.send(JSON.stringify(queryOpt));
+        if (queryOpt) {
+            xhr.send(JSON.stringify(queryOpt));
+        }
+        else {
+            xhr.send();
+        }
         console.info("sending http-POST: " + url);
         return data$;
     };
@@ -847,7 +570,7 @@ exports.default = new HttpService();
 
 /***/ }),
 
-/***/ 1377:
+/***/ 1378:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -969,7 +692,7 @@ function fromByteArray (uint8) {
 
 /***/ }),
 
-/***/ 1378:
+/***/ 1379:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -983,9 +706,9 @@ function fromByteArray (uint8) {
 
 
 
-var base64 = __webpack_require__(1377)
-var ieee754 = __webpack_require__(1380)
-var isArray = __webpack_require__(1379)
+var base64 = __webpack_require__(1378)
+var ieee754 = __webpack_require__(1381)
+var isArray = __webpack_require__(1380)
 
 exports.Buffer = Buffer
 exports.SlowBuffer = SlowBuffer
@@ -2767,7 +2490,7 @@ function isnan (val) {
 
 /***/ }),
 
-/***/ 1379:
+/***/ 1380:
 /***/ (function(module, exports) {
 
 var toString = {}.toString;
@@ -2779,7 +2502,7 @@ module.exports = Array.isArray || function (arr) {
 
 /***/ }),
 
-/***/ 1380:
+/***/ 1381:
 /***/ (function(module, exports) {
 
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
@@ -2870,7 +2593,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 
 /***/ }),
 
-/***/ 1381:
+/***/ 1382:
 /***/ (function(module, exports) {
 
 
@@ -2966,7 +2689,7 @@ module.exports = function (css) {
 
 /***/ }),
 
-/***/ 1382:
+/***/ 1383:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2979,38 +2702,38 @@ exports.default = {
 
 /***/ }),
 
-/***/ 1389:
+/***/ 1392:
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(1374)(undefined);
+exports = module.exports = __webpack_require__(1375)(undefined);
 // imports
 
 
 // module
-exports.push([module.i, ".login-page {\n  position: relative;\n  text-align: center;\n  padding-top: 100px;\n}\n.login-page .logo-block {\n  padding-bottom: 20px;\n}\n.login-page .logo-block .title {\n  font-size: 60px;\n}\n.login-page .logo-block .info {\n  font-size: 20px;\n}\n.login-page .form-block {\n  position: absolute;\n  width: 25%;\n  left: 50%;\n  transform: translate(-50%, 0);\n}\n.login-page .login-form button {\n  width: 80%;\n}\n.login-page .reset-form {\n  width: 80%;\n}\n", ""]);
+exports.push([module.i, ".msg-detail-page {\n  padding-top: 20px;\n  box-sizing: border-box;\n}\n", ""]);
 
 // exports
 
 
 /***/ }),
 
-/***/ 1396:
+/***/ 1400:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1389);
+var content = __webpack_require__(1392);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(1375)(content, {});
+var update = __webpack_require__(1376)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
 	// When the styles change, update the <style> tags
 	if(!content.locals) {
-		module.hot.accept("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./login.less", function() {
-			var newContent = require("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./login.less");
+		module.hot.accept("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./msg-detail.less", function() {
+			var newContent = require("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./msg-detail.less");
 			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 			update(newContent);
 		});

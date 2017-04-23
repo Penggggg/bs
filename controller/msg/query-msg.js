@@ -36,6 +36,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
+;
+;
 var msg_model_1 = require("../../model/models/msg.model");
 exports.fetchAllMsgList = function (ctx) { return __awaiter(_this, void 0, void 0, function () {
     var readed, toUID, limit, skip, count, _a, data, _b, result, _c;

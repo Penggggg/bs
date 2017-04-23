@@ -1,4 +1,4 @@
-import * as Koa from 'koa';
+import * as Koa from 'koa';;;
 
 import MsgModel from '../../model/models/msg.model';
 
@@ -52,5 +52,5 @@ export let fetchFadeMsgList = async( ctx: Koa.Context ) => {
 
 
 export let fetchMsgDetail = async( ctx: Koa.Context ) => {
-    
+
 }

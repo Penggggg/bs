@@ -38,8 +38,8 @@ export let InjectMsgList = ( PopoverBadge ) => {
             this.sub = userStore.data.userData$
                 .do( user => {
                     http
-                        .post<API.Res.AllMsg>('/api/v1/msg-list-fade', 
-                            { toUID: user._id, readed: false, limit: 3, skip: 0 } as API.Query.AllMsg )
+                        .post<API.Res.AllMsg, API.Query.AllMsg>('/api/v1/msg-list-fade', 
+                            { toUID: user._id, readed: false, limit: 3, skip: 0 })
                         .combineLatest(msgStore.data.data$)
                         .do( res => {
                             let { msgList, count } = this.state;

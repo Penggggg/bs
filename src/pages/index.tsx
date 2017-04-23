@@ -91,7 +91,17 @@ export default {
                 System.import('./msg/msg-all.page').then( module => { 
                     cb( null, module.default )}
                 ).catch(( err: Error ) => showMessage( err, './msg-all.page' ))
-            }      
+            },
+            childRoutes: [
+                {
+                    path: ':id',
+                    getComponent: ( nextstate: RouterState , cb: Function ) => {
+                        System.import('./msg/msg-detail.page').then( module => { 
+                            cb( null, module.default )}
+                        ).catch(( err: Error ) => showMessage( err, './msg-detail.page' ))
+                    }              
+                }
+            ]    
         }
     ]
 }

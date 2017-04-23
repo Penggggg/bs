@@ -27,6 +27,11 @@ declare namespace API {
             data: Array<Partial<APP.Msg>>
         }
 
+        /**GET：消息详情 */
+        export interface MsgDetail extends APP.Msg {
+
+        }
+
     }
 
     export namespace Req {
@@ -60,6 +65,11 @@ declare namespace API {
         export interface AllMsg extends Partial<APP.Msg> {
             limit: number | null
             skip: number | null
+        }
+
+        /**GET：消息详情 */
+        export interface MsgDetail {
+            _id: string
         }
 
     }

@@ -10,6 +10,9 @@ class HttpService {
         return new XMLHttpRequest( );
     }
     
+    public get< T >( url: string ): Observable<T>
+    public get< T, Q >( url: string, query: Q ): Observable<T>
+
     public get<T>( url: string, opt?: object ): Observable<T> {
 
         /**变量声明 */
@@ -38,7 +41,10 @@ class HttpService {
         return data$;
     }
 
-    public post<T>( url: string, queryOpt: Object ): Observable<T> {
+    public post< T >( url: string ): Observable<T>
+    public post< T, Q >( url: string, query: Q ): Observable<T>
+
+    public post<T>( url: string, queryOpt?: Object ): Observable<T> {
   
         /**变量声明 */
         let postBody: string;
@@ -55,17 +61,17 @@ class HttpService {
         /**异步事件设置 */
         this.decorateXHR( xhr, data$$ );
 
-        /**拼接查村串 */
-        // postBody = queryOpt ? this.setPostBody( queryOpt ) : '';
 
         /**开启xhr */
         xhr.open( 'POST', `${clientConfig.reqURL}${url}`, true );
 
-        // xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-        // xhr.send( postBody );
-
         xhr.setRequestHeader("Content-type","application/json");
-        xhr.send(JSON.stringify( queryOpt ));
+        
+        if ( queryOpt ) {
+            xhr.send(JSON.stringify( queryOpt ))
+        } else {
+            xhr.send( )
+        }
 
         console.info(`sending http-POST: ${url}`);
 

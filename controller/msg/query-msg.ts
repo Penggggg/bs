@@ -49,3 +49,8 @@ export let fetchFadeMsgList = async( ctx: Koa.Context ) => {
     ctx.body = result;
 
 }
+
+
+export let fetchMsgDetail = async( ctx: Koa.Context ) => {
+    
+}

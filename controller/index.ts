@@ -6,7 +6,7 @@ import { inviteMember } from './project/invite-member';
 import { createProject } from './project/create-project';
 import { fetchAllUserByName } from './user/query.controller';
 import { allProject, projectDetail } from './project/query-project';
-import { fetchAllMsgList, fetchFadeMsgList } from './msg/query-msg';
+import { fetchAllMsgList, fetchFadeMsgList, fetchMsgDetail } from './msg/query-msg';
 
 
 export default ( router ) => {
@@ -39,7 +39,9 @@ export default ( router ) => {
     /**消息模块：查询所有符合条件的消息 */
     router.post('/api/v1/msg-list', fetchAllMsgList );
     /**消息模块：所有消息的伪查询 */
-    router.post('/api/v1/msg-list-fade', fetchFadeMsgList )
+    router.post('/api/v1/msg-list-fade', fetchFadeMsgList );
+    /**消息模块 */
+    router.get('/api/v1/msg-detail/:_id', fetchMsgDetail )
 
 
 }

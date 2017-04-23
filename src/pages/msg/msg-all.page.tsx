@@ -40,6 +40,7 @@ export default class msgAllPage extends React.PureComponent< IProps, IState > {
 
     watchSOK( ) {
         this.sub = msgStore.data.data$
+            .filter( sok => sok !== null )
             .do( res => {
                 let { currentPage, msgType } = this.state;
                 this.fetchMsgList( msgType === '所有消息' ? true : false, currentPage );
@@ -98,9 +99,9 @@ export default class msgAllPage extends React.PureComponent< IProps, IState > {
         let msgContent = <ul>
             {
                 msgList.map(( msg, key ) => <li key={key}>
-                    <a onClick={() => console.log(key)}>
+                    <a href={`/#/msgs/${msg._id}`}>
                         <Image src="/static/touxiang.png" />
-                        <Tag color="#108ee9" className="my-tag">未读</Tag> 
+                        { !msg.readed && <Tag color="#108ee9" className="my-tag">未读</Tag> }
                         <h3>{ msg.title }</h3>
                         <p>{ msg.content }</p>
                         <span className="time">{(new Date(msg.meta.createdTime)).toLocaleString( )}</span>
@@ -129,7 +130,7 @@ export default class msgAllPage extends React.PureComponent< IProps, IState > {
                                     <span style={{ color: '#666' }}>{ total }条</span>
                                 </div>
                                 <div className="content">
-                                    <Spin spinning={ spinning } tip="Loading..."  size="large">
+                                    <Spin spinning={ spinning } tip="Loading..."  size="large" className="my-spin">
                                         { msgContent }
                                     </Spin> 
                                 </div>
@@ -139,7 +140,7 @@ export default class msgAllPage extends React.PureComponent< IProps, IState > {
                                 </div>
                             </div>
                         </Col>
-                        <Col span={14} className="msg-content">{ this.props.children }??</Col>
+                        <Col span={14} className="msg-content">{ this.props.children }</Col>
                     </Row>
                 </Content>
             </Layout>

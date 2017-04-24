@@ -1,6 +1,6 @@
 webpackJsonp([2],{
 
-/***/ 1372:
+/***/ 1374:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16,15 +16,14 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-__webpack_require__(1401);
+__webpack_require__(1403);
 var React = __webpack_require__(0);
-var antd_1 = __webpack_require__(154);
-var index_con_1 = __webpack_require__(114);
+var antd_1 = __webpack_require__(91);
 var user_1 = __webpack_require__(155);
-var http_service_1 = __webpack_require__(541);
-var project_1 = __webpack_require__(542);
+var http_service_1 = __webpack_require__(542);
+var project_1 = __webpack_require__(240);
 var auth_login_service_1 = __webpack_require__(543);
-var Image_component_1 = __webpack_require__(1386);
+var Image_component_1 = __webpack_require__(1388);
 var notification_service_1 = __webpack_require__(239);
 var FormItem = antd_1.Form.Item;
 var ProjectAllPage = (function (_super) {
@@ -55,7 +54,7 @@ var ProjectAllPage = (function (_super) {
             }
         };
         _this.watchRole = function () {
-            var sub = _this.projectStore.data.data$
+            _this.sub = _this.projectStore.data.data$
                 .combineLatest(_this.userStore.data.userData$)
                 .debounceTime(500)
                 .do(function (res) {
@@ -63,41 +62,31 @@ var ProjectAllPage = (function (_super) {
                 var isLeader = false;
                 var isMember = false;
                 var isCreator = false;
-                var userID = res[1]._id;
+                var project = res[0], user = res[1];
+                var userID = user._id;
                 /**creator判断 */
-                if (userID === res[0].creator._id) {
+                if (userID === project.creator._id) {
                     isCreator = true;
                     _this.projectStore.role.save('creator');
-                    _this.props.router.push("/project/" + res[0]._id + "/tasks");
+                    return _this.props.router.push("/project/" + project._id + "/tasks");
                 }
                 /**leader判断 */
-                isLeader = res[0].leader.some(function (leader) {
-                    if (userID === leader._id) {
-                        _this.projectStore.role.save('leader');
-                        _this.props.router.push("/project/" + res[0]._id + "/tasks");
-                        return true;
-                    }
-                    return false;
-                });
+                if (project.leader.find(function (leader) { return leader._id === userID; })) {
+                    isLeader = true;
+                    _this.projectStore.role.save('leader');
+                    return _this.props.router.push("/project/" + project._id + "/tasks");
+                }
                 /**member判断 */
-                if (!isLeader) {
-                    isMember = res[0].member.some(function (member) {
-                        if (userID === member._id) {
-                            _this.projectStore.role.save('member');
-                            _this.props.router.push("/project/" + res[0]._id + "/tasks");
-                            return true;
-                        }
-                        return false;
-                    });
+                if (project.member.find(function (member) { return member._id === userID; })) {
+                    isMember = true;
+                    _this.projectStore.role.save('member');
+                    return _this.props.router.push("/project/" + project._id + "/tasks");
                 }
                 /**没有权限 */
-                if (!(isCreator || isLeader || isMember)) {
-                    antd_1.Modal.warning({
-                        title: 'Warning',
-                        content: '您没有该项目的权限！请先申请权限'
-                    });
-                }
-                index_con_1.Util.cancelSubscribe(sub);
+                return antd_1.Modal.warning({
+                    title: 'Warning',
+                    content: '您没有该项目的权限！请先申请权限'
+                });
             })
                 .subscribe();
         };
@@ -148,6 +137,7 @@ var ProjectAllPage = (function (_super) {
         this.fetchAllProject();
     };
     ProjectAllPage.prototype.componentWillUnmount = function () {
+        this.sub.unsubscribe();
     };
     ProjectAllPage.prototype.render = function () {
         var _this = this;
@@ -176,20 +166,12 @@ var ProjectAllPage = (function (_super) {
                         if (_this.userData._id === project.creator._id) {
                             return _this.renderToJsx(project);
                         }
-                        project.leader.some(function (leader) {
-                            if (_this.userData._id === leader._id) {
-                                _this.renderToJsx(project);
-                                return true;
-                            }
-                            return false;
-                        });
-                        project.member.some(function (member) {
-                            if (_this.userData._id === member._id) {
-                                _this.renderToJsx(project);
-                                return true;
-                            }
-                            return false;
-                        });
+                        if (project.leader.find(function (leader) { return leader._id === _this.userData._id; })) {
+                            return _this.renderToJsx(project);
+                        }
+                        if (project.member.find(function (member) { return member._id === _this.userData._id; })) {
+                            return _this.renderToJsx(project);
+                        }
                     }),
                     React.createElement(antd_1.Card, { className: "project-card add-project-card", bodyStyle: { padding: 0, height: '100%' } },
                         React.createElement(antd_1.Icon, { type: "plus-circle", className: "icon", onClick: function () { return _this.setState({ dynamicFormShow: true }); } }),
@@ -208,7 +190,7 @@ exports.default = antd_1.Form.create()(ProjectAllPage);
 
 /***/ }),
 
-/***/ 1377:
+/***/ 1379:
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(Buffer) {/*
@@ -287,11 +269,11 @@ function toComment(sourceMap) {
   return '/*# ' + data + ' */';
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1380).Buffer))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1382).Buffer))
 
 /***/ }),
 
-/***/ 1378:
+/***/ 1380:
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -323,7 +305,7 @@ var stylesInDom = {},
 	singletonElement = null,
 	singletonCounter = 0,
 	styleElementsInsertedAtTop = [],
-	fixUrls = __webpack_require__(1383);
+	fixUrls = __webpack_require__(1385);
 
 module.exports = function(list, options) {
 	if(typeof DEBUG !== "undefined" && DEBUG) {
@@ -583,7 +565,7 @@ function updateLink(linkElement, options, obj) {
 
 /***/ }),
 
-/***/ 1379:
+/***/ 1381:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -705,7 +687,7 @@ function fromByteArray (uint8) {
 
 /***/ }),
 
-/***/ 1380:
+/***/ 1382:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -719,9 +701,9 @@ function fromByteArray (uint8) {
 
 
 
-var base64 = __webpack_require__(1379)
-var ieee754 = __webpack_require__(1382)
-var isArray = __webpack_require__(1381)
+var base64 = __webpack_require__(1381)
+var ieee754 = __webpack_require__(1384)
+var isArray = __webpack_require__(1383)
 
 exports.Buffer = Buffer
 exports.SlowBuffer = SlowBuffer
@@ -2503,7 +2485,7 @@ function isnan (val) {
 
 /***/ }),
 
-/***/ 1381:
+/***/ 1383:
 /***/ (function(module, exports) {
 
 var toString = {}.toString;
@@ -2515,7 +2497,7 @@ module.exports = Array.isArray || function (arr) {
 
 /***/ }),
 
-/***/ 1382:
+/***/ 1384:
 /***/ (function(module, exports) {
 
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
@@ -2606,7 +2588,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 
 /***/ }),
 
-/***/ 1383:
+/***/ 1385:
 /***/ (function(module, exports) {
 
 
@@ -2702,10 +2684,10 @@ module.exports = function (css) {
 
 /***/ }),
 
-/***/ 1384:
+/***/ 1386:
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(1377)(undefined);
+exports = module.exports = __webpack_require__(1379)(undefined);
 // imports
 
 
@@ -2717,16 +2699,16 @@ exports.push([module.i, ".my-img {\n  opacity: 0;\n  transition: all 0.4s ease;\
 
 /***/ }),
 
-/***/ 1385:
+/***/ 1387:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1384);
+var content = __webpack_require__(1386);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(1378)(content, {});
+var update = __webpack_require__(1380)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -2744,7 +2726,7 @@ if(false) {
 
 /***/ }),
 
-/***/ 1386:
+/***/ 1388:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2761,7 +2743,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
-__webpack_require__(1385);
+__webpack_require__(1387);
 var Image = (function (_super) {
     __extends(Image, _super);
     function Image() {
@@ -2788,10 +2770,10 @@ exports.default = Image;
 
 /***/ }),
 
-/***/ 1393:
+/***/ 1395:
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(1377)(undefined);
+exports = module.exports = __webpack_require__(1379)(undefined);
 // imports
 
 
@@ -2803,16 +2785,16 @@ exports.push([module.i, "/**2个大block */\n/**标题 */\n/**展示区 */\n/**c
 
 /***/ }),
 
-/***/ 1401:
+/***/ 1403:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1393);
+var content = __webpack_require__(1395);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(1378)(content, {});
+var update = __webpack_require__(1380)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {

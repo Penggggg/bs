@@ -19,7 +19,7 @@ const FormItem = Form.Item;
 
 class ProjectAllPage extends React.PureComponent< IProps, IState > {
     
-
+    private sub: Subscription;
     private watchingRole = false;
     private formProjectName = 'projectName';
     private formProjectInfo = 'projectInfo';
@@ -42,7 +42,7 @@ class ProjectAllPage extends React.PureComponent< IProps, IState > {
     }
 
     componentWillUnmount( ) {
-       
+       this.sub.unsubscribe( );
     }
 
     private fetchAllProject = ( ) => {
@@ -67,7 +67,7 @@ class ProjectAllPage extends React.PureComponent< IProps, IState > {
     }
 
     private watchRole = ( ) => {
-        let sub = this.projectStore.data.data$
+        this.sub = this.projectStore.data.data$
             .combineLatest(this.userStore.data.userData$)
             .debounceTime( 500 )
             .do( res => {
@@ -77,44 +77,38 @@ class ProjectAllPage extends React.PureComponent< IProps, IState > {
                 let isMember = false;
                 let isCreator = false;
 
-                let userID = res[1]._id;
+                let [ project, user ] = res;
+
+                let userID = user._id;
 
                 /**creator判断 */
-                if ( userID === res[0].creator._id ) {
+                if ( userID === project.creator._id ) {
                     isCreator = true;
                     this.projectStore.role.save('creator');
-                    this.props.router.push(`/project/${res[0]._id}/tasks`)
+                    return this.props.router.push(`/project/${project._id}/tasks`)
                 }
 
                 /**leader判断 */
-                isLeader = res[0].leader.some(( leader ) => {
-                    if ( userID === leader._id ) {
-                        this.projectStore.role.save('leader');
-                        this.props.router.push(`/project/${res[0]._id}/tasks`);
-                        return true;
-                    }
-                    return false;
-                })
+                if (project.leader.find( leader => leader._id === userID )) {
+                    isLeader = true;
+                    this.projectStore.role.save('leader');
+                    return this.props.router.push(`/project/${project._id}/tasks`)
+                }
 
                 /**member判断 */
-                if( !isLeader ) {
-                    isMember = res[0].member.some(( member ) => {
-                        if ( userID === member._id ) {
-                            this.projectStore.role.save('member');
-                            this.props.router.push(`/project/${res[0]._id}/tasks`);
-                            return true;             
-                        }
-                        return false;
-                    })
+                if (project.member.find( member => member._id === userID )) {
+                    isMember = true;
+                    this.projectStore.role.save('member');
+                    return this.props.router.push(`/project/${project._id}/tasks`)
                 }
+
                 /**没有权限 */
-                if (!( isCreator || isLeader || isMember )) {
-                    Modal.warning({
-                        title: 'Warning',
-                        content: '您没有该项目的权限！请先申请权限'
-                    })
-                }
-                Util.cancelSubscribe( sub );
+               
+                return Modal.warning({
+                    title: 'Warning',
+                    content: '您没有该项目的权限！请先申请权限'
+                })
+                
             })
             .subscribe( )
     }
@@ -212,20 +206,12 @@ class ProjectAllPage extends React.PureComponent< IProps, IState > {
                              if ( this.userData._id === project.creator._id ) {
                                  return this.renderToJsx( project )
                              } 
-                             project.leader.some(( leader ) => {
-                                 if ( this.userData._id === leader._id ) {
-                                    this.renderToJsx( project );
-                                    return true;
-                                 }
-                                 return false;
-                             })
-                             project.member.some(( member ) => {
-                                 if ( this.userData._id === member._id ) {
-                                    this.renderToJsx( project );
-                                    return true;
-                                 }
-                                 return false;
-                             })              
+                             if ( project.leader.find( leader => leader._id === this.userData._id )) {
+                                 return this.renderToJsx( project )
+                             }                              
+                             if ( project.member.find( member => member._id === this.userData._id )) {
+                                 return this.renderToJsx( project )
+                             }              
                          })                        
                     }
                      <Card  className="project-card add-project-card"  bodyStyle={{ padding: 0, height: '100%'}}>

@@ -5,6 +5,7 @@ import { RouteComponentProps } from 'react-router';
 
 import { ENUM } from '../../index.con';
 import http from '../../services/http.service';
+import notification  from '../../services/notification.service';
 
 export default class MsgDetailPage extends React.PureComponent< IProps, IState > {
 
@@ -26,6 +27,8 @@ export default class MsgDetailPage extends React.PureComponent< IProps, IState >
     componentWillReceiveProps( np ) {
         let { id } = np.params;
         this.fetchMsgDetail( id );   
+        this.controllLoading('resolveBtn', false );
+        this.controllLoading('rejectBtn', false );
     }
 
     fetchMsgDetail( id: string ) {
@@ -52,8 +55,12 @@ export default class MsgDetailPage extends React.PureComponent< IProps, IState >
         let sub = http
             .post<API.Res.ReplyInvite, API.Query.ReplyInvite>( replyURL, { answer, mid })
             .do( res => {
-                console.log( res );
+                notification.open({
+                    title: '系统消息',
+                    msg: res.msg
+                })
                 setTimeout(( ) => sub.unsubscribe, 100 );
+                this.controllLoading( answer ? 'resolveBtn' : 'rejectBtn', false )
             })
             .subscribe( )
     }

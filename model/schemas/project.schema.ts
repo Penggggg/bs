@@ -59,6 +59,8 @@ PorjectSchema.statics.findAllWithNest =  function( select ) {
         this
             .find({ }, ['name', 'info', 'cover', 'creator', 'leader', 'member'])
             .populate('creator', select )
+            .populate('member', select )
+            .populate('leader', select )
             .exec(( err, data ) => returnData( err, resolve, reject, data ))
     })
 }

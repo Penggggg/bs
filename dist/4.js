@@ -1,6 +1,6 @@
 webpackJsonp([4],{
 
-/***/ 1369:
+/***/ 1371:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16,10 +16,11 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-__webpack_require__(1400);
+__webpack_require__(1402);
 var React = __webpack_require__(0);
-var antd_1 = __webpack_require__(154);
-var http_service_1 = __webpack_require__(541);
+var antd_1 = __webpack_require__(91);
+var http_service_1 = __webpack_require__(542);
+var notification_service_1 = __webpack_require__(239);
 var MsgDetailPage = (function (_super) {
     __extends(MsgDetailPage, _super);
     function MsgDetailPage() {
@@ -29,8 +30,12 @@ var MsgDetailPage = (function (_super) {
             var sub = http_service_1.default
                 .post(replyURL, { answer: answer, mid: mid })
                 .do(function (res) {
-                console.log(res);
+                notification_service_1.default.open({
+                    title: '系统消息',
+                    msg: res.msg
+                });
                 setTimeout(function () { return sub.unsubscribe; }, 100);
+                _this.controllLoading(answer ? 'resolveBtn' : 'rejectBtn', false);
             })
                 .subscribe();
         };
@@ -65,6 +70,8 @@ var MsgDetailPage = (function (_super) {
     MsgDetailPage.prototype.componentWillReceiveProps = function (np) {
         var id = np.params.id;
         this.fetchMsgDetail(id);
+        this.controllLoading('resolveBtn', false);
+        this.controllLoading('rejectBtn', false);
     };
     MsgDetailPage.prototype.fetchMsgDetail = function (id) {
         var _this = this;
@@ -105,7 +112,7 @@ exports.default = MsgDetailPage;
 
 /***/ }),
 
-/***/ 1377:
+/***/ 1379:
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(Buffer) {/*
@@ -184,11 +191,11 @@ function toComment(sourceMap) {
   return '/*# ' + data + ' */';
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1380).Buffer))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1382).Buffer))
 
 /***/ }),
 
-/***/ 1378:
+/***/ 1380:
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -220,7 +227,7 @@ var stylesInDom = {},
 	singletonElement = null,
 	singletonCounter = 0,
 	styleElementsInsertedAtTop = [],
-	fixUrls = __webpack_require__(1383);
+	fixUrls = __webpack_require__(1385);
 
 module.exports = function(list, options) {
 	if(typeof DEBUG !== "undefined" && DEBUG) {
@@ -480,7 +487,7 @@ function updateLink(linkElement, options, obj) {
 
 /***/ }),
 
-/***/ 1379:
+/***/ 1381:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -602,7 +609,7 @@ function fromByteArray (uint8) {
 
 /***/ }),
 
-/***/ 1380:
+/***/ 1382:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -616,9 +623,9 @@ function fromByteArray (uint8) {
 
 
 
-var base64 = __webpack_require__(1379)
-var ieee754 = __webpack_require__(1382)
-var isArray = __webpack_require__(1381)
+var base64 = __webpack_require__(1381)
+var ieee754 = __webpack_require__(1384)
+var isArray = __webpack_require__(1383)
 
 exports.Buffer = Buffer
 exports.SlowBuffer = SlowBuffer
@@ -2400,7 +2407,7 @@ function isnan (val) {
 
 /***/ }),
 
-/***/ 1381:
+/***/ 1383:
 /***/ (function(module, exports) {
 
 var toString = {}.toString;
@@ -2412,7 +2419,7 @@ module.exports = Array.isArray || function (arr) {
 
 /***/ }),
 
-/***/ 1382:
+/***/ 1384:
 /***/ (function(module, exports) {
 
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
@@ -2503,7 +2510,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 
 /***/ }),
 
-/***/ 1383:
+/***/ 1385:
 /***/ (function(module, exports) {
 
 
@@ -2599,10 +2606,10 @@ module.exports = function (css) {
 
 /***/ }),
 
-/***/ 1392:
+/***/ 1394:
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(1377)(undefined);
+exports = module.exports = __webpack_require__(1379)(undefined);
 // imports
 
 
@@ -2614,16 +2621,16 @@ exports.push([module.i, ".msg-detail-page {\n  padding-top: 20px;\n  box-sizing:
 
 /***/ }),
 
-/***/ 1400:
+/***/ 1402:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1392);
+var content = __webpack_require__(1394);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(1378)(content, {});
+var update = __webpack_require__(1380)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {

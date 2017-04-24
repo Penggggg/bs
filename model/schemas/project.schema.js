@@ -56,6 +56,8 @@ exports.PorjectSchema.statics.findAllWithNest = function (select) {
         _this
             .find({}, ['name', 'info', 'cover', 'creator', 'leader', 'member'])
             .populate('creator', select)
+            .populate('member', select)
+            .populate('leader', select)
             .exec(function (err, data) { return returnData(err, resolve, reject, data); });
     });
 };

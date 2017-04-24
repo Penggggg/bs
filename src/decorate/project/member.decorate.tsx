@@ -94,7 +94,7 @@ export let InjectMember = ( Slider ) => {
             this.sub = projectStore.data.data$
                 .do( project => {
                     let { creator, member, leader, _id } = project;
-                    console.log( project )
+                    
                     this.setState({
                         content: <div><ul>
                             <li className="btn" style={{ paddingLeft: 0 }} onClick={ this.addNewMember }>

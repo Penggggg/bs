@@ -237,10 +237,7 @@ declare namespace APP {
         PID: Partial<APP.Project>
     }
 
-    /**项目事件 */
-    export abstract class ProjectEvent {
-        cancelSub( ): void
-    }
+
 
 }
 

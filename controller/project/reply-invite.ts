@@ -15,55 +15,63 @@ export let replyInvite = async( ctx: Koa.Context ) => {
     let project = projectData[ 0 ];
 
     /**0. 检查dirty */
-
-    /**1. 刷新msg dirty */
-    let updateDirty = await MsgModel.updateDirty( mid );
-
-    /**2-1. 拒绝加入 */
-    if ( !answer ) {
+    if ( msg.dirty ) {
         result = {
-            msg: '您已拒绝加入邀请',
+            msg: '提交无效，此前您已经选择过是否加入',
             status: '200'
         }
         return ctx.body = result;
+    } else {
+
+        /**1. 刷新msg dirty */
+        let updateDirty = await MsgModel.updateDirty( mid );
+
+        /**2-1. 拒绝加入 */
+        if ( !answer ) {
+            result = {
+                msg: '您已拒绝加入邀请',
+                status: '200'
+            }
+            return ctx.body = result;
+        }
+
+        /**2-2-0. 检查项目成员、组长、boss */
+        if ( project.creator._id === msg.toUID ) {
+            result = {
+                msg: '您已是该项目的负责任人',
+                status: '200'
+            }
+            return ctx.body = result;        
+        } 
+        if ( project.leader.find( leaderID =>  JSON.stringify(leaderID) ===  JSON.stringify(msg.toUID) )) {
+            result = {
+                msg: '您已是该项目的组长',
+                status: '200'
+            }
+            return ctx.body = result;         
+        } 
+        if ( project.member.find( uid =>  JSON.stringify(uid) ===  JSON.stringify(msg.toUID) )) {
+            result = {
+                msg: '您已是该项目的成员',
+                status: '200'
+            }
+            return ctx.body = result;         
+        }
+
+        /**2-2-1. 加入项目成员 */
+        let newMembers = [ ...project.member, msg.toUID ];
+        let updateMember = await ProjectModel.updateMember( project._id ,newMembers );
+
+
+        /**2-2-2. socket通告 */
+
+
+        /**3. 返回数据 */
+        result = {
+            msg: `成功加入【${project.name}】项目！`,
+            status: '200'
+        }
+        ctx.body = result;
     }
-
-    console.log(project.member)
-    console.log(msg.toUID)
-    console.log( typeof project.member[0])
-    console.log( typeof msg.toUID)
-    /**2-2-0. 检查项目成员、组长、boss */
-    if ( project.creator._id === msg.toUID ) {
-        result = {
-            msg: '您已是该项目的负责任人',
-            status: '200'
-        }
-        return ctx.body = result;        
-    } 
-    if ( project.leader.find( leaderID => leaderID === msg.toUID )) {
-        result = {
-            msg: '您已是该项目的组长',
-            status: '200'
-        }
-        return ctx.body = result;         
-    } 
-    if ( project.member.find( uid => uid === msg.toUID )) {
-        console.log('???????????')
-        result = {
-            msg: '您已是该项目的成员',
-            status: '200'
-        }
-        return ctx.body = result;         
-    }
-
-    /**2-2-1. 加入项目成员 */
-    let newMembers = [ ...project.member, msg.toUID ];
-    let updateMember = await ProjectModel.updateMember( project._id ,newMembers );
-
-
-    /**2-2-2. socket通告 */
-
-
-    /**3. 返回数据 */
 
 }

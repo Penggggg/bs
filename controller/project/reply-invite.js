@@ -52,8 +52,14 @@ exports.replyInvite = function (ctx) { return __awaiter(_this, void 0, void 0, f
                 projectData = _b.sent();
                 msg = msgData[0];
                 project = projectData[0];
-                return [4 /*yield*/, msg_model_1.default.updateDirty(mid)];
-            case 3:
+                if (!msg.dirty) return [3 /*break*/, 3];
+                result = {
+                    msg: '提交无效，此前您已经选择过是否加入',
+                    status: '200'
+                };
+                return [2 /*return*/, ctx.body = result];
+            case 3: return [4 /*yield*/, msg_model_1.default.updateDirty(mid)];
+            case 4:
                 updateDirty = _b.sent();
                 /**2-1. 拒绝加入 */
                 if (!answer) {
@@ -63,10 +69,6 @@ exports.replyInvite = function (ctx) { return __awaiter(_this, void 0, void 0, f
                     };
                     return [2 /*return*/, ctx.body = result];
                 }
-                console.log(project.member);
-                console.log(msg.toUID);
-                console.log(typeof project.member[0]);
-                console.log(typeof msg.toUID);
                 /**2-2-0. 检查项目成员、组长、boss */
                 if (project.creator._id === msg.toUID) {
                     result = {
@@ -75,15 +77,14 @@ exports.replyInvite = function (ctx) { return __awaiter(_this, void 0, void 0, f
                     };
                     return [2 /*return*/, ctx.body = result];
                 }
-                if (project.leader.find(function (leaderID) { return leaderID === msg.toUID; })) {
+                if (project.leader.find(function (leaderID) { return JSON.stringify(leaderID) === JSON.stringify(msg.toUID); })) {
                     result = {
                         msg: '您已是该项目的组长',
                         status: '200'
                     };
                     return [2 /*return*/, ctx.body = result];
                 }
-                if (project.member.find(function (uid) { return uid === msg.toUID; })) {
-                    console.log('???????????');
+                if (project.member.find(function (uid) { return JSON.stringify(uid) === JSON.stringify(msg.toUID); })) {
                     result = {
                         msg: '您已是该项目的成员',
                         status: '200'
@@ -92,9 +93,17 @@ exports.replyInvite = function (ctx) { return __awaiter(_this, void 0, void 0, f
                 }
                 newMembers = project.member.concat([msg.toUID]);
                 return [4 /*yield*/, project_model_1.default.updateMember(project._id, newMembers)];
-            case 4:
+            case 5:
                 updateMember = _b.sent();
-                return [2 /*return*/];
+                /**2-2-2. socket通告 */
+                /**3. 返回数据 */
+                result = {
+                    msg: "\u6210\u529F\u52A0\u5165\u3010" + project.name + "\u3011\u9879\u76EE\uFF01",
+                    status: '200'
+                };
+                ctx.body = result;
+                _b.label = 6;
+            case 6: return [2 /*return*/];
         }
     });
 }); };

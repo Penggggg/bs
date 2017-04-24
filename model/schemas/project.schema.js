@@ -82,7 +82,7 @@ exports.PorjectSchema.statics.save = function (name, info, userID) {
     return new Promise(function (resolve, reject) {
         var model = _this.model('Project');
         new model({ name: name, info: info, creator: userID })
-            .save(function (err) { return returnData(err, resolve, reject); });
+            .save(function (err, data) { return returnData(err, resolve, reject, data); });
     });
 };
 function getRanDom(range) {

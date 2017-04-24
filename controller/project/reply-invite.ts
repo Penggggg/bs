@@ -17,7 +17,7 @@ export let replyInvite = async( ctx: Koa.Context ) => {
     /**0. 检查dirty */
     if ( msg.dirty ) {
         result = {
-            msg: '提交无效，此前您已经选择过是否加入',
+            msg: '提交无效，此前您已经选择过是否加入该项目',
             status: '200'
         }
         return ctx.body = result;

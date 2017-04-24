@@ -54,7 +54,7 @@ exports.replyInvite = function (ctx) { return __awaiter(_this, void 0, void 0, f
                 project = projectData[0];
                 if (!msg.dirty) return [3 /*break*/, 3];
                 result = {
-                    msg: '提交无效，此前您已经选择过是否加入',
+                    msg: '提交无效，此前您已经选择过是否加入该项目',
                     status: '200'
                 };
                 return [2 /*return*/, ctx.body = result];

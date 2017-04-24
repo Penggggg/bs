@@ -86,7 +86,7 @@ PorjectSchema.statics.save = function( name, info, userID ) {
     return new Promise(( resolve, reject ) => {
         let model = this.model('Project');
         new model({ name, info, creator: userID })
-            .save(( err ) => returnData( err, resolve, reject ))
+            .save(( err, data ) => returnData( err, resolve, reject, data ))
     })
 }
 

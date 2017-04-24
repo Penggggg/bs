@@ -58,6 +58,7 @@ declare namespace API {
             status: '200' | '400' | '500'
         }
 
+
     }
 
     export namespace Req {
@@ -104,8 +105,8 @@ declare namespace API {
 
         /**POST：新增项目 */
         export interface CreateProject {
-            ProjectName: string
-            ProjectInfo: string
+            projectName: string
+            projectInfo: string
             creatorID: string
         }
 

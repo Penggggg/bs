@@ -234,6 +234,17 @@ var socketService = (function () {
         this.connectedNameSpace[name] = socketClient;
         return socketClient;
     };
+    socketService.prototype.connectNewProject = function (pid) {
+        /**接触上次namespace */
+        if (!!this.connectingPID) {
+            this.disconnectNsp(this.connectingPID);
+        }
+        /**新建namespace */
+        var socketClient = io(this.connectedUrl + "/" + pid);
+        this.connectingPID = pid;
+        this.connectedNameSpace[pid] = socketClient;
+        return socketClient;
+    };
     socketService.prototype.disconnectNsp = function (name) {
         this.connectedNameSpace[name].disconnect();
         delete this.connectedNameSpace[name];

@@ -12,6 +12,7 @@ var UserSocket = (function () {
         this.userMapSid = {};
         /**初始化 */
         this.initIo = function (io) {
+            console.log('----------user socket启动成功------------');
             io
                 .of("" + _this.nameSpace)
                 .on('connection', function (socket) {

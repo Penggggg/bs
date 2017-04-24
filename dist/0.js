@@ -16,11 +16,12 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
+__webpack_require__(1402);
 var React = __webpack_require__(0);
 var antd_1 = __webpack_require__(154);
 var http_service_1 = __webpack_require__(541);
 var project_1 = __webpack_require__(542);
-__webpack_require__(1402);
+var socket_1 = __webpack_require__(1357);
 var bread_container_1 = __webpack_require__(1407);
 var memberSlider_container_1 = __webpack_require__(1408);
 var Header = antd_1.Layout.Header, Footer = antd_1.Layout.Footer, Sider = antd_1.Layout.Sider, Content = antd_1.Layout.Content;
@@ -69,6 +70,12 @@ var ProjectPage = (function (_super) {
     ProjectPage.prototype.componentWillMount = function () {
         this.setMenuKey();
         this.fetchProject();
+        this.connectProjectSocket();
+    };
+    ProjectPage.prototype.connectProjectSocket = function () {
+        var id = this.props.params.id;
+        /**项目socket链接 */
+        socket_1.default.connectNewProject(id);
     };
     ProjectPage.prototype.componentDidMount = function () {
     };

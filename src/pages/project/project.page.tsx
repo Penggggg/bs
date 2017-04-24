@@ -1,12 +1,11 @@
+import './project.less';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
 import { Layout, Row, Col, Breadcrumb, Menu, Icon } from 'antd';
 
 import http from '../../services/http.service';
 import projectStore from '../../store/project';
-
-import './project.less';
-import { IProject } from '../../interface/app.interface';
+import socketService from '../../services/socket';
 import { ProjectBread } from '../../containers/project/bread.container';
 import { MemberSlider } from '../../containers/project/memberSlider.container';
 
@@ -30,11 +29,18 @@ export default class ProjectPage extends React.PureComponent< IProps, IState > {
     componentWillMount( ) {
         this.setMenuKey( );
         this.fetchProject( );
+        this.connectProjectSocket( );
+    }
+
+    connectProjectSocket( ) {
+        let { id } = this.props.params;
+        /**项目socket链接 */
+        socketService.connectNewProject( id );
     }
 
     fetchProject = ( ) => {
         let { id } = this.props.params;
-        http.get<IProject>(`/api/v1/project/${id}`)
+        http.get<APP.Project>(`/api/v1/project/${id}`)
             .do(e => projectStore.data.save( e ))
             .subscribe( )
     }

@@ -36,16 +36,19 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
+var socket_1 = require("../../socket");
 var project_model_1 = require("../../model/models/project.model");
 exports.createProject = function (ctx) { return __awaiter(_this, void 0, void 0, function () {
-    var projectName, projectInfo, creatorID, a, _a;
+    var projectName, projectInfo, creatorID, newProject, _a;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
                 projectName = (_a = ctx.request.body, _a.projectName), projectInfo = _a.projectInfo, creatorID = _a.creatorID;
                 return [4 /*yield*/, project_model_1.default.save(projectName, projectInfo, creatorID)];
             case 1:
-                a = _b.sent();
+                newProject = _b.sent();
+                /**添加pid-namespace-socket */
+                socket_1.default.addProjectSocket(newProject._id);
                 ctx.body = {
                     msg: 'success',
                     status: '200'

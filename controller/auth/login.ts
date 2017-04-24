@@ -1,6 +1,5 @@
 import { setCtx } from '../util';
 import UserModel from '../../model/models/user.model';
-import { _IPostQueryLogin, IPostLogin_ } from '../../interface/api.interface';
 
 const enum LoginError {
     PswNotEqual = 4001,
@@ -11,7 +10,7 @@ const enum LoginError {
 export let login = async( ctx ) => {
 
     /**变量声明 */
-    let { userName, userPhone, password, password2 } = ctx.request.body as _IPostQueryLogin;
+    let { userName, userPhone, password, password2 } = ctx.request.body as API.Query.Login;
 
     /**Ctx配置 */
     setCtx( ctx );
@@ -22,7 +21,7 @@ export let login = async( ctx ) => {
         return ctx.body = JSON.stringify({
             status: `${LoginError.PswNotEqual}`,
             msg: 'psw not equal'
-        } as IPostLogin_ )
+        } as API.Res.Login )
     }
 
     /**检查是否已存在 */
@@ -32,7 +31,7 @@ export let login = async( ctx ) => {
         return ctx.body = JSON.stringify({
             status: `${LoginError.UserExisted}`,
             msg: 'user has been existed'
-        } as IPostLogin_ )
+        } as API.Res.Login )
     }
 
     /**储存到数据库 */
@@ -43,6 +42,6 @@ export let login = async( ctx ) => {
     return ctx.body = JSON.stringify( Object.assign({
         status: '200',
         msg: 'success'
-    }, { user: result }) as IPostLogin_ );
+    }, { user: result }) as API.Res.Login );
 }
 

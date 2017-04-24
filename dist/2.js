@@ -16,16 +16,16 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var React = __webpack_require__(0);
-var http_service_1 = __webpack_require__(541);
-var auth_login_service_1 = __webpack_require__(543);
-var project_1 = __webpack_require__(542);
-var user_1 = __webpack_require__(155);
-var notification_service_1 = __webpack_require__(239);
-var antd_1 = __webpack_require__(154);
-var Image_component_1 = __webpack_require__(1386);
 __webpack_require__(1401);
+var React = __webpack_require__(0);
+var antd_1 = __webpack_require__(154);
 var index_con_1 = __webpack_require__(114);
+var user_1 = __webpack_require__(155);
+var http_service_1 = __webpack_require__(541);
+var project_1 = __webpack_require__(542);
+var auth_login_service_1 = __webpack_require__(543);
+var Image_component_1 = __webpack_require__(1386);
+var notification_service_1 = __webpack_require__(239);
 var FormItem = antd_1.Form.Item;
 var ProjectAllPage = (function (_super) {
     __extends(ProjectAllPage, _super);
@@ -48,6 +48,7 @@ var ProjectAllPage = (function (_super) {
         _this.onEnterProject = function (project) {
             /**保存project数据 */
             _this.projectStore.data.save(project);
+            /**项目角色判断 */
             if (!_this.watchingRole) {
                 _this.watchingRole = true;
                 _this.watchRole();

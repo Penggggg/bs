@@ -1,18 +1,18 @@
+import './project-all.less';
 import * as React from 'react';
 import { Subscription } from 'rxjs';
-import http from '../../services/http.service';
-import Auth from '../../services/auth-login.service';
-import ProjectStore from '../../store/project';
-import UserStore from '../../store/user';
-import Notifycation from '../../services/notification.service';
 import { Card, Icon, Modal, Button, Form, Input } from 'antd';
-import Image from '../../component/Image/Image.component';
 
 
-
-import './project-all.less';
 import { Util } from '../../index.con';
+import UserStore from '../../store/user';
+import http from '../../services/http.service';
+import ProjectStore from '../../store/project';
 import { RouteComponentProps } from 'react-router';
+import Auth from '../../services/auth-login.service';
+import Image from '../../component/Image/Image.component';
+import Notifycation from '../../services/notification.service';
+
 
 
 const FormItem = Form.Item;
@@ -55,8 +55,11 @@ class ProjectAllPage extends React.PureComponent< IProps, IState > {
     }
 
     private onEnterProject = ( project: APP.Project ) => {
+
         /**保存project数据 */
         this.projectStore.data.save( project );
+        
+        /**项目角色判断 */
         if ( !this.watchingRole ) {
             this.watchingRole = true;
             this.watchRole( );

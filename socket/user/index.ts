@@ -19,6 +19,7 @@ export default class UserSocket {
 
     /**初始化 */
     public initIo = ( io: SocketIO.Server ) => {
+        console.log('----------user socket启动成功------------')
         io
           .of(`${this.nameSpace}`)
           .on('connection', ( socket ) => {

@@ -1,6 +1,6 @@
 webpackJsonp([0],{
 
-/***/ 1371:
+/***/ 1373:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -17,9 +17,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
-var antd_1 = __webpack_require__(153);
-var http_service_1 = __webpack_require__(1377);
-var project_1 = __webpack_require__(541);
+var antd_1 = __webpack_require__(154);
+var http_service_1 = __webpack_require__(541);
+var project_1 = __webpack_require__(542);
 __webpack_require__(1402);
 var bread_container_1 = __webpack_require__(1407);
 var memberSlider_container_1 = __webpack_require__(1408);
@@ -107,7 +107,7 @@ exports.default = ProjectPage;
 
 /***/ }),
 
-/***/ 1375:
+/***/ 1377:
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(Buffer) {/*
@@ -186,11 +186,11 @@ function toComment(sourceMap) {
   return '/*# ' + data + ' */';
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1379).Buffer))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1380).Buffer))
 
 /***/ }),
 
-/***/ 1376:
+/***/ 1378:
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -222,7 +222,7 @@ var stylesInDom = {},
 	singletonElement = null,
 	singletonCounter = 0,
 	styleElementsInsertedAtTop = [],
-	fixUrls = __webpack_require__(1382);
+	fixUrls = __webpack_require__(1383);
 
 module.exports = function(list, options) {
 	if(typeof DEBUG !== "undefined" && DEBUG) {
@@ -482,7 +482,7 @@ function updateLink(linkElement, options, obj) {
 
 /***/ }),
 
-/***/ 1378:
+/***/ 1379:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -604,7 +604,7 @@ function fromByteArray (uint8) {
 
 /***/ }),
 
-/***/ 1379:
+/***/ 1380:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -618,9 +618,9 @@ function fromByteArray (uint8) {
 
 
 
-var base64 = __webpack_require__(1378)
-var ieee754 = __webpack_require__(1381)
-var isArray = __webpack_require__(1380)
+var base64 = __webpack_require__(1379)
+var ieee754 = __webpack_require__(1382)
+var isArray = __webpack_require__(1381)
 
 exports.Buffer = Buffer
 exports.SlowBuffer = SlowBuffer
@@ -2402,7 +2402,7 @@ function isnan (val) {
 
 /***/ }),
 
-/***/ 1380:
+/***/ 1381:
 /***/ (function(module, exports) {
 
 var toString = {}.toString;
@@ -2414,7 +2414,7 @@ module.exports = Array.isArray || function (arr) {
 
 /***/ }),
 
-/***/ 1381:
+/***/ 1382:
 /***/ (function(module, exports) {
 
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
@@ -2505,7 +2505,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 
 /***/ }),
 
-/***/ 1382:
+/***/ 1383:
 /***/ (function(module, exports) {
 
 
@@ -2604,7 +2604,7 @@ module.exports = function (css) {
 /***/ 1384:
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(1375)(undefined);
+exports = module.exports = __webpack_require__(1377)(undefined);
 // imports
 
 
@@ -2625,7 +2625,7 @@ exports.push([module.i, ".my-img {\n  opacity: 0;\n  transition: all 0.4s ease;\
 var content = __webpack_require__(1384);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(1376)(content, {});
+var update = __webpack_require__(1378)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -2690,7 +2690,7 @@ exports.default = Image;
 /***/ 1388:
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(1375)(undefined);
+exports = module.exports = __webpack_require__(1377)(undefined);
 // imports
 
 
@@ -2705,7 +2705,7 @@ exports.push([module.i, ".c-Slider {\n  background-color: #f5f5f5;\n  width: 350
 /***/ 1394:
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(1375)(undefined);
+exports = module.exports = __webpack_require__(1377)(undefined);
 // imports
 
 
@@ -2726,7 +2726,7 @@ exports.push([module.i, ".project-page .my-layout {\n  background-color: #fff;\n
 var content = __webpack_require__(1388);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(1376)(content, {});
+var update = __webpack_require__(1378)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -2753,7 +2753,7 @@ if(false) {
 var content = __webpack_require__(1394);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(1376)(content, {});
+var update = __webpack_require__(1378)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -2778,7 +2778,7 @@ if(false) {
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
-var antd_1 = __webpack_require__(153);
+var antd_1 = __webpack_require__(154);
 exports.default = function (_a) {
     var data = _a.data;
     return React.createElement(antd_1.Breadcrumb, null, data.map(function (bread, key) {
@@ -2809,7 +2809,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
-var antd_1 = __webpack_require__(153);
+var antd_1 = __webpack_require__(154);
 __webpack_require__(1396);
 var Slider = (function (_super) {
     __extends(Slider, _super);
@@ -2874,7 +2874,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
-var project_1 = __webpack_require__(541);
+var project_1 = __webpack_require__(542);
 exports.InjectProjectBread = function (Bread) {
     var Wrapper = (function (_super) {
         __extends(Wrapper, _super);
@@ -2947,10 +2947,10 @@ var __assign = (this && this.__assign) || Object.assign || function(t) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
-var antd_1 = __webpack_require__(153);
-var user_1 = __webpack_require__(238);
-var project_1 = __webpack_require__(541);
-var http_service_1 = __webpack_require__(1377);
+var antd_1 = __webpack_require__(154);
+var user_1 = __webpack_require__(155);
+var project_1 = __webpack_require__(542);
+var http_service_1 = __webpack_require__(541);
 var notification_service_1 = __webpack_require__(239);
 var Image_component_1 = __webpack_require__(1386);
 exports.InjectMember = function (Slider) {

@@ -56,6 +56,17 @@ MsgSchema.statics.updateReaded = function( id ) {
     })
 }
 
+
+/**更新dirty为true */
+MsgSchema.statics.updateDirty = function( id ) {
+    return new Promise(( resolve, reject ) => {
+        this
+            .update({ _id: id }, { dirty: true })
+            .exec(( err, data ) => returnData( err, resolve, reject, data ))
+    })
+}
+
+
 MsgSchema.statics.findDetailById = function( id ) {
     return new Promise(( resolve, reject ) => {
         this

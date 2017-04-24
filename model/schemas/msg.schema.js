@@ -55,6 +55,15 @@ exports.MsgSchema.statics.updateReaded = function (id) {
             .exec(function (err, data) { return returnData(err, resolve, reject, data); });
     });
 };
+/**更新dirty为true */
+exports.MsgSchema.statics.updateDirty = function (id) {
+    var _this = this;
+    return new Promise(function (resolve, reject) {
+        _this
+            .update({ _id: id }, { dirty: true })
+            .exec(function (err, data) { return returnData(err, resolve, reject, data); });
+    });
+};
 exports.MsgSchema.statics.findDetailById = function (id) {
     var _this = this;
     return new Promise(function (resolve, reject) {

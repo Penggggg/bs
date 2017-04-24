@@ -4,6 +4,7 @@ import { resetPsw } from './auth/reset';
 import { sginIn } from './auth/signin';
 import { inviteMember } from './project/invite-member'; 
 import { createProject } from './project/create-project';
+import { replyInvite } from './project/reply-invite';
 import { fetchAllUserByName } from './user/query.controller';
 import { allProject, projectDetail } from './project/query-project';
 import { fetchAllMsgList, fetchFadeMsgList, fetchMsgDetail } from './msg/query-msg';
@@ -30,6 +31,8 @@ export default ( router ) => {
     router.get('/api/v1/project/:id', projectDetail )
     /**项目模块：邀请成员 */
     router.post('/api/v1/invite-member', inviteMember )
+    /**项目模块：回应邀请 */
+    router.post('/api/v1/reply-invite', replyInvite )
 
 
     /**用户模块：查询所有符合条件的用户 */

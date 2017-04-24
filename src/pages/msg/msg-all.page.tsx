@@ -60,7 +60,6 @@ export default class msgAllPage extends React.PureComponent< IProps, IState > {
     }
 
     fetchMsgList( readed: boolean, currentPage: number ) {
-        console.log(`fetch: ${readed}`)
         this.setState({ spinning: true })
 
         let toUID: string;
@@ -117,7 +116,6 @@ export default class msgAllPage extends React.PureComponent< IProps, IState > {
     }
 
     render( ) {
-        console.log('render')
         let { msgType, total, currentPage, msgList, spinning, selectorValue } = this.state;
 
         let msgContent = <ul>

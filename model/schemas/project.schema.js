@@ -38,6 +38,12 @@ exports.PorjectSchema.pre('save', function (next) {
     }
     next();
 });
+exports.PorjectSchema.statics.customFind = function (query, fields, options) {
+    var _this = this;
+    return new Promise(function (resolve, reject) {
+        _this.find(query, fields, options, function (err, data) { return returnData(err, resolve, reject, data); });
+    });
+};
 exports.PorjectSchema.statics.findAllWithRef = function () {
     var _this = this;
     return new Promise(function (resolve, reject) {
@@ -59,6 +65,15 @@ exports.PorjectSchema.statics.findDetailByIdWithNest = function (id, select) {
         _this
             .find({ _id: id })
             .populate('creator', select)
+            .exec(function (err, data) { return returnData(err, resolve, reject, data); });
+    });
+};
+/**更新项目member */
+exports.PorjectSchema.statics.updateMember = function (id, member) {
+    var _this = this;
+    return new Promise(function (resolve, reject) {
+        _this
+            .update({ _id: id }, { member: member })
             .exec(function (err, data) { return returnData(err, resolve, reject, data); });
     });
 };

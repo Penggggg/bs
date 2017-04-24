@@ -52,6 +52,12 @@ declare namespace API {
 
         }
 
+        /**POST：回应项目邀请 */
+        export interface ReplyInvite {
+            msg: string
+            status: '200' | '400' | '500'
+        }
+
     }
 
     export namespace Req {
@@ -112,6 +118,12 @@ declare namespace API {
         /**GET：消息详情 */
         export interface MsgDetail {
             id: string
+        }
+
+        /**POST：回应项目邀请 */
+        export interface ReplyInvite {
+            answer: boolean
+            mid: string | Partial<APP.Msg>
         }
 
     }

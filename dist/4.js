@@ -1,6 +1,6 @@
 webpackJsonp([4],{
 
-/***/ 1367:
+/***/ 1369:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -18,27 +18,53 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 __webpack_require__(1400);
 var React = __webpack_require__(0);
-var antd_1 = __webpack_require__(153);
-var http_service_1 = __webpack_require__(1377);
+var antd_1 = __webpack_require__(154);
+var http_service_1 = __webpack_require__(541);
 var MsgDetailPage = (function (_super) {
     __extends(MsgDetailPage, _super);
     function MsgDetailPage() {
         var _this = _super.call(this) || this;
+        _this.replyTwoChoice = function (answer, replyURL, mid) {
+            _this.controllLoading(answer ? 'resolveBtn' : 'rejectBtn', true);
+            var sub = http_service_1.default
+                .post(replyURL, { answer: answer, mid: mid })
+                .do(function (res) {
+                console.log(res);
+                setTimeout(function () { return sub.unsubscribe; }, 100);
+            })
+                .subscribe();
+        };
+        _this.controllLoading = function (target, value) {
+            switch (target) {
+                case 'resolveBtn': {
+                    _this.setState({
+                        resolveBtnLoading: value
+                    });
+                    break;
+                }
+                case 'rejectBtn': {
+                    _this.setState({
+                        rejectBtnLoading: value
+                    });
+                    break;
+                }
+            }
+        };
         _this.state = {
             spinning: false,
-            msgDetail: null
+            msgDetail: null,
+            rejectBtnLoading: false,
+            resolveBtnLoading: false
         };
         return _this;
     }
     MsgDetailPage.prototype.componentDidMount = function () {
         var id = this.props.params.id;
         this.fetchMsgDetail(id);
-        console.log('首次');
     };
     MsgDetailPage.prototype.componentWillReceiveProps = function (np) {
         var id = np.params.id;
         this.fetchMsgDetail(id);
-        console.log('2次');
     };
     MsgDetailPage.prototype.fetchMsgDetail = function (id) {
         var _this = this;
@@ -48,7 +74,6 @@ var MsgDetailPage = (function (_super) {
         http_service_1.default
             .get('/api/v1/msg-detail', { id: id })
             .do(function (res) {
-            // console.log( res );
             _this.setState({
                 msgDetail: res,
                 spinning: false
@@ -57,7 +82,8 @@ var MsgDetailPage = (function (_super) {
             .subscribe();
     };
     MsgDetailPage.prototype.render = function () {
-        var _a = this.state, msgDetail = _a.msgDetail, spinning = _a.spinning;
+        var _this = this;
+        var _a = this.state, msgDetail = _a.msgDetail, spinning = _a.spinning, resolveBtnLoading = _a.resolveBtnLoading, rejectBtnLoading = _a.rejectBtnLoading;
         return React.createElement("div", { className: "msg-detail-page" }, !!msgDetail &&
             React.createElement("div", { className: "msg-block" },
                 React.createElement(antd_1.Spin, { spinning: spinning, size: "large" },
@@ -67,8 +93,10 @@ var MsgDetailPage = (function (_super) {
                         "By: ",
                         msgDetail.fromUID.name),
                     React.createElement("p", { className: "time" }, (new Date(msgDetail.meta.createdTime)).toLocaleString()),
-                    React.createElement("div", null, msgDetail.formType === 2 /* twoChoice */ &&
-                        React.createElement("div", null)))));
+                    React.createElement("div", { style: { paddingTop: 30 } }, msgDetail.formType === 2 /* twoChoice */ &&
+                        React.createElement("div", { className: "two-choice-form" },
+                            React.createElement(antd_1.Button, { onClick: function () { return _this.replyTwoChoice(false, msgDetail.replyURL, msgDetail._id); }, loading: rejectBtnLoading, type: "danger", size: "large", icon: "left-circle-o" }, "\u62D2\u7EDD\u9080\u8BF7"),
+                            React.createElement(antd_1.Button, { onClick: function () { return _this.replyTwoChoice(true, msgDetail.replyURL, msgDetail._id); }, loading: resolveBtnLoading, type: "primary", size: "large", icon: "right-circle-o" }, "\u7B54\u5E94\u9080\u8BF7"))))));
     };
     return MsgDetailPage;
 }(React.PureComponent));
@@ -77,7 +105,7 @@ exports.default = MsgDetailPage;
 
 /***/ }),
 
-/***/ 1375:
+/***/ 1377:
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(Buffer) {/*
@@ -156,11 +184,11 @@ function toComment(sourceMap) {
   return '/*# ' + data + ' */';
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1379).Buffer))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1380).Buffer))
 
 /***/ }),
 
-/***/ 1376:
+/***/ 1378:
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -192,7 +220,7 @@ var stylesInDom = {},
 	singletonElement = null,
 	singletonCounter = 0,
 	styleElementsInsertedAtTop = [],
-	fixUrls = __webpack_require__(1382);
+	fixUrls = __webpack_require__(1383);
 
 module.exports = function(list, options) {
 	if(typeof DEBUG !== "undefined" && DEBUG) {
@@ -452,7 +480,7 @@ function updateLink(linkElement, options, obj) {
 
 /***/ }),
 
-/***/ 1378:
+/***/ 1379:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -574,7 +602,7 @@ function fromByteArray (uint8) {
 
 /***/ }),
 
-/***/ 1379:
+/***/ 1380:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -588,9 +616,9 @@ function fromByteArray (uint8) {
 
 
 
-var base64 = __webpack_require__(1378)
-var ieee754 = __webpack_require__(1381)
-var isArray = __webpack_require__(1380)
+var base64 = __webpack_require__(1379)
+var ieee754 = __webpack_require__(1382)
+var isArray = __webpack_require__(1381)
 
 exports.Buffer = Buffer
 exports.SlowBuffer = SlowBuffer
@@ -2372,7 +2400,7 @@ function isnan (val) {
 
 /***/ }),
 
-/***/ 1380:
+/***/ 1381:
 /***/ (function(module, exports) {
 
 var toString = {}.toString;
@@ -2384,7 +2412,7 @@ module.exports = Array.isArray || function (arr) {
 
 /***/ }),
 
-/***/ 1381:
+/***/ 1382:
 /***/ (function(module, exports) {
 
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
@@ -2475,7 +2503,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 
 /***/ }),
 
-/***/ 1382:
+/***/ 1383:
 /***/ (function(module, exports) {
 
 
@@ -2574,12 +2602,12 @@ module.exports = function (css) {
 /***/ 1392:
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(1375)(undefined);
+exports = module.exports = __webpack_require__(1377)(undefined);
 // imports
 
 
 // module
-exports.push([module.i, ".msg-detail-page {\n  padding-top: 20px;\n  box-sizing: border-box;\n}\n.msg-detail-page .msg-block {\n  width: 70%;\n  overflow: scroll;\n  max-height: 300px;\n}\n.msg-detail-page .msg-block h3 {\n  font-size: 25px;\n  padding-bottom: 10px;\n  border-bottom: 1px solid #e9e9e9;\n}\n.msg-detail-page .msg-block p {\n  font-size: 16px;\n  padding-bottom: 10px;\n}\n.msg-detail-page .msg-block p.content {\n  padding-top: 20px;\n}\n.msg-detail-page .msg-block p.time {\n  text-align: right;\n}\n.msg-detail-page .msg-block p.name {\n  text-align: right;\n}\n.msg-detail-page .msg-block::-webkit-scrollbar {\n  display: none;\n}\n", ""]);
+exports.push([module.i, ".msg-detail-page {\n  padding-top: 20px;\n  box-sizing: border-box;\n}\n.msg-detail-page .msg-block {\n  width: 70%;\n  overflow: scroll;\n  max-height: 300px;\n}\n.msg-detail-page .msg-block .two-choice-form {\n  text-align: center;\n}\n.msg-detail-page .msg-block .two-choice-form button {\n  margin: 0 35px;\n}\n.msg-detail-page .msg-block h3 {\n  font-size: 25px;\n  padding-bottom: 10px;\n  border-bottom: 1px solid #e9e9e9;\n}\n.msg-detail-page .msg-block p {\n  font-size: 16px;\n  padding-bottom: 10px;\n}\n.msg-detail-page .msg-block p.content {\n  padding-top: 20px;\n}\n.msg-detail-page .msg-block p.time {\n  text-align: right;\n}\n.msg-detail-page .msg-block p.name {\n  text-align: right;\n}\n.msg-detail-page .msg-block::-webkit-scrollbar {\n  display: none;\n}\n", ""]);
 
 // exports
 
@@ -2595,7 +2623,7 @@ exports.push([module.i, ".msg-detail-page {\n  padding-top: 20px;\n  box-sizing:
 var content = __webpack_require__(1392);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(1376)(content, {});
+var update = __webpack_require__(1378)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {

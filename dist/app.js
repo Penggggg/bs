@@ -1,6 +1,58 @@
 webpackJsonp([11],{
 
-/***/ 1351:
+/***/ 114:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var CON;
+(function (CON) {
+    /**socket事件名称 */
+    var socketEvent;
+    (function (socketEvent) {
+        socketEvent.signIn = 'signInUser';
+        socketEvent.signOut = 'signOutUser';
+        socketEvent.msg = 'msg';
+    })(socketEvent = CON.socketEvent || (CON.socketEvent = {}));
+    /**socket命名空间 */
+    var socketNSP;
+    (function (socketNSP) {
+        socketNSP.user = 'user';
+    })(socketNSP = CON.socketNSP || (CON.socketNSP = {}));
+})(CON = exports.CON || (exports.CON = {}));
+var Util;
+(function (Util) {
+    Util.cancelSubscribe = function () {
+        var subscritions = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            subscritions[_i] = arguments[_i];
+        }
+        setTimeout(function () {
+            subscritions.map(function (sub) {
+                sub.unsubscribe();
+            });
+        }, 300);
+    };
+})(Util = exports.Util || (exports.Util = {}));
+
+
+/***/ }),
+
+/***/ 1352:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = {
+    reqURL:  true ? '' : ''
+};
+
+
+/***/ }),
+
+/***/ 1353:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -19,7 +71,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 /// <reference path="./index.d.tsx" />
 var React = __webpack_require__(0);
 var ReactDom = __webpack_require__(12);
-var react_router_1 = __webpack_require__(152);
+var react_router_1 = __webpack_require__(153);
 var pages_1 = __webpack_require__(540);
 var App = (function (_super) {
     __extends(App, _super);
@@ -36,7 +88,7 @@ ReactDom.render(React.createElement(App, null), document.querySelector('#app'));
 
 /***/ }),
 
-/***/ 1352:
+/***/ 1354:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -69,15 +121,15 @@ exports.default = new localStorageService();
 
 /***/ }),
 
-/***/ 1353:
+/***/ 1355:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var rxjs_1 = __webpack_require__(48);
-var msg_1 = __webpack_require__(543);
-var index_con_1 = __webpack_require__(154);
+var msg_1 = __webpack_require__(544);
+var index_con_1 = __webpack_require__(114);
 var notification_service_1 = __webpack_require__(239);
 var Msg = (function () {
     function Msg() {
@@ -108,7 +160,7 @@ exports.default = new Msg();
 
 /***/ }),
 
-/***/ 1354:
+/***/ 1356:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -116,8 +168,8 @@ exports.default = new Msg();
 Object.defineProperty(exports, "__esModule", { value: true });
 var notification_service_1 = __webpack_require__(239);
 var rxjs_1 = __webpack_require__(48);
-var user_1 = __webpack_require__(238);
-var index_con_1 = __webpack_require__(154);
+var user_1 = __webpack_require__(155);
+var index_con_1 = __webpack_require__(114);
 var SignIn = (function () {
     function SignIn() {
         var _this = this;
@@ -162,14 +214,14 @@ exports.default = new SignIn();
 
 /***/ }),
 
-/***/ 1355:
+/***/ 1357:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var event_signIn_1 = __webpack_require__(1354);
-var event_msg_1 = __webpack_require__(1353);
+var event_signIn_1 = __webpack_require__(1356);
+var event_msg_1 = __webpack_require__(1355);
 var socketService = (function () {
     function socketService() {
         this.SignIn = event_signIn_1.default;
@@ -193,16 +245,16 @@ exports.default = new socketService();
 
 /***/ }),
 
-/***/ 1356:
+/***/ 1358:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var rxjs_1 = __webpack_require__(48);
-var user_1 = __webpack_require__(238);
-var http_service_1 = __webpack_require__(1377);
-var index_con_1 = __webpack_require__(154);
+var user_1 = __webpack_require__(155);
+var http_service_1 = __webpack_require__(541);
+var index_con_1 = __webpack_require__(114);
 var MsgData = (function () {
     function MsgData() {
         var _this = this;
@@ -239,7 +291,7 @@ exports.default = MsgData;
 
 /***/ }),
 
-/***/ 1357:
+/***/ 1359:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -274,7 +326,7 @@ exports.default = ProjectData;
 
 /***/ }),
 
-/***/ 1358:
+/***/ 1360:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -309,7 +361,7 @@ exports.default = ProjecRole;
 
 /***/ }),
 
-/***/ 1359:
+/***/ 1361:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -345,7 +397,7 @@ exports.default = UserData;
 
 /***/ }),
 
-/***/ 1360:
+/***/ 1362:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -377,14 +429,172 @@ exports.default = UserSignIn;
 
 /***/ }),
 
-/***/ 1377:
+/***/ 155:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var signIn_store_1 = __webpack_require__(1362);
+var data_store_1 = __webpack_require__(1361);
+var UserStore = (function () {
+    function UserStore() {
+        this.signIn = new signIn_store_1.default();
+        this.data = new data_store_1.default();
+    }
+    return UserStore;
+}());
+exports.default = new UserStore();
+
+
+/***/ }),
+
+/***/ 239:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var React = __webpack_require__(0);
+var antd_1 = __webpack_require__(154);
+var NotificationService = (function () {
+    function NotificationService() {
+    }
+    NotificationService.prototype.open = function (_a) {
+        var title = _a.title, msg = _a.msg, _b = _a.type, type = _b === void 0 ? 'ok' : _b;
+        antd_1.notification.open({
+            message: title,
+            description: msg,
+            icon: React.createElement(antd_1.Icon, { type: type === 'ok' ? "smile" : "frown", style: { color: '#108ee9' } }),
+        });
+    };
+    return NotificationService;
+}());
+exports.default = new NotificationService();
+
+
+/***/ }),
+
+/***/ 540:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var auth_login_service_1 = __webpack_require__(543);
+exports.default = {
+    path: '/',
+    getComponent: function (nextstate, cb) {
+        __webpack_require__.e/* import() */(1).then(__webpack_require__.bind(null, 1366)).then(function (module) {
+            cb(null, module.default);
+        }).catch(function (err) { return showMessage(err, './app.page'); });
+    },
+    childRoutes: [
+        {
+            path: 'login',
+            getComponent: function (nextstate, cb) {
+                __webpack_require__.e/* import() */(5).then(__webpack_require__.bind(null, 1367)).then(function (module) {
+                    cb(null, module.default);
+                }).catch(function (err) { return showMessage(err, './login.page'); });
+            },
+        }, {
+            path: 'projects',
+            onEnter: auth_login_service_1.default.requireLogin,
+            getComponent: function (nextstate, cb) {
+                __webpack_require__.e/* import() */(2).then(__webpack_require__.bind(null, 1372)).then(function (module) {
+                    cb(null, module.default);
+                }).catch(function (err) { return showMessage(err, './project-all.page'); });
+            }
+        }, {
+            path: 'project/:id',
+            onEnter: auth_login_service_1.default.requireLogin,
+            getComponent: function (nextstate, cb) {
+                __webpack_require__.e/* import() */(0).then(__webpack_require__.bind(null, 1373)).then(function (module) {
+                    cb(null, module.default);
+                }).catch(function (err) { return showMessage(err, './project.page'); });
+            },
+            childRoutes: [
+                {
+                    path: 'tasks',
+                    onEnter: auth_login_service_1.default.requireLogin,
+                    getComponent: function (nextstate, cb) {
+                        __webpack_require__.e/* import() */(6).then(__webpack_require__.bind(null, 1376)).then(function (module) {
+                            cb(null, module.default);
+                        }).catch(function (err) { return showMessage(err, './project-tasks.page'); });
+                    }
+                },
+                {
+                    path: 'shares',
+                    onEnter: auth_login_service_1.default.requireLogin,
+                    getComponent: function (nextstate, cb) {
+                        __webpack_require__.e/* import() */(7).then(__webpack_require__.bind(null, 1375)).then(function (module) {
+                            cb(null, module.default);
+                        }).catch(function (err) { return showMessage(err, './project-shares.page'); });
+                    }
+                },
+                {
+                    path: 'chats',
+                    onEnter: auth_login_service_1.default.requireLogin,
+                    getComponent: function (nextstate, cb) {
+                        __webpack_require__.e/* import() */(10).then(__webpack_require__.bind(null, 1370)).then(function (module) {
+                            cb(null, module.default);
+                        }).catch(function (err) { return showMessage(err, './project-chat.page'); });
+                    }
+                },
+                {
+                    path: 'files',
+                    onEnter: auth_login_service_1.default.requireLogin,
+                    getComponent: function (nextstate, cb) {
+                        __webpack_require__.e/* import() */(9).then(__webpack_require__.bind(null, 1371)).then(function (module) {
+                            cb(null, module.default);
+                        }).catch(function (err) { return showMessage(err, './project-files.page'); });
+                    }
+                },
+                {
+                    path: 'schedules',
+                    onEnter: auth_login_service_1.default.requireLogin,
+                    getComponent: function (nextstate, cb) {
+                        __webpack_require__.e/* import() */(8).then(__webpack_require__.bind(null, 1374)).then(function (module) {
+                            cb(null, module.default);
+                        }).catch(function (err) { return showMessage(err, './project-schedules.page'); });
+                    }
+                },
+            ]
+        }, {
+            path: 'msgs',
+            getComponent: function (nextstate, cb) {
+                __webpack_require__.e/* import() */(3).then(__webpack_require__.bind(null, 1368)).then(function (module) {
+                    cb(null, module.default);
+                }).catch(function (err) { return showMessage(err, './msg-all.page'); });
+            },
+            childRoutes: [
+                {
+                    path: ':id',
+                    getComponent: function (nextstate, cb) {
+                        __webpack_require__.e/* import() */(4).then(__webpack_require__.bind(null, 1369)).then(function (module) {
+                            cb(null, module.default);
+                        }).catch(function (err) { return showMessage(err, './msg-detail.page'); });
+                    }
+                }
+            ]
+        }
+    ]
+};
+function showMessage(err, pageName) {
+    return console.error("Error in download " + pageName + ": " + err);
+}
+
+
+/***/ }),
+
+/***/ 541:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var rxjs_1 = __webpack_require__(48);
-var config_1 = __webpack_require__(1383);
+var config_1 = __webpack_require__(1352);
 var HttpService = (function () {
     function HttpService() {
         this.TIMEOUT = 10000;
@@ -508,224 +718,14 @@ exports.default = new HttpService();
 
 /***/ }),
 
-/***/ 1383:
+/***/ 542:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = {
-    reqURL:  true ? '' : ''
-};
-
-
-/***/ }),
-
-/***/ 154:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var CON;
-(function (CON) {
-    /**socket事件名称 */
-    var socketEvent;
-    (function (socketEvent) {
-        socketEvent.signIn = 'signInUser';
-        socketEvent.signOut = 'signOutUser';
-        socketEvent.msg = 'msg';
-    })(socketEvent = CON.socketEvent || (CON.socketEvent = {}));
-    /**socket命名空间 */
-    var socketNSP;
-    (function (socketNSP) {
-        socketNSP.user = 'user';
-    })(socketNSP = CON.socketNSP || (CON.socketNSP = {}));
-})(CON = exports.CON || (exports.CON = {}));
-var Util;
-(function (Util) {
-    Util.cancelSubscribe = function () {
-        var subscritions = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            subscritions[_i] = arguments[_i];
-        }
-        setTimeout(function () {
-            subscritions.map(function (sub) {
-                sub.unsubscribe();
-            });
-        }, 300);
-    };
-})(Util = exports.Util || (exports.Util = {}));
-
-
-/***/ }),
-
-/***/ 238:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var signIn_store_1 = __webpack_require__(1360);
+var role_store_1 = __webpack_require__(1360);
 var data_store_1 = __webpack_require__(1359);
-var UserStore = (function () {
-    function UserStore() {
-        this.signIn = new signIn_store_1.default();
-        this.data = new data_store_1.default();
-    }
-    return UserStore;
-}());
-exports.default = new UserStore();
-
-
-/***/ }),
-
-/***/ 239:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var React = __webpack_require__(0);
-var antd_1 = __webpack_require__(153);
-var NotificationService = (function () {
-    function NotificationService() {
-    }
-    NotificationService.prototype.open = function (_a) {
-        var title = _a.title, msg = _a.msg, _b = _a.type, type = _b === void 0 ? 'ok' : _b;
-        antd_1.notification.open({
-            message: title,
-            description: msg,
-            icon: React.createElement(antd_1.Icon, { type: type === 'ok' ? "smile" : "frown", style: { color: '#108ee9' } }),
-        });
-    };
-    return NotificationService;
-}());
-exports.default = new NotificationService();
-
-
-/***/ }),
-
-/***/ 540:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var auth_login_service_1 = __webpack_require__(542);
-exports.default = {
-    path: '/',
-    getComponent: function (nextstate, cb) {
-        __webpack_require__.e/* import() */(1).then(__webpack_require__.bind(null, 1364)).then(function (module) {
-            cb(null, module.default);
-        }).catch(function (err) { return showMessage(err, './app.page'); });
-    },
-    childRoutes: [
-        {
-            path: 'login',
-            getComponent: function (nextstate, cb) {
-                __webpack_require__.e/* import() */(5).then(__webpack_require__.bind(null, 1365)).then(function (module) {
-                    cb(null, module.default);
-                }).catch(function (err) { return showMessage(err, './login.page'); });
-            },
-        }, {
-            path: 'projects',
-            onEnter: auth_login_service_1.default.requireLogin,
-            getComponent: function (nextstate, cb) {
-                __webpack_require__.e/* import() */(2).then(__webpack_require__.bind(null, 1370)).then(function (module) {
-                    cb(null, module.default);
-                }).catch(function (err) { return showMessage(err, './project-all.page'); });
-            }
-        }, {
-            path: 'project/:id',
-            onEnter: auth_login_service_1.default.requireLogin,
-            getComponent: function (nextstate, cb) {
-                __webpack_require__.e/* import() */(0).then(__webpack_require__.bind(null, 1371)).then(function (module) {
-                    cb(null, module.default);
-                }).catch(function (err) { return showMessage(err, './project.page'); });
-            },
-            childRoutes: [
-                {
-                    path: 'tasks',
-                    onEnter: auth_login_service_1.default.requireLogin,
-                    getComponent: function (nextstate, cb) {
-                        __webpack_require__.e/* import() */(6).then(__webpack_require__.bind(null, 1374)).then(function (module) {
-                            cb(null, module.default);
-                        }).catch(function (err) { return showMessage(err, './project-tasks.page'); });
-                    }
-                },
-                {
-                    path: 'shares',
-                    onEnter: auth_login_service_1.default.requireLogin,
-                    getComponent: function (nextstate, cb) {
-                        __webpack_require__.e/* import() */(7).then(__webpack_require__.bind(null, 1373)).then(function (module) {
-                            cb(null, module.default);
-                        }).catch(function (err) { return showMessage(err, './project-shares.page'); });
-                    }
-                },
-                {
-                    path: 'chats',
-                    onEnter: auth_login_service_1.default.requireLogin,
-                    getComponent: function (nextstate, cb) {
-                        __webpack_require__.e/* import() */(10).then(__webpack_require__.bind(null, 1368)).then(function (module) {
-                            cb(null, module.default);
-                        }).catch(function (err) { return showMessage(err, './project-chat.page'); });
-                    }
-                },
-                {
-                    path: 'files',
-                    onEnter: auth_login_service_1.default.requireLogin,
-                    getComponent: function (nextstate, cb) {
-                        __webpack_require__.e/* import() */(9).then(__webpack_require__.bind(null, 1369)).then(function (module) {
-                            cb(null, module.default);
-                        }).catch(function (err) { return showMessage(err, './project-files.page'); });
-                    }
-                },
-                {
-                    path: 'schedules',
-                    onEnter: auth_login_service_1.default.requireLogin,
-                    getComponent: function (nextstate, cb) {
-                        __webpack_require__.e/* import() */(8).then(__webpack_require__.bind(null, 1372)).then(function (module) {
-                            cb(null, module.default);
-                        }).catch(function (err) { return showMessage(err, './project-schedules.page'); });
-                    }
-                },
-            ]
-        }, {
-            path: 'msgs',
-            getComponent: function (nextstate, cb) {
-                __webpack_require__.e/* import() */(3).then(__webpack_require__.bind(null, 1366)).then(function (module) {
-                    cb(null, module.default);
-                }).catch(function (err) { return showMessage(err, './msg-all.page'); });
-            },
-            childRoutes: [
-                {
-                    path: ':id',
-                    getComponent: function (nextstate, cb) {
-                        __webpack_require__.e/* import() */(4).then(__webpack_require__.bind(null, 1367)).then(function (module) {
-                            cb(null, module.default);
-                        }).catch(function (err) { return showMessage(err, './msg-detail.page'); });
-                    }
-                }
-            ]
-        }
-    ]
-};
-function showMessage(err, pageName) {
-    return console.error("Error in download " + pageName + ": " + err);
-}
-
-
-/***/ }),
-
-/***/ 541:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var role_store_1 = __webpack_require__(1358);
-var data_store_1 = __webpack_require__(1357);
 var ProjectStore = (function () {
     function ProjectStore() {
         this.role = new role_store_1.default();
@@ -738,17 +738,17 @@ exports.default = new ProjectStore();
 
 /***/ }),
 
-/***/ 542:
+/***/ 543:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var index_con_1 = __webpack_require__(154);
-var local_storage_service_1 = __webpack_require__(1352);
-var socket_1 = __webpack_require__(1355);
-var user_1 = __webpack_require__(238);
-var project_1 = __webpack_require__(541);
+var index_con_1 = __webpack_require__(114);
+var local_storage_service_1 = __webpack_require__(1354);
+var socket_1 = __webpack_require__(1357);
+var user_1 = __webpack_require__(155);
+var project_1 = __webpack_require__(542);
 var authLoginService = (function () {
     function authLoginService() {
         var _this = this;
@@ -806,13 +806,13 @@ exports.default = new authLoginService();
 
 /***/ }),
 
-/***/ 543:
+/***/ 544:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var data_store_1 = __webpack_require__(1356);
+var data_store_1 = __webpack_require__(1358);
 var MsgStore = (function () {
     function MsgStore() {
         this.data = new data_store_1.default();
@@ -824,4 +824,4 @@ exports.default = new MsgStore();
 
 /***/ })
 
-},[1351]);
+},[1353]);

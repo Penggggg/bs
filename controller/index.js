@@ -41,6 +41,7 @@ var reset_1 = require("./auth/reset");
 var signin_1 = require("./auth/signin");
 var invite_member_1 = require("./project/invite-member");
 var create_project_1 = require("./project/create-project");
+var reply_invite_1 = require("./project/reply-invite");
 var query_controller_1 = require("./user/query.controller");
 var query_project_1 = require("./project/query-project");
 var query_msg_1 = require("./msg/query-msg");
@@ -61,6 +62,8 @@ exports.default = function (router) {
     router.get('/api/v1/project/:id', query_project_1.projectDetail);
     /**项目模块：邀请成员 */
     router.post('/api/v1/invite-member', invite_member_1.inviteMember);
+    /**项目模块：回应邀请 */
+    router.post('/api/v1/reply-invite', reply_invite_1.replyInvite);
     /**用户模块：查询所有符合条件的用户 */
     router.post('/api/v1/all-user', query_controller_1.fetchAllUserByName);
     /**消息模块：查询所有符合条件的消息 */

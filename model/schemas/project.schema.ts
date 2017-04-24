@@ -41,6 +41,12 @@ PorjectSchema.pre('save', function( next ){
 })
 
 
+PorjectSchema.statics.customFind = function( query, fields, options ) {
+    return new Promise(( resolve, reject ) => {
+        this.find( query, fields, options, ( err, data) =>  returnData( err, resolve, reject, data ))
+    })
+}
+
 PorjectSchema.statics.findAllWithRef =  function( ) {
     return new Promise(( resolve, reject ) => {
         this.find({ }, ( err, data) =>  returnData( err, resolve, reject, data ))
@@ -66,6 +72,15 @@ PorjectSchema.statics.findDetailByIdWithNest = function( id, select ) {
     })
 }
 
+
+/**更新项目member */
+PorjectSchema.statics.updateMember = function( id, member ) {
+    return new Promise(( resolve, reject ) => {
+        this
+            .update({ _id: id }, { member })
+            .exec(( err, data ) => returnData( err, resolve, reject, data ))
+    })
+}
 
 PorjectSchema.statics.save = function( name, info, userID ) {
     return new Promise(( resolve, reject ) => {

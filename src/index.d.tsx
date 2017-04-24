@@ -163,6 +163,16 @@ declare namespace SOK {
             content: MsgInviteContent
         }
 
+        /**消息推送：项目socket链接成功 */
+        export interface getInProject {
+            msg: string
+        }
+
+        /**消息推送：项目成员加入成功 */
+        export interface NewMember {
+            msg: string,
+            data: APP.Project
+        }
     }
 
     export namespace Req {
@@ -225,6 +235,11 @@ declare namespace APP {
         type: number
         content: string,
         PID: Partial<APP.Project>
+    }
+
+    /**项目事件 */
+    export abstract class ProjectEvent {
+        cancelSub( ): void
     }
 
 }

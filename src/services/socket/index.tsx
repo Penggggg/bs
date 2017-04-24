@@ -1,6 +1,8 @@
 import { Observable } from 'rxjs';
 import SignIn from './event-signIn';
 import Msg from './event-msg';
+import { EventProjectMember } from './event-project-member';
+import { EventProjectGetIn } from './event-project-getIn';
 
 
 class socketService {
@@ -14,29 +16,55 @@ class socketService {
         [ key: string ]: SocketIO.Socket
     } = {  }
 
+    private connectingProjectSocket: {
+        [ key: string ]: {
+            server: SocketIO.Socket,
+            events: Array<APP.ProjectEvent>
+        }
+    } = { };
+
     public connectNewNsp( name: string ): SocketIO.Socket {
         let socketClient = io(`${this.connectedUrl}/${name}`);
         this.connectedNameSpace[name] = socketClient;
         return socketClient
     }
 
-    public connectNewProject( pid: string ): SocketIO.Socket {
+    public connectNewProject( pid: string ) {
 
         /**接触上次namespace */
         if ( !!this.connectingPID ) {
-            this.disconnectNsp( this.connectingPID );
+            this.disconnectProjectSocket( this.connectingPID );
         }
 
         /**新建namespace */
         let socketClient = io(`${this.connectedUrl}/${pid}`);
+
+        this.connectingProjectSocket[pid] = {
+            server: null,
+            events: [ ]
+        }
+
+        /**保存该链接下的事件实例与socket */
         this.connectingPID = pid;
-        this.connectedNameSpace[pid] = socketClient;
-        return socketClient
+        this.connectingProjectSocket[pid].server = socketClient;
+        
+        /**project-socket事件监听 */
+        this.connectingProjectSocket[pid].events.push( new EventProjectMember( socketClient ));
+        this.connectingProjectSocket[pid].events.push( new EventProjectGetIn( socketClient ));
     }
 
     public disconnectNsp( name: string ) {
         this.connectedNameSpace[name].disconnect( );
         delete this.connectedNameSpace[name]
+    }
+
+    public disconnectProjectSocket( pid: string ) {
+        this.connectingProjectSocket[pid].server.disconnect( );
+        this.connectingProjectSocket[pid].events.map(( eventExample ) => {
+            console.log(`${pid}项目通讯通道已解除链接`)
+            eventExample.cancelSub( );
+        })
+        delete this.connectingProjectSocket[pid];
     }
 
 }

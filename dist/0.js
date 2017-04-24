@@ -21,7 +21,7 @@ var React = __webpack_require__(0);
 var antd_1 = __webpack_require__(154);
 var http_service_1 = __webpack_require__(541);
 var project_1 = __webpack_require__(542);
-var socket_1 = __webpack_require__(1357);
+var socket_1 = __webpack_require__(545);
 var bread_container_1 = __webpack_require__(1407);
 var memberSlider_container_1 = __webpack_require__(1408);
 var Header = antd_1.Layout.Header, Footer = antd_1.Layout.Footer, Sider = antd_1.Layout.Sider, Content = antd_1.Layout.Content;

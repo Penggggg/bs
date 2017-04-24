@@ -5,9 +5,20 @@ var CON;
     /**socket事件名称 */
     var socketEvent;
     (function (socketEvent) {
+        /**登录 */
         socketEvent.signIn = 'signInUser';
+        /**登出 */
         socketEvent.signOut = 'signOutUser';
+        /**消息 */
         socketEvent.msg = 'msg';
+        /**项目事件 */
+        var project;
+        (function (project) {
+            /**进入项目 */
+            project.getIn = 'getInProject';
+            /**成员 */
+            project.member = 'member';
+        })(project = socketEvent.project || (socketEvent.project = {}));
     })(socketEvent = CON.socketEvent || (CON.socketEvent = {}));
     /**socket命名空间 */
     var socketNSP;

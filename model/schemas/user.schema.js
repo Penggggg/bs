@@ -25,6 +25,12 @@ exports.UserSchema.pre('save', function (next) {
     }
     next();
 });
+exports.UserSchema.statics.customFind = function (query, fields, options) {
+    var _this = this;
+    return new Promise(function (resolve, reject) {
+        _this.find(query, fields, options, function (err, data) { return returnData(err, resolve, reject, data); });
+    });
+};
 exports.UserSchema.statics.findAll = function (select) {
     var _this = this;
     return new Promise(function (resolve, reject) {

@@ -1,18 +1,23 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var index_con_1 = require("../../index.con");
+var member_1 = require("./member");
 var ProjectSocket = (function () {
     function ProjectSocket(io, pid) {
         console.log("--------project-socket\u542F\u52A8\u6210\u529F: " + pid);
-        this.io = io;
-        this.pid = pid;
         this.init(io, pid);
     }
     ProjectSocket.prototype.init = function (io, pid) {
-        io
-            .of("" + pid)
-            .on('connection', function (socket) {
-            console.log("\u6709\u4EBA\u8FDB\u5165\u4E86\u9879\u76EE" + pid);
+        var _this = this;
+        this.socket = io
+            .of("" + pid);
+        this.socket.on('connection', function (socket) {
+            socket.emit("" + index_con_1.CON.socketEvent.project.getIn, { msg: '您已进入该项目的实时通讯频道' });
+            /**事件通讯 */
+            _this.member = new member_1.Member(_this.socket);
         });
+    };
+    ProjectSocket.prototype.broadcast = function () {
     };
     return ProjectSocket;
 }());

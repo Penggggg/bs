@@ -1,24 +1,35 @@
 
+import { CON } from '../../index.con';
+import { Member } from './member';
 
 export class ProjectSocket {
 
-    private pid: string;
-    private io: SocketIO.Server;
+    private socket: SocketIO.Namespace
+    public member: Member;
 
 
     constructor( io: SocketIO.Server ,pid: string ) {
         console.log(`--------project-socket启动成功: ${pid}`)
-        this.io = io;
-        this.pid = pid;
         this.init( io, pid );
     }
 
     private init( io: SocketIO.Server ,pid: string ) {
-        io  
-            .of(`${pid}`)
-            .on('connection', ( socket ) => {
-                console.log(`有人进入了项目${pid}`)
+        this.socket = io
+            .of(`${pid}`);
+
+            this.socket.on('connection', ( socket ) => {
+                socket.emit(`${CON.socketEvent.project.getIn}`,
+                    { msg: '您已进入该项目的实时通讯频道' } as SOK.Res.getInProject);
+
+                /**事件通讯 */
+                this.member = new Member( this.socket ); 
+
+
             })
+    }
+
+    public broadcast( ) {
+        
     }
 
 }

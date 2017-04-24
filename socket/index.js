@@ -48,6 +48,7 @@ var project_model_1 = require("../model/models/project.model");
 var mySocket = (function () {
     function mySocket() {
         this.userSocket = new user_1.default();
+        this.projectSockets = {};
     }
     mySocket.prototype.init = function (io) {
         return __awaiter(this, void 0, void 0, function () {
@@ -72,7 +73,7 @@ var mySocket = (function () {
     };
     /**动态添加pid的namespace socket */
     mySocket.prototype.addProjectSocket = function (pid) {
-        new project_1.ProjectSocket(this.serverIO, pid);
+        this.projectSockets[pid] = new project_1.ProjectSocket(this.serverIO, pid);
     };
     return mySocket;
 }());

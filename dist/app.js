@@ -11,9 +11,20 @@ var CON;
     /**socket事件名称 */
     var socketEvent;
     (function (socketEvent) {
+        /**登录 */
         socketEvent.signIn = 'signInUser';
+        /**登出 */
         socketEvent.signOut = 'signOutUser';
+        /**消息 */
         socketEvent.msg = 'msg';
+        /**项目事件 */
+        var project;
+        (function (project) {
+            /**进入项目 */
+            project.getIn = 'getInProject';
+            /**成员 */
+            project.member = 'member';
+        })(project = socketEvent.project || (socketEvent.project = {}));
     })(socketEvent = CON.socketEvent || (CON.socketEvent = {}));
     /**socket命名空间 */
     var socketNSP;
@@ -39,7 +50,7 @@ var Util;
 
 /***/ }),
 
-/***/ 1352:
+/***/ 1353:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -52,7 +63,7 @@ exports.default = {
 
 /***/ }),
 
-/***/ 1353:
+/***/ 1354:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -88,7 +99,7 @@ ReactDom.render(React.createElement(App, null), document.querySelector('#app'));
 
 /***/ }),
 
-/***/ 1354:
+/***/ 1355:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -121,7 +132,7 @@ exports.default = new localStorageService();
 
 /***/ }),
 
-/***/ 1355:
+/***/ 1356:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -160,7 +171,7 @@ exports.default = new Msg();
 
 /***/ }),
 
-/***/ 1356:
+/***/ 1357:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -210,48 +221,6 @@ var SignIn = (function () {
     return SignIn;
 }());
 exports.default = new SignIn();
-
-
-/***/ }),
-
-/***/ 1357:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var event_signIn_1 = __webpack_require__(1356);
-var event_msg_1 = __webpack_require__(1355);
-var socketService = (function () {
-    function socketService() {
-        this.SignIn = event_signIn_1.default;
-        this.Msg = event_msg_1.default;
-        this.connectedUrl = 'http://localhost';
-        this.connectedNameSpace = {};
-    }
-    socketService.prototype.connectNewNsp = function (name) {
-        var socketClient = io(this.connectedUrl + "/" + name);
-        this.connectedNameSpace[name] = socketClient;
-        return socketClient;
-    };
-    socketService.prototype.connectNewProject = function (pid) {
-        /**接触上次namespace */
-        if (!!this.connectingPID) {
-            this.disconnectNsp(this.connectingPID);
-        }
-        /**新建namespace */
-        var socketClient = io(this.connectedUrl + "/" + pid);
-        this.connectingPID = pid;
-        this.connectedNameSpace[pid] = socketClient;
-        return socketClient;
-    };
-    socketService.prototype.disconnectNsp = function (name) {
-        this.connectedNameSpace[name].disconnect();
-        delete this.connectedNameSpace[name];
-    };
-    return socketService;
-}());
-exports.default = new socketService();
 
 
 /***/ }),
@@ -440,6 +409,70 @@ exports.default = UserSignIn;
 
 /***/ }),
 
+/***/ 1412:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var antd_1 = __webpack_require__(154);
+var rxjs_1 = __webpack_require__(48);
+var index_con_1 = __webpack_require__(114);
+var project_1 = __webpack_require__(542);
+var EventProjectMember = (function () {
+    function EventProjectMember(io) {
+        this.init(io);
+    }
+    EventProjectMember.prototype.init = function (io) {
+        this.sub = rxjs_1.Observable
+            .fromEvent(io, "" + index_con_1.CON.socketEvent.project.member)
+            .do(function (res) {
+            antd_1.message.success(res.msg);
+            project_1.default.data.save(res.data);
+        })
+            .subscribe();
+    };
+    EventProjectMember.prototype.cancelSub = function () {
+        this.sub.unsubscribe();
+    };
+    return EventProjectMember;
+}());
+exports.EventProjectMember = EventProjectMember;
+
+
+/***/ }),
+
+/***/ 1413:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var antd_1 = __webpack_require__(154);
+var rxjs_1 = __webpack_require__(48);
+var index_con_1 = __webpack_require__(114);
+var EventProjectGetIn = (function () {
+    function EventProjectGetIn(io) {
+        this.init(io);
+    }
+    EventProjectGetIn.prototype.init = function (io) {
+        this.sub = rxjs_1.Observable
+            .fromEvent(io, "" + index_con_1.CON.socketEvent.project.getIn)
+            .do(function (res) {
+            antd_1.message.success(res.msg);
+        })
+            .subscribe();
+    };
+    EventProjectGetIn.prototype.cancelSub = function () {
+        this.sub.unsubscribe();
+    };
+    return EventProjectGetIn;
+}());
+exports.EventProjectGetIn = EventProjectGetIn;
+
+
+/***/ }),
+
 /***/ 155:
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -605,7 +638,7 @@ function showMessage(err, pageName) {
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var rxjs_1 = __webpack_require__(48);
-var config_1 = __webpack_require__(1352);
+var config_1 = __webpack_require__(1353);
 var HttpService = (function () {
     function HttpService() {
         this.TIMEOUT = 10000;
@@ -756,8 +789,8 @@ exports.default = new ProjectStore();
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var index_con_1 = __webpack_require__(114);
-var local_storage_service_1 = __webpack_require__(1354);
-var socket_1 = __webpack_require__(1357);
+var local_storage_service_1 = __webpack_require__(1355);
+var socket_1 = __webpack_require__(545);
 var user_1 = __webpack_require__(155);
 var project_1 = __webpack_require__(542);
 var authLoginService = (function () {
@@ -833,6 +866,66 @@ var MsgStore = (function () {
 exports.default = new MsgStore();
 
 
+/***/ }),
+
+/***/ 545:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var event_signIn_1 = __webpack_require__(1357);
+var event_msg_1 = __webpack_require__(1356);
+var event_project_member_1 = __webpack_require__(1412);
+var event_project_getIn_1 = __webpack_require__(1413);
+var socketService = (function () {
+    function socketService() {
+        this.SignIn = event_signIn_1.default;
+        this.Msg = event_msg_1.default;
+        this.connectedUrl = 'http://localhost';
+        this.connectedNameSpace = {};
+        this.connectingProjectSocket = {};
+    }
+    socketService.prototype.connectNewNsp = function (name) {
+        var socketClient = io(this.connectedUrl + "/" + name);
+        this.connectedNameSpace[name] = socketClient;
+        return socketClient;
+    };
+    socketService.prototype.connectNewProject = function (pid) {
+        /**接触上次namespace */
+        if (!!this.connectingPID) {
+            this.disconnectProjectSocket(this.connectingPID);
+        }
+        /**新建namespace */
+        var socketClient = io(this.connectedUrl + "/" + pid);
+        this.connectingProjectSocket[pid] = {
+            server: null,
+            events: []
+        };
+        /**保存该链接下的事件实例与socket */
+        this.connectingPID = pid;
+        this.connectingProjectSocket[pid].server = socketClient;
+        /**project-socket事件监听 */
+        this.connectingProjectSocket[pid].events.push(new event_project_member_1.EventProjectMember(socketClient));
+        this.connectingProjectSocket[pid].events.push(new event_project_getIn_1.EventProjectGetIn(socketClient));
+    };
+    socketService.prototype.disconnectNsp = function (name) {
+        this.connectedNameSpace[name].disconnect();
+        delete this.connectedNameSpace[name];
+    };
+    socketService.prototype.disconnectProjectSocket = function (pid) {
+        this.connectingProjectSocket[pid].server.disconnect();
+        this.connectingProjectSocket[pid].events.map(function (eventExample) {
+            console.log(pid + "\u9879\u76EE\u901A\u8BAF\u901A\u9053\u5DF2\u89E3\u9664\u94FE\u63A5");
+            eventExample.cancelSub();
+        });
+        delete this.connectingProjectSocket[pid];
+    };
+    return socketService;
+}());
+exports.default = new socketService();
+
+
 /***/ })
 
-},[1353]);
+},[1354]);

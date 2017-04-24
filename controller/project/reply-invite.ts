@@ -1,5 +1,8 @@
 import * as Koa from 'koa';
+
+import mySocket from '../../socket';
 import MsgModel from '../../model/models/msg.model';
+import UserModel from '../../model/models/user.model';
 import ProjectModel from '../../model/models/project.model';
 
 export let replyInvite = async( ctx: Koa.Context ) => {
@@ -62,9 +65,14 @@ export let replyInvite = async( ctx: Koa.Context ) => {
         let newMembers = [ ...project.member, msg.toUID ];
         let updateMember = await ProjectModel.updateMember( project._id ,newMembers );
 
+        /**查询新成员数据 */
+        let newMember: Array<APP.User> = await UserModel.customFind({ _id: msg.toUID }, ['name'], null );
 
         /**2-2-2. socket通告 */
-
+        mySocket.projectSockets[project._id].member.broadcast({
+            msg: `欢迎新同学${newMember[0].name}加入项目！`,
+            data: Object.assign({ }, project, { member: newMembers })
+        });
 
         /**3. 返回数据 */
         result = {

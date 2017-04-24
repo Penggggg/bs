@@ -25,6 +25,12 @@ UserSchema.pre('save', function( next ){
     next( );
 })
 
+UserSchema.statics.customFind = function( query, fields, options ) {
+    return new Promise(( resolve, reject ) => {
+        this.find( query, fields, options, ( err, data) =>  returnData( err, resolve, reject, data ))
+    })
+}
+
 UserSchema.statics.findAll =  function( select ) {
     return new Promise(( resolve, reject ) => {
         this.find({ }, select, ( err, data) =>  returnData( err, resolve, reject, data ))

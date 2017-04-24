@@ -36,10 +36,12 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
+var socket_1 = require("../../socket");
 var msg_model_1 = require("../../model/models/msg.model");
+var user_model_1 = require("../../model/models/user.model");
 var project_model_1 = require("../../model/models/project.model");
 exports.replyInvite = function (ctx) { return __awaiter(_this, void 0, void 0, function () {
-    var result, answer, mid, msgData, projectData, msg, project, updateDirty, newMembers, updateMember, _a;
+    var result, answer, mid, msgData, projectData, msg, project, updateDirty, newMembers, updateMember, newMember, _a;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
@@ -95,15 +97,22 @@ exports.replyInvite = function (ctx) { return __awaiter(_this, void 0, void 0, f
                 return [4 /*yield*/, project_model_1.default.updateMember(project._id, newMembers)];
             case 5:
                 updateMember = _b.sent();
+                return [4 /*yield*/, user_model_1.default.customFind({ _id: msg.toUID }, ['name'], null)];
+            case 6:
+                newMember = _b.sent();
                 /**2-2-2. socket通告 */
+                socket_1.default.projectSockets[project._id].member.broadcast({
+                    msg: "\u6B22\u8FCE\u65B0\u540C\u5B66" + newMember[0].name + "\u52A0\u5165\u9879\u76EE\uFF01",
+                    data: Object.assign({}, project, { member: newMembers })
+                });
                 /**3. 返回数据 */
                 result = {
                     msg: "\u6210\u529F\u52A0\u5165\u3010" + project.name + "\u3011\u9879\u76EE\uFF01",
                     status: '200'
                 };
                 ctx.body = result;
-                _b.label = 6;
-            case 6: return [2 /*return*/];
+                _b.label = 7;
+            case 7: return [2 /*return*/];
         }
     });
 }); };

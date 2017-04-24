@@ -78,6 +78,21 @@ PorjectSchema.statics.updateMember = function( id, member ) {
     return new Promise(( resolve, reject ) => {
         this
             .update({ _id: id }, { member })
+            .populate('creator', '_id name phone')
+            .populate('member', '_id name phone')
+            .populate('leader', '_id name phone')
+            .exec(( err, data ) => returnData( err, resolve, reject, data ))
+    })
+}
+
+/**更新项目member后，查询最新数据 */
+PorjectSchema.statics.lastData = function( id ) {
+    return new Promise(( resolve, reject ) => {
+        this
+            .find({ _id: id })
+            .populate('creator', '_id name phone')
+            .populate('member', '_id name phone')
+            .populate('leader', '_id name phone')
             .exec(( err, data ) => returnData( err, resolve, reject, data ))
     })
 }

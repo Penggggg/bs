@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as ReactDom from 'react-dom';
-import { Icon, Modal, Button, AutoComplete } from 'antd';
+import { Icon, Modal, Button, AutoComplete, Tag } from 'antd';
 
 
 import { Subscription } from 'rxjs';
@@ -94,6 +94,7 @@ export let InjectMember = ( Slider ) => {
             this.sub = projectStore.data.data$
                 .do( project => {
                     let { creator, member, leader, _id } = project;
+                    console.log( project )
                     this.setState({
                         content: <div><ul>
                             <li className="btn" style={{ paddingLeft: 0 }} onClick={ this.addNewMember }>
@@ -102,10 +103,31 @@ export let InjectMember = ( Slider ) => {
                             </li>
                             {
                                 <li>
+                                    <Tag color="#108ee9" className="my-tag">项目负责人</Tag>
                                     <Image src="/static/touxiang.png" />
                                     <h3>{ creator.name }</h3>
                                     <p>{ creator.phone }</p>
                                 </li>
+                            }
+                            {
+                                leader.map(( l, key ) => {
+                                    return <li key={key}>
+                                        <Tag color="#6252cd" className="my-tag">组长</Tag>
+                                        <Image src="/static/touxiang.png" />
+                                        <h3>{ l.name }</h3>
+                                        <p>{ l.phone }</p>
+                                    </li>
+                                })
+                            }
+                            {
+                                member.map(( l, key ) => {
+                                    return <li key={key}>
+                                        <Tag color="#00a854" className="my-tag">成员</Tag>
+                                        <Image src="/static/touxiang.png" />
+                                        <h3>{ l.name }</h3>
+                                        <p>{ l.phone }</p>
+                                    </li>
+                                })                         
                             }
                         </ul></div>
                     })

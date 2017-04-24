@@ -68,10 +68,13 @@ export let replyInvite = async( ctx: Koa.Context ) => {
         /**查询新成员数据 */
         let newMember: Array<APP.User> = await UserModel.customFind({ _id: msg.toUID }, ['name'], null );
 
+        /**查询项目最新数据 */
+        let lastData: Array<APP.Project> = await ProjectModel.lastData( project._id );
+
         /**2-2-2. socket通告 */
         mySocket.projectSockets[project._id].member.broadcast({
             msg: `欢迎新同学${newMember[0].name}加入项目！`,
-            data: Object.assign({ }, project, { member: newMembers })
+            data: lastData[0]
         });
 
         /**3. 返回数据 */

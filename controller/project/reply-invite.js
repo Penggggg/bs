@@ -41,7 +41,7 @@ var msg_model_1 = require("../../model/models/msg.model");
 var user_model_1 = require("../../model/models/user.model");
 var project_model_1 = require("../../model/models/project.model");
 exports.replyInvite = function (ctx) { return __awaiter(_this, void 0, void 0, function () {
-    var result, answer, mid, msgData, projectData, msg, project, updateDirty, newMembers, updateMember, newMember, _a;
+    var result, answer, mid, msgData, projectData, msg, project, updateDirty, newMembers, updateMember, newMember, lastData, _a;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
@@ -100,10 +100,13 @@ exports.replyInvite = function (ctx) { return __awaiter(_this, void 0, void 0, f
                 return [4 /*yield*/, user_model_1.default.customFind({ _id: msg.toUID }, ['name'], null)];
             case 6:
                 newMember = _b.sent();
+                return [4 /*yield*/, project_model_1.default.lastData(project._id)];
+            case 7:
+                lastData = _b.sent();
                 /**2-2-2. socket通告 */
                 socket_1.default.projectSockets[project._id].member.broadcast({
                     msg: "\u6B22\u8FCE\u65B0\u540C\u5B66" + newMember[0].name + "\u52A0\u5165\u9879\u76EE\uFF01",
-                    data: Object.assign({}, project, { member: newMembers })
+                    data: lastData[0]
                 });
                 /**3. 返回数据 */
                 result = {
@@ -111,8 +114,8 @@ exports.replyInvite = function (ctx) { return __awaiter(_this, void 0, void 0, f
                     status: '200'
                 };
                 ctx.body = result;
-                _b.label = 7;
-            case 7: return [2 /*return*/];
+                _b.label = 8;
+            case 8: return [2 /*return*/];
         }
     });
 }); };

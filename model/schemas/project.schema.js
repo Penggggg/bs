@@ -74,6 +74,21 @@ exports.PorjectSchema.statics.updateMember = function (id, member) {
     return new Promise(function (resolve, reject) {
         _this
             .update({ _id: id }, { member: member })
+            .populate('creator', '_id name phone')
+            .populate('member', '_id name phone')
+            .populate('leader', '_id name phone')
+            .exec(function (err, data) { return returnData(err, resolve, reject, data); });
+    });
+};
+/**更新项目member后，查询最新数据 */
+exports.PorjectSchema.statics.lastData = function (id) {
+    var _this = this;
+    return new Promise(function (resolve, reject) {
+        _this
+            .find({ _id: id })
+            .populate('creator', '_id name phone')
+            .populate('member', '_id name phone')
+            .populate('leader', '_id name phone')
             .exec(function (err, data) { return returnData(err, resolve, reject, data); });
     });
 };

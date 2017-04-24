@@ -2702,7 +2702,7 @@ exports = module.exports = __webpack_require__(1377)(undefined);
 
 
 // module
-exports.push([module.i, ".c-Slider {\n  background-color: #f5f5f5;\n  width: 350px;\n  height: 500px;\n  position: absolute;\n  right: 20px;\n  top: 125px;\n  z-index: 10px;\n  transition: all ease 0.4s;\n  transform: translate3d(350px, 0, 0);\n  opacity: 0;\n  border-radius: 8px;\n  box-shadow: 0px 0px 20px 1px #919191;\n}\n.c-Slider .title {\n  text-align: center;\n  position: relative;\n  padding: 10px 25px;\n}\n.c-Slider .title h3 {\n  border-bottom: 1px solid #d9d9d9;\n  padding-bottom: 10px;\n}\n.c-Slider .title i {\n  transition: all ease 0.4s;\n  position: absolute;\n  cursor: pointer;\n  right: 20px;\n  top: 16px;\n}\n.c-Slider .title i:hover {\n  color: #56ABEF;\n}\n.c-Slider .content {\n  padding: 0 25px 20px;\n  height: 450px;\n  overflow: scroll;\n}\n.c-Slider .content ul {\n  padding-top: 15px;\n}\n.c-Slider .content ul li {\n  position: relative;\n  padding-left: 65px;\n  padding-top: 3px;\n  padding-bottom: 18px;\n}\n.c-Slider .content ul li img {\n  width: 50px;\n  border-radius: 50%;\n  position: absolute;\n  left: 0;\n  top: 0;\n}\n.c-Slider .content ul li.btn {\n  cursor: pointer;\n}\n.c-Slider .content ul li.btn i {\n  font-size: 50px;\n  color: #108ee9;\n}\n.c-Slider .content ul li.btn a {\n  position: absolute;\n  top: 20px;\n  left: 62px;\n}\n.c-Slider .content::-webkit-scrollbar {\n  display: none;\n}\n.c-Slider.show {\n  transform: translate3d(0, 0, 0);\n  opacity: 1;\n}\n", ""]);
+exports.push([module.i, ".c-Slider {\n  background-color: #f5f5f5;\n  width: 350px;\n  height: 500px;\n  position: absolute;\n  right: 20px;\n  top: 125px;\n  z-index: 10px;\n  transition: all ease 0.4s;\n  transform: translate3d(350px, 0, 0);\n  opacity: 0;\n  border-radius: 8px;\n  box-shadow: 0px 0px 20px 1px #919191;\n}\n.c-Slider .title {\n  text-align: center;\n  position: relative;\n  padding: 10px 25px;\n}\n.c-Slider .title h3 {\n  border-bottom: 1px solid #d9d9d9;\n  padding-bottom: 10px;\n}\n.c-Slider .title i {\n  transition: all ease 0.4s;\n  position: absolute;\n  cursor: pointer;\n  right: 20px;\n  top: 16px;\n}\n.c-Slider .title i:hover {\n  color: #56ABEF;\n}\n.c-Slider .content {\n  padding: 0 25px 20px;\n  height: 450px;\n  overflow: scroll;\n}\n.c-Slider .content ul {\n  padding-top: 15px;\n}\n.c-Slider .content ul li {\n  position: relative;\n  padding-left: 65px;\n  padding-top: 3px;\n  padding-bottom: 18px;\n}\n.c-Slider .content ul li img {\n  width: 55px;\n  border-radius: 50%;\n  position: absolute;\n  left: 0;\n  top: 8px;\n}\n.c-Slider .content ul li.btn {\n  cursor: pointer;\n}\n.c-Slider .content ul li.btn i {\n  font-size: 50px;\n  color: #108ee9;\n}\n.c-Slider .content ul li.btn a {\n  position: absolute;\n  top: 20px;\n  left: 62px;\n}\n.c-Slider .content::-webkit-scrollbar {\n  display: none;\n}\n.c-Slider.show {\n  transform: translate3d(0, 0, 0);\n  opacity: 1;\n}\n", ""]);
 
 // exports
 
@@ -3013,6 +3013,7 @@ exports.InjectMember = function (Slider) {
                 _this.sub = project_1.default.data.data$
                     .do(function (project) {
                     var creator = project.creator, member = project.member, leader = project.leader, _id = project._id;
+                    console.log(project);
                     _this.setState({
                         content: React.createElement("div", null,
                             React.createElement("ul", null,
@@ -3020,9 +3021,24 @@ exports.InjectMember = function (Slider) {
                                     React.createElement(antd_1.Icon, { type: "plus-circle" }),
                                     React.createElement("a", null, "\u9080\u8BF7\u65B0\u6210\u5458")),
                                 React.createElement("li", null,
+                                    React.createElement(antd_1.Tag, { color: "#108ee9", className: "my-tag" }, "\u9879\u76EE\u8D1F\u8D23\u4EBA"),
                                     React.createElement(Image_component_1.default, { src: "/static/touxiang.png" }),
                                     React.createElement("h3", null, creator.name),
-                                    React.createElement("p", null, creator.phone))))
+                                    React.createElement("p", null, creator.phone)),
+                                leader.map(function (l, key) {
+                                    return React.createElement("li", { key: key },
+                                        React.createElement(antd_1.Tag, { color: "#6252cd", className: "my-tag" }, "\u7EC4\u957F"),
+                                        React.createElement(Image_component_1.default, { src: "/static/touxiang.png" }),
+                                        React.createElement("h3", null, l.name),
+                                        React.createElement("p", null, l.phone));
+                                }),
+                                member.map(function (l, key) {
+                                    return React.createElement("li", { key: key },
+                                        React.createElement(antd_1.Tag, { color: "#00a854", className: "my-tag" }, "\u6210\u5458"),
+                                        React.createElement(Image_component_1.default, { src: "/static/touxiang.png" }),
+                                        React.createElement("h3", null, l.name),
+                                        React.createElement("p", null, l.phone));
+                                })))
                     });
                 })
                     .subscribe();

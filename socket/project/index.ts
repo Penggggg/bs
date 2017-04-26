@@ -1,10 +1,12 @@
 
 import { CON } from '../../index.con';
 import { Member } from './member';
+import { Chat } from './chat';
 
 export class ProjectSocket {
 
-    private socket: SocketIO.Namespace
+    private socket: SocketIO.Namespace;
+    public chat: Chat;
     public member: Member;
 
 
@@ -23,7 +25,7 @@ export class ProjectSocket {
 
                 /**事件通讯 */
                 this.member = new Member( this.socket ); 
-
+                this.chat = new Chat( this.socket );
 
             })
     }

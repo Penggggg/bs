@@ -18,6 +18,9 @@ export namespace CON {
 
             /**成员 */
             export const member = 'member'
+
+            /**聊天信息 */
+            export const chat = 'chat'
         }
     }
 

@@ -423,6 +423,67 @@ exports.default = UserSignIn;
 
 /***/ }),
 
+/***/ 1416:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var antd_1 = __webpack_require__(91);
+var rxjs_1 = __webpack_require__(41);
+var index_con_1 = __webpack_require__(76);
+var project_1 = __webpack_require__(240);
+var EventProjectChat = (function () {
+    function EventProjectChat(io) {
+        this.init(io);
+    }
+    EventProjectChat.prototype.init = function (io) {
+        this.sub = rxjs_1.Observable
+            .fromEvent(io, "" + index_con_1.CON.socketEvent.project.chat)
+            .do(function (res) {
+            antd_1.message.success('项目有一条新聊天记录~');
+            project_1.default.chat.save(res);
+        })
+            .subscribe();
+    };
+    EventProjectChat.prototype.cancelSub = function () {
+        this.sub.unsubscribe();
+    };
+    return EventProjectChat;
+}());
+exports.EventProjectChat = EventProjectChat;
+
+
+/***/ }),
+
+/***/ 1417:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var rxjs_1 = __webpack_require__(41);
+var ProjectChat = (function () {
+    function ProjectChat() {
+        var _this = this;
+        var subject = new rxjs_1.ReplaySubject(1);
+        var source = rxjs_1.Observable.create(function (observer) {
+            _this.data$$ = observer;
+            observer.next();
+        });
+        this.data$ = source.multicast(subject).refCount();
+        this.data$.subscribe();
+    }
+    ProjectChat.prototype.save = function (newChat) {
+        this.data$$.next(newChat);
+    };
+    return ProjectChat;
+}());
+exports.ProjectChat = ProjectChat;
+
+
+/***/ }),
+
 /***/ 155:
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -477,10 +538,12 @@ exports.default = new NotificationService();
 Object.defineProperty(exports, "__esModule", { value: true });
 var role_store_1 = __webpack_require__(1362);
 var data_store_1 = __webpack_require__(1361);
+var chat_store_1 = __webpack_require__(1417);
 var ProjectStore = (function () {
     function ProjectStore() {
         this.role = new role_store_1.default();
         this.data = new data_store_1.default();
+        this.chat = new chat_store_1.ProjectChat();
     }
     return ProjectStore;
 }());
@@ -828,6 +891,7 @@ var event_signIn_1 = __webpack_require__(1359);
 var event_msg_1 = __webpack_require__(1356);
 var event_project_member_1 = __webpack_require__(1358);
 var event_project_getIn_1 = __webpack_require__(1357);
+var event_project_chat_1 = __webpack_require__(1416);
 var socketService = (function () {
     function socketService() {
         this.SignIn = event_signIn_1.default;
@@ -858,6 +922,7 @@ var socketService = (function () {
         /**project-socket事件监听 */
         this.connectingProjectSocket[pid].events.push(new event_project_member_1.EventProjectMember(socketClient));
         this.connectingProjectSocket[pid].events.push(new event_project_getIn_1.EventProjectGetIn(socketClient));
+        this.connectingProjectSocket[pid].events.push(new event_project_chat_1.EventProjectChat(socketClient));
     };
     socketService.prototype.disconnectNsp = function (name) {
         this.connectedNameSpace[name].disconnect();
@@ -902,6 +967,8 @@ var CON;
             project.getIn = 'getInProject';
             /**成员 */
             project.member = 'member';
+            /**聊天信息 */
+            project.chat = 'chat';
         })(project = socketEvent.project || (socketEvent.project = {}));
     })(socketEvent = CON.socketEvent || (CON.socketEvent = {}));
     /**socket命名空间 */

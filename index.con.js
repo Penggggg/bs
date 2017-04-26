@@ -18,6 +18,8 @@ var CON;
             project.getIn = 'getInProject';
             /**成员 */
             project.member = 'member';
+            /**聊天信息 */
+            project.chat = 'chat';
         })(project = socketEvent.project || (socketEvent.project = {}));
     })(socketEvent = CON.socketEvent || (CON.socketEvent = {}));
     /**socket命名空间 */

@@ -2,15 +2,6 @@ import userSocket from './user';
 import { ProjectSocket } from './project';
 import projectModel from '../model/models/project.model';
 
-// io
-//     .of('/chat')
-//     .on('connection', function (socket) {
-//         // socket.broadcast.emit('news', { hello: 'world' });
-//         socket.join('dog')
-//         socket.broadcast.in('dog').emit('news', { room: 'dog-1' });
-//     });
-
-
 class mySocket {
 
     private serverIO: SocketIO.Server;

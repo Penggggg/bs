@@ -58,6 +58,12 @@ declare namespace API {
             status: '200' | '400' | '500'
         }
 
+        /**POST：发送聊天 */
+        export interface AddChatRecord {
+            msg: string,
+            status: '200' | '500' | '400'
+        }
+
 
     }
 
@@ -127,6 +133,13 @@ declare namespace API {
             mid: string | Partial<APP.Msg>
         }
 
+        /**POST：发送聊天 */
+        export interface AddChatRecord {
+            pid: string,
+            uid: string,
+            content: string
+        }
+
     }
 
 }
@@ -172,6 +185,13 @@ declare namespace SOK {
         export interface NewMember {
             msg: string,
             data: APP.Project
+        }
+
+        /**消息推送：新增聊天记录 */
+        export interface NewChat {
+            uid: string
+            content: string
+            userName: string
         }
     }
 
@@ -240,6 +260,18 @@ declare namespace APP {
     /**项目事件 */
     export abstract class ProjectEvent {
         cancelSub( ): void
+    }
+
+
+    /**聊天记录列表 */
+    export interface ChatList {
+        pid?: string
+        record: Array<{
+            uid: string
+            userName: string
+            content: string
+            createdTime: string
+        }>
     }
 
 }

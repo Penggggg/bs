@@ -120,7 +120,9 @@ var ProjectChatPage = (function (_super) {
                 React.createElement(Image_component_1.default, { src: "/static/touxiang.png" }),
                 React.createElement("h3", null, _this.uid === chat.user._id ? '我' : chat.user.name),
                 React.createElement("p", { className: "content" }, chat.content),
-                React.createElement("p", { className: "time" }, (new Date(chat.createdTime)).toLocaleString())); }))
+                React.createElement("p", { className: "time" }, chat.createdTime ?
+                    (new Date(chat.createdTime)).toLocaleString() :
+                    (new Date()).toLocaleString())); }))
             :
                 React.createElement("ul", null);
         return React.createElement("div", { className: "project-chat-page" },

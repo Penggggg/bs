@@ -124,7 +124,9 @@ export default class ProjectChatPage extends React.PureComponent< IProps, IState
                         <Image src="/static/touxiang.png" />
                         <h3>{ this.uid === chat.user._id ? '我' : chat.user.name }</h3>
                         <p className="content">{ chat.content }</p>
-                        <p className="time">{ (new Date( chat.createdTime )).toLocaleString( ) }</p>
+                        <p className="time">{ chat.createdTime ?
+                                 (new Date( chat.createdTime )).toLocaleString( ) :
+                                 (new Date( )).toLocaleString( ) }</p>
                     </li>)
                 }
             </ul> 

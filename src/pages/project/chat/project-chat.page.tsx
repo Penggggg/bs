@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs';
 import { RouteComponentProps } from 'react-router';
 import { Button, Input } from 'antd';
 
+import Image from '../../../component/Image/Image.component';
 import userStore from '../../../store/user';
 import projectStore from '../../../store/project';
 import http from '../../../services/http.service';
@@ -11,6 +12,7 @@ import http from '../../../services/http.service';
 
 export default class ProjectChatPage extends React.PureComponent< IProps, IState > {
 
+    private uid: string = null;
     private sub: Subscription;
 
     constructor( ) {
@@ -22,11 +24,27 @@ export default class ProjectChatPage extends React.PureComponent< IProps, IState
     }
 
     componentDidMount( ) {
+        this.init( );
         this.combineFlow( );
     }
 
     componentWillUnmount( ) {
         this.sub.unsubscribe( );
+    }
+
+    init = ( ) => {
+        let sub = userStore.data.userData$
+            .do( user => {
+                this.uid = user._id;
+                setTimeout(( ) => sub.unsubscribe( ), 100 );
+            })
+            .subscribe( );
+    }
+
+    dealChatList = ( ) => {
+        let a = document.querySelector('#chatList');
+        a.scrollTop = 100000;
+        a = null;
     }
 
     combineFlow = ( ) => {
@@ -39,7 +57,7 @@ export default class ProjectChatPage extends React.PureComponent< IProps, IState
                 let { chatList } = this.state;
                 let [ chatData, SOK ] = res;
                 let chatListFromFetch = chatData.data;
-
+                
                 if ( !!SOK ) {
                     let newChat = {
                         user: {
@@ -57,6 +75,8 @@ export default class ProjectChatPage extends React.PureComponent< IProps, IState
                         chatList: [...chatListFromFetch]
                     })
                 }
+
+                setTimeout(( ) => this.dealChatList( ), 100 )
             })
             .subscribe( )
 
@@ -97,15 +117,27 @@ export default class ProjectChatPage extends React.PureComponent< IProps, IState
     render( ) {
         let { inputValue, chatList } = this.state;
 
-        
+        let list = this.uid ? 
+            <ul>
+                {
+                chatList.map(( chat, key ) => <li key={key} className={ this.uid === chat.user._id ? 'me' : 'other' }>
+                        <Image src="/static/touxiang.png" />
+                        <h3>{ this.uid === chat.user._id ? '我' : chat.user.name }</h3>
+                        <p className="content">{ chat.content }</p>
+                        <p className="time">{ (new Date( chat.createdTime )).toLocaleString( ) }</p>
+                    </li>)
+                }
+            </ul> 
+            : 
+            <ul></ul>
 
         return <div className="project-chat-page">
             <div className="chat-block">
-                <div className="chat-list">
-
+                <div className="chat-list" id="chatList">
+                    { list }
                 </div>
                 <div className="chat-input">
-                    <Input type="textarea" className="my-input" rows={4} ref="input" value={ inputValue }
+                    <textarea type="textarea" className="ant-input my-input" rows={4} value={ inputValue }
                          onChange={( e: any ) => this.setState({ inputValue: e.target.value})}/>
                     <Button type="primary" className="my-btn" onClick={this.postChat}>发送</Button>
                 </div>

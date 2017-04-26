@@ -36,7 +36,10 @@ export let addChat = async( ctx: Koa.Context ) => {
         userName: userData[0].name,
         createdTime: String(( new Date( )).getTime( ))
     }
-    mySocket.projectSockets[pid].chat.broadcast( sokData );
+    console.log( sokData )
+    setTimeout(( ) => {
+        mySocket.projectSockets[pid].chat.broadcast( sokData );
+    }, 16 )
     
 
     /**4. 数据返回 */

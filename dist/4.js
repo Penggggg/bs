@@ -19,6 +19,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 __webpack_require__(1406);
 var React = __webpack_require__(0);
 var antd_1 = __webpack_require__(77);
+var Image_component_1 = __webpack_require__(1390);
 var user_1 = __webpack_require__(156);
 var project_1 = __webpack_require__(155);
 var http_service_1 = __webpack_require__(542);
@@ -26,6 +27,20 @@ var ProjectChatPage = (function (_super) {
     __extends(ProjectChatPage, _super);
     function ProjectChatPage() {
         var _this = _super.call(this) || this;
+        _this.uid = null;
+        _this.init = function () {
+            var sub = user_1.default.data.userData$
+                .do(function (user) {
+                _this.uid = user._id;
+                setTimeout(function () { return sub.unsubscribe(); }, 100);
+            })
+                .subscribe();
+        };
+        _this.dealChatList = function () {
+            var a = document.querySelector('#chatList');
+            a.scrollTop = 100000;
+            a = null;
+        };
         _this.combineFlow = function () {
             var pid = _this.props.params.id;
             _this.sub = http_service_1.default
@@ -53,6 +68,7 @@ var ProjectChatPage = (function (_super) {
                         chatList: chatListFromFetch.slice()
                     });
                 }
+                setTimeout(function () { return _this.dealChatList(); }, 100);
             })
                 .subscribe();
         };
@@ -90,6 +106,7 @@ var ProjectChatPage = (function (_super) {
         return _this;
     }
     ProjectChatPage.prototype.componentDidMount = function () {
+        this.init();
         this.combineFlow();
     };
     ProjectChatPage.prototype.componentWillUnmount = function () {
@@ -98,11 +115,19 @@ var ProjectChatPage = (function (_super) {
     ProjectChatPage.prototype.render = function () {
         var _this = this;
         var _a = this.state, inputValue = _a.inputValue, chatList = _a.chatList;
+        var list = this.uid ?
+            React.createElement("ul", null, chatList.map(function (chat, key) { return React.createElement("li", { key: key, className: _this.uid === chat.user._id ? 'me' : 'other' },
+                React.createElement(Image_component_1.default, { src: "/static/touxiang.png" }),
+                React.createElement("h3", null, _this.uid === chat.user._id ? '我' : chat.user.name),
+                React.createElement("p", { className: "content" }, chat.content),
+                React.createElement("p", { className: "time" }, (new Date(chat.createdTime)).toLocaleString())); }))
+            :
+                React.createElement("ul", null);
         return React.createElement("div", { className: "project-chat-page" },
             React.createElement("div", { className: "chat-block" },
-                React.createElement("div", { className: "chat-list" }),
+                React.createElement("div", { className: "chat-list", id: "chatList" }, list),
                 React.createElement("div", { className: "chat-input" },
-                    React.createElement(antd_1.Input, { type: "textarea", className: "my-input", rows: 4, ref: "input", value: inputValue, onChange: function (e) { return _this.setState({ inputValue: e.target.value }); } }),
+                    React.createElement("textarea", { type: "textarea", className: "ant-input my-input", rows: 4, value: inputValue, onChange: function (e) { return _this.setState({ inputValue: e.target.value }); } }),
                     React.createElement(antd_1.Button, { type: "primary", className: "my-btn", onClick: this.postChat }, "\u53D1\u9001"))));
     };
     return ProjectChatPage;
@@ -2606,6 +2631,92 @@ module.exports = function (css) {
 
 /***/ }),
 
+/***/ 1388:
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(1381)(undefined);
+// imports
+
+
+// module
+exports.push([module.i, ".my-img {\n  opacity: 0;\n  transition: all 0.4s ease;\n}\n.my-img.loaded {\n  opacity: 1;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ 1389:
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(1388);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(1382)(content, {});
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./Image.less", function() {
+			var newContent = require("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./Image.less");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+
+/***/ 1390:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var React = __webpack_require__(0);
+__webpack_require__(1389);
+var Image = (function (_super) {
+    __extends(Image, _super);
+    function Image() {
+        var _this = _super.call(this) || this;
+        _this.onLoadHandler = function () {
+            _this.setState({
+                imgLoaded: true
+            });
+        };
+        _this.state = {
+            imgLoaded: false
+        };
+        return _this;
+    }
+    Image.prototype.render = function () {
+        var imgLoaded = this.state.imgLoaded;
+        var _a = this.props, src = _a.src, _b = _a.alt, alt = _b === void 0 ? '' : _b;
+        return React.createElement("img", { src: src, alt: alt, onLoad: this.onLoadHandler, className: imgLoaded ? "my-img loaded" : "my-img" });
+    };
+    return Image;
+}(React.PureComponent));
+exports.default = Image;
+
+
+/***/ }),
+
 /***/ 1397:
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -2614,7 +2725,7 @@ exports = module.exports = __webpack_require__(1381)(undefined);
 
 
 // module
-exports.push([module.i, ".project-chat-page {\n  padding-bottom: 20px;\n  margin-top: 20px;\n  box-sizing: border-box;\n}\n.project-chat-page .chat-block {\n  width: 70%;\n  margin: 0 auto;\n  border-radius: 8px;\n  position: relative;\n  box-sizing: border-box;\n  padding: 10px;\n  border: 1px solid #e9e9e9;\n  box-shadow: 0px 5px 40px 5px #d9d9d9;\n}\n.project-chat-page .chat-block .chat-list {\n  height: 400px;\n  overflow: scroll;\n}\n.project-chat-page .chat-block .chat-input {\n  height: 100px;\n  overflow: scroll;\n  position: relative;\n  padding: 10px 0 0 0;\n}\n.project-chat-page .chat-block .chat-input textarea {\n  padding: 4px 85px 10px 10px;\n}\n.project-chat-page .chat-block .chat-input textarea::-webkit-scrollbar {\n  display: none;\n}\n.project-chat-page .chat-block .chat-input .my-btn {\n  right: 10px;\n  bottom: 20px;\n  position: absolute;\n}\n.project-chat-page .chat-block .chat-list::-webkit-scrollbar {\n  display: none;\n}\n.project-chat-page .chat-block .chat-input::-webkit-scrollbar {\n  display: none;\n}\n", ""]);
+exports.push([module.i, ".project-chat-page {\n  padding-bottom: 20px;\n  margin-top: 20px;\n  box-sizing: border-box;\n}\n.project-chat-page .chat-block {\n  width: 70%;\n  margin: 0 auto;\n  border-radius: 8px;\n  position: relative;\n  box-sizing: border-box;\n  padding: 10px;\n  border: 1px solid #e9e9e9;\n  box-shadow: 0px 5px 40px 5px #d9d9d9;\n}\n.project-chat-page .chat-block .chat-list {\n  height: 360px;\n  overflow: scroll;\n  transition: all ease 0.4s;\n}\n.project-chat-page .chat-block .chat-list li.other {\n  position: relative;\n  padding: 10px 20px 30px 90px;\n}\n.project-chat-page .chat-block .chat-list li.other img {\n  width: 60px;\n  left: 10px;\n  top: 15px;\n  position: absolute;\n  border-radius: 50%;\n}\n.project-chat-page .chat-block .chat-list li.other h3 {\n  margin-bottom: 10px;\n}\n.project-chat-page .chat-block .chat-list li.other p.content {\n  color: #fff;\n  display: inline-block;\n  max-width: 480px;\n  border-radius: 10px;\n  padding: 8px 10px;\n  background-color: #108ee9;\n}\n.project-chat-page .chat-block .chat-list li.other p.time {\n  position: absolute;\n  top: 10px;\n  left: 150px;\n}\n.project-chat-page .chat-block .chat-list li.me {\n  text-align: right;\n  position: relative;\n  padding: 10px 90px 30px 20px;\n}\n.project-chat-page .chat-block .chat-list li.me img {\n  width: 60px;\n  top: 10px;\n  right: 10px;\n  position: absolute;\n  border-radius: 50%;\n}\n.project-chat-page .chat-block .chat-list li.me h3 {\n  margin-bottom: 15px;\n  text-align: right;\n}\n.project-chat-page .chat-block .chat-list li.me p.content {\n  color: #fff;\n  text-align: right;\n  display: inline-block;\n  max-width: 480px;\n  border-radius: 10px;\n  padding: 8px 10px;\n  background-color: #108ee9;\n}\n.project-chat-page .chat-block .chat-list li.me p.time {\n  position: absolute;\n  top: 10px;\n  right: 125px;\n}\n.project-chat-page .chat-block .chat-input {\n  height: 100px;\n  overflow: scroll;\n  position: relative;\n  padding: 10px 0 0 0;\n}\n.project-chat-page .chat-block .chat-input textarea {\n  padding: 4px 85px 10px 10px;\n}\n.project-chat-page .chat-block .chat-input textarea::-webkit-scrollbar {\n  display: none;\n}\n.project-chat-page .chat-block .chat-input .my-btn {\n  right: 10px;\n  bottom: 20px;\n  position: absolute;\n}\n.project-chat-page .chat-block .chat-list::-webkit-scrollbar {\n  display: none;\n}\n.project-chat-page .chat-block .chat-input::-webkit-scrollbar {\n  display: none;\n}\n", ""]);
 
 // exports
 

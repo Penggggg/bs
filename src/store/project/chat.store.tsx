@@ -16,6 +16,7 @@ export class ProjectChat {
     }
 
     public save( newChat: SOK.Res.NewChat ) {
+        console.log( newChat )
         this.data$$.next( newChat )
     }
 

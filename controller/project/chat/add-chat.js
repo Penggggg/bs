@@ -71,7 +71,10 @@ exports.addChat = function (ctx) { return __awaiter(_this, void 0, void 0, funct
                     userName: userData[0].name,
                     createdTime: String((new Date()).getTime())
                 };
-                socket_1.default.projectSockets[pid].chat.broadcast(sokData);
+                console.log(sokData);
+                setTimeout(function () {
+                    socket_1.default.projectSockets[pid].chat.broadcast(sokData);
+                }, 16);
                 result = {
                     status: '200',
                     msg: 'success'

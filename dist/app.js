@@ -337,6 +337,7 @@ var ProjectChat = (function () {
         this.data$.subscribe();
     }
     ProjectChat.prototype.save = function (newChat) {
+        console.log(newChat);
         this.data$$.next(newChat);
     };
     return ProjectChat;

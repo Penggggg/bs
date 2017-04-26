@@ -1,5 +1,4 @@
 import * as Mongoose from 'mongoose';
-import UserModel from '../models/user.model';
 
 export let PorjectSchema = new Mongoose.Schema({
     name: String,

@@ -1,0 +1,57 @@
+
+
+.project-chat-page {
+
+    padding-bottom: 20px;
+    margin-top: 20px;
+    box-sizing: border-box;
+
+    .chat-block {
+
+        width: 70%;
+        margin: 0 auto;
+        border-radius: 8px;
+        position: relative;
+        box-sizing: border-box;
+        padding: 10px;
+        border: 1px solid #e9e9e9;
+        box-shadow: 0px 5px 40px 5px #d9d9d9;
+
+        .chat-list {
+
+            height: 400px;
+            overflow: scroll;
+        }
+
+        .chat-input {
+
+            height: 100px;
+            overflow: scroll;
+            position: relative;
+            padding: 10px 0 0 0;
+
+            textarea {
+                padding: 4px 85px 10px 10px;
+            }
+
+            textarea::-webkit-scrollbar {
+                display:none
+            }
+
+            .my-btn {
+
+                right: 10px;
+                bottom: 20px;
+                position: absolute;
+            }
+        }
+
+        .chat-list::-webkit-scrollbar {
+            display:none
+        }
+
+        .chat-input::-webkit-scrollbar {
+            display:none
+        }
+    }
+}

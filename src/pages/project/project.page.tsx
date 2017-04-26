@@ -104,7 +104,7 @@ export default class ProjectPage extends React.PureComponent< IProps, IState > {
                         </Col>
                     </Row>
                 </Header>
-                <Content>
+                <Content className="my-content">
                     { this.props.children }
                 </Content>
                 <MemberSlider show={ showMember } onClose={ this.showMember } />

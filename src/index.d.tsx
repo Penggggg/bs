@@ -64,6 +64,15 @@ declare namespace API {
             status: '200' | '500' | '400'
         }
 
+        /**GET：查询聊天记录 */
+        export interface ProjectChat {
+            data: Array<{
+                content: string
+                createdTime: string
+                user: Partial<APP.User>
+            }>
+        }
+
 
     }
 
@@ -140,6 +149,11 @@ declare namespace API {
             content: string
         }
 
+        /**GET：查询聊天记录 */
+        export interface ProjectChat {
+            pid: string
+        }
+
     }
 
 }
@@ -192,6 +206,7 @@ declare namespace SOK {
             uid: string
             content: string
             userName: string
+            createdTime: string
         }
     }
 
@@ -268,11 +283,11 @@ declare namespace APP {
         pid?: string
         record: Array<{
             uid: string
-            userName: string
             content: string
             createdTime: string
         }>
     }
+
 
 }
 

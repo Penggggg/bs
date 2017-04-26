@@ -32,6 +32,14 @@ ChatSchema.statics.customFind = function( query, fields, options ) {
     })
 }
 
+ChatSchema.statics.findAllWithPid$ = function( pid ) {
+    return new Promise(( resolve, reject ) => {
+        this.find({ pid })
+            .populate('record.uid', 'name')
+            .exec(( err, data ) => returnData( err, resolve, reject, data ))
+    })
+}
+
 ChatSchema.statics.myUpdate = function( pid, record ) {
     return new Promise(( resolve, reject ) => {
         this

@@ -33,6 +33,14 @@ exports.ChatSchema.statics.customFind = function (query, fields, options) {
         _this.find(query, fields, options, function (err, data) { return returnData(err, resolve, reject, data); });
     });
 };
+exports.ChatSchema.statics.findAllWithPid$ = function (pid) {
+    var _this = this;
+    return new Promise(function (resolve, reject) {
+        _this.find({ pid: pid })
+            .populate('record.uid', 'name')
+            .exec(function (err, data) { return returnData(err, resolve, reject, data); });
+    });
+};
 exports.ChatSchema.statics.myUpdate = function (pid, record) {
     var _this = this;
     return new Promise(function (resolve, reject) {

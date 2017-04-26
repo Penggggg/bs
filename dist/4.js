@@ -1,6 +1,6 @@
 webpackJsonp([4],{
 
-/***/ 1371:
+/***/ 1374:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16,103 +16,103 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-__webpack_require__(1402);
+__webpack_require__(1406);
 var React = __webpack_require__(0);
-var antd_1 = __webpack_require__(91);
+var antd_1 = __webpack_require__(77);
+var user_1 = __webpack_require__(156);
+var project_1 = __webpack_require__(155);
 var http_service_1 = __webpack_require__(542);
-var notification_service_1 = __webpack_require__(239);
-var MsgDetailPage = (function (_super) {
-    __extends(MsgDetailPage, _super);
-    function MsgDetailPage() {
+var ProjectChatPage = (function (_super) {
+    __extends(ProjectChatPage, _super);
+    function ProjectChatPage() {
         var _this = _super.call(this) || this;
-        _this.replyTwoChoice = function (answer, replyURL, mid) {
-            _this.controllLoading(answer ? 'resolveBtn' : 'rejectBtn', true);
-            var sub = http_service_1.default
-                .post(replyURL, { answer: answer, mid: mid })
+        _this.combineFlow = function () {
+            var pid = _this.props.params.id;
+            _this.sub = http_service_1.default
+                .get('/api/v1/chat-list', { pid: pid })
+                .combineLatest(project_1.default.chat.data$)
                 .do(function (res) {
-                notification_service_1.default.open({
-                    title: '系统消息',
-                    msg: res.msg
-                });
-                setTimeout(function () { return sub.unsubscribe; }, 100);
-                _this.controllLoading(answer ? 'resolveBtn' : 'rejectBtn', false);
+                var chatList = _this.state.chatList;
+                var chatData = res[0], SOK = res[1];
+                var chatListFromFetch = chatData.data;
+                if (!!SOK) {
+                    var newChat = {
+                        user: {
+                            _id: SOK.uid,
+                            name: SOK.userName
+                        },
+                        content: SOK.content,
+                        createdTime: SOK.createdTime
+                    };
+                    _this.setState({
+                        chatList: chatList.concat([newChat])
+                    });
+                }
+                else {
+                    _this.setState({
+                        chatList: chatListFromFetch.slice()
+                    });
+                }
             })
                 .subscribe();
         };
-        _this.controllLoading = function (target, value) {
-            switch (target) {
-                case 'resolveBtn': {
-                    _this.setState({
-                        resolveBtnLoading: value
-                    });
-                    break;
-                }
-                case 'rejectBtn': {
-                    _this.setState({
-                        rejectBtnLoading: value
-                    });
-                    break;
-                }
+        _this.postChat = function () {
+            var data;
+            var sub = user_1.default.data.userData$
+                .combineLatest(project_1.default.data.data$)
+                .do(function (res) {
+                data = res;
+                setTimeout(function () { return sub.unsubscribe(); }, 100);
+            })
+                .subscribe();
+            var inputValue = _this.state.inputValue;
+            var user = data[0], project = data[1];
+            var sub2 = http_service_1.default
+                .post('/api/v1/chat-record', { pid: project._id, uid: user._id, content: inputValue })
+                .do(function (res) {
+                _this.analyseResult(res);
+                setTimeout(function () { return sub2.unsubscribe(); }, 100);
+            })
+                .subscribe();
+        };
+        _this.analyseResult = function (_a) {
+            var msg = _a.msg, status = _a.status;
+            if (status === '200') {
+                _this.setState({
+                    inputValue: ''
+                });
             }
         };
         _this.state = {
-            spinning: false,
-            msgDetail: null,
-            rejectBtnLoading: false,
-            resolveBtnLoading: false
+            inputValue: '',
+            chatList: []
         };
         return _this;
     }
-    MsgDetailPage.prototype.componentDidMount = function () {
-        var id = this.props.params.id;
-        this.fetchMsgDetail(id);
+    ProjectChatPage.prototype.componentDidMount = function () {
+        this.combineFlow();
     };
-    MsgDetailPage.prototype.componentWillReceiveProps = function (np) {
-        var id = np.params.id;
-        this.fetchMsgDetail(id);
-        this.controllLoading('resolveBtn', false);
-        this.controllLoading('rejectBtn', false);
+    ProjectChatPage.prototype.componentWillUnmount = function () {
+        this.sub.unsubscribe();
     };
-    MsgDetailPage.prototype.fetchMsgDetail = function (id) {
+    ProjectChatPage.prototype.render = function () {
         var _this = this;
-        this.setState({
-            spinning: true
-        });
-        http_service_1.default
-            .get('/api/v1/msg-detail', { id: id })
-            .do(function (res) {
-            _this.setState({
-                msgDetail: res,
-                spinning: false
-            });
-        })
-            .subscribe();
+        var _a = this.state, inputValue = _a.inputValue, chatList = _a.chatList;
+        return React.createElement("div", { className: "project-chat-page" },
+            React.createElement("div", { className: "chat-block" },
+                React.createElement("div", { className: "chat-list" }),
+                React.createElement("div", { className: "chat-input" },
+                    React.createElement(antd_1.Input, { type: "textarea", className: "my-input", rows: 4, ref: "input", value: inputValue, onChange: function (e) { return _this.setState({ inputValue: e.target.value }); } }),
+                    React.createElement(antd_1.Button, { type: "primary", className: "my-btn", onClick: this.postChat }, "\u53D1\u9001"))));
     };
-    MsgDetailPage.prototype.render = function () {
-        var _this = this;
-        var _a = this.state, msgDetail = _a.msgDetail, spinning = _a.spinning, resolveBtnLoading = _a.resolveBtnLoading, rejectBtnLoading = _a.rejectBtnLoading;
-        return React.createElement("div", { className: "msg-detail-page" }, !!msgDetail &&
-            React.createElement("div", { className: "msg-block" },
-                React.createElement(antd_1.Spin, { spinning: spinning, size: "large" },
-                    React.createElement("h3", null, msgDetail.title),
-                    React.createElement("p", { className: "content" }, msgDetail.content),
-                    React.createElement("p", { className: "name" },
-                        "By: ",
-                        msgDetail.fromUID.name),
-                    React.createElement("p", { className: "time" }, (new Date(msgDetail.meta.createdTime)).toLocaleString()),
-                    React.createElement("div", { style: { paddingTop: 30 } }, msgDetail.formType === 2 /* twoChoice */ &&
-                        React.createElement("div", { className: "two-choice-form" },
-                            React.createElement(antd_1.Button, { onClick: function () { return _this.replyTwoChoice(false, msgDetail.replyURL, msgDetail._id); }, loading: rejectBtnLoading, type: "danger", size: "large", icon: "left-circle-o" }, "\u62D2\u7EDD\u9080\u8BF7"),
-                            React.createElement(antd_1.Button, { onClick: function () { return _this.replyTwoChoice(true, msgDetail.replyURL, msgDetail._id); }, loading: resolveBtnLoading, type: "primary", size: "large", icon: "right-circle-o" }, "\u7B54\u5E94\u9080\u8BF7"))))));
-    };
-    return MsgDetailPage;
+    return ProjectChatPage;
 }(React.PureComponent));
-exports.default = MsgDetailPage;
+exports.default = ProjectChatPage;
 
 
 /***/ }),
 
-/***/ 1379:
+/***/ 1381:
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(Buffer) {/*
@@ -191,11 +191,11 @@ function toComment(sourceMap) {
   return '/*# ' + data + ' */';
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1382).Buffer))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1384).Buffer))
 
 /***/ }),
 
-/***/ 1380:
+/***/ 1382:
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -227,7 +227,7 @@ var stylesInDom = {},
 	singletonElement = null,
 	singletonCounter = 0,
 	styleElementsInsertedAtTop = [],
-	fixUrls = __webpack_require__(1385);
+	fixUrls = __webpack_require__(1387);
 
 module.exports = function(list, options) {
 	if(typeof DEBUG !== "undefined" && DEBUG) {
@@ -487,7 +487,7 @@ function updateLink(linkElement, options, obj) {
 
 /***/ }),
 
-/***/ 1381:
+/***/ 1383:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -609,7 +609,7 @@ function fromByteArray (uint8) {
 
 /***/ }),
 
-/***/ 1382:
+/***/ 1384:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -623,9 +623,9 @@ function fromByteArray (uint8) {
 
 
 
-var base64 = __webpack_require__(1381)
-var ieee754 = __webpack_require__(1384)
-var isArray = __webpack_require__(1383)
+var base64 = __webpack_require__(1383)
+var ieee754 = __webpack_require__(1386)
+var isArray = __webpack_require__(1385)
 
 exports.Buffer = Buffer
 exports.SlowBuffer = SlowBuffer
@@ -2407,7 +2407,7 @@ function isnan (val) {
 
 /***/ }),
 
-/***/ 1383:
+/***/ 1385:
 /***/ (function(module, exports) {
 
 var toString = {}.toString;
@@ -2419,7 +2419,7 @@ module.exports = Array.isArray || function (arr) {
 
 /***/ }),
 
-/***/ 1384:
+/***/ 1386:
 /***/ (function(module, exports) {
 
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
@@ -2510,7 +2510,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 
 /***/ }),
 
-/***/ 1385:
+/***/ 1387:
 /***/ (function(module, exports) {
 
 
@@ -2606,38 +2606,38 @@ module.exports = function (css) {
 
 /***/ }),
 
-/***/ 1394:
+/***/ 1397:
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(1379)(undefined);
+exports = module.exports = __webpack_require__(1381)(undefined);
 // imports
 
 
 // module
-exports.push([module.i, ".msg-detail-page {\n  padding-top: 20px;\n  box-sizing: border-box;\n}\n.msg-detail-page .msg-block {\n  width: 70%;\n  overflow: scroll;\n  max-height: 300px;\n}\n.msg-detail-page .msg-block .two-choice-form {\n  text-align: center;\n}\n.msg-detail-page .msg-block .two-choice-form button {\n  margin: 0 35px;\n}\n.msg-detail-page .msg-block h3 {\n  font-size: 25px;\n  padding-bottom: 10px;\n  border-bottom: 1px solid #e9e9e9;\n}\n.msg-detail-page .msg-block p {\n  font-size: 16px;\n  padding-bottom: 10px;\n}\n.msg-detail-page .msg-block p.content {\n  padding-top: 20px;\n}\n.msg-detail-page .msg-block p.time {\n  text-align: right;\n}\n.msg-detail-page .msg-block p.name {\n  text-align: right;\n}\n.msg-detail-page .msg-block::-webkit-scrollbar {\n  display: none;\n}\n", ""]);
+exports.push([module.i, ".project-chat-page {\n  padding-bottom: 20px;\n  margin-top: 20px;\n  box-sizing: border-box;\n}\n.project-chat-page .chat-block {\n  width: 70%;\n  margin: 0 auto;\n  border-radius: 8px;\n  position: relative;\n  box-sizing: border-box;\n  padding: 10px;\n  border: 1px solid #e9e9e9;\n  box-shadow: 0px 5px 40px 5px #d9d9d9;\n}\n.project-chat-page .chat-block .chat-list {\n  height: 400px;\n  overflow: scroll;\n}\n.project-chat-page .chat-block .chat-input {\n  height: 100px;\n  overflow: scroll;\n  position: relative;\n  padding: 10px 0 0 0;\n}\n.project-chat-page .chat-block .chat-input textarea {\n  padding: 4px 85px 10px 10px;\n}\n.project-chat-page .chat-block .chat-input textarea::-webkit-scrollbar {\n  display: none;\n}\n.project-chat-page .chat-block .chat-input .my-btn {\n  right: 10px;\n  bottom: 20px;\n  position: absolute;\n}\n.project-chat-page .chat-block .chat-list::-webkit-scrollbar {\n  display: none;\n}\n.project-chat-page .chat-block .chat-input::-webkit-scrollbar {\n  display: none;\n}\n", ""]);
 
 // exports
 
 
 /***/ }),
 
-/***/ 1402:
+/***/ 1406:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1394);
+var content = __webpack_require__(1397);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(1380)(content, {});
+var update = __webpack_require__(1382)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
 	// When the styles change, update the <style> tags
 	if(!content.locals) {
-		module.hot.accept("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./msg-detail.less", function() {
-			var newContent = require("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./msg-detail.less");
+		module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/less-loader/index.js!./project-chat.less", function() {
+			var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/less-loader/index.js!./project-chat.less");
 			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 			update(newContent);
 		});

@@ -1,5 +1,6 @@
 import './project-chat.less';
 import * as React from 'react';
+import { Subscription } from 'rxjs';
 import { RouteComponentProps } from 'react-router';
 import { Button, Input } from 'antd';
 
@@ -10,6 +11,8 @@ import http from '../../../services/http.service';
 
 export default class ProjectChatPage extends React.PureComponent< IProps, IState > {
 
+    private sub: Subscription;
+
     constructor( ) {
         super( );
         this.state = {
@@ -19,10 +22,43 @@ export default class ProjectChatPage extends React.PureComponent< IProps, IState
     }
 
     componentDidMount( ) {
-
+        this.combineFlow( );
     }
 
-    combineFlow( ) {
+    componentWillUnmount( ) {
+        this.sub.unsubscribe( );
+    }
+
+    combineFlow = ( ) => {
+        let pid = this.props.params.id;
+        this.sub = http
+            .get<API.Res.ProjectChat, API.Query.ProjectChat>('/api/v1/chat-list', { pid })
+            .combineLatest( projectStore.chat.data$)
+            .do( res => {
+
+                let { chatList } = this.state;
+                let [ chatData, SOK ] = res;
+                let chatListFromFetch = chatData.data;
+
+                if ( !!SOK ) {
+                    let newChat = {
+                        user: {
+                            _id: SOK.uid,
+                            name: SOK.userName
+                        },
+                        content: SOK.content,
+                        createdTime: SOK.createdTime
+                    }
+                    this.setState({ 
+                        chatList: [...chatList, newChat ]
+                    })                    
+                } else {
+                    this.setState({ 
+                        chatList: [...chatListFromFetch]
+                    })
+                }
+            })
+            .subscribe( )
 
     }
 
@@ -43,7 +79,6 @@ export default class ProjectChatPage extends React.PureComponent< IProps, IState
             .post<API.Res.AddChatRecord, API.Query.AddChatRecord>('/api/v1/chat-record', 
                 { pid: project._id, uid: user._id, content: inputValue })
             .do( res => {
-                console.log( res );
                 this.analyseResult( res );
                 setTimeout(( ) => sub2.unsubscribe( ), 100 )
             })
@@ -51,19 +86,26 @@ export default class ProjectChatPage extends React.PureComponent< IProps, IState
 
     }
 
-    analyseResult({ msg, status }: API.Res.AddChatRecord) {
-
+    analyseResult = ({ msg, status }: API.Res.AddChatRecord) => {
+        if ( status === '200' ) {
+            this.setState({
+                inputValue: ''
+            })
+        }
     }
 
     render( ) {
-        let { inputValue } = this.state;
+        let { inputValue, chatList } = this.state;
+
+        
+
         return <div className="project-chat-page">
             <div className="chat-block">
                 <div className="chat-list">
-                
+
                 </div>
                 <div className="chat-input">
-                    <Input type="textarea" className="my-input" rows={4} 
+                    <Input type="textarea" className="my-input" rows={4} ref="input" value={ inputValue }
                          onChange={( e: any ) => this.setState({ inputValue: e.target.value})}/>
                     <Button type="primary" className="my-btn" onClick={this.postChat}>发送</Button>
                 </div>
@@ -73,15 +115,14 @@ export default class ProjectChatPage extends React.PureComponent< IProps, IState
 
 }
 
-interface IProps extends RouteComponentProps<{}, {}>{
+interface IProps extends RouteComponentProps<{id: string}, {}>{
 
 }
 
 interface IState {
     inputValue: string,
     chatList: Array<{
-        uid: string
-        userName: string
+        user: Partial<APP.User>
         content: string
         createdTime: string
     }> 

@@ -4,6 +4,7 @@ import { resetPsw } from './auth/reset';
 import { sginIn } from './auth/signin';
 import { addChat } from './project/chat/add-chat';
 import { inviteMember } from './project/invite-member'; 
+import { getChatList } from './project/chat/query-chat';
 import { createProject } from './project/create-project';
 import { replyInvite } from './project/reply-invite';
 import { fetchAllUserByName } from './user/query.controller';
@@ -35,7 +36,8 @@ export default ( router ) => {
     /**项目模块：回应邀请 */
     router.post('/api/v1/reply-invite', replyInvite )
     /**项目模块：增加聊天记录 */
-    router.post('/api/v1/chat-record', addChat )
+    router.post('/api/v1/chat-record', addChat );
+    router.get('/api/v1/chat-list', getChatList );
 
 
     /**用户模块：查询所有符合条件的用户 */

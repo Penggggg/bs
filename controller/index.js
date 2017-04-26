@@ -41,6 +41,7 @@ var reset_1 = require("./auth/reset");
 var signin_1 = require("./auth/signin");
 var add_chat_1 = require("./project/chat/add-chat");
 var invite_member_1 = require("./project/invite-member");
+var query_chat_1 = require("./project/chat/query-chat");
 var create_project_1 = require("./project/create-project");
 var reply_invite_1 = require("./project/reply-invite");
 var query_controller_1 = require("./user/query.controller");
@@ -67,6 +68,7 @@ exports.default = function (router) {
     router.post('/api/v1/reply-invite', reply_invite_1.replyInvite);
     /**项目模块：增加聊天记录 */
     router.post('/api/v1/chat-record', add_chat_1.addChat);
+    router.get('/api/v1/chat-list', query_chat_1.getChatList);
     /**用户模块：查询所有符合条件的用户 */
     router.post('/api/v1/all-user', query_controller_1.fetchAllUserByName);
     /**消息模块：查询所有符合条件的消息 */

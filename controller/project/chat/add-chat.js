@@ -68,7 +68,8 @@ exports.addChat = function (ctx) { return __awaiter(_this, void 0, void 0, funct
                 userData = _b.sent();
                 sokData = {
                     uid: uid, content: content,
-                    userName: userData[0].name
+                    userName: userData[0].name,
+                    createdTime: String((new Date()).getTime())
                 };
                 socket_1.default.projectSockets[pid].chat.broadcast(sokData);
                 result = {

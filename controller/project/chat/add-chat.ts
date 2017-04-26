@@ -33,7 +33,8 @@ export let addChat = async( ctx: Koa.Context ) => {
     let userData: Array<Partial<APP.User>> = await userModel.customFind({ _id: uid }, 'name', null );
     let sokData: SOK.Res.NewChat = {
         uid, content,
-        userName: userData[0].name
+        userName: userData[0].name,
+        createdTime: String(( new Date( )).getTime( ))
     }
     mySocket.projectSockets[pid].chat.broadcast( sokData );
     

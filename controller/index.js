@@ -81,7 +81,9 @@ exports.default = function (router) {
     /**文件模块：下载 */
     router.get('/api/v1/files/:fileName', files_1.download);
     /**文件模块：上传 */
-    router.post('/api/v1/upload/:pid', files_1.upload);
+    router.post('/api/v1/upload/:pid/:uid', files_1.upload);
+    /**文件模块：查询 */
+    router.get('/api/v1/all-files', files_1.allFiles);
 };
 function getIndex(ctx) {
     return __awaiter(this, void 0, void 0, function () {

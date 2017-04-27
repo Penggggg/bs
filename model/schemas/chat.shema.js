@@ -2,28 +2,30 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var Mongoose = require("mongoose");
 exports.ChatSchema = new Mongoose.Schema({
+    content: String,
     pid: {
         type: Mongoose.Schema.Types.ObjectId,
         ref: 'Project'
     },
-    record: [{
-            createdTime: {
-                type: Date,
-                default: Date.now()
-            },
-            uid: {
-                type: Mongoose.Schema.Types.ObjectId,
-                ref: 'User'
-            },
-            content: String
-        }]
+    createdTime: {
+        type: Date,
+        default: Date.now()
+    },
+    uid: {
+        type: Mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    }
+});
+exports.ChatSchema.pre('save', function (next) {
+    this.updatedTime = Date.now();
+    next();
 });
 exports.ChatSchema.statics.save = function (_a) {
     var _this = this;
     var pid = _a.pid, uid = _a.uid, content = _a.content;
     return new Promise(function (resolve, reject) {
         var model = _this.model('Chat');
-        new model({ pid: pid, record: { uid: uid, content: content, createdTime: (new Date()).getTime() } })
+        new model({ pid: pid, uid: uid, content: content })
             .save(function (err, data) { return returnData(err, resolve, reject, data); });
     });
 };
@@ -37,7 +39,7 @@ exports.ChatSchema.statics.findAllWithPid$ = function (pid) {
     var _this = this;
     return new Promise(function (resolve, reject) {
         _this.find({ pid: pid })
-            .populate('record.uid', 'name')
+            .populate('uid', 'name')
             .exec(function (err, data) { return returnData(err, resolve, reject, data); });
     });
 };

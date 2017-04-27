@@ -140,8 +140,8 @@ var EventProjectChat = (function () {
             .fromEvent(io, "" + index_con_1.CON.socketEvent.project.chat)
             .do(function (res) {
             antd_1.message.success('项目有一条新聊天记录~');
-            console.log(res);
             project_1.default.chat.save(res);
+            // console.log( res )
         })
             .subscribe();
     };

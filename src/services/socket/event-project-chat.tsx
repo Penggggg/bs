@@ -17,8 +17,8 @@ export class EventProjectChat implements APP.ProjectEvent {
             .fromEvent<SOK.Res.NewChat>( io, `${CON.socketEvent.project.chat}`)
             .do( res => {
                 message.success('项目有一条新聊天记录~');
-                console.log( res )
                 projectStore.chat.save( res );
+                // console.log( res )
             })
             .subscribe( );
     }

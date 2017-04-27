@@ -9,8 +9,8 @@ export class Chat {
         this.io = io;
     }
 
-    public broadcast({ uid, userName, content }: SOK.Res.NewChat ) {
-        this.io.emit(`${CON.socketEvent.project.chat}`, { uid, userName, content })
+    public broadcast( arg: SOK.Res.NewChat ) {
+        this.io.emit(`${CON.socketEvent.project.chat}`, { ...arg })
     }
 
 }

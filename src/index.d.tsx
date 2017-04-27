@@ -73,6 +73,11 @@ declare namespace API {
             }>
         }
 
+        /**GET：查询所有文件 */
+        export interface AllFiles {
+            data: Array<APP.File>
+        }
+
 
     }
 
@@ -154,6 +159,11 @@ declare namespace API {
             pid: string
         }
 
+        /**GET：查询所有文件 */
+        export interface AllFiles {
+            pid: string
+        }
+
     }
 
 }
@@ -203,6 +213,7 @@ declare namespace SOK {
 
         /**消息推送：新增聊天记录 */
         export interface NewChat {
+            _id: string
             uid: string
             content: string
             userName: string
@@ -277,7 +288,6 @@ declare namespace APP {
         cancelSub( ): void
     }
 
-
     /**聊天记录列表 */
     export interface ChatList {
         pid?: string
@@ -288,7 +298,21 @@ declare namespace APP {
         }>
     }
 
+    /**文件 */
+    export interface File {
+        fileName: string
+        updatedTime?: string
+        pid: string | APP.Project
+        uid: string | APP.User
+    }
 
+    /**单条聊天记录 */
+    export interface SingleChat {
+        content: string
+        createdTime: string
+        uid: string | APP.User
+        pid: string | APP.Project
+    }
 }
 
 

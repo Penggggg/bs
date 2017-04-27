@@ -27,9 +27,9 @@ export default class ProjectChatPage extends React.PureComponent< IProps, IState
     componentDidMount( ) {
         this.init( );
         this.combineFlow( );
-        this.setState({
-            loading: true
-        })
+        // this.setState({
+        //     loading: true
+        // })
     }
 
     componentWillUnmount( ) {
@@ -56,37 +56,46 @@ export default class ProjectChatPage extends React.PureComponent< IProps, IState
         let pid = this.props.params.id;
         
         this.sub = http
-            .get<API.Res.ProjectChat, API.Query.ProjectChat>('/api/v1/chat-list', { pid })
+            .get< any , API.Query.ProjectChat>('/api/v1/chat-list', { pid })
             .combineLatest( projectStore.chat.data$)
             .do( res => {
 
                 let { chatList } = this.state;
                 let [ chatData, SOK ] = res;
-                let chatListFromFetch = chatData.data;
 
-                this.setState({
-                    loading: true
-                })
-                
-                if ( !!SOK ) {
-                    let newChat = {
-                        user: {
-                            _id: SOK.uid,
-                            name: SOK.userName
-                        },
-                        content: SOK.content,
-                        createdTime: SOK.createdTime
-                    }
-                    this.setState({ 
-                        loading: false,
-                        chatList: [...chatList, newChat ]
-                    })                    
-                } else {
-                    this.setState({ 
-                        loading: false,
-                        chatList: [...chatListFromFetch]
+                if ( !SOK ) {
+                    // 首次加载
+                    console.log(`首次加载`)
+                    this.setState({
+                        chatList: chatData
                     })
+                } else {
+
+                    let lastChatFromFetch = chatData[ chatData.length -1 ];
+
+                    if ( !lastChatFromFetch && chatData.length === 0 ) {
+                        // 首次数据来自于SOK
+                        return this.setState({
+                            chatList: [ SOK ]
+                        })
+                        
+                    }
+                    if ( SOK._id !== lastChatFromFetch._id ) {
+                        // 更新来自于SOK
+                        this.setState({
+                            chatList: [ ...chatList, SOK ]
+                        })
+
+                    } else {
+                        // 二次进入
+                        this.setState({
+                            chatList: chatData
+                        })
+                    }
+
                 }
+
+
 
                 setTimeout(( ) => this.dealChatList( ), 100 )
             })
@@ -133,13 +142,11 @@ export default class ProjectChatPage extends React.PureComponent< IProps, IState
             <Spin spinning={loading}>
                 <ul>
                     {
-                    chatList.map(( chat, key ) => <li key={key} className={ this.uid === chat.user._id ? 'me' : 'other' }>
+                    chatList.map(( chat, key ) => <li key={key} className={ this.uid === chat.uid._id ? 'me' : 'other' }>
                             <Image src="/static/touxiang.png" />
-                            <h3>{ this.uid === chat.user._id ? '我' : chat.user.name }</h3>
+                            <h3>{ this.uid === chat.uid._id ? '我' : chat.uid.name }</h3>
                             <p className="content">{ chat.content }</p>
-                            <p className="time">{ chat.createdTime ?
-                                    (new Date( chat.createdTime )).toLocaleString( ) :
-                                    (new Date( )).toLocaleString( ) }</p>
+                            <p className="time">{ (new Date( chat.createdTime )).toLocaleString( )}</p>
                         </li>)
                     }
                 </ul>
@@ -170,9 +177,5 @@ interface IProps extends RouteComponentProps<{id: string}, {}>{
 interface IState {
     loading: boolean
     inputValue: string,
-    chatList: Array<{
-        user: Partial<APP.User>
-        content: string
-        createdTime: string
-    }> 
+    chatList: Array<any> 
 }

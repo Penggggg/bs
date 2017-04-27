@@ -1,27 +1,31 @@
 import * as Mongoose from 'mongoose';
 
 export let ChatSchema = new Mongoose.Schema({
+    content: String,
     pid: {
         type: Mongoose.Schema.Types.ObjectId,
         ref: 'Project'
     },
-    record: [{
-        createdTime: {
-            type: Date,
-            default: Date.now( )
-        },
-        uid: {
-            type: Mongoose.Schema.Types.ObjectId,
-            ref: 'User'
-        },
-        content: String
-    }]
+    createdTime: {
+        type: Date,
+        default: Date.now( )
+    },
+    uid: {
+        type: Mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    }
+        
+})
+
+ChatSchema.pre('save', function( next ){
+    this.updatedTime = Date.now( );
+    next( );
 })
 
 ChatSchema.statics.save = function({ pid, uid, content }) {
     return new Promise(( resolve, reject ) => {
         let model = this.model('Chat');
-        new model({ pid, record: { uid, content, createdTime: (new Date( )).getTime( )}})
+        new model({ pid, uid, content })
             .save(( err, data ) => returnData( err, resolve, reject, data ))
     })
 }
@@ -35,7 +39,7 @@ ChatSchema.statics.customFind = function( query, fields, options ) {
 ChatSchema.statics.findAllWithPid$ = function( pid ) {
     return new Promise(( resolve, reject ) => {
         this.find({ pid })
-            .populate('record.uid', 'name')
+            .populate('uid', 'name')
             .exec(( err, data ) => returnData( err, resolve, reject, data ))
     })
 }

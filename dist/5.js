@@ -19,22 +19,70 @@ Object.defineProperty(exports, "__esModule", { value: true });
 __webpack_require__(1408);
 var React = __webpack_require__(0);
 var antd_1 = __webpack_require__(77);
+var user_1 = __webpack_require__(156);
+var http_service_1 = __webpack_require__(542);
+var notification_service_1 = __webpack_require__(240);
 var ProjectFilesPage = (function (_super) {
     __extends(ProjectFilesPage, _super);
     function ProjectFilesPage() {
-        return _super.call(this) || this;
+        var _this = _super.call(this) || this;
+        _this.init = function () {
+            _this.sub = user_1.default.data.userData$
+                .do(function (user) {
+                _this.setState({
+                    uid: user._id
+                });
+            })
+                .subscribe();
+        };
+        _this.onUpload = function (info) {
+            if (info.file.status === 'done') {
+                notification_service_1.default.open({
+                    title: '消息',
+                    msg: '文件已成功上传'
+                });
+            }
+            else if (info.file.status === 'error') {
+                notification_service_1.default.open({
+                    title: '消息',
+                    msg: '文件长传失败',
+                    type: 'error'
+                });
+            }
+        };
+        _this.combineFlow = function () {
+            var pid = _this.props.params.id;
+            http_service_1.default.get('/api/v1/all-files', { pid: pid })
+                .do(function (res) {
+                console.log(res);
+            })
+                .subscribe();
+        };
+        _this.state = {
+            uid: '',
+            fileList: []
+        };
+        return _this;
     }
+    ProjectFilesPage.prototype.componentDidMount = function () {
+        this.init();
+        this.combineFlow();
+    };
+    ProjectFilesPage.prototype.componentWillUnmount = function () {
+        this.sub.unsubscribe();
+    };
     ProjectFilesPage.prototype.render = function () {
+        var uid = this.state.uid;
         var id = this.props.params.id;
         return React.createElement("div", { className: "project-files-page" },
             React.createElement("div", { className: "main-block" },
                 React.createElement("div", { className: "header" },
                     React.createElement("h3", null, "\u6587\u4EF6\u5E93"),
                     React.createElement("div", { className: "upload-block" },
-                        React.createElement(antd_1.Upload, { action: "/api/v1/upload/" + id },
+                        React.createElement(antd_1.Upload, { action: "/api/v1/upload/" + id + "/" + uid, onChange: this.onUpload },
                             React.createElement(antd_1.Button, null,
                                 React.createElement(antd_1.Icon, { type: "upload" }),
-                                " Upload")))),
+                                " Uploadddd")))),
                 React.createElement("div", { className: "content" })));
     };
     return ProjectFilesPage;
@@ -2546,7 +2594,7 @@ exports = module.exports = __webpack_require__(1381)(undefined);
 
 
 // module
-exports.push([module.i, ".project-files-page {\n  margin-top: 20px;\n  padding-bottom: 20px;\n  box-sizing: border-box;\n}\n.project-files-page .main-block {\n  width: 70%;\n  margin: 0 auto;\n  border-radius: 8px;\n  position: relative;\n  box-sizing: border-box;\n  padding: 10px;\n  border: 1px solid #e9e9e9;\n  box-shadow: 0px 5px 40px 5px #d9d9d9;\n}\n.project-files-page .main-block .header {\n  height: 40px;\n  position: relative;\n  box-sizing: border-box;\n  padding: 5px 15px 10px 15px;\n  border-bottom: 1px solid #d9d9d9;\n}\n.project-files-page .main-block .header .upload-block {\n  top: 0px;\n  right: 30px;\n  position: absolute;\n}\n.project-files-page .main-block .header .upload-block .ant-upload-select {\n  border-radius: 8px;\n}\n.project-files-page .main-block .header .upload-block .ant-upload-select button {\n  color: #108ee9;\n}\n.project-files-page .main-block .header h3 {\n  color: #666;\n  font-size: 15px;\n}\n.project-files-page .main-block .content {\n  height: 370px;\n}\n", ""]);
+exports.push([module.i, ".project-files-page {\n  margin-top: 20px;\n  padding-bottom: 20px;\n  box-sizing: border-box;\n}\n.project-files-page .main-block {\n  width: 70%;\n  margin: 0 auto;\n  border-radius: 8px;\n  position: relative;\n  box-sizing: border-box;\n  padding: 10px;\n  border: 1px solid #e9e9e9;\n  box-shadow: 0px 5px 40px 5px #d9d9d9;\n}\n.project-files-page .main-block .header {\n  height: 40px;\n  position: relative;\n  box-sizing: border-box;\n  padding: 5px 15px 10px 15px;\n  border-bottom: 1px solid #d9d9d9;\n}\n.project-files-page .main-block .header .upload-block {\n  top: 0px;\n  right: 30px;\n  position: absolute;\n}\n.project-files-page .main-block .header .upload-block .ant-upload-select {\n  border-radius: 8px;\n}\n.project-files-page .main-block .header .upload-block .ant-upload-select button {\n  color: #108ee9;\n}\n.project-files-page .main-block .header .upload-block .ant-upload-list {\n  display: none;\n}\n.project-files-page .main-block .header h3 {\n  color: #666;\n  font-size: 15px;\n}\n.project-files-page .main-block .content {\n  height: 370px;\n}\n", ""]);
 
 // exports
 

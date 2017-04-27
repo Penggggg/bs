@@ -38,7 +38,7 @@ var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var chat_model_1 = require("../../../model/models/chat.model");
 exports.getChatList = function (ctx) { return __awaiter(_this, void 0, void 0, function () {
-    var pid, data, res, list, result;
+    var pid, data;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -46,21 +46,7 @@ exports.getChatList = function (ctx) { return __awaiter(_this, void 0, void 0, f
                 return [4 /*yield*/, chat_model_1.default.findAllWithPid$(pid)];
             case 1:
                 data = _a.sent();
-                if (data.length !== 0) {
-                    list = data[0].record;
-                    res = list.map(function (li) { return ({
-                        user: li.uid,
-                        content: li.content,
-                        createdTime: li.createdTime
-                    }); });
-                }
-                else {
-                    res = [];
-                }
-                result = {
-                    data: res
-                };
-                ctx.body = result;
+                ctx.body = data;
                 return [2 /*return*/];
         }
     });

@@ -40,36 +40,28 @@ var socket_1 = require("../../../socket");
 var chat_model_1 = require("../../../model/models/chat.model");
 var user_model_1 = require("../../../model/models/user.model");
 exports.addChat = function (ctx) { return __awaiter(_this, void 0, void 0, function () {
-    var pid, uid, content, data, oldRecord, newRecord, update, save, userData, sokData, result, _a;
+    var pid, uid, content, save, userData, sokData, result, _a;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
                 pid = (_a = ctx.request.body, _a.pid), uid = _a.uid, content = _a.content;
-                return [4 /*yield*/, chat_model_1.default.customFind({ pid: pid }, null, null)];
+                return [4 /*yield*/, chat_model_1.default.save({ pid: pid, uid: uid, content: content })
+                    /**2. 消息转发 */
+                ];
             case 1:
-                data = _b.sent();
-                if (!(data.length !== 0)) return [3 /*break*/, 3];
-                oldRecord = data[0].record;
-                newRecord = oldRecord.concat([{
-                        uid: uid,
-                        content: content,
-                        createdTime: (new Date()).getTime()
-                    }]);
-                return [4 /*yield*/, chat_model_1.default.myUpdate(pid, newRecord)];
-            case 2:
-                update = _b.sent();
-                return [3 /*break*/, 5];
-            case 3: return [4 /*yield*/, chat_model_1.default.save({ pid: pid, uid: uid, content: content })];
-            case 4:
                 save = _b.sent();
-                _b.label = 5;
-            case 5: return [4 /*yield*/, user_model_1.default.customFind({ _id: uid }, 'name', null)];
-            case 6:
+                return [4 /*yield*/, user_model_1.default.customFind({ _id: uid }, 'name', null)];
+            case 2:
                 userData = _b.sent();
                 sokData = {
-                    createdTime: (new Date()).getTime(),
-                    uid: uid, content: content,
-                    userName: userData[0].name,
+                    _id: save._id,
+                    uid: {
+                        _id: userData[0]._id,
+                        name: userData[0].name
+                    },
+                    content: save.content,
+                    createdTime: "" + save.createdTime,
+                    userName: userData[0].name
                 };
                 socket_1.default.projectSockets[pid].chat.broadcast(sokData);
                 result = {

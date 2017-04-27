@@ -571,7 +571,7 @@ exports.default = {
         {
             path: 'login',
             getComponent: function (nextstate, cb) {
-                __webpack_require__.e/* import() */(6).then(__webpack_require__.bind(null, 1371)).then(function (module) {
+                __webpack_require__.e/* import() */(7).then(__webpack_require__.bind(null, 1371)).then(function (module) {
                     cb(null, module.default);
                 }).catch(function (err) { return showMessage(err, './login.page'); });
             },
@@ -596,7 +596,7 @@ exports.default = {
                     path: 'tasks',
                     onEnter: auth_login_service_1.default.requireLogin,
                     getComponent: function (nextstate, cb) {
-                        __webpack_require__.e/* import() */(7).then(__webpack_require__.bind(null, 1380)).then(function (module) {
+                        __webpack_require__.e/* import() */(8).then(__webpack_require__.bind(null, 1380)).then(function (module) {
                             cb(null, module.default);
                         }).catch(function (err) { return showMessage(err, './project-tasks.page'); });
                     }
@@ -605,7 +605,7 @@ exports.default = {
                     path: 'shares',
                     onEnter: auth_login_service_1.default.requireLogin,
                     getComponent: function (nextstate, cb) {
-                        __webpack_require__.e/* import() */(8).then(__webpack_require__.bind(null, 1379)).then(function (module) {
+                        __webpack_require__.e/* import() */(9).then(__webpack_require__.bind(null, 1379)).then(function (module) {
                             cb(null, module.default);
                         }).catch(function (err) { return showMessage(err, './project-shares.page'); });
                     }
@@ -623,7 +623,7 @@ exports.default = {
                     path: 'files',
                     onEnter: auth_login_service_1.default.requireLogin,
                     getComponent: function (nextstate, cb) {
-                        __webpack_require__.e/* import() */(10).then(__webpack_require__.bind(null, 1375)).then(function (module) {
+                        __webpack_require__.e/* import() */(5).then(__webpack_require__.bind(null, 1375)).then(function (module) {
                             cb(null, module.default);
                         }).catch(function (err) { return showMessage(err, './project-files.page'); });
                     }
@@ -632,7 +632,7 @@ exports.default = {
                     path: 'schedules',
                     onEnter: auth_login_service_1.default.requireLogin,
                     getComponent: function (nextstate, cb) {
-                        __webpack_require__.e/* import() */(9).then(__webpack_require__.bind(null, 1378)).then(function (module) {
+                        __webpack_require__.e/* import() */(10).then(__webpack_require__.bind(null, 1378)).then(function (module) {
                             cb(null, module.default);
                         }).catch(function (err) { return showMessage(err, './project-schedules.page'); });
                     }
@@ -649,7 +649,7 @@ exports.default = {
                 {
                     path: ':id',
                     getComponent: function (nextstate, cb) {
-                        __webpack_require__.e/* import() */(5).then(__webpack_require__.bind(null, 1373)).then(function (module) {
+                        __webpack_require__.e/* import() */(6).then(__webpack_require__.bind(null, 1373)).then(function (module) {
                             cb(null, module.default);
                         }).catch(function (err) { return showMessage(err, './msg-detail.page'); });
                     }

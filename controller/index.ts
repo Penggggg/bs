@@ -1,6 +1,8 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as Koa from 'koa';
+import * as body from 'koa-better-body';
+
 import { login } from './auth/login';
 import { resetPsw } from './auth/reset';
 import { sginIn } from './auth/signin';
@@ -9,6 +11,7 @@ import { inviteMember } from './project/invite-member';
 import { getChatList } from './project/chat/query-chat';
 import { createProject } from './project/create-project';
 import { replyInvite } from './project/reply-invite';
+import { download, upload } from './files';
 import { fetchAllUserByName } from './user/query.controller';
 import { allProject, projectDetail } from './project/query-project';
 import { fetchAllMsgList, fetchFadeMsgList, fetchMsgDetail } from './msg/query-msg';
@@ -54,42 +57,15 @@ export default ( router ) => {
     router.get('/api/v1/msg-detail', fetchMsgDetail );
 
 
-
-    router.get('/files/:fileName', test );
+    /**文件模块：下载 */
+    router.get('/api/v1/files/:fileName', download );
+    /**文件模块：上传 */
+    router.post('/api/v1/upload/:pid', upload );
 
 
 }
 
 
-
-async function test( ctx: Koa.Context ) {
-
-    let { fileName } = ctx.params;
-
-    
-
-    var filePath = path.join(__dirname, '../files', fileName )
-    var stats = fs.statSync(filePath); 
-
-    if ( stats.isFile( ) ) {
-        
-        ctx.set({
-            'Content-Disposition': `attachment; filename=${fileName}`,
-            'Content-Length': `${stats.size}`
-        })
-
-
-        let data = await fs.readFileSync(filePath)
-        return ctx.body = data;
-    }
-
-    
-
-    ctx.body = '无可返回文件'
-
-}
-
-// koa-multer
 
 
 async function getIndex( ctx ) {

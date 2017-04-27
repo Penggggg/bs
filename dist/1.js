@@ -17,10 +17,10 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
-var msgListPopBadge_container_1 = __webpack_require__(1412);
+var msgListPopBadge_container_1 = __webpack_require__(1414);
 var antd_1 = __webpack_require__(77);
 var auth_login_service_1 = __webpack_require__(543);
-__webpack_require__(1402);
+__webpack_require__(1403);
 var Header = antd_1.Layout.Header, Content = antd_1.Layout.Content, Footer = antd_1.Layout.Footer;
 var AppPage = (function (_super) {
     __extends(AppPage, _super);
@@ -2697,7 +2697,7 @@ exports.push([module.i, "* {\n  font-size: 14px;\n}\ndiv {\n  box-sizing: border
 
 /***/ }),
 
-/***/ 1400:
+/***/ 1401:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
@@ -2724,7 +2724,7 @@ if(false) {
 
 /***/ }),
 
-/***/ 1402:
+/***/ 1403:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
@@ -2751,7 +2751,7 @@ if(false) {
 
 /***/ }),
 
-/***/ 1410:
+/***/ 1412:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2769,7 +2769,7 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
 var antd_1 = __webpack_require__(77);
-__webpack_require__(1400);
+__webpack_require__(1401);
 var PopoverBadge = (function (_super) {
     __extends(PopoverBadge, _super);
     function PopoverBadge() {
@@ -2788,20 +2788,20 @@ exports.PopoverBadge = PopoverBadge;
 
 /***/ }),
 
-/***/ 1412:
+/***/ 1414:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var PopoverBadge_component_1 = __webpack_require__(1410);
-var msgList_decorate_1 = __webpack_require__(1415);
+var PopoverBadge_component_1 = __webpack_require__(1412);
+var msgList_decorate_1 = __webpack_require__(1417);
 exports.MsgPopBadge = msgList_decorate_1.InjectMsgList(PopoverBadge_component_1.PopoverBadge);
 
 
 /***/ }),
 
-/***/ 1415:
+/***/ 1417:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

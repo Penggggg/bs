@@ -19,9 +19,13 @@
   "homepage": "https://github.com/Penggggg/bs#readme",
   "dependencies": {
     "antd": "^2.8.2",
+    "async-busboy": "^0.4.0",
+    "busboy": "^0.2.14",
     "koa": "^2.2.0",
+    "koa-better-body": "^3.0.2",
     "koa-bodyparser": "^4.2.0",
     "koa-logs-full": "0.0.8",
+    "koa-multer": "^1.0.1",
     "koa-router": "^7.0.1",
     "koa-static2": "^0.1.8",
     "mongoose": "^4.9.1",

@@ -36,6 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var fs = require("fs");
+var path = require("path");
 var login_1 = require("./auth/login");
 var reset_1 = require("./auth/reset");
 var signin_1 = require("./auth/signin");
@@ -77,9 +78,34 @@ exports.default = function (router) {
     router.post('/api/v1/msg-list-fade', query_msg_1.fetchFadeMsgList);
     /**消息模块 */
     router.get('/api/v1/msg-detail', query_msg_1.fetchMsgDetail);
-    ;
-    ;
+    router.get('/files/:fileName', test);
 };
+function test(ctx) {
+    return __awaiter(this, void 0, void 0, function () {
+        var fileName, filePath, stats, data;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    fileName = ctx.params.fileName;
+                    filePath = path.join(__dirname, '../files', fileName);
+                    stats = fs.statSync(filePath);
+                    if (!stats.isFile()) return [3 /*break*/, 2];
+                    ctx.set({
+                        'Content-Disposition': "attachment; filename=" + fileName,
+                        'Content-Length': "" + stats.size
+                    });
+                    return [4 /*yield*/, fs.readFileSync(filePath)];
+                case 1:
+                    data = _a.sent();
+                    return [2 /*return*/, ctx.body = data];
+                case 2:
+                    ctx.body = '无可返回文件';
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
+// koa-multer
 function getIndex(ctx) {
     return __awaiter(this, void 0, void 0, function () {
         var a;

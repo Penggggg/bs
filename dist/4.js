@@ -1,6 +1,6 @@
 webpackJsonp([4],{
 
-/***/ 1374:
+/***/ 1372:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16,125 +16,145 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-__webpack_require__(1406);
+__webpack_require__(1404);
 var React = __webpack_require__(0);
 var antd_1 = __webpack_require__(77);
 var Image_component_1 = __webpack_require__(1390);
+var index_con_1 = __webpack_require__(62);
+var msg_1 = __webpack_require__(544);
 var user_1 = __webpack_require__(156);
-var project_1 = __webpack_require__(155);
 var http_service_1 = __webpack_require__(542);
-var ProjectChatPage = (function (_super) {
-    __extends(ProjectChatPage, _super);
-    function ProjectChatPage() {
+var Header = antd_1.Layout.Header, Footer = antd_1.Layout.Footer, Sider = antd_1.Layout.Sider, Content = antd_1.Layout.Content;
+var msgAllPage = (function (_super) {
+    __extends(msgAllPage, _super);
+    function msgAllPage() {
         var _this = _super.call(this) || this;
-        _this.uid = null;
-        _this.init = function () {
-            var sub = user_1.default.data.userData$
-                .do(function (user) {
-                _this.uid = user._id;
-                setTimeout(function () { return sub.unsubscribe(); }, 100);
-            })
-                .subscribe();
+        _this.limit = 5;
+        _this.handleChange = function (readed) {
+            _this.setState({
+                currentPage: 1,
+                selectorValue: readed === 'false' ? 'false' : 'true',
+                msgType: readed === 'false' ? '未读消息' : '所有消息'
+            });
+            _this.fetchMsgList(readed === 'false' ? false : true, 1);
         };
-        _this.dealChatList = function () {
-            var a = document.querySelector('#chatList');
-            a.scrollTop = 100000;
-            a = null;
+        _this.handleSelect = function (currentPage) {
+            var msgType = _this.state.msgType;
+            _this.setState({
+                currentPage: currentPage
+            });
+            _this.fetchMsgList(msgType === '未读消息' ? false : true, currentPage);
         };
-        _this.combineFlow = function () {
-            var pid = _this.props.params.id;
-            _this.sub = http_service_1.default
-                .get('/api/v1/chat-list', { pid: pid })
-                .combineLatest(project_1.default.chat.data$)
-                .do(function (res) {
-                var chatList = _this.state.chatList;
-                var chatData = res[0], SOK = res[1];
-                var chatListFromFetch = chatData.data;
-                if (!!SOK) {
-                    var newChat = {
-                        user: {
-                            _id: SOK.uid,
-                            name: SOK.userName
-                        },
-                        content: SOK.content,
-                        createdTime: SOK.createdTime
-                    };
-                    _this.setState({
-                        chatList: chatList.concat([newChat])
-                    });
-                }
-                else {
-                    _this.setState({
-                        chatList: chatListFromFetch.slice()
-                    });
-                }
-                setTimeout(function () { return _this.dealChatList(); }, 100);
-            })
-                .subscribe();
-        };
-        _this.postChat = function () {
-            var data;
-            var sub = user_1.default.data.userData$
-                .combineLatest(project_1.default.data.data$)
-                .do(function (res) {
-                data = res;
-                setTimeout(function () { return sub.unsubscribe(); }, 100);
-            })
-                .subscribe();
-            var inputValue = _this.state.inputValue;
-            var user = data[0], project = data[1];
-            var sub2 = http_service_1.default
-                .post('/api/v1/chat-record', { pid: project._id, uid: user._id, content: inputValue })
-                .do(function (res) {
-                _this.analyseResult(res);
-                setTimeout(function () { return sub2.unsubscribe(); }, 100);
-            })
-                .subscribe();
-        };
-        _this.analyseResult = function (_a) {
-            var msg = _a.msg, status = _a.status;
-            if (status === '200') {
-                _this.setState({
-                    inputValue: ''
-                });
-            }
+        _this.onEnter = function (msg, key) {
+            /**路由推送 */
+            _this.props.router.push("/msgs/" + msg._id);
+            /**右上角badge刷新 */
+            setTimeout(function () {
+                msg_1.default.data.refresh();
+            }, 300);
         };
         _this.state = {
-            inputValue: '',
-            chatList: []
+            total: 0,
+            msgList: [],
+            spinning: false,
+            currentPage: 1,
+            msgType: '未读消息',
+            selectorValue: 'false'
         };
         return _this;
     }
-    ProjectChatPage.prototype.componentDidMount = function () {
-        this.init();
-        this.combineFlow();
+    msgAllPage.prototype.componentDidMount = function () {
+        var _this = this;
+        if (!!this.props.children) {
+            this.setState({
+                msgType: '所有消息',
+                selectorValue: 'true'
+            });
+            this.fetchMsgList(true, 1);
+        }
+        else {
+            this.fetchMsgList(false, 1);
+        }
+        setTimeout(function () { return _this.watchSOK(); }, 200);
     };
-    ProjectChatPage.prototype.componentWillUnmount = function () {
+    msgAllPage.prototype.componentWillUnmount = function () {
         this.sub.unsubscribe();
     };
-    ProjectChatPage.prototype.render = function () {
+    msgAllPage.prototype.watchSOK = function () {
         var _this = this;
-        var _a = this.state, inputValue = _a.inputValue, chatList = _a.chatList;
-        var list = this.uid ?
-            React.createElement("ul", null, chatList.map(function (chat, key) { return React.createElement("li", { key: key, className: _this.uid === chat.user._id ? 'me' : 'other' },
-                React.createElement(Image_component_1.default, { src: "/static/touxiang.png" }),
-                React.createElement("h3", null, _this.uid === chat.user._id ? '我' : chat.user.name),
-                React.createElement("p", { className: "content" }, chat.content),
-                React.createElement("p", { className: "time" }, chat.createdTime ?
-                    (new Date(chat.createdTime)).toLocaleString() :
-                    (new Date()).toLocaleString())); }))
-            :
-                React.createElement("ul", null);
-        return React.createElement("div", { className: "project-chat-page" },
-            React.createElement("div", { className: "chat-block" },
-                React.createElement("div", { className: "chat-list", id: "chatList" }, list),
-                React.createElement("div", { className: "chat-input" },
-                    React.createElement("textarea", { type: "textarea", className: "ant-input my-input", rows: 4, value: inputValue, onChange: function (e) { return _this.setState({ inputValue: e.target.value }); } }),
-                    React.createElement(antd_1.Button, { type: "primary", className: "my-btn", onClick: this.postChat }, "\u53D1\u9001"))));
+        this.sub = msg_1.default.data.data$
+            .filter(function (sok) { return sok !== null; })
+            .skip(1)
+            .do(function (res) {
+            var _a = _this.state, currentPage = _a.currentPage, msgType = _a.msgType, msgList = _a.msgList;
+            _this.fetchMsgList(msgType === '所有消息' ? true : false, currentPage);
+        })
+            .subscribe();
     };
-    return ProjectChatPage;
+    msgAllPage.prototype.fetchMsgList = function (readed, currentPage) {
+        var _this = this;
+        this.setState({ spinning: true });
+        var toUID;
+        var limit = this.limit;
+        var skip = (currentPage - 1) * limit;
+        var sub = user_1.default.data.userData$
+            .do(function (user) {
+            toUID = user._id;
+            setTimeout(function () { return index_con_1.Util.cancelSubscribe(sub); }, 16);
+        }).subscribe();
+        var sub2 = http_service_1.default
+            .post('/api/v1/msg-list', { toUID: toUID, readed: readed, skip: skip, limit: limit })
+            .do(function (res) {
+            _this.setState({
+                spinning: false,
+                total: res.count,
+                msgList: res.data
+            });
+            setTimeout(function () { return index_con_1.Util.cancelSubscribe(sub2); }, 16);
+        })
+            .subscribe();
+    };
+    msgAllPage.prototype.render = function () {
+        var _this = this;
+        var _a = this.state, msgType = _a.msgType, total = _a.total, currentPage = _a.currentPage, msgList = _a.msgList, spinning = _a.spinning, selectorValue = _a.selectorValue;
+        var msgContent = React.createElement("ul", null, msgList.map(function (msg, key) { return React.createElement("li", { key: key },
+            React.createElement("a", { onClick: function () { return _this.onEnter(msg, key); } },
+                React.createElement(Image_component_1.default, { src: "/static/touxiang.png" }),
+                !msg.readed && React.createElement(antd_1.Tag, { color: "#108ee9", className: "my-tag" }, "\u672A\u8BFB"),
+                React.createElement("h3", null, msg.title),
+                React.createElement("p", null, msg.content),
+                React.createElement("span", { className: "time" }, (new Date(msg.meta.createdTime)).toLocaleString()))); }));
+        return React.createElement("div", { className: "msg-all-page" },
+            React.createElement(antd_1.Layout, null,
+                React.createElement(Header, null,
+                    React.createElement(antd_1.Breadcrumb, null,
+                        React.createElement(antd_1.Breadcrumb.Item, { href: "/#/projects" }, "\u9879\u76EE"),
+                        React.createElement(antd_1.Breadcrumb.Item, null, "\u6211\u7684\u6D88\u606F"))),
+                React.createElement(Content, null,
+                    React.createElement(antd_1.Row, null,
+                        React.createElement(antd_1.Col, { span: 10, className: "msg-list-block" },
+                            React.createElement("div", { className: "msg-list" },
+                                React.createElement("div", { className: "title" },
+                                    React.createElement(antd_1.Select, { defaultValue: "false", value: selectorValue, style: { width: 120 }, onChange: this.handleChange },
+                                        React.createElement(antd_1.Select.Option, { value: "false" },
+                                            React.createElement(antd_1.Icon, { type: "tag-o" }), " ",
+                                            "\u672A\u8BFB\u6D88\u606F"),
+                                        React.createElement(antd_1.Select.Option, { value: "true" },
+                                            React.createElement(antd_1.Icon, { type: "bell" }), " ",
+                                            "\u6240\u6709\u6D88\u606F")),
+                                    React.createElement("span", { style: { color: '#666' } },
+                                        total,
+                                        "\u6761")),
+                                React.createElement("div", { className: "content" },
+                                    React.createElement(antd_1.Spin, { spinning: spinning, tip: "Loading...", size: "large", className: "my-spin" }, msgContent)),
+                                React.createElement("div", { className: "page-content" },
+                                    React.createElement(antd_1.Pagination, { simple: true, defaultCurrent: 1, total: total, current: currentPage, defaultPageSize: 5, onChange: this.handleSelect })))),
+                        React.createElement(antd_1.Col, { span: 14, className: "msg-content" }, this.props.children ||
+                            React.createElement("h3", { className: "tips" }, "\u9009\u62E9\u5DE6\u4FA7\u6D88\u606F\uFF0C\u67E5\u770B\u6D88\u606F\u8BE6\u60C5"))))));
+    };
+    return msgAllPage;
 }(React.PureComponent));
-exports.default = ProjectChatPage;
+exports.default = msgAllPage;
 
 
 /***/ }),
@@ -2719,7 +2739,7 @@ exports.default = Image;
 
 /***/ }),
 
-/***/ 1397:
+/***/ 1395:
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1381)(undefined);
@@ -2727,20 +2747,20 @@ exports = module.exports = __webpack_require__(1381)(undefined);
 
 
 // module
-exports.push([module.i, ".project-chat-page {\n  padding-bottom: 20px;\n  margin-top: 20px;\n  box-sizing: border-box;\n}\n.project-chat-page .chat-block {\n  width: 70%;\n  margin: 0 auto;\n  border-radius: 8px;\n  position: relative;\n  box-sizing: border-box;\n  padding: 10px;\n  border: 1px solid #e9e9e9;\n  box-shadow: 0px 5px 40px 5px #d9d9d9;\n}\n.project-chat-page .chat-block .chat-list {\n  height: 360px;\n  overflow: scroll;\n  transition: all ease 0.4s;\n}\n.project-chat-page .chat-block .chat-list li.other {\n  position: relative;\n  padding: 10px 20px 30px 90px;\n}\n.project-chat-page .chat-block .chat-list li.other img {\n  width: 60px;\n  left: 10px;\n  top: 15px;\n  position: absolute;\n  border-radius: 50%;\n}\n.project-chat-page .chat-block .chat-list li.other h3 {\n  margin-bottom: 10px;\n}\n.project-chat-page .chat-block .chat-list li.other p.content {\n  color: #fff;\n  display: inline-block;\n  max-width: 480px;\n  border-radius: 10px;\n  padding: 8px 10px;\n  background-color: #108ee9;\n}\n.project-chat-page .chat-block .chat-list li.other p.time {\n  position: absolute;\n  top: 10px;\n  left: 150px;\n}\n.project-chat-page .chat-block .chat-list li.me {\n  text-align: right;\n  position: relative;\n  padding: 10px 90px 30px 20px;\n}\n.project-chat-page .chat-block .chat-list li.me img {\n  width: 60px;\n  top: 10px;\n  right: 10px;\n  position: absolute;\n  border-radius: 50%;\n}\n.project-chat-page .chat-block .chat-list li.me h3 {\n  margin-bottom: 15px;\n  text-align: right;\n}\n.project-chat-page .chat-block .chat-list li.me p.content {\n  color: #fff;\n  text-align: right;\n  display: inline-block;\n  max-width: 480px;\n  border-radius: 10px;\n  padding: 8px 10px;\n  background-color: #108ee9;\n}\n.project-chat-page .chat-block .chat-list li.me p.time {\n  position: absolute;\n  top: 10px;\n  right: 125px;\n}\n.project-chat-page .chat-block .chat-input {\n  height: 100px;\n  overflow: scroll;\n  position: relative;\n  padding: 10px 0 0 0;\n}\n.project-chat-page .chat-block .chat-input textarea {\n  padding: 4px 85px 10px 10px;\n}\n.project-chat-page .chat-block .chat-input textarea::-webkit-scrollbar {\n  display: none;\n}\n.project-chat-page .chat-block .chat-input .my-btn {\n  right: 10px;\n  bottom: 20px;\n  position: absolute;\n}\n.project-chat-page .chat-block .chat-list::-webkit-scrollbar {\n  display: none;\n}\n.project-chat-page .chat-block .chat-input::-webkit-scrollbar {\n  display: none;\n}\n", ""]);
+exports.push([module.i, "div {\n  box-sizing: border-box;\n}\n.msg-all-page .ant-layout {\n  background: #fff;\n}\n.msg-all-page .ant-layout .ant-layout-header {\n  height: 50px;\n  line-height: 50px;\n  margin-top: 6px;\n  border-bottom: 1px solid #e9e9e9;\n  background-color: #f5f5f5 !important;\n}\n.msg-all-page .ant-layout .ant-layout-content {\n  padding-bottom: 20px;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block {\n  padding-left: 80px;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list {\n  width: 400px;\n  margin-top: 20px;\n  border-radius: 8px;\n  position: relative;\n  padding: 10px 10px 50px;\n  border: 1px solid #e9e9e9;\n  box-shadow: 0px 5px 40px 5px #d9d9d9;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list .title {\n  padding: 12px 10px;\n  border-bottom: 1px solid #e9e9e9;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list .title .ant-select-selection {\n  border: none;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list .content {\n  height: 400px;\n  overflow: scroll;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list .content .my-spin {\n  top: 100px;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list .content ul li {\n  position: relative;\n  padding: 10px 20px 10px 70px;\n  border-bottom: 1px solid #e9e9e9;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list .content ul li .my-tag {\n  top: 5px;\n  left: 0;\n  position: absolute;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list .content ul li img {\n  left: 10px;\n  top: 15px;\n  width: 50px;\n  height: 50px;\n  position: absolute;\n  margin: 4px 8px 0 0;\n  border-radius: 50%;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list .content ul li h3 {\n  padding-bottom: 5px;\n  color: #666;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list .content ul li p {\n  color: #666;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list .content ul li span.time {\n  position: absolute;\n  right: 25px;\n  top: 9px;\n  color: #666;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list .content::-webkit-scrollbar {\n  display: none;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list .page-content {\n  left: 0;\n  bottom: 0px;\n  width: 100%;\n  height: 40px;\n  text-align: center;\n  position: absolute;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list .page-content .ant-pagination {\n  display: inline-block;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-content {\n  position: relative;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-content .tips {\n  font-size: 30px;\n  position: absolute;\n  top: 240px;\n  left: 120px;\n  font-weight: 500;\n  color: #919191;\n}\n", ""]);
 
 // exports
 
 
 /***/ }),
 
-/***/ 1406:
+/***/ 1404:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1397);
+var content = __webpack_require__(1395);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(1382)(content, {});
@@ -2749,8 +2769,8 @@ if(content.locals) module.exports = content.locals;
 if(false) {
 	// When the styles change, update the <style> tags
 	if(!content.locals) {
-		module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/less-loader/index.js!./project-chat.less", function() {
-			var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/less-loader/index.js!./project-chat.less");
+		module.hot.accept("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./msg-all.less", function() {
+			var newContent = require("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./msg-all.less");
 			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 			update(newContent);
 		});

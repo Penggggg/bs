@@ -206,7 +206,7 @@ declare namespace SOK {
             uid: string
             content: string
             userName: string
-            createdTime: string
+            createdTime: string | number
         }
     }
 

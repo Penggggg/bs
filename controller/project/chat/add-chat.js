@@ -67,7 +67,7 @@ exports.addChat = function (ctx) { return __awaiter(_this, void 0, void 0, funct
             case 6:
                 userData = _b.sent();
                 sokData = {
-                    createdTime: "" + new Date(),
+                    createdTime: (new Date()).getTime(),
                     uid: uid, content: content,
                     userName: userData[0].name,
                 };

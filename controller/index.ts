@@ -1,4 +1,6 @@
 import * as fs from 'fs';
+import * as path from 'path';
+import * as Koa from 'koa';
 import { login } from './auth/login';
 import { resetPsw } from './auth/reset';
 import { sginIn } from './auth/signin';
@@ -49,13 +51,45 @@ export default ( router ) => {
     /**消息模块：所有消息的伪查询 */
     router.post('/api/v1/msg-list-fade', fetchFadeMsgList );
     /**消息模块 */
-    router.get('/api/v1/msg-detail', fetchMsgDetail );;;
+    router.get('/api/v1/msg-detail', fetchMsgDetail );
+
+
+
+    router.get('/files/:fileName', test );
 
 
 }
 
 
 
+async function test( ctx: Koa.Context ) {
+
+    let { fileName } = ctx.params;
+
+    
+
+    var filePath = path.join(__dirname, '../files', fileName )
+    var stats = fs.statSync(filePath); 
+
+    if ( stats.isFile( ) ) {
+        
+        ctx.set({
+            'Content-Disposition': `attachment; filename=${fileName}`,
+            'Content-Length': `${stats.size}`
+        })
+
+
+        let data = await fs.readFileSync(filePath)
+        return ctx.body = data;
+    }
+
+    
+
+    ctx.body = '无可返回文件'
+
+}
+
+// koa-multer
 
 
 async function getIndex( ctx ) {

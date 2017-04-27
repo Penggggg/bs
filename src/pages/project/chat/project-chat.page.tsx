@@ -2,7 +2,7 @@ import './project-chat.less';
 import * as React from 'react';
 import { Subscription } from 'rxjs';
 import { RouteComponentProps } from 'react-router';
-import { Button, Input } from 'antd';
+import { Button, Input, Spin } from 'antd';
 
 import Image from '../../../component/Image/Image.component';
 import userStore from '../../../store/user';
@@ -18,6 +18,7 @@ export default class ProjectChatPage extends React.PureComponent< IProps, IState
     constructor( ) {
         super( );
         this.state = {
+            loading: false,
             inputValue: '',
             chatList: [ ]
         }
@@ -26,6 +27,9 @@ export default class ProjectChatPage extends React.PureComponent< IProps, IState
     componentDidMount( ) {
         this.init( );
         this.combineFlow( );
+        this.setState({
+            loading: true
+        })
     }
 
     componentWillUnmount( ) {
@@ -48,7 +52,9 @@ export default class ProjectChatPage extends React.PureComponent< IProps, IState
     }
 
     combineFlow = ( ) => {
+
         let pid = this.props.params.id;
+        
         this.sub = http
             .get<API.Res.ProjectChat, API.Query.ProjectChat>('/api/v1/chat-list', { pid })
             .combineLatest( projectStore.chat.data$)
@@ -57,6 +63,10 @@ export default class ProjectChatPage extends React.PureComponent< IProps, IState
                 let { chatList } = this.state;
                 let [ chatData, SOK ] = res;
                 let chatListFromFetch = chatData.data;
+
+                this.setState({
+                    loading: true
+                })
                 
                 if ( !!SOK ) {
                     let newChat = {
@@ -68,10 +78,12 @@ export default class ProjectChatPage extends React.PureComponent< IProps, IState
                         createdTime: SOK.createdTime
                     }
                     this.setState({ 
+                        loading: false,
                         chatList: [...chatList, newChat ]
                     })                    
                 } else {
                     this.setState({ 
+                        loading: false,
                         chatList: [...chatListFromFetch]
                     })
                 }
@@ -115,21 +127,23 @@ export default class ProjectChatPage extends React.PureComponent< IProps, IState
     }
 
     render( ) {
-        let { inputValue, chatList } = this.state;
+        let { inputValue, chatList, loading } = this.state;
 
         let list = this.uid ? 
-            <ul>
-                {
-                chatList.map(( chat, key ) => <li key={key} className={ this.uid === chat.user._id ? 'me' : 'other' }>
-                        <Image src="/static/touxiang.png" />
-                        <h3>{ this.uid === chat.user._id ? '我' : chat.user.name }</h3>
-                        <p className="content">{ chat.content }</p>
-                        <p className="time">{ chat.createdTime ?
-                                 (new Date( chat.createdTime )).toLocaleString( ) :
-                                 (new Date( )).toLocaleString( ) }</p>
-                    </li>)
-                }
-            </ul> 
+            <Spin spinning={loading}>
+                <ul>
+                    {
+                    chatList.map(( chat, key ) => <li key={key} className={ this.uid === chat.user._id ? 'me' : 'other' }>
+                            <Image src="/static/touxiang.png" />
+                            <h3>{ this.uid === chat.user._id ? '我' : chat.user.name }</h3>
+                            <p className="content">{ chat.content }</p>
+                            <p className="time">{ chat.createdTime ?
+                                    (new Date( chat.createdTime )).toLocaleString( ) :
+                                    (new Date( )).toLocaleString( ) }</p>
+                        </li>)
+                    }
+                </ul>
+            </Spin> 
             : 
             <ul></ul>
 
@@ -154,6 +168,7 @@ interface IProps extends RouteComponentProps<{id: string}, {}>{
 }
 
 interface IState {
+    loading: boolean
     inputValue: string,
     chatList: Array<{
         user: Partial<APP.User>

@@ -32,7 +32,7 @@ export let addChat = async( ctx: Koa.Context ) => {
     /**3. 消息转发 */
     let userData: Array<Partial<APP.User>> = await userModel.customFind({ _id: uid }, 'name', null );
     let sokData: SOK.Res.NewChat = {
-        createdTime: `${new Date( )}`,        
+        createdTime: (new Date( )).getTime( ),        
         uid, content,
         userName: userData[0].name,
     }

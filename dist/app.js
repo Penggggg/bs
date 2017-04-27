@@ -140,6 +140,7 @@ var EventProjectChat = (function () {
             .fromEvent(io, "" + index_con_1.CON.socketEvent.project.chat)
             .do(function (res) {
             antd_1.message.success('项目有一条新聊天记录~');
+            console.log(res);
             project_1.default.chat.save(res);
         })
             .subscribe();
@@ -613,7 +614,7 @@ exports.default = {
                     path: 'chats',
                     onEnter: auth_login_service_1.default.requireLogin,
                     getComponent: function (nextstate, cb) {
-                        __webpack_require__.e/* import() */(4).then(__webpack_require__.bind(null, 1374)).then(function (module) {
+                        __webpack_require__.e/* import() */(3).then(__webpack_require__.bind(null, 1374)).then(function (module) {
                             cb(null, module.default);
                         }).catch(function (err) { return showMessage(err, './project-chat.page'); });
                     }
@@ -640,7 +641,7 @@ exports.default = {
         }, {
             path: 'msgs',
             getComponent: function (nextstate, cb) {
-                __webpack_require__.e/* import() */(3).then(__webpack_require__.bind(null, 1372)).then(function (module) {
+                __webpack_require__.e/* import() */(4).then(__webpack_require__.bind(null, 1372)).then(function (module) {
                     cb(null, module.default);
                 }).catch(function (err) { return showMessage(err, './msg-all.page'); });
             },

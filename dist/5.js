@@ -76,7 +76,7 @@ var ProjectFilesPage = (function (_super) {
         };
         _this.mapOriginToDataSource = function (data) {
             return data.map(function (file, key) { return ({
-                key: "" + key,
+                key: "" + Math.random() * 9999,
                 name: file.user.name,
                 fileName: file.fileName,
                 updatedTime: (new Date(file.updatedTime)).toLocaleString()
@@ -87,10 +87,10 @@ var ProjectFilesPage = (function (_super) {
             _this.sub = http_service_1.default.get('/api/v1/all-files', { pid: pid })
                 .combineLatest(project_1.default.file.data$)
                 .do(function (res) {
-                var fileList = _this.state.fileList;
+                var _a = _this.state, fileList = _a.fileList, dataSource = _a.dataSource;
                 var fromFetch = res[0], fromSOK = res[1];
                 if (!fromSOK) {
-                    // console.log('首次加载')
+                    console.log('首次加载');
                     _this.setState({
                         dataSource: _this.mapOriginToDataSource(fromFetch)
                     });
@@ -99,19 +99,19 @@ var ProjectFilesPage = (function (_super) {
                     /**fetch的时候是sort: -1 */
                     var lastFromFetch = fromFetch[0];
                     if (fromFetch.length === 0) {
-                        // console.log('首次数据来自于SOK')
+                        console.log('首次数据来自于SOK');
                         return _this.setState({
-                            dataSource: _this.mapOriginToDataSource([fromSOK])
+                            dataSource: _this.mapOriginToDataSource([fromSOK]).concat(dataSource)
                         });
                     }
                     if (fromSOK._id !== lastFromFetch._id) {
-                        // console.log('更新来自于SOK')
+                        console.log('更新来自于SOK');
                         _this.setState({
                             dataSource: _this.mapOriginToDataSource([fromSOK].concat(fromFetch))
                         });
                     }
                     else {
-                        // console.log('二次进入')
+                        console.log('二次进入');
                         _this.setState({
                             dataSource: _this.mapOriginToDataSource(fromFetch.slice())
                         });
@@ -2659,7 +2659,7 @@ exports = module.exports = __webpack_require__(1381)(undefined);
 
 
 // module
-exports.push([module.i, ".project-files-page {\n  margin-top: 20px;\n  padding-bottom: 20px;\n  box-sizing: border-box;\n}\n.project-files-page .main-block {\n  width: 70%;\n  margin: 0 auto;\n  border-radius: 8px;\n  position: relative;\n  box-sizing: border-box;\n  padding: 10px;\n  border: 1px solid #e9e9e9;\n  box-shadow: 0px 5px 40px 5px #d9d9d9;\n}\n.project-files-page .main-block .header {\n  height: 40px;\n  position: relative;\n  box-sizing: border-box;\n  padding: 5px 15px 10px 15px;\n  border-bottom: 1px solid #d9d9d9;\n}\n.project-files-page .main-block .header .upload-block {\n  top: 0px;\n  right: 30px;\n  position: absolute;\n}\n.project-files-page .main-block .header .upload-block .ant-upload-select {\n  border-radius: 8px;\n}\n.project-files-page .main-block .header .upload-block .ant-upload-select button {\n  color: #108ee9;\n}\n.project-files-page .main-block .header .upload-block .ant-upload-list {\n  display: none;\n}\n.project-files-page .main-block .header h3 {\n  color: #666;\n  font-size: 15px;\n}\n.project-files-page .main-block .content {\n  height: 370px;\n}\n", ""]);
+exports.push([module.i, ".project-files-page {\n  margin-top: 20px;\n  padding-bottom: 20px;\n  box-sizing: border-box;\n}\n.project-files-page .main-block {\n  width: 70%;\n  margin: 0 auto;\n  border-radius: 8px;\n  position: relative;\n  box-sizing: border-box;\n  padding: 10px;\n  border: 1px solid #e9e9e9;\n  box-shadow: 0px 5px 40px 5px #d9d9d9;\n}\n.project-files-page .main-block .header {\n  height: 40px;\n  position: relative;\n  box-sizing: border-box;\n  padding: 5px 15px 10px 15px;\n  border-bottom: 1px solid #d9d9d9;\n}\n.project-files-page .main-block .header .upload-block {\n  top: 0px;\n  right: 30px;\n  position: absolute;\n}\n.project-files-page .main-block .header .upload-block .ant-upload-select {\n  border-radius: 8px;\n}\n.project-files-page .main-block .header .upload-block .ant-upload-select button {\n  color: #108ee9;\n}\n.project-files-page .main-block .header .upload-block .ant-upload-list {\n  display: none;\n}\n.project-files-page .main-block .header h3 {\n  color: #666;\n  font-size: 15px;\n}\n.project-files-page .main-block .content {\n  height: 400px;\n  overflow: scroll;\n}\n.project-files-page .main-block .content .ant-table-thead th {\n  color: #666;\n  background-color: #fff;\n}\n.project-files-page .main-block .content::-webkit-scrollbar {\n  display: none;\n}\n", ""]);
 
 // exports
 

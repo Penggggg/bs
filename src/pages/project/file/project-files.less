@@ -53,7 +53,20 @@
 
         .content {
 
-             height: 370px;
+             height: 400px;
+             overflow: scroll;
+
+             .ant-table-thead {
+
+                 th {
+                     color: #666;
+                     background-color: #fff;
+                 }
+             }
+        }
+
+        .content::-webkit-scrollbar {
+            display:none
         }
     }
 }

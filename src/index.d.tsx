@@ -219,6 +219,9 @@ declare namespace SOK {
             userName: string
             createdTime: string
         }
+
+        /**消息推送：新增文件 */
+        export interface NewFile extends APP.File {  }
     }
 
     export namespace Req {
@@ -300,10 +303,11 @@ declare namespace APP {
 
     /**文件 */
     export interface File {
+        _id: string
+        pid: string
         fileName: string
-        updatedTime?: string
-        pid: string | APP.Project
-        uid: string | APP.User
+        updatedTime: string
+        user: Partial<APP.User>
     }
 
     /**单条聊天记录 */
@@ -315,7 +319,25 @@ declare namespace APP {
     }
 }
 
+declare namespace Schema {
 
+    export interface File {
+        _id: string
+        uid: string
+        pid: string
+        fileName: string
+        updatedTime?: string
+    }
+
+    export interface File$ {
+        _id: string
+        pid: string
+        fileName: string
+        updatedTime: string
+        uid: Partial<APP.User>
+    }
+
+}
 
 /**webpack2 import */
 declare var System: {

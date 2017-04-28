@@ -1,13 +1,15 @@
-
-import { CON } from '../../index.con';
-import { Member } from './member';
 import { Chat } from './chat';
+import { File } from './file';
+import { Member } from './member';
+import { CON } from '../../index.con';
+
 
 export class ProjectSocket {
 
-    private socket: SocketIO.Namespace;
+    public file: File;
     public chat: Chat;
     public member: Member;
+    private socket: SocketIO.Namespace;
 
 
     constructor( io: SocketIO.Server ,pid: string ) {
@@ -26,7 +28,7 @@ export class ProjectSocket {
                 /**事件通讯 */
                 this.member = new Member( this.socket ); 
                 this.chat = new Chat( this.socket );
-
+                this.file = new File( this.socket )
             })
     }
 

@@ -20,6 +20,8 @@ var CON;
             project.member = 'member';
             /**聊天信息 */
             project.chat = 'chat';
+            /**文件信息 */
+            project.file = 'file';
         })(project = socketEvent.project || (socketEvent.project = {}));
     })(socketEvent = CON.socketEvent || (CON.socketEvent = {}));
     /**socket命名空间 */

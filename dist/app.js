@@ -485,6 +485,67 @@ exports.default = UserSignIn;
 
 /***/ }),
 
+/***/ 1420:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var antd_1 = __webpack_require__(77);
+var rxjs_1 = __webpack_require__(34);
+var index_con_1 = __webpack_require__(62);
+var project_1 = __webpack_require__(155);
+var EventProjectFile = (function () {
+    function EventProjectFile(io) {
+        this.init(io);
+    }
+    EventProjectFile.prototype.init = function (io) {
+        this.sub = rxjs_1.Observable
+            .fromEvent(io, "" + index_con_1.CON.socketEvent.project.file)
+            .do(function (res) {
+            antd_1.message.success('项目增加一个新文件~');
+            project_1.default.file.save(res);
+        })
+            .subscribe();
+    };
+    EventProjectFile.prototype.cancelSub = function () {
+        this.sub.unsubscribe();
+    };
+    return EventProjectFile;
+}());
+exports.EventProjectFile = EventProjectFile;
+
+
+/***/ }),
+
+/***/ 1421:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var rxjs_1 = __webpack_require__(34);
+var ProjectFile = (function () {
+    function ProjectFile() {
+        var _this = this;
+        var subject = new rxjs_1.ReplaySubject(1);
+        var source = rxjs_1.Observable.create(function (observer) {
+            _this.data$$ = observer;
+            observer.next();
+        }).startWith(null);
+        this.data$ = source.multicast(subject).refCount();
+        this.data$.subscribe();
+    }
+    ProjectFile.prototype.save = function (newFile) {
+        this.data$$.next(newFile);
+    };
+    return ProjectFile;
+}());
+exports.ProjectFile = ProjectFile;
+
+
+/***/ }),
+
 /***/ 155:
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -494,11 +555,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var role_store_1 = __webpack_require__(1364);
 var data_store_1 = __webpack_require__(1363);
 var chat_store_1 = __webpack_require__(1362);
+var file_store_1 = __webpack_require__(1421);
 var ProjectStore = (function () {
     function ProjectStore() {
         this.role = new role_store_1.default();
         this.data = new data_store_1.default();
         this.chat = new chat_store_1.ProjectChat();
+        this.file = new file_store_1.ProjectFile();
     }
     return ProjectStore;
 }());
@@ -893,6 +956,7 @@ var event_msg_1 = __webpack_require__(1356);
 var event_project_member_1 = __webpack_require__(1359);
 var event_project_getIn_1 = __webpack_require__(1358);
 var event_project_chat_1 = __webpack_require__(1357);
+var event_project_file_1 = __webpack_require__(1420);
 var socketService = (function () {
     function socketService() {
         this.SignIn = event_signIn_1.default;
@@ -924,6 +988,7 @@ var socketService = (function () {
         this.connectingProjectSocket[pid].events.push(new event_project_member_1.EventProjectMember(socketClient));
         this.connectingProjectSocket[pid].events.push(new event_project_getIn_1.EventProjectGetIn(socketClient));
         this.connectingProjectSocket[pid].events.push(new event_project_chat_1.EventProjectChat(socketClient));
+        this.connectingProjectSocket[pid].events.push(new event_project_file_1.EventProjectFile(socketClient));
     };
     socketService.prototype.disconnectNsp = function (name) {
         this.connectedNameSpace[name].disconnect();
@@ -970,6 +1035,8 @@ var CON;
             project.member = 'member';
             /**聊天信息 */
             project.chat = 'chat';
+            /**文件信息 */
+            project.file = 'file';
         })(project = socketEvent.project || (socketEvent.project = {}));
     })(socketEvent = CON.socketEvent || (CON.socketEvent = {}));
     /**socket命名空间 */

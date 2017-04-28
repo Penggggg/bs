@@ -65,7 +65,7 @@ export default class ProjectChatPage extends React.PureComponent< IProps, IState
 
                 if ( !SOK ) {
                     // 首次加载
-                    console.log(`首次加载`)
+                    // console.log(`首次加载`)
                     this.setState({
                         chatList: chatData
                     })

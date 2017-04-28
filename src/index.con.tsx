@@ -21,6 +21,9 @@ export namespace CON {
 
             /**聊天信息 */
             export const chat = 'chat'
+
+            /**文件信息 */
+            export const file = 'file';
         }
     }
 

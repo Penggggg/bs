@@ -20,6 +20,7 @@ __webpack_require__(1408);
 var React = __webpack_require__(0);
 var antd_1 = __webpack_require__(77);
 var user_1 = __webpack_require__(156);
+var project_1 = __webpack_require__(155);
 var http_service_1 = __webpack_require__(542);
 var notification_service_1 = __webpack_require__(240);
 var ProjectFilesPage = (function (_super) {
@@ -27,11 +28,12 @@ var ProjectFilesPage = (function (_super) {
     function ProjectFilesPage() {
         var _this = _super.call(this) || this;
         _this.init = function () {
-            _this.sub = user_1.default.data.userData$
+            var sub = user_1.default.data.userData$
                 .do(function (user) {
                 _this.setState({
                     uid: user._id
                 });
+                setTimeout(function () { return sub.unsubscribe(); }, 100);
             })
                 .subscribe();
         };
@@ -52,9 +54,41 @@ var ProjectFilesPage = (function (_super) {
         };
         _this.combineFlow = function () {
             var pid = _this.props.params.id;
-            http_service_1.default.get('/api/v1/all-files', { pid: pid })
+            _this.sub = http_service_1.default.get('/api/v1/all-files', { pid: pid })
+                .combineLatest(project_1.default.file.data$)
                 .do(function (res) {
-                console.log(res);
+                var fileList = _this.state.fileList;
+                var fromFetch = res[0], fromSOK = res[1];
+                console.log(fromSOK);
+                console.log(fromFetch);
+                if (!fromSOK) {
+                    // console.log('首次加载')
+                    _this.setState({
+                        fileList: fromFetch
+                    });
+                }
+                else {
+                    /**fetch的时候是sort: -1 */
+                    var lastFromFetch = fromFetch[0];
+                    if (fromFetch.length === 0) {
+                        // console.log('首次数据来自于SOK')
+                        return _this.setState({
+                            fileList: [fromSOK]
+                        });
+                    }
+                    if (fromSOK._id !== lastFromFetch._id) {
+                        // console.log('更新来自于SOK')
+                        _this.setState({
+                            fileList: [fromSOK].concat(fileList)
+                        });
+                    }
+                    else {
+                        // console.log('二次进入')
+                        _this.setState({
+                            fileList: fromFetch
+                        });
+                    }
+                }
             })
                 .subscribe();
         };
@@ -72,8 +106,12 @@ var ProjectFilesPage = (function (_super) {
         this.sub.unsubscribe();
     };
     ProjectFilesPage.prototype.render = function () {
-        var uid = this.state.uid;
+        var _a = this.state, uid = _a.uid, fileList = _a.fileList;
         var id = this.props.params.id;
+        var list = React.createElement("ul", null, fileList.map(function (file, key) { return React.createElement("li", { key: key },
+            file.fileName,
+            file.user.name,
+            (new Date(file.updatedTime)).toLocaleString()); }));
         return React.createElement("div", { className: "project-files-page" },
             React.createElement("div", { className: "main-block" },
                 React.createElement("div", { className: "header" },
@@ -82,8 +120,8 @@ var ProjectFilesPage = (function (_super) {
                         React.createElement(antd_1.Upload, { action: "/api/v1/upload/" + id + "/" + uid, onChange: this.onUpload },
                             React.createElement(antd_1.Button, null,
                                 React.createElement(antd_1.Icon, { type: "upload" }),
-                                " Uploadddd")))),
-                React.createElement("div", { className: "content" })));
+                                " Upload")))),
+                React.createElement("div", { className: "content" }, list)));
     };
     return ProjectFilesPage;
 }(React.PureComponent));

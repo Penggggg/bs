@@ -11,7 +11,7 @@ import { inviteMember } from './project/invite-member';
 import { getChatList } from './project/chat/query-chat';
 import { createProject } from './project/create-project';
 import { replyInvite } from './project/reply-invite';
-import { download, upload, allFiles } from './files';
+import { download, upload, allFiles } from './project/files';
 import { fetchAllUserByName } from './user/query.controller';
 import { allProject, projectDetail } from './project/query-project';
 import { fetchAllMsgList, fetchFadeMsgList, fetchMsgDetail } from './msg/query-msg';

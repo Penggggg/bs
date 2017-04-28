@@ -31,6 +31,14 @@ FileSchema.statics.save = function({ pid, uid, fileName }) {
     })
 }
 
+FileSchema.statics.myUpdate = function( fileName ) {
+    return new Promise(( resolve, reject ) => {
+        this
+            .update({ fileName }, { updatedTime: (new Date( )).getTime( ) })
+            .exec(( err, data ) => returnData( err, resolve, reject, data ))
+    })
+}
+
 FileSchema.statics.customFind = function( query, fields, options ) {
     return new Promise(( resolve, reject ) => {
         this.find( query, fields, options )

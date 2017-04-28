@@ -109,7 +109,7 @@ export default class ProjectFilesPage extends React.PureComponent< IProps, IStat
                 let [ fromFetch, fromSOK ] = res;
                 
                 if ( !fromSOK ) {
-                    console.log('首次加载')
+                    // console.log('首次加载')
 
                     this.setState({
                         dataSource: this.mapOriginToDataSource( fromFetch )
@@ -121,19 +121,19 @@ export default class ProjectFilesPage extends React.PureComponent< IProps, IStat
                     let lastFromFetch = fromFetch[ 0 ];
 
                     if ( fromFetch.length === 0 ) {
-                        console.log('首次数据来自于SOK')
+                        // console.log('首次数据来自于SOK')
                         return this.setState({
                             dataSource: [ ...this.mapOriginToDataSource([ fromSOK ]), ...dataSource ]
                         })
                     }
 
                     if ( fromSOK._id !== lastFromFetch._id ) {
-                        console.log('更新来自于SOK')
+                        // console.log('更新来自于SOK')
                         this.setState({
                             dataSource: this.mapOriginToDataSource([ fromSOK, ...fromFetch  ])
                         })
                     } else {
-                        console.log('二次进入')
+                        // console.log('二次进入')
                         this.setState({
                             dataSource: this.mapOriginToDataSource([ ...fromFetch ])
                         })

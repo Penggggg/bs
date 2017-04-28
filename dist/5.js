@@ -90,7 +90,7 @@ var ProjectFilesPage = (function (_super) {
                 var _a = _this.state, fileList = _a.fileList, dataSource = _a.dataSource;
                 var fromFetch = res[0], fromSOK = res[1];
                 if (!fromSOK) {
-                    console.log('首次加载');
+                    // console.log('首次加载')
                     _this.setState({
                         dataSource: _this.mapOriginToDataSource(fromFetch)
                     });
@@ -99,19 +99,19 @@ var ProjectFilesPage = (function (_super) {
                     /**fetch的时候是sort: -1 */
                     var lastFromFetch = fromFetch[0];
                     if (fromFetch.length === 0) {
-                        console.log('首次数据来自于SOK');
+                        // console.log('首次数据来自于SOK')
                         return _this.setState({
                             dataSource: _this.mapOriginToDataSource([fromSOK]).concat(dataSource)
                         });
                     }
                     if (fromSOK._id !== lastFromFetch._id) {
-                        console.log('更新来自于SOK');
+                        // console.log('更新来自于SOK')
                         _this.setState({
                             dataSource: _this.mapOriginToDataSource([fromSOK].concat(fromFetch))
                         });
                     }
                     else {
-                        console.log('二次进入');
+                        // console.log('二次进入')
                         _this.setState({
                             dataSource: _this.mapOriginToDataSource(fromFetch.slice())
                         });

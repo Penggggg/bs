@@ -29,6 +29,14 @@ exports.FileSchema.statics.save = function (_a) {
             .save(function (err, data) { return returnData(err, resolve, reject, data); });
     });
 };
+exports.FileSchema.statics.myUpdate = function (fileName) {
+    var _this = this;
+    return new Promise(function (resolve, reject) {
+        _this
+            .update({ fileName: fileName }, { updatedTime: (new Date()).getTime() })
+            .exec(function (err, data) { return returnData(err, resolve, reject, data); });
+    });
+};
 exports.FileSchema.statics.customFind = function (query, fields, options) {
     var _this = this;
     return new Promise(function (resolve, reject) {

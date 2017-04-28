@@ -37,6 +37,28 @@ var ProjectFilesPage = (function (_super) {
             })
                 .subscribe();
         };
+        _this.initCol = function () {
+            _this.columns = [{
+                    title: '文件名称',
+                    dataIndex: 'fileName',
+                    key: 'fileName'
+                }, {
+                    title: '上传者',
+                    dataIndex: 'name',
+                    key: 'name',
+                }, {
+                    title: '上传时间',
+                    dataIndex: 'updatedTime',
+                    key: 'updatedTime'
+                }, {
+                    title: '操作',
+                    key: 'action',
+                    render: function (text, record) { return (React.createElement("span", null,
+                        React.createElement("a", { onClick: function () { return console.log(text); } }, "\u4E0B\u8F7D"),
+                        React.createElement("span", { className: "ant-divider" }),
+                        React.createElement("a", null, "\u5220\u9664"))); }
+                }];
+        };
         _this.onUpload = function (info) {
             if (info.file.status === 'done') {
                 notification_service_1.default.open({
@@ -52,6 +74,14 @@ var ProjectFilesPage = (function (_super) {
                 });
             }
         };
+        _this.mapOriginToDataSource = function (data) {
+            return data.map(function (file, key) { return ({
+                key: "" + key,
+                name: file.user.name,
+                fileName: file.fileName,
+                updatedTime: (new Date(file.updatedTime)).toLocaleString()
+            }); });
+        };
         _this.combineFlow = function () {
             var pid = _this.props.params.id;
             _this.sub = http_service_1.default.get('/api/v1/all-files', { pid: pid })
@@ -59,12 +89,10 @@ var ProjectFilesPage = (function (_super) {
                 .do(function (res) {
                 var fileList = _this.state.fileList;
                 var fromFetch = res[0], fromSOK = res[1];
-                console.log(fromSOK);
-                console.log(fromFetch);
                 if (!fromSOK) {
                     // console.log('首次加载')
                     _this.setState({
-                        fileList: fromFetch
+                        dataSource: _this.mapOriginToDataSource(fromFetch)
                     });
                 }
                 else {
@@ -73,19 +101,19 @@ var ProjectFilesPage = (function (_super) {
                     if (fromFetch.length === 0) {
                         // console.log('首次数据来自于SOK')
                         return _this.setState({
-                            fileList: [fromSOK]
+                            dataSource: _this.mapOriginToDataSource([fromSOK])
                         });
                     }
                     if (fromSOK._id !== lastFromFetch._id) {
                         // console.log('更新来自于SOK')
                         _this.setState({
-                            fileList: [fromSOK].concat(fileList)
+                            dataSource: _this.mapOriginToDataSource([fromSOK].concat(fromFetch))
                         });
                     }
                     else {
                         // console.log('二次进入')
                         _this.setState({
-                            fileList: fromFetch
+                            dataSource: _this.mapOriginToDataSource(fromFetch.slice())
                         });
                     }
                 }
@@ -94,24 +122,22 @@ var ProjectFilesPage = (function (_super) {
         };
         _this.state = {
             uid: '',
-            fileList: []
+            fileList: [],
+            dataSource: []
         };
         return _this;
     }
     ProjectFilesPage.prototype.componentDidMount = function () {
         this.init();
+        this.initCol();
         this.combineFlow();
     };
     ProjectFilesPage.prototype.componentWillUnmount = function () {
         this.sub.unsubscribe();
     };
     ProjectFilesPage.prototype.render = function () {
-        var _a = this.state, uid = _a.uid, fileList = _a.fileList;
+        var _a = this.state, uid = _a.uid, fileList = _a.fileList, dataSource = _a.dataSource;
         var id = this.props.params.id;
-        var list = React.createElement("ul", null, fileList.map(function (file, key) { return React.createElement("li", { key: key },
-            file.fileName,
-            file.user.name,
-            (new Date(file.updatedTime)).toLocaleString()); }));
         return React.createElement("div", { className: "project-files-page" },
             React.createElement("div", { className: "main-block" },
                 React.createElement("div", { className: "header" },
@@ -121,7 +147,8 @@ var ProjectFilesPage = (function (_super) {
                             React.createElement(antd_1.Button, null,
                                 React.createElement(antd_1.Icon, { type: "upload" }),
                                 " Upload")))),
-                React.createElement("div", { className: "content" }, list)));
+                React.createElement("div", { className: "content" },
+                    React.createElement(antd_1.Table, { columns: this.columns, pagination: false, dataSource: dataSource }))));
     };
     return ProjectFilesPage;
 }(React.PureComponent));

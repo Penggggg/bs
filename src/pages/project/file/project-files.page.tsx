@@ -2,7 +2,7 @@ import './project-files.less';
 import * as React from 'react';
 import { Subscription } from 'rxjs';
 import { RouteComponentProps } from 'react-router';
-import { Icon, Button, Upload } from 'antd';
+import { Icon, Button, Upload, Spin, Table } from 'antd';
 
 
 import userStore from '../../../store/user';
@@ -14,18 +14,21 @@ import notification from '../../../services/notification.service';
 
 export default class ProjectFilesPage extends React.PureComponent< IProps, IState > {
 
+    private columns: any;
     private sub: Subscription;
 
     constructor( ) {
         super( );
         this.state = {
             uid: '',
-            fileList: [ ]
+            fileList: [ ],
+            dataSource: [ ]
         }
     }
 
     componentDidMount( ) {
         this.init( );
+        this.initCol( );
         this.combineFlow( );
     }
 
@@ -44,6 +47,32 @@ export default class ProjectFilesPage extends React.PureComponent< IProps, IStat
             .subscribe( )
     }
 
+    initCol = ( ) => {
+        this.columns = [{
+            title: '文件名称',
+            dataIndex: 'fileName',
+            key: 'fileName'
+        }, {
+            title: '上传者',
+            dataIndex: 'name',
+            key: 'name',
+        }, {
+            title: '上传时间',
+            dataIndex: 'updatedTime',
+            key: 'updatedTime'
+        }, {
+            title: '操作',
+            key: 'action',
+            render: ( text, record ) => (
+                <span>
+                    <a onClick={( ) => console.log(text)}>下载</a>
+                    <span className="ant-divider" />
+                    <a>删除</a>
+                </span>
+            )
+        }]
+    }
+
     onUpload = ( info ) => {
         if ( info.file.status === 'done' ) {
             notification.open({
@@ -59,6 +88,15 @@ export default class ProjectFilesPage extends React.PureComponent< IProps, IStat
         } 
     }
 
+    mapOriginToDataSource = ( data: Array<APP.File> ) => {
+        return data.map(( file, key ) => ({
+            key: `${key}`,
+            name: file.user.name,
+            fileName: file.fileName,
+            updatedTime: (new Date( file.updatedTime )).toLocaleString( )
+        }))
+    }
+
     combineFlow = ( ) => {
 
         let pid = this.props.params.id;
@@ -70,15 +108,13 @@ export default class ProjectFilesPage extends React.PureComponent< IProps, IStat
                 let { fileList } = this.state;
                 let [ fromFetch, fromSOK ] = res;
                 
-                console.log( fromSOK )
-                console.log( fromFetch )
-
-
                 if ( !fromSOK ) {
                     // console.log('首次加载')
+
                     this.setState({
-                        fileList: fromFetch
+                        dataSource: this.mapOriginToDataSource( fromFetch )
                     })
+
                 } else {
 
                     /**fetch的时候是sort: -1 */
@@ -87,19 +123,19 @@ export default class ProjectFilesPage extends React.PureComponent< IProps, IStat
                     if ( fromFetch.length === 0 ) {
                         // console.log('首次数据来自于SOK')
                         return this.setState({
-                            fileList: [ fromSOK ]
+                            dataSource: this.mapOriginToDataSource([ fromSOK ])
                         })
                     }
 
                     if ( fromSOK._id !== lastFromFetch._id ) {
                         // console.log('更新来自于SOK')
                         this.setState({
-                            fileList: [ fromSOK, ...fileList  ]
+                            dataSource: this.mapOriginToDataSource([ fromSOK, ...fromFetch  ])
                         })
                     } else {
                         // console.log('二次进入')
                         this.setState({
-                            fileList: fromFetch
+                            dataSource: this.mapOriginToDataSource([ ...fromFetch ])
                         })
                     }
 
@@ -111,18 +147,8 @@ export default class ProjectFilesPage extends React.PureComponent< IProps, IStat
 
     render( ) {
 
-        let { uid, fileList } = this.state;
+        let { uid, fileList, dataSource } = this.state;
         let { id } = this.props.params;
-
-        let list = <ul>
-            {
-                fileList.map(( file, key ) => <li key={key}>
-                    { file.fileName }
-                    { file.user.name }
-                    { (new Date( file.updatedTime )).toLocaleString( )}
-                </li>)
-            }
-        </ul>
 
         return <div className="project-files-page">
             <div className="main-block">
@@ -137,7 +163,7 @@ export default class ProjectFilesPage extends React.PureComponent< IProps, IStat
                     </div>
                 </div>
                 <div className="content">
-                    { list }
+                    <Table columns={ this.columns } pagination={ false } dataSource={ dataSource }  />
                 </div>
             </div>
         </div>
@@ -152,4 +178,10 @@ interface IProps  extends RouteComponentProps<{id: string}, {}>{
 interface IState {
     uid: string
     fileList: Array<APP.File>
+    dataSource: Array<{
+        key: string
+        name: string
+        fileName: string
+        updatedTime: string
+    }>
 }

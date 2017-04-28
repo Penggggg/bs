@@ -58,7 +58,7 @@ export default ( router ) => {
 
 
     /**文件模块：下载 */
-    router.get('/api/v1/files/:fileName', download );
+    router.get('/api/v1/download', download );
     /**文件模块：上传 */
     router.post('/api/v1/upload/:pid/:uid', upload );
     /**文件模块：查询 */

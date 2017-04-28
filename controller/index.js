@@ -79,7 +79,7 @@ exports.default = function (router) {
     /**消息模块 */
     router.get('/api/v1/msg-detail', query_msg_1.fetchMsgDetail);
     /**文件模块：下载 */
-    router.get('/api/v1/files/:fileName', files_1.download);
+    router.get('/api/v1/download', files_1.download);
     /**文件模块：上传 */
     router.post('/api/v1/upload/:pid/:uid', files_1.upload);
     /**文件模块：查询 */

@@ -38,6 +38,7 @@ var ProjectFilesPage = (function (_super) {
                 .subscribe();
         };
         _this.initCol = function () {
+            var pid = _this.props.params.id;
             _this.columns = [{
                     title: '文件名称',
                     dataIndex: 'fileName',
@@ -54,7 +55,7 @@ var ProjectFilesPage = (function (_super) {
                     title: '操作',
                     key: 'action',
                     render: function (text, record) { return (React.createElement("span", null,
-                        React.createElement("a", { onClick: function () { return console.log(text); } }, "\u4E0B\u8F7D"),
+                        React.createElement("a", { href: "/api/v1/download?pid=" + pid + "&fileName=" + text.fileName, download: true }, "\u4E0B\u8F7D"),
                         React.createElement("span", { className: "ant-divider" }),
                         React.createElement("a", null, "\u5220\u9664"))); }
                 }];

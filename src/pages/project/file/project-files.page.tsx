@@ -48,6 +48,7 @@ export default class ProjectFilesPage extends React.PureComponent< IProps, IStat
     }
 
     initCol = ( ) => {
+        let pid = this.props.params.id;
         this.columns = [{
             title: '文件名称',
             dataIndex: 'fileName',
@@ -65,7 +66,7 @@ export default class ProjectFilesPage extends React.PureComponent< IProps, IStat
             key: 'action',
             render: ( text, record ) => (
                 <span>
-                    <a onClick={( ) => console.log(text)}>下载</a>
+                    <a href={`/api/v1/download?pid=${pid}&fileName=${text.fileName}`} download>下载</a>
                     <span className="ant-divider" />
                     <a>删除</a>
                 </span>

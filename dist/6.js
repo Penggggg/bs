@@ -1,6 +1,6 @@
 webpackJsonp([6],{
 
-/***/ 1375:
+/***/ 1381:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16,103 +16,185 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-__webpack_require__(1408);
+__webpack_require__(1415);
 var React = __webpack_require__(0);
-var antd_1 = __webpack_require__(63);
-var http_service_1 = __webpack_require__(542);
-var notification_service_1 = __webpack_require__(240);
-var MsgDetailPage = (function (_super) {
-    __extends(MsgDetailPage, _super);
-    function MsgDetailPage() {
+var antd_1 = __webpack_require__(68);
+var user_1 = __webpack_require__(157);
+var project_1 = __webpack_require__(119);
+var http_service_1 = __webpack_require__(547);
+var notification_service_1 = __webpack_require__(242);
+var ProjectFilesPage = (function (_super) {
+    __extends(ProjectFilesPage, _super);
+    function ProjectFilesPage() {
         var _this = _super.call(this) || this;
-        _this.replyTwoChoice = function (answer, replyURL, mid) {
-            _this.controllLoading(answer ? 'resolveBtn' : 'rejectBtn', true);
-            var sub = http_service_1.default
-                .post(replyURL, { answer: answer, mid: mid })
-                .do(function (res) {
-                notification_service_1.default.open({
-                    title: '系统消息',
-                    msg: res.msg
+        _this.init = function () {
+            var sub = user_1.default.data.userData$
+                .do(function (user) {
+                _this.setState({
+                    uid: user._id
                 });
-                setTimeout(function () { return sub.unsubscribe; }, 100);
-                _this.controllLoading(answer ? 'resolveBtn' : 'rejectBtn', false);
+                setTimeout(function () { return sub.unsubscribe(); }, 100);
             })
                 .subscribe();
         };
-        _this.controllLoading = function (target, value) {
-            switch (target) {
-                case 'resolveBtn': {
-                    _this.setState({
-                        resolveBtnLoading: value
-                    });
-                    break;
-                }
-                case 'rejectBtn': {
-                    _this.setState({
-                        rejectBtnLoading: value
-                    });
-                    break;
-                }
+        _this.initCol = function () {
+            var pid = _this.props.params.id;
+            _this.columns = [{
+                    title: '文件名称',
+                    dataIndex: 'fileName',
+                    key: 'fileName'
+                }, {
+                    title: '上传者',
+                    dataIndex: 'name',
+                    key: 'name',
+                }, {
+                    title: '上传时间',
+                    dataIndex: 'updatedTime',
+                    key: 'updatedTime'
+                }, {
+                    title: '操作',
+                    key: 'action',
+                    render: function (text, record) { return (React.createElement("span", null,
+                        React.createElement("a", { href: "/api/v1/download?pid=" + pid + "&fileName=" + text.fileName, download: true }, "\u4E0B\u8F7D"),
+                        React.createElement("span", { className: "ant-divider" }),
+                        React.createElement("a", { onClick: function () { return _this.handleDelete(text); } }, "\u5220\u9664"))); }
+                }];
+        };
+        _this.onUpload = function (info) {
+            if (info.file.status === 'done') {
+                notification_service_1.default.open({
+                    title: '消息',
+                    msg: '文件已成功上传'
+                });
+            }
+            else if (info.file.status === 'error') {
+                notification_service_1.default.open({
+                    title: '消息',
+                    msg: '文件长传失败',
+                    type: 'error'
+                });
             }
         };
+        _this.handleDelete = function (file) {
+            var _a = _this.state, uid = _a.uid, dataSource = _a.dataSource;
+            var fileName = file.fileName;
+            var pid = _this.props.params.id;
+            // 1. 权限判断
+            var hasAuth = uid === file.user._id;
+            // 1-1. 通过
+            if (hasAuth) {
+                http_service_1.default.get('/api/v1/delete-file', { pid: pid, fileName: fileName })
+                    .do(function (res) {
+                    if (res.status === '200') {
+                        antd_1.message.success('删除文件成功！');
+                        var index = dataSource.findIndex(function (data) { return String(data.key) === String(file.key); });
+                        dataSource.splice(index, 1);
+                        var a = dataSource.slice();
+                        _this.setState({
+                            dataSource: a
+                        });
+                    }
+                })
+                    .subscribe();
+            }
+            // 1-2. 不通过
+            if (!hasAuth) {
+                antd_1.Modal.warning({
+                    title: '消息',
+                    content: '抱歉。您没有删除该文件的权限！'
+                });
+            }
+        };
+        _this.mapOriginToDataSource = function (data) {
+            return data.map(function (file, key) { return ({
+                key: "" + Math.floor(Math.random() * 9999),
+                name: file.user.name,
+                fileName: file.fileName,
+                updatedTime: (new Date(file.updatedTime)).toLocaleString(),
+                user: file.user
+            }); });
+        };
+        _this.combineFlow = function () {
+            var pid = _this.props.params.id;
+            _this.sub = http_service_1.default.get('/api/v1/all-files', { pid: pid })
+                .combineLatest(project_1.default.file.data$)
+                .do(function (res) {
+                var dataSource = _this.state.dataSource;
+                var fromFetch = res[0], fromSOK = res[1];
+                if (!fromSOK) {
+                    // console.log('首次加载')
+                    _this.setState({
+                        loading: false,
+                        dataSource: _this.mapOriginToDataSource(fromFetch)
+                    });
+                }
+                else {
+                    /**fetch的时候是sort: -1 */
+                    var lastFromFetch = fromFetch[0];
+                    if (fromFetch.length === 0) {
+                        // console.log('首次数据来自于SOK')
+                        return _this.setState({
+                            loading: false,
+                            dataSource: _this.mapOriginToDataSource([fromSOK]).concat(dataSource)
+                        });
+                    }
+                    if (fromSOK._id !== lastFromFetch._id) {
+                        // console.log('更新来自于SOK')
+                        _this.setState({
+                            loading: false,
+                            dataSource: _this.mapOriginToDataSource([fromSOK].concat(fromFetch))
+                        });
+                    }
+                    else {
+                        // console.log('二次进入')
+                        _this.setState({
+                            loading: false,
+                            dataSource: _this.mapOriginToDataSource(fromFetch.slice())
+                        });
+                    }
+                }
+            })
+                .subscribe();
+        };
         _this.state = {
-            spinning: false,
-            msgDetail: null,
-            rejectBtnLoading: false,
-            resolveBtnLoading: false
+            uid: '',
+            loading: true,
+            dataSource: []
         };
         return _this;
     }
-    MsgDetailPage.prototype.componentDidMount = function () {
+    ProjectFilesPage.prototype.componentDidMount = function () {
+        this.init();
+        this.initCol();
+        this.combineFlow();
+    };
+    ProjectFilesPage.prototype.componentWillUnmount = function () {
+        this.sub.unsubscribe();
+    };
+    ProjectFilesPage.prototype.render = function () {
+        var _a = this.state, uid = _a.uid, dataSource = _a.dataSource, loading = _a.loading;
         var id = this.props.params.id;
-        this.fetchMsgDetail(id);
+        return React.createElement("div", { className: "project-files-page" },
+            React.createElement("div", { className: "main-block" },
+                React.createElement("div", { className: "header" },
+                    React.createElement("h3", null, "\u6587\u4EF6\u5E93"),
+                    React.createElement("div", { className: "upload-block" },
+                        React.createElement(antd_1.Upload, { action: "/api/v1/upload/" + id + "/" + uid, onChange: this.onUpload },
+                            React.createElement(antd_1.Button, null,
+                                React.createElement(antd_1.Icon, { type: "upload" }),
+                                " Upload")))),
+                React.createElement("div", { className: "content" },
+                    React.createElement(antd_1.Spin, { spinning: loading, size: 'large' },
+                        React.createElement(antd_1.Table, { columns: this.columns, pagination: false, dataSource: dataSource })))));
     };
-    MsgDetailPage.prototype.componentWillReceiveProps = function (np) {
-        var id = np.params.id;
-        this.fetchMsgDetail(id);
-        this.controllLoading('resolveBtn', false);
-        this.controllLoading('rejectBtn', false);
-    };
-    MsgDetailPage.prototype.fetchMsgDetail = function (id) {
-        var _this = this;
-        this.setState({
-            spinning: true
-        });
-        http_service_1.default
-            .get('/api/v1/msg-detail', { id: id })
-            .do(function (res) {
-            _this.setState({
-                msgDetail: res,
-                spinning: false
-            });
-        })
-            .subscribe();
-    };
-    MsgDetailPage.prototype.render = function () {
-        var _this = this;
-        var _a = this.state, msgDetail = _a.msgDetail, spinning = _a.spinning, resolveBtnLoading = _a.resolveBtnLoading, rejectBtnLoading = _a.rejectBtnLoading;
-        return React.createElement("div", { className: "msg-detail-page" }, !!msgDetail &&
-            React.createElement("div", { className: "msg-block" },
-                React.createElement(antd_1.Spin, { spinning: spinning, size: "large" },
-                    React.createElement("h3", null, msgDetail.title),
-                    React.createElement("p", { className: "content" }, msgDetail.content),
-                    React.createElement("p", { className: "name" },
-                        "By: ",
-                        msgDetail.fromUID.name),
-                    React.createElement("p", { className: "time" }, (new Date(msgDetail.meta.createdTime)).toLocaleString()),
-                    React.createElement("div", { style: { paddingTop: 30 } }, msgDetail.formType === 2 /* twoChoice */ &&
-                        React.createElement("div", { className: "two-choice-form" },
-                            React.createElement(antd_1.Button, { onClick: function () { return _this.replyTwoChoice(false, msgDetail.replyURL, msgDetail._id); }, loading: rejectBtnLoading, type: "danger", size: "large", icon: "left-circle-o" }, "\u62D2\u7EDD\u9080\u8BF7"),
-                            React.createElement(antd_1.Button, { onClick: function () { return _this.replyTwoChoice(true, msgDetail.replyURL, msgDetail._id); }, loading: resolveBtnLoading, type: "primary", size: "large", icon: "right-circle-o" }, "\u7B54\u5E94\u9080\u8BF7"))))));
-    };
-    return MsgDetailPage;
+    return ProjectFilesPage;
 }(React.PureComponent));
-exports.default = MsgDetailPage;
+exports.default = ProjectFilesPage;
 
 
 /***/ }),
 
-/***/ 1383:
+/***/ 1387:
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(Buffer) {/*
@@ -191,11 +273,11 @@ function toComment(sourceMap) {
   return '/*# ' + data + ' */';
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1386).Buffer))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1390).Buffer))
 
 /***/ }),
 
-/***/ 1384:
+/***/ 1388:
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -227,7 +309,7 @@ var stylesInDom = {},
 	singletonElement = null,
 	singletonCounter = 0,
 	styleElementsInsertedAtTop = [],
-	fixUrls = __webpack_require__(1389);
+	fixUrls = __webpack_require__(1393);
 
 module.exports = function(list, options) {
 	if(typeof DEBUG !== "undefined" && DEBUG) {
@@ -487,7 +569,7 @@ function updateLink(linkElement, options, obj) {
 
 /***/ }),
 
-/***/ 1385:
+/***/ 1389:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -609,7 +691,7 @@ function fromByteArray (uint8) {
 
 /***/ }),
 
-/***/ 1386:
+/***/ 1390:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -623,9 +705,9 @@ function fromByteArray (uint8) {
 
 
 
-var base64 = __webpack_require__(1385)
-var ieee754 = __webpack_require__(1388)
-var isArray = __webpack_require__(1387)
+var base64 = __webpack_require__(1389)
+var ieee754 = __webpack_require__(1392)
+var isArray = __webpack_require__(1391)
 
 exports.Buffer = Buffer
 exports.SlowBuffer = SlowBuffer
@@ -2403,11 +2485,11 @@ function isnan (val) {
   return val !== val // eslint-disable-line no-self-compare
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(26)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(27)))
 
 /***/ }),
 
-/***/ 1387:
+/***/ 1391:
 /***/ (function(module, exports) {
 
 var toString = {}.toString;
@@ -2419,7 +2501,7 @@ module.exports = Array.isArray || function (arr) {
 
 /***/ }),
 
-/***/ 1388:
+/***/ 1392:
 /***/ (function(module, exports) {
 
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
@@ -2510,7 +2592,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 
 /***/ }),
 
-/***/ 1389:
+/***/ 1393:
 /***/ (function(module, exports) {
 
 
@@ -2606,38 +2688,38 @@ module.exports = function (css) {
 
 /***/ }),
 
-/***/ 1398:
+/***/ 1404:
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(1383)(undefined);
+exports = module.exports = __webpack_require__(1387)(undefined);
 // imports
 
 
 // module
-exports.push([module.i, ".msg-detail-page {\n  padding-top: 20px;\n  box-sizing: border-box;\n}\n.msg-detail-page .msg-block {\n  width: 70%;\n  overflow: scroll;\n  max-height: 300px;\n}\n.msg-detail-page .msg-block .two-choice-form {\n  text-align: center;\n}\n.msg-detail-page .msg-block .two-choice-form button {\n  margin: 0 35px;\n}\n.msg-detail-page .msg-block h3 {\n  font-size: 25px;\n  padding-bottom: 10px;\n  border-bottom: 1px solid #e9e9e9;\n}\n.msg-detail-page .msg-block p {\n  font-size: 16px;\n  padding-bottom: 10px;\n}\n.msg-detail-page .msg-block p.content {\n  padding-top: 20px;\n}\n.msg-detail-page .msg-block p.time {\n  text-align: right;\n}\n.msg-detail-page .msg-block p.name {\n  text-align: right;\n}\n.msg-detail-page .msg-block::-webkit-scrollbar {\n  display: none;\n}\n", ""]);
+exports.push([module.i, ".project-files-page {\n  margin-top: 20px;\n  padding-bottom: 20px;\n  box-sizing: border-box;\n}\n.project-files-page .main-block {\n  width: 70%;\n  margin: 0 auto;\n  border-radius: 8px;\n  position: relative;\n  box-sizing: border-box;\n  padding: 10px;\n  border: 1px solid #e9e9e9;\n  box-shadow: 0px 5px 40px 5px #d9d9d9;\n}\n.project-files-page .main-block .header {\n  height: 40px;\n  position: relative;\n  box-sizing: border-box;\n  padding: 5px 15px 10px 15px;\n  border-bottom: 1px solid #d9d9d9;\n}\n.project-files-page .main-block .header .upload-block {\n  top: 0px;\n  right: 30px;\n  position: absolute;\n}\n.project-files-page .main-block .header .upload-block .ant-upload-select {\n  border-radius: 8px;\n}\n.project-files-page .main-block .header .upload-block .ant-upload-select button {\n  color: #108ee9;\n}\n.project-files-page .main-block .header .upload-block .ant-upload-list {\n  display: none;\n}\n.project-files-page .main-block .header h3 {\n  color: #666;\n  font-size: 15px;\n}\n.project-files-page .main-block .content {\n  height: 400px;\n  overflow: scroll;\n}\n.project-files-page .main-block .content .ant-table-thead th {\n  color: #666;\n  background-color: #fff;\n}\n.project-files-page .main-block .content::-webkit-scrollbar {\n  display: none;\n}\n", ""]);
 
 // exports
 
 
 /***/ }),
 
-/***/ 1408:
+/***/ 1415:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1398);
+var content = __webpack_require__(1404);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(1384)(content, {});
+var update = __webpack_require__(1388)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
 	// When the styles change, update the <style> tags
 	if(!content.locals) {
-		module.hot.accept("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./msg-detail.less", function() {
-			var newContent = require("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./msg-detail.less");
+		module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/less-loader/index.js!./project-files.less", function() {
+			var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/less-loader/index.js!./project-files.less");
 			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 			update(newContent);
 		});

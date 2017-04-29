@@ -83,7 +83,7 @@ declare namespace API {
             msg: string,
             status: '200' | '400' | '500'
         }
-        
+
     }
 
     export namespace Req {
@@ -173,6 +173,19 @@ declare namespace API {
         export interface DeleteFile {
             pid: string
             fileName: string
+        }
+
+        /**GET：某项目下所有成员以及组长 */
+        export interface AllMemberLeader {
+            pid: string
+        }
+
+        /**POST：项目新增分组 */
+        export interface AddNewGroup {
+            pid: string
+            touid: Array<string>
+            fromuid: string
+            groupName: string
         }
 
     }
@@ -343,6 +356,43 @@ declare namespace Schema {
         fileName: string
         updatedTime: string
         uid: Partial<APP.User>
+    }
+
+    export interface Project {
+        _id?: string
+        name: string
+        info: string
+        cover: string
+        creator: string
+        group: Array<string>
+        leader: Array<string>
+        member: Array<string>
+        meta: {
+            createdTime: string
+            updatedTime: string
+        }
+    }
+
+    export interface Project$ {
+        name: string
+        info: string
+        cover: string
+        creator: APP.User
+        leader: Array<APP.User>
+        member: Array<APP.User>
+        meta: {
+            createdTime: string
+            updatedTime: string
+        } 
+    }
+
+    export interface Group {
+        _id?: string
+        pid: string
+        creatorID: string
+        groupName: string
+        tasksID?: Array<string>
+        leadersID: Array<string>
     }
 
 }

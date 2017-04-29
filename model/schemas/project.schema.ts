@@ -16,6 +16,10 @@ export let PorjectSchema = new Mongoose.Schema({
         type: Mongoose.Schema.Types.ObjectId,
         ref: 'User'
     }],
+    group: [{
+        type: Mongoose.Schema.Types.ObjectId,
+        ref: 'Group'
+    }],
     meta: {
         createdTime: {
             type: Date,
@@ -73,6 +77,37 @@ PorjectSchema.statics.findDetailByIdWithNest = function( id, select ) {
     })
 }
 
+/**更新项目所有group和leader */
+PorjectSchema.statics.updateAllGroupAndLeader = function( id, newLeaders, newGroups ) {
+    return new Promise(( resolve, reject ) => {
+        this
+            .update({ _id: id }, { leader: newLeaders, group: newGroups })
+            .exec(( err, data ) => returnData( err, resolve, reject, data ))
+    })
+}
+
+
+/**查询项目所有group和leader */
+PorjectSchema.statics.findAllGroupAndLeader = function( id ) {
+    return new Promise(( resolve, reject ) => {
+        this
+            .find({ _id: id }, 'group leader')
+            .exec(( err, data ) => returnData( err, resolve, reject, data ))
+    })
+}
+
+
+/**查询 all member and populte */
+PorjectSchema.statics.allMember$ = function( pid ) {
+    return new Promise(( resolve, reject ) => {
+        this
+            .find({ _id: pid })
+            .populate('member', '_id name phone')
+            .populate('leader', '_id name phone')
+            .populate('creator', '_id name phone')
+            .exec(( err, data ) => returnData( err, resolve, reject, data ))
+    })
+}
 
 /**更新项目member */
 PorjectSchema.statics.updateMember = function( id, member ) {

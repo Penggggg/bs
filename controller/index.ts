@@ -7,12 +7,13 @@ import { login } from './auth/login';
 import { resetPsw } from './auth/reset';
 import { sginIn } from './auth/signin';
 import { addChat } from './project/chat/add-chat';
+import { addNewGroup } from './project/group/add-group';
 import { inviteMember } from './project/invite-member'; 
 import { getChatList } from './project/chat/query-chat';
 import { createProject } from './project/create-project';
 import { replyInvite } from './project/reply-invite';
 import { download, upload, allFiles, deleteFile } from './project/files';
-import { fetchAllUserByName } from './user/query.controller';
+import { fetchAllUserByName, allMemberInProject } from './user/query.controller';
 import { allProject, projectDetail } from './project/query-project';
 import { fetchAllMsgList, fetchFadeMsgList, fetchMsgDetail } from './msg/query-msg';
 
@@ -42,11 +43,16 @@ export default ( router ) => {
     router.post('/api/v1/reply-invite', replyInvite )
     /**项目模块：增加聊天记录 */
     router.post('/api/v1/chat-record', addChat );
+    /**项目模块：所有聊天记录 */
     router.get('/api/v1/chat-list', getChatList );
+    /**项目模块：新增分组 */
+    router.post('/api/v1/add-group', addNewGroup )
 
 
     /**用户模块：查询所有符合条件的用户 */
     router.post('/api/v1/all-user', fetchAllUserByName )
+    /**用户模块：查询项目下所有成员和组长 */
+    router.get('/api/v1/all-member-leader', allMemberInProject )
 
 
     /**消息模块：查询所有符合条件的消息 */

@@ -1,6 +1,6 @@
 webpackJsonp([5],{
 
-/***/ 1377:
+/***/ 1386:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16,185 +16,161 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-__webpack_require__(1410);
+__webpack_require__(1418);
 var React = __webpack_require__(0);
-var antd_1 = __webpack_require__(63);
-var user_1 = __webpack_require__(156);
-var project_1 = __webpack_require__(116);
-var http_service_1 = __webpack_require__(542);
-var notification_service_1 = __webpack_require__(240);
-var ProjectFilesPage = (function (_super) {
-    __extends(ProjectFilesPage, _super);
-    function ProjectFilesPage() {
+var antd_1 = __webpack_require__(68);
+var user_1 = __webpack_require__(157);
+var project_1 = __webpack_require__(119);
+var http_service_1 = __webpack_require__(547);
+var FormItem = antd_1.Form.Item;
+var Option = antd_1.Select.Option;
+var ProjectTasksPage = (function (_super) {
+    __extends(ProjectTasksPage, _super);
+    function ProjectTasksPage() {
         var _this = _super.call(this) || this;
-        _this.init = function () {
-            var sub = user_1.default.data.userData$
-                .do(function (user) {
-                _this.setState({
-                    uid: user._id
-                });
-                setTimeout(function () { return sub.unsubscribe(); }, 100);
-            })
-                .subscribe();
-        };
-        _this.initCol = function () {
-            var pid = _this.props.params.id;
-            _this.columns = [{
-                    title: '文件名称',
-                    dataIndex: 'fileName',
-                    key: 'fileName'
-                }, {
-                    title: '上传者',
-                    dataIndex: 'name',
-                    key: 'name',
-                }, {
-                    title: '上传时间',
-                    dataIndex: 'updatedTime',
-                    key: 'updatedTime'
-                }, {
-                    title: '操作',
-                    key: 'action',
-                    render: function (text, record) { return (React.createElement("span", null,
-                        React.createElement("a", { href: "/api/v1/download?pid=" + pid + "&fileName=" + text.fileName, download: true }, "\u4E0B\u8F7D"),
-                        React.createElement("span", { className: "ant-divider" }),
-                        React.createElement("a", { onClick: function () { return _this.handleDelete(text); } }, "\u5220\u9664"))); }
-                }];
-        };
-        _this.onUpload = function (info) {
-            if (info.file.status === 'done') {
-                notification_service_1.default.open({
-                    title: '消息',
-                    msg: '文件已成功上传'
-                });
-            }
-            else if (info.file.status === 'error') {
-                notification_service_1.default.open({
-                    title: '消息',
-                    msg: '文件长传失败',
-                    type: 'error'
-                });
-            }
-        };
-        _this.handleDelete = function (file) {
-            var _a = _this.state, uid = _a.uid, dataSource = _a.dataSource;
-            var fileName = file.fileName;
-            var pid = _this.props.params.id;
-            // 1. 权限判断
-            var hasAuth = uid === file.user._id;
-            // 1-1. 通过
-            if (hasAuth) {
-                http_service_1.default.get('/api/v1/delete-file', { pid: pid, fileName: fileName })
-                    .do(function (res) {
-                    if (res.status === '200') {
-                        antd_1.message.success('删除文件成功！');
-                        var index = dataSource.findIndex(function (data) { return String(data.key) === String(file.key); });
-                        dataSource.splice(index, 1);
-                        var a = dataSource.slice();
-                        _this.setState({
-                            dataSource: a
-                        });
-                    }
+        _this.formGroupName = "formGroupName";
+        /**初始化user、project数据 */
+        _this.initData = function () {
+            setTimeout(function () {
+                _this.sub = user_1.default.data.userData$
+                    .combineLatest(project_1.default.data.data$)
+                    .do(function (data) {
+                    _this.user = data[0];
+                    _this.project = data[1];
                 })
                     .subscribe();
+            }, 1000);
+        };
+        /**权限检查：总负责人 */
+        _this.checkAuth2 = function () {
+            var _id = _this.user._id;
+            var _a = _this.project, creator = _a.creator, leader = _a.leader;
+            if (creator._id === _id) {
+                return true;
             }
-            // 1-2. 不通过
-            if (!hasAuth) {
-                antd_1.Modal.warning({
+            return false;
+        };
+        /**权限检查：总负责人或组长 */
+        _this.checkAuth = function () {
+            var _id = _this.user._id;
+            var _a = _this.project, creator = _a.creator, leader = _a.leader;
+            if (creator._id === _id) {
+                return true;
+            }
+            else if (leader.find(function (l) { return l._id === _id; })) {
+                return true;
+            }
+            return false;
+        };
+        /**增加项目任务分组 */
+        _this.addGroup = function () {
+            if (!_this.checkAuth2()) {
+                return antd_1.Modal.warning({
                     title: '消息',
-                    content: '抱歉。您没有删除该文件的权限！'
+                    content: '抱歉。该项目中您还没有新增分组的权限'
                 });
             }
+            _this.setState({
+                showGroupForm: true
+            });
+            _this.fetchUser();
         };
-        _this.mapOriginToDataSource = function (data) {
-            return data.map(function (file, key) { return ({
-                key: "" + Math.floor(Math.random() * 9999),
-                name: file.user.name,
-                fileName: file.fileName,
-                updatedTime: (new Date(file.updatedTime)).toLocaleString(),
-                user: file.user
-            }); });
-        };
-        _this.combineFlow = function () {
+        /**http:获取user */
+        _this.fetchUser = function () {
             var pid = _this.props.params.id;
-            _this.sub = http_service_1.default.get('/api/v1/all-files', { pid: pid })
-                .combineLatest(project_1.default.file.data$)
-                .do(function (res) {
-                var dataSource = _this.state.dataSource;
-                var fromFetch = res[0], fromSOK = res[1];
-                if (!fromSOK) {
-                    // console.log('首次加载')
-                    _this.setState({
-                        loading: false,
-                        dataSource: _this.mapOriginToDataSource(fromFetch)
+            http_service_1.default
+                .get('/api/v1/all-member-leader', { pid: pid })
+                .map(function (res) {
+                return res.map(function (_a) {
+                    var _id = _a._id, name = _a.name, phone = _a.phone;
+                    return ({
+                        value: "" + _id,
+                        text: name + " - phone: " + phone + " "
                     });
-                }
-                else {
-                    /**fetch的时候是sort: -1 */
-                    var lastFromFetch = fromFetch[0];
-                    if (fromFetch.length === 0) {
-                        // console.log('首次数据来自于SOK')
-                        return _this.setState({
-                            loading: false,
-                            dataSource: _this.mapOriginToDataSource([fromSOK]).concat(dataSource)
-                        });
-                    }
-                    if (fromSOK._id !== lastFromFetch._id) {
-                        // console.log('更新来自于SOK')
-                        _this.setState({
-                            loading: false,
-                            dataSource: _this.mapOriginToDataSource([fromSOK].concat(fromFetch))
-                        });
-                    }
-                    else {
-                        // console.log('二次进入')
-                        _this.setState({
-                            loading: false,
-                            dataSource: _this.mapOriginToDataSource(fromFetch.slice())
-                        });
-                    }
-                }
+                });
+            })
+                .do(function (res) {
+                _this.setState({
+                    dataSource: res
+                });
             })
                 .subscribe();
         };
+        /**提交表单 —— 新增任务分组 */
+        _this.submitAddGroup = function () {
+            var formGroupName = _this.formGroupName;
+            var pid = _this.props.params.id;
+            _this.props.form.validateFields([formGroupName], function (err, values) {
+                if (!err && _this.groupLeaderID.length !== 0) {
+                    http_service_1.default.post('/api/v1/add-group', { pid: pid, touid: _this.groupLeaderID, fromuid: _this.user._id, groupName: values[_this.formGroupName] })
+                        .do(function (res) {
+                        console.log(res);
+                    })
+                        .subscribe();
+                }
+                else if (!err && _this.groupLeaderID.length === 0) {
+                    antd_1.Modal.warning({
+                        title: "消息",
+                        content: '请选择组长'
+                    });
+                }
+            });
+        };
+        /**AutoComplete */
+        _this.choiceUser = function (value) {
+            console.log(value);
+            _this.groupLeaderID = value;
+        };
         _this.state = {
-            uid: '',
-            loading: true,
-            dataSource: []
+            dataSource: [],
+            showGroupForm: false
         };
         return _this;
     }
-    ProjectFilesPage.prototype.componentDidMount = function () {
-        this.init();
-        this.initCol();
-        this.combineFlow();
+    ProjectTasksPage.prototype.componentDidMount = function () {
+        this.initData();
     };
-    ProjectFilesPage.prototype.componentWillUnmount = function () {
+    ProjectTasksPage.prototype.componentWillUnmount = function () {
         this.sub.unsubscribe();
     };
-    ProjectFilesPage.prototype.render = function () {
-        var _a = this.state, uid = _a.uid, dataSource = _a.dataSource, loading = _a.loading;
-        var id = this.props.params.id;
-        return React.createElement("div", { className: "project-files-page" },
-            React.createElement("div", { className: "main-block" },
-                React.createElement("div", { className: "header" },
-                    React.createElement("h3", null, "\u6587\u4EF6\u5E93"),
-                    React.createElement("div", { className: "upload-block" },
-                        React.createElement(antd_1.Upload, { action: "/api/v1/upload/" + id + "/" + uid, onChange: this.onUpload },
-                            React.createElement(antd_1.Button, null,
-                                React.createElement(antd_1.Icon, { type: "upload" }),
-                                " Upload")))),
-                React.createElement("div", { className: "content" },
-                    React.createElement(antd_1.Spin, { spinning: loading, size: 'large' },
-                        React.createElement(antd_1.Table, { columns: this.columns, pagination: false, dataSource: dataSource })))));
+    ProjectTasksPage.prototype.render = function () {
+        var _this = this;
+        var formGroupName = this.formGroupName;
+        var getFieldDecorator = this.props.form.getFieldDecorator;
+        var _a = this.state, showGroupForm = _a.showGroupForm, dataSource = _a.dataSource;
+        /**新建分组表单 */
+        var addGroupForm = React.createElement("div", { className: "modal-resetpsw-form" },
+            React.createElement("div", { className: "modal-img", style: { height: 226 } },
+                React.createElement("img", { src: "/static/reset-psw.png", alt: "" }),
+                React.createElement("p", null, "\u521B\u5EFA\u4E00\u4E2A\u65B0\u5206\u7EC4")),
+            React.createElement(antd_1.Form, { className: "reset-form" },
+                React.createElement(FormItem, null, getFieldDecorator(formGroupName, {
+                    rules: [{ required: true, message: '分组名称不能为空' }],
+                })(React.createElement(antd_1.Input, { prefix: React.createElement(antd_1.Icon, { type: "link", style: { fontSize: 16 } }), placeholder: "分组名称" }))),
+                React.createElement(FormItem, null,
+                    React.createElement(antd_1.Select, { mode: "multiple", onChange: this.choiceUser, placeholder: "请选择分组组长", style: { width: 315 } }, dataSource.map(function (data, key) {
+                        return React.createElement(Option, { value: data.value, key: key }, data.text);
+                    }))),
+                React.createElement(FormItem, null,
+                    React.createElement(antd_1.Button, { type: "primary", size: 'large', style: { width: '100%' }, onClick: this.submitAddGroup }, "\u5B8C\u6210\u5E76\u521B\u5EFA"))));
+        return React.createElement("div", { className: "project-tasks-page" },
+            React.createElement("ul", { className: "groups-container" },
+                React.createElement("li", { className: " group" },
+                    React.createElement("p", null, "\u65B0\u5EFA\u9879\u76EE\u5206\u7EC4")),
+                React.createElement("li", { className: "add-group group" },
+                    React.createElement("p", { onClick: this.addGroup },
+                        React.createElement(antd_1.Icon, { type: "plus-circle", style: { marginRight: 10 } }),
+                        "\u65B0\u5EFA\u9879\u76EE\u5206\u7EC4"))),
+            React.createElement(antd_1.Modal, { title: "创建新项目", footer: null, visible: showGroupForm, onCancel: function () { return _this.setState({ showGroupForm: false }); }, style: { width: '400px !import', padding: '0 85px' } }, addGroupForm));
     };
-    return ProjectFilesPage;
+    return ProjectTasksPage;
 }(React.PureComponent));
-exports.default = ProjectFilesPage;
+exports.default = antd_1.Form.create()(ProjectTasksPage);
 
 
 /***/ }),
 
-/***/ 1383:
+/***/ 1387:
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(Buffer) {/*
@@ -273,11 +249,11 @@ function toComment(sourceMap) {
   return '/*# ' + data + ' */';
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1386).Buffer))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1390).Buffer))
 
 /***/ }),
 
-/***/ 1384:
+/***/ 1388:
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -309,7 +285,7 @@ var stylesInDom = {},
 	singletonElement = null,
 	singletonCounter = 0,
 	styleElementsInsertedAtTop = [],
-	fixUrls = __webpack_require__(1389);
+	fixUrls = __webpack_require__(1393);
 
 module.exports = function(list, options) {
 	if(typeof DEBUG !== "undefined" && DEBUG) {
@@ -569,7 +545,7 @@ function updateLink(linkElement, options, obj) {
 
 /***/ }),
 
-/***/ 1385:
+/***/ 1389:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -691,7 +667,7 @@ function fromByteArray (uint8) {
 
 /***/ }),
 
-/***/ 1386:
+/***/ 1390:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -705,9 +681,9 @@ function fromByteArray (uint8) {
 
 
 
-var base64 = __webpack_require__(1385)
-var ieee754 = __webpack_require__(1388)
-var isArray = __webpack_require__(1387)
+var base64 = __webpack_require__(1389)
+var ieee754 = __webpack_require__(1392)
+var isArray = __webpack_require__(1391)
 
 exports.Buffer = Buffer
 exports.SlowBuffer = SlowBuffer
@@ -2485,11 +2461,11 @@ function isnan (val) {
   return val !== val // eslint-disable-line no-self-compare
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(26)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(27)))
 
 /***/ }),
 
-/***/ 1387:
+/***/ 1391:
 /***/ (function(module, exports) {
 
 var toString = {}.toString;
@@ -2501,7 +2477,7 @@ module.exports = Array.isArray || function (arr) {
 
 /***/ }),
 
-/***/ 1388:
+/***/ 1392:
 /***/ (function(module, exports) {
 
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
@@ -2592,7 +2568,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 
 /***/ }),
 
-/***/ 1389:
+/***/ 1393:
 /***/ (function(module, exports) {
 
 
@@ -2688,38 +2664,38 @@ module.exports = function (css) {
 
 /***/ }),
 
-/***/ 1400:
+/***/ 1407:
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(1383)(undefined);
+exports = module.exports = __webpack_require__(1387)(undefined);
 // imports
 
 
 // module
-exports.push([module.i, ".project-files-page {\n  margin-top: 20px;\n  padding-bottom: 20px;\n  box-sizing: border-box;\n}\n.project-files-page .main-block {\n  width: 70%;\n  margin: 0 auto;\n  border-radius: 8px;\n  position: relative;\n  box-sizing: border-box;\n  padding: 10px;\n  border: 1px solid #e9e9e9;\n  box-shadow: 0px 5px 40px 5px #d9d9d9;\n}\n.project-files-page .main-block .header {\n  height: 40px;\n  position: relative;\n  box-sizing: border-box;\n  padding: 5px 15px 10px 15px;\n  border-bottom: 1px solid #d9d9d9;\n}\n.project-files-page .main-block .header .upload-block {\n  top: 0px;\n  right: 30px;\n  position: absolute;\n}\n.project-files-page .main-block .header .upload-block .ant-upload-select {\n  border-radius: 8px;\n}\n.project-files-page .main-block .header .upload-block .ant-upload-select button {\n  color: #108ee9;\n}\n.project-files-page .main-block .header .upload-block .ant-upload-list {\n  display: none;\n}\n.project-files-page .main-block .header h3 {\n  color: #666;\n  font-size: 15px;\n}\n.project-files-page .main-block .content {\n  height: 400px;\n  overflow: scroll;\n}\n.project-files-page .main-block .content .ant-table-thead th {\n  color: #666;\n  background-color: #fff;\n}\n.project-files-page .main-block .content::-webkit-scrollbar {\n  display: none;\n}\n", ""]);
+exports.push([module.i, ".project-tasks-page {\n  overflow: hidden;\n  box-sizing: border-box;\n  padding: 15px 15px 0 15px;\n  /*定义滚动条轨道 内阴影+圆角*/\n}\n.project-tasks-page .groups-container {\n  overflow: scroll;\n  white-space: nowrap;\n  padding-bottom: 20px;\n  box-sizing: border-box;\n}\n.project-tasks-page .groups-container .group {\n  width: 280px;\n  padding: 10px;\n  height: 475px;\n  margin-right: 20px;\n  border-radius: 8px;\n  display: inline-block;\n  box-sizing: border-box;\n  background-color: #e9e9e9;\n  box-shadow: 10px 10px 10px #d9d9d9;\n}\n.project-tasks-page .groups-container .add-group {\n  box-shadow: none;\n  background-color: #fff;\n}\n.project-tasks-page .groups-container .add-group p {\n  cursor: pointer;\n  color: #108EE9;\n  border-radius: 8px;\n  padding: 8px 25px;\n  background-color: #e9e9e9;\n}\n.project-tasks-page .groups-container::-webkit-scrollbar {\n  width: 0;\n  height: 1;\n  background-color: #F5F5F5;\n}\n.project-tasks-page .groups-container::-webkit-scrollbar-track {\n  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);\n  border-radius: 10px;\n  background-color: #F5F5F5;\n}\n.project-tasks-page .groups-container::-webkit-scrollbar-thumb {\n  border-radius: 10px;\n  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);\n  background-color: #919191;\n}\n", ""]);
 
 // exports
 
 
 /***/ }),
 
-/***/ 1410:
+/***/ 1418:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1400);
+var content = __webpack_require__(1407);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(1384)(content, {});
+var update = __webpack_require__(1388)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
 	// When the styles change, update the <style> tags
 	if(!content.locals) {
-		module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/less-loader/index.js!./project-files.less", function() {
-			var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/less-loader/index.js!./project-files.less");
+		module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/less-loader/index.js!./tasks.less", function() {
+			var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/less-loader/index.js!./tasks.less");
 			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 			update(newContent);
 		});

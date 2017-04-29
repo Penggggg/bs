@@ -17,6 +17,10 @@ exports.PorjectSchema = new Mongoose.Schema({
             type: Mongoose.Schema.Types.ObjectId,
             ref: 'User'
         }],
+    group: [{
+            type: Mongoose.Schema.Types.ObjectId,
+            ref: 'Group'
+        }],
     meta: {
         createdTime: {
             type: Date,
@@ -67,6 +71,36 @@ exports.PorjectSchema.statics.findDetailByIdWithNest = function (id, select) {
         _this
             .find({ _id: id })
             .populate('creator', select)
+            .exec(function (err, data) { return returnData(err, resolve, reject, data); });
+    });
+};
+/**更新项目所有group和leader */
+exports.PorjectSchema.statics.updateAllGroupAndLeader = function (id, newLeaders, newGroups) {
+    var _this = this;
+    return new Promise(function (resolve, reject) {
+        _this
+            .update({ _id: id }, { leader: newLeaders, group: newGroups })
+            .exec(function (err, data) { return returnData(err, resolve, reject, data); });
+    });
+};
+/**查询项目所有group和leader */
+exports.PorjectSchema.statics.findAllGroupAndLeader = function (id) {
+    var _this = this;
+    return new Promise(function (resolve, reject) {
+        _this
+            .find({ _id: id }, 'group leader')
+            .exec(function (err, data) { return returnData(err, resolve, reject, data); });
+    });
+};
+/**查询 all member and populte */
+exports.PorjectSchema.statics.allMember$ = function (pid) {
+    var _this = this;
+    return new Promise(function (resolve, reject) {
+        _this
+            .find({ _id: pid })
+            .populate('member', '_id name phone')
+            .populate('leader', '_id name phone')
+            .populate('creator', '_id name phone')
             .exec(function (err, data) { return returnData(err, resolve, reject, data); });
     });
 };

@@ -50,7 +50,7 @@ export let upload = async( ctx: Koa.Context ) => {
         socketService.projectSockets[pid].file.broadcast( sokData );
     } else {
         /**2-3. 已存在 */
-        FileModel.myUpdate( fileName )
+        FileModel.myUpdate( fileName, uid )
     }
 
     /**last. 上传到服务器文件夹 */
@@ -101,4 +101,27 @@ export let allFiles = async( ctx: Koa.Context ) => {
     }))
 
     ctx.body = result;
+}
+
+export let deleteFile = async( ctx: Koa.Context ) => {
+    
+    let { pid, fileName } = ctx.query as API.Query.DeleteFile
+
+    try {
+        /**删除数据库的数据 */
+        let remove = await FileModel.myDelete( pid, fileName );
+
+        /**删除本地文件 */
+        let unlink = await fs.unlinkSync(`uploads/${pid}/${fileName}`)
+
+    } catch ( e ) {
+        console.log(`File：删除出错${e}`)
+    } 
+
+    let result: API.Res.DeleteFile = {
+        msg: '删除成功',
+        status: '200'
+    }
+    ctx.body = result;
+    
 }

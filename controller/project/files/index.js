@@ -85,7 +85,7 @@ exports.upload = function (ctx) { return __awaiter(_this, void 0, void 0, functi
                 return [3 /*break*/, 9];
             case 8:
                 /**2-3. 已存在 */
-                file_model_1.FileModel.myUpdate(fileName);
+                file_model_1.FileModel.myUpdate(fileName, uid);
                 _c.label = 9;
             case 9:
                 /**last. 上传到服务器文件夹 */
@@ -139,6 +139,36 @@ exports.allFiles = function (ctx) { return __awaiter(_this, void 0, void 0, func
                         user: uid
                     });
                 });
+                ctx.body = result;
+                return [2 /*return*/];
+        }
+    });
+}); };
+exports.deleteFile = function (ctx) { return __awaiter(_this, void 0, void 0, function () {
+    var pid, fileName, remove, unlink, e_1, result, _a;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
+            case 0:
+                pid = (_a = ctx.query, _a.pid), fileName = _a.fileName;
+                _b.label = 1;
+            case 1:
+                _b.trys.push([1, 4, , 5]);
+                return [4 /*yield*/, file_model_1.FileModel.myDelete(pid, fileName)];
+            case 2:
+                remove = _b.sent();
+                return [4 /*yield*/, fs.unlinkSync("uploads/" + pid + "/" + fileName)];
+            case 3:
+                unlink = _b.sent();
+                return [3 /*break*/, 5];
+            case 4:
+                e_1 = _b.sent();
+                console.log("File\uFF1A\u5220\u9664\u51FA\u9519" + e_1);
+                return [3 /*break*/, 5];
+            case 5:
+                result = {
+                    msg: '删除成功',
+                    status: '200'
+                };
                 ctx.body = result;
                 return [2 /*return*/];
         }

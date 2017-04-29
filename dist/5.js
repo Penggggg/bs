@@ -1,6 +1,6 @@
 webpackJsonp([5],{
 
-/***/ 1375:
+/***/ 1377:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16,11 +16,11 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-__webpack_require__(1408);
+__webpack_require__(1410);
 var React = __webpack_require__(0);
-var antd_1 = __webpack_require__(77);
+var antd_1 = __webpack_require__(63);
 var user_1 = __webpack_require__(156);
-var project_1 = __webpack_require__(155);
+var project_1 = __webpack_require__(116);
 var http_service_1 = __webpack_require__(542);
 var notification_service_1 = __webpack_require__(240);
 var ProjectFilesPage = (function (_super) {
@@ -57,7 +57,7 @@ var ProjectFilesPage = (function (_super) {
                     render: function (text, record) { return (React.createElement("span", null,
                         React.createElement("a", { href: "/api/v1/download?pid=" + pid + "&fileName=" + text.fileName, download: true }, "\u4E0B\u8F7D"),
                         React.createElement("span", { className: "ant-divider" }),
-                        React.createElement("a", null, "\u5220\u9664"))); }
+                        React.createElement("a", { onClick: function () { return _this.handleDelete(text); } }, "\u5220\u9664"))); }
                 }];
         };
         _this.onUpload = function (info) {
@@ -75,12 +75,43 @@ var ProjectFilesPage = (function (_super) {
                 });
             }
         };
+        _this.handleDelete = function (file) {
+            var _a = _this.state, uid = _a.uid, dataSource = _a.dataSource;
+            var fileName = file.fileName;
+            var pid = _this.props.params.id;
+            // 1. 权限判断
+            var hasAuth = uid === file.user._id;
+            // 1-1. 通过
+            if (hasAuth) {
+                http_service_1.default.get('/api/v1/delete-file', { pid: pid, fileName: fileName })
+                    .do(function (res) {
+                    if (res.status === '200') {
+                        antd_1.message.success('删除文件成功！');
+                        var index = dataSource.findIndex(function (data) { return String(data.key) === String(file.key); });
+                        dataSource.splice(index, 1);
+                        var a = dataSource.slice();
+                        _this.setState({
+                            dataSource: a
+                        });
+                    }
+                })
+                    .subscribe();
+            }
+            // 1-2. 不通过
+            if (!hasAuth) {
+                antd_1.Modal.warning({
+                    title: '消息',
+                    content: '抱歉。您没有删除该文件的权限！'
+                });
+            }
+        };
         _this.mapOriginToDataSource = function (data) {
             return data.map(function (file, key) { return ({
-                key: "" + Math.random() * 9999,
+                key: "" + Math.floor(Math.random() * 9999),
                 name: file.user.name,
                 fileName: file.fileName,
-                updatedTime: (new Date(file.updatedTime)).toLocaleString()
+                updatedTime: (new Date(file.updatedTime)).toLocaleString(),
+                user: file.user
             }); });
         };
         _this.combineFlow = function () {
@@ -88,11 +119,12 @@ var ProjectFilesPage = (function (_super) {
             _this.sub = http_service_1.default.get('/api/v1/all-files', { pid: pid })
                 .combineLatest(project_1.default.file.data$)
                 .do(function (res) {
-                var _a = _this.state, fileList = _a.fileList, dataSource = _a.dataSource;
+                var dataSource = _this.state.dataSource;
                 var fromFetch = res[0], fromSOK = res[1];
                 if (!fromSOK) {
                     // console.log('首次加载')
                     _this.setState({
+                        loading: false,
                         dataSource: _this.mapOriginToDataSource(fromFetch)
                     });
                 }
@@ -102,18 +134,21 @@ var ProjectFilesPage = (function (_super) {
                     if (fromFetch.length === 0) {
                         // console.log('首次数据来自于SOK')
                         return _this.setState({
+                            loading: false,
                             dataSource: _this.mapOriginToDataSource([fromSOK]).concat(dataSource)
                         });
                     }
                     if (fromSOK._id !== lastFromFetch._id) {
                         // console.log('更新来自于SOK')
                         _this.setState({
+                            loading: false,
                             dataSource: _this.mapOriginToDataSource([fromSOK].concat(fromFetch))
                         });
                     }
                     else {
                         // console.log('二次进入')
                         _this.setState({
+                            loading: false,
                             dataSource: _this.mapOriginToDataSource(fromFetch.slice())
                         });
                     }
@@ -123,7 +158,7 @@ var ProjectFilesPage = (function (_super) {
         };
         _this.state = {
             uid: '',
-            fileList: [],
+            loading: true,
             dataSource: []
         };
         return _this;
@@ -137,7 +172,7 @@ var ProjectFilesPage = (function (_super) {
         this.sub.unsubscribe();
     };
     ProjectFilesPage.prototype.render = function () {
-        var _a = this.state, uid = _a.uid, fileList = _a.fileList, dataSource = _a.dataSource;
+        var _a = this.state, uid = _a.uid, dataSource = _a.dataSource, loading = _a.loading;
         var id = this.props.params.id;
         return React.createElement("div", { className: "project-files-page" },
             React.createElement("div", { className: "main-block" },
@@ -149,7 +184,8 @@ var ProjectFilesPage = (function (_super) {
                                 React.createElement(antd_1.Icon, { type: "upload" }),
                                 " Upload")))),
                 React.createElement("div", { className: "content" },
-                    React.createElement(antd_1.Table, { columns: this.columns, pagination: false, dataSource: dataSource }))));
+                    React.createElement(antd_1.Spin, { spinning: loading, size: 'large' },
+                        React.createElement(antd_1.Table, { columns: this.columns, pagination: false, dataSource: dataSource })))));
     };
     return ProjectFilesPage;
 }(React.PureComponent));
@@ -158,7 +194,7 @@ exports.default = ProjectFilesPage;
 
 /***/ }),
 
-/***/ 1381:
+/***/ 1383:
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(Buffer) {/*
@@ -237,11 +273,11 @@ function toComment(sourceMap) {
   return '/*# ' + data + ' */';
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1384).Buffer))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1386).Buffer))
 
 /***/ }),
 
-/***/ 1382:
+/***/ 1384:
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -273,7 +309,7 @@ var stylesInDom = {},
 	singletonElement = null,
 	singletonCounter = 0,
 	styleElementsInsertedAtTop = [],
-	fixUrls = __webpack_require__(1387);
+	fixUrls = __webpack_require__(1389);
 
 module.exports = function(list, options) {
 	if(typeof DEBUG !== "undefined" && DEBUG) {
@@ -533,7 +569,7 @@ function updateLink(linkElement, options, obj) {
 
 /***/ }),
 
-/***/ 1383:
+/***/ 1385:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -655,7 +691,7 @@ function fromByteArray (uint8) {
 
 /***/ }),
 
-/***/ 1384:
+/***/ 1386:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -669,9 +705,9 @@ function fromByteArray (uint8) {
 
 
 
-var base64 = __webpack_require__(1383)
-var ieee754 = __webpack_require__(1386)
-var isArray = __webpack_require__(1385)
+var base64 = __webpack_require__(1385)
+var ieee754 = __webpack_require__(1388)
+var isArray = __webpack_require__(1387)
 
 exports.Buffer = Buffer
 exports.SlowBuffer = SlowBuffer
@@ -2453,7 +2489,7 @@ function isnan (val) {
 
 /***/ }),
 
-/***/ 1385:
+/***/ 1387:
 /***/ (function(module, exports) {
 
 var toString = {}.toString;
@@ -2465,7 +2501,7 @@ module.exports = Array.isArray || function (arr) {
 
 /***/ }),
 
-/***/ 1386:
+/***/ 1388:
 /***/ (function(module, exports) {
 
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
@@ -2556,7 +2592,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 
 /***/ }),
 
-/***/ 1387:
+/***/ 1389:
 /***/ (function(module, exports) {
 
 
@@ -2652,10 +2688,10 @@ module.exports = function (css) {
 
 /***/ }),
 
-/***/ 1398:
+/***/ 1400:
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(1381)(undefined);
+exports = module.exports = __webpack_require__(1383)(undefined);
 // imports
 
 
@@ -2667,16 +2703,16 @@ exports.push([module.i, ".project-files-page {\n  margin-top: 20px;\n  padding-b
 
 /***/ }),
 
-/***/ 1408:
+/***/ 1410:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1398);
+var content = __webpack_require__(1400);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(1382)(content, {});
+var update = __webpack_require__(1384)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {

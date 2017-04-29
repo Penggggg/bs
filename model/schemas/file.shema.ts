@@ -31,11 +31,19 @@ FileSchema.statics.save = function({ pid, uid, fileName }) {
     })
 }
 
-FileSchema.statics.myUpdate = function( fileName ) {
+FileSchema.statics.myUpdate = function( fileName, uid ) {
     return new Promise(( resolve, reject ) => {
         this
-            .update({ fileName }, { updatedTime: (new Date( )).getTime( ) })
+            .update({ fileName }, { updatedTime: (new Date( )).getTime( ), uid })
             .exec(( err, data ) => returnData( err, resolve, reject, data ))
+    })
+}
+
+FileSchema.statics.myDelete = function( pid, fileName ) {
+    return new Promise(( resolve, reject ) => {
+        this
+            .remove({ pid, fileName })
+            .exec(( err ) => returnData( err, resolve, reject ))
     })
 }
 

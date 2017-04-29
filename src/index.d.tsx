@@ -78,6 +78,11 @@ declare namespace API {
             data: Array<APP.File>
         }
 
+        /**GET：删除文件 */
+        export interface DeleteFile {
+            msg: string,
+            status: '200' | '400' | '500'
+        }
 
     }
 
@@ -162,6 +167,12 @@ declare namespace API {
         /**GET：查询所有文件 */
         export interface AllFiles {
             pid: string
+        }
+
+        /**GET：删除文件 */
+        export interface DeleteFile {
+            pid: string
+            fileName: string
         }
 
     }

@@ -29,12 +29,20 @@ exports.FileSchema.statics.save = function (_a) {
             .save(function (err, data) { return returnData(err, resolve, reject, data); });
     });
 };
-exports.FileSchema.statics.myUpdate = function (fileName) {
+exports.FileSchema.statics.myUpdate = function (fileName, uid) {
     var _this = this;
     return new Promise(function (resolve, reject) {
         _this
-            .update({ fileName: fileName }, { updatedTime: (new Date()).getTime() })
+            .update({ fileName: fileName }, { updatedTime: (new Date()).getTime(), uid: uid })
             .exec(function (err, data) { return returnData(err, resolve, reject, data); });
+    });
+};
+exports.FileSchema.statics.myDelete = function (pid, fileName) {
+    var _this = this;
+    return new Promise(function (resolve, reject) {
+        _this
+            .remove({ pid: pid, fileName: fileName })
+            .exec(function (err) { return returnData(err, resolve, reject); });
     });
 };
 exports.FileSchema.statics.customFind = function (query, fields, options) {

@@ -2,7 +2,7 @@ import './project-files.less';
 import * as React from 'react';
 import { Subscription } from 'rxjs';
 import { RouteComponentProps } from 'react-router';
-import { Icon, Button, Upload, Spin, Table } from 'antd';
+import { Icon, Button, Upload, Spin, Table, Modal, message } from 'antd';
 
 
 import userStore from '../../../store/user';
@@ -10,7 +10,9 @@ import projectStore from '../../../store/project';
 import http from '../../../services/http.service';
 import notification from '../../../services/notification.service';
 
-
+interface K extends APP.File {
+    key: number
+}
 
 export default class ProjectFilesPage extends React.PureComponent< IProps, IState > {
 
@@ -21,7 +23,7 @@ export default class ProjectFilesPage extends React.PureComponent< IProps, IStat
         super( );
         this.state = {
             uid: '',
-            fileList: [ ],
+            loading: true,
             dataSource: [ ]
         }
     }
@@ -68,7 +70,7 @@ export default class ProjectFilesPage extends React.PureComponent< IProps, IStat
                 <span>
                     <a href={`/api/v1/download?pid=${pid}&fileName=${text.fileName}`} download>下载</a>
                     <span className="ant-divider" />
-                    <a>删除</a>
+                    <a onClick={( ) => this.handleDelete( text )}>删除</a>
                 </span>
             )
         }]
@@ -89,12 +91,49 @@ export default class ProjectFilesPage extends React.PureComponent< IProps, IStat
         } 
     }
 
+    handleDelete = ( file: K ) => {
+
+        let { uid, dataSource } = this.state;
+        let { fileName } = file;
+        let pid = this.props.params.id;
+
+
+        // 1. 权限判断
+        let hasAuth = uid === file.user._id;
+        // 1-1. 通过
+        if ( hasAuth ) {
+            http.get<API.Res.DeleteFile, API.Query.DeleteFile>('/api/v1/delete-file', { pid, fileName })
+                .do( res => {
+                    if ( res.status === '200' ) {
+                        message.success('删除文件成功！');
+
+                        let index = dataSource.findIndex( data => String(data.key) === String(file.key));
+                        dataSource.splice( index, 1 );
+
+                        let a = [ ...dataSource ];
+                        this.setState({
+                            dataSource: a
+                        })
+                    }
+                })
+                .subscribe( )
+        }
+        // 1-2. 不通过
+        if ( !hasAuth ) {
+            Modal.warning({
+                title: '消息',
+                content: '抱歉。您没有删除该文件的权限！'
+            })
+        }
+    }
+
     mapOriginToDataSource = ( data: Array<APP.File> ) => {
         return data.map(( file, key ) => ({
-            key: `${Math.random( ) * 9999}`,
+            key: `${Math.floor(Math.random( ) * 9999)}`,
             name: file.user.name,
             fileName: file.fileName,
-            updatedTime: (new Date( file.updatedTime )).toLocaleString( )
+            updatedTime: (new Date( file.updatedTime )).toLocaleString( ),
+            user: file.user
         }))
     }
 
@@ -106,13 +145,14 @@ export default class ProjectFilesPage extends React.PureComponent< IProps, IStat
             .combineLatest(projectStore.file.data$)
             .do( res => {
                
-                let { fileList, dataSource } = this.state;
+                let { dataSource } = this.state;
                 let [ fromFetch, fromSOK ] = res;
                 
                 if ( !fromSOK ) {
                     // console.log('首次加载')
 
                     this.setState({
+                        loading: false,
                         dataSource: this.mapOriginToDataSource( fromFetch )
                     })
 
@@ -124,6 +164,7 @@ export default class ProjectFilesPage extends React.PureComponent< IProps, IStat
                     if ( fromFetch.length === 0 ) {
                         // console.log('首次数据来自于SOK')
                         return this.setState({
+                            loading: false,
                             dataSource: [ ...this.mapOriginToDataSource([ fromSOK ]), ...dataSource ]
                         })
                     }
@@ -131,11 +172,13 @@ export default class ProjectFilesPage extends React.PureComponent< IProps, IStat
                     if ( fromSOK._id !== lastFromFetch._id ) {
                         // console.log('更新来自于SOK')
                         this.setState({
+                            loading: false,
                             dataSource: this.mapOriginToDataSource([ fromSOK, ...fromFetch  ])
                         })
                     } else {
                         // console.log('二次进入')
                         this.setState({
+                            loading: false,
                             dataSource: this.mapOriginToDataSource([ ...fromFetch ])
                         })
                     }
@@ -148,7 +191,7 @@ export default class ProjectFilesPage extends React.PureComponent< IProps, IStat
 
     render( ) {
 
-        let { uid, fileList, dataSource } = this.state;
+        let { uid, dataSource, loading } = this.state;
         let { id } = this.props.params;
 
         return <div className="project-files-page">
@@ -164,7 +207,9 @@ export default class ProjectFilesPage extends React.PureComponent< IProps, IStat
                     </div>
                 </div>
                 <div className="content">
-                    <Table columns={ this.columns } pagination={ false } dataSource={ dataSource }  />
+                    <Spin spinning={ loading } size='large'>
+                        <Table columns={ this.columns } pagination={ false } dataSource={ dataSource }  />
+                    </Spin>
                 </div>
             </div>
         </div>
@@ -178,7 +223,7 @@ interface IProps  extends RouteComponentProps<{id: string}, {}>{
 
 interface IState {
     uid: string
-    fileList: Array<APP.File>
+    loading: boolean
     dataSource: Array<{
         key: string
         name: string

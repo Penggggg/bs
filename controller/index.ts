@@ -11,7 +11,7 @@ import { inviteMember } from './project/invite-member';
 import { getChatList } from './project/chat/query-chat';
 import { createProject } from './project/create-project';
 import { replyInvite } from './project/reply-invite';
-import { download, upload, allFiles } from './project/files';
+import { download, upload, allFiles, deleteFile } from './project/files';
 import { fetchAllUserByName } from './user/query.controller';
 import { allProject, projectDetail } from './project/query-project';
 import { fetchAllMsgList, fetchFadeMsgList, fetchMsgDetail } from './msg/query-msg';
@@ -63,6 +63,8 @@ export default ( router ) => {
     router.post('/api/v1/upload/:pid/:uid', upload );
     /**文件模块：查询 */
     router.get('/api/v1/all-files', allFiles )
+    /**文件模块：删除 */
+    router.get('/api/v1/delete-file', deleteFile );
 
 
 }

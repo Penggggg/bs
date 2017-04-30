@@ -42,9 +42,16 @@ exports.GroupSchema.statics.customFind$ = function (query, fields, options) {
     var _this = this;
     return new Promise(function (resolve, reject) {
         _this.find(query, fields, options)
-            .populate('leadersID', 'name _id')
-            .populate('tasksID', 'title _id content finished priority executorsID')
-            .populate('tasksID.executorsID', '_id name')
+            .populate({
+            path: 'leadersID'
+        })
+            .populate({
+            path: 'tasksID',
+            populate: {
+                path: 'executorsID',
+                select: 'name'
+            }
+        })
             .exec(function (err, data) { return returnData(err, resolve, reject, data); });
     });
 };

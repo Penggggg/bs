@@ -80,7 +80,7 @@ var ProjectTasksPage = (function (_super) {
         _this.addTask = function (group) {
             var _id = _this.user._id;
             _this.selectGroupID = group._id;
-            if (_this.checkAuth2() || group.leaders.find(function (leader) { return leader._id === _id; })) {
+            if (_this.checkAuth2() || group.leadersID.find(function (leader) { return leader._id === _id; })) {
                 _this.setState({
                     showTaskForm: true
                 });

@@ -107,10 +107,10 @@ class ProjectTasksPage extends React.PureComponent< IProps, IState > {
     }
 
     /**增加任务分组 */
-    addTask = ( group: APP.Group ) => {
+    addTask = ( group: Schema.Group$ ) => {
         let { _id } = this.user;
         this.selectGroupID = group._id;
-        if ( this.checkAuth2( ) || group.leaders.find( leader => leader._id === _id )) {
+        if ( this.checkAuth2( ) || group.leadersID.find( leader => leader._id === _id )) {
             this.setState({
                 showTaskForm: true
             })
@@ -146,7 +146,7 @@ class ProjectTasksPage extends React.PureComponent< IProps, IState > {
     /**http:获取 group$ */
     fetchGroups = ( ) => {
         let pid = this.props.params.id;
-        http.get<Array<APP.Group>, { pid: string } >('/api/v1/all-group', { pid })
+        http.get<Array<Schema.Group$>, { pid: string } >('/api/v1/all-group', { pid })
             .do( groups => {
                 console.log( groups );
                 this.setState({ groups })
@@ -342,5 +342,5 @@ interface IState {
         text: string
     }> 
     /**组数据源 */
-    groups: Array<APP.Group>
+    groups: Array<Schema.Group$>
 }

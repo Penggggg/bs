@@ -8,7 +8,12 @@ export let addTask = async( ctx: Koa.Context ) => {
     let { creatorID, title, groupID, executorsID } = ctx.request.body as Partial<Schema.Task>;
 
     /**1. 保存到Task表 */
-    let save: Schema.Task = await TaskModel.mySave({ creatorID, title, groupID, executorsID });
+    let save: Schema.Task = await TaskModel.mySave({ creatorID, title, groupID, executorsID, 
+            content: "",
+            finished: false,
+            priority: 0,
+            deadLine: ''
+    } as Partial<Schema.Task> );
 
     /**2. 更新group表 */
 

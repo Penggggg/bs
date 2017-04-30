@@ -452,7 +452,7 @@ declare namespace Schema {
         pid: string
         creatorID: string
         groupName: string
-        tasksID?: Array<Schema.Task>
+        tasksID?: Array<Schema.Task$>
         leadersID: Array<APP.User>
     }
 
@@ -482,8 +482,8 @@ declare namespace Schema {
         creatorID: string
         createdTime: string
         executorsID: Array<APP.User>
-        taskTalksID: Array<Schema.TaskTalk>
-        childTasksID: Array<Schema.ChildTask> 
+        taskTalksID: Array<Schema.TaskTalk$>
+        childTasksID: Array<Schema.ChildTask$> 
     }
 
     export interface TaskTalk {

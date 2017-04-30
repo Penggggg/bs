@@ -44,7 +44,12 @@ exports.addTask = function (ctx) { return __awaiter(_this, void 0, void 0, funct
         switch (_b.label) {
             case 0:
                 creatorID = (_a = ctx.request.body, _a.creatorID), title = _a.title, groupID = _a.groupID, executorsID = _a.executorsID;
-                return [4 /*yield*/, task_model_1.TaskModel.mySave({ creatorID: creatorID, title: title, groupID: groupID, executorsID: executorsID })];
+                return [4 /*yield*/, task_model_1.TaskModel.mySave({ creatorID: creatorID, title: title, groupID: groupID, executorsID: executorsID,
+                        content: "",
+                        finished: false,
+                        priority: 0,
+                        deadLine: ''
+                    })];
             case 1:
                 save = _b.sent();
                 return [4 /*yield*/, group_model_1.GroupModel.customFind({ _id: groupID })

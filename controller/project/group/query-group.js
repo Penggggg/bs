@@ -47,27 +47,6 @@ exports.allGroup$ = function (ctx) { return __awaiter(_this, void 0, void 0, fun
                 return [4 /*yield*/, group_model_1.GroupModel.customFind$({ pid: pid }, null, null)];
             case 1:
                 groups = _a.sent();
-                console.log(groups[0].tasksID);
-                result = groups.map(function (group$) {
-                    var tasks = group$.tasksID.map(function (task$) {
-                        var appTask = Object.assign({}, task$, { executors: [], taskTalks: [], childTasks: [] });
-                        delete appTask.executorsID;
-                        delete appTask.taskTalksID;
-                        delete appTask.childTasksID;
-                        appTask.executors = task$.executorsID;
-                        appTask.taskTalks = task$.taskTalksID;
-                        appTask.childTasks = task$.childTasksID;
-                        return appTask;
-                    });
-                    return {
-                        _id: group$._id,
-                        pid: group$.pid,
-                        creatorID: group$.creatorID,
-                        groupName: group$.groupName,
-                        tasks: tasks,
-                        leaders: group$.leadersID
-                    };
-                });
                 ctx.body = groups;
                 return [2 /*return*/];
         }

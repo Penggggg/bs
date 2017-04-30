@@ -36,39 +36,29 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
+var task_model_1 = require("../../../model/models/task.model");
 var group_model_1 = require("../../../model/models/group.model");
-exports.allGroup$ = function (ctx) { return __awaiter(_this, void 0, void 0, function () {
-    var pid, result, groups;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
+exports.addTask = function (ctx) { return __awaiter(_this, void 0, void 0, function () {
+    var creatorID, title, groupID, executorsID, save, oldGroup, newTasksID, update, _a;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
             case 0:
-                pid = ctx.query.pid;
-                result = [];
-                return [4 /*yield*/, group_model_1.GroupModel.customFind$({ pid: pid }, null, null)];
+                creatorID = (_a = ctx.request.body, _a.creatorID), title = _a.title, groupID = _a.groupID, executorsID = _a.executorsID;
+                return [4 /*yield*/, task_model_1.TaskModel.mySave({ creatorID: creatorID, title: title, groupID: groupID, executorsID: executorsID })];
             case 1:
-                groups = _a.sent();
-                console.log(groups[0].tasksID);
-                result = groups.map(function (group$) {
-                    var tasks = group$.tasksID.map(function (task$) {
-                        var appTask = Object.assign({}, task$, { executors: [], taskTalks: [], childTasks: [] });
-                        delete appTask.executorsID;
-                        delete appTask.taskTalksID;
-                        delete appTask.childTasksID;
-                        appTask.executors = task$.executorsID;
-                        appTask.taskTalks = task$.taskTalksID;
-                        appTask.childTasks = task$.childTasksID;
-                        return appTask;
-                    });
-                    return {
-                        _id: group$._id,
-                        pid: group$.pid,
-                        creatorID: group$.creatorID,
-                        groupName: group$.groupName,
-                        tasks: tasks,
-                        leaders: group$.leadersID
-                    };
-                });
-                ctx.body = groups;
+                save = _b.sent();
+                return [4 /*yield*/, group_model_1.GroupModel.customFind({ _id: groupID })
+                    /**2-2. 更新新数据 */
+                ];
+            case 2:
+                oldGroup = _b.sent();
+                newTasksID = oldGroup[0].tasksID.concat([save._id]);
+                return [4 /*yield*/, group_model_1.GroupModel.updateTasksID(groupID, newTasksID)];
+            case 3:
+                update = _b.sent();
+                ctx.body = {
+                    data: 'ok'
+                };
                 return [2 /*return*/];
         }
     });

@@ -7,6 +7,7 @@ import { login } from './auth/login';
 import { resetPsw } from './auth/reset';
 import { sginIn } from './auth/signin';
 import { addChat } from './project/chat/add-chat';
+import { addTask } from './project/task/add-task';
 import { addNewGroup } from './project/group/add-group';
 import { inviteMember } from './project/invite-member'; 
 import { getChatList } from './project/chat/query-chat';
@@ -49,7 +50,9 @@ export default ( router ) => {
     /**项目模块：新增分组 */
     router.post('/api/v1/add-group', addNewGroup )
     /**项目模块：查询分组 */
-    router.get('/api/v1/all-group', allGroup$ )
+    router.get('/api/v1/all-group', allGroup$ );
+    /**项目模块：新增任务 */
+    router.post('/api/v1/add-task', addTask );
 
 
     /**用户模块：查询所有符合条件的用户 */

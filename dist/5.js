@@ -28,6 +28,7 @@ var ProjectTasksPage = (function (_super) {
     __extends(ProjectTasksPage, _super);
     function ProjectTasksPage() {
         var _this = _super.call(this) || this;
+        _this.formTaskName = "formTaskName";
         _this.formGroupName = "formGroupName";
         /**初始化user、project数据 */
         _this.initData = function () {
@@ -75,6 +76,23 @@ var ProjectTasksPage = (function (_super) {
             });
             _this.fetchUser();
         };
+        /**增加任务分组 */
+        _this.addTask = function (group) {
+            var _id = _this.user._id;
+            _this.selectGroupID = group._id;
+            if (_this.checkAuth2() || group.leaders.find(function (leader) { return leader._id === _id; })) {
+                _this.setState({
+                    showTaskForm: true
+                });
+                _this.fetchUser();
+            }
+            else {
+                return antd_1.Modal.warning({
+                    title: '消息',
+                    content: '抱歉。该分组中您还没有新增任务的权限'
+                });
+            }
+        };
         /**http:获取user */
         _this.fetchUser = function () {
             var pid = _this.props.params.id;
@@ -100,12 +118,13 @@ var ProjectTasksPage = (function (_super) {
         _this.fetchGroups = function () {
             var pid = _this.props.params.id;
             http_service_1.default.get('/api/v1/all-group', { pid: pid })
-                .do(function (res) {
-                console.log(res);
+                .do(function (groups) {
+                console.log(groups);
+                _this.setState({ groups: groups });
             })
                 .subscribe();
         };
-        /**提交表单 —— 新增任务分组 */
+        /**提交表单 —— 新增分组 */
         _this.submitAddGroup = function () {
             var formGroupName = _this.formGroupName;
             var pid = _this.props.params.id;
@@ -126,12 +145,38 @@ var ProjectTasksPage = (function (_super) {
                 }
             });
         };
+        /**提交表单 —— 新增任务 */
+        _this.submitAddTask = function () {
+            var _a = _this, formTaskName = _a.formTaskName, selectGroupID = _a.selectGroupID, taskExecutorID = _a.taskExecutorID;
+            var pid = _this.props.params.id;
+            _this.props.form.validateFields([formTaskName], function (err, values) {
+                if (!err && _this.taskExecutorID.length !== 0) {
+                    http_service_1.default.post('/api/v1/add-task', { creatorID: _this.user._id, title: values[formTaskName], groupID: selectGroupID, executorsID: taskExecutorID })
+                        .do(function (res) {
+                        console.log(res);
+                        _this.taskExecutorID = [];
+                    })
+                        .subscribe();
+                }
+                else if (!err && _this.taskExecutorID.length === 0) {
+                    antd_1.Modal.warning({
+                        title: "消息",
+                        content: '请选择任务执行者'
+                    });
+                }
+            });
+        };
         /**AutoComplete */
         _this.choiceUser = function (value) {
             _this.groupLeaderID = value;
         };
+        _this.choiceExecutor = function (value) {
+            _this.taskExecutorID = value;
+        };
         _this.state = {
+            groups: [],
             dataSource: [],
+            showTaskForm: false,
             showGroupForm: false
         };
         return _this;
@@ -145,9 +190,9 @@ var ProjectTasksPage = (function (_super) {
     };
     ProjectTasksPage.prototype.render = function () {
         var _this = this;
-        var formGroupName = this.formGroupName;
+        var _a = this, formGroupName = _a.formGroupName, formTaskName = _a.formTaskName;
         var getFieldDecorator = this.props.form.getFieldDecorator;
-        var _a = this.state, showGroupForm = _a.showGroupForm, dataSource = _a.dataSource;
+        var _b = this.state, showGroupForm = _b.showGroupForm, showTaskForm = _b.showTaskForm, dataSource = _b.dataSource, groups = _b.groups;
         /**新建分组表单 */
         var addGroupForm = React.createElement("div", { className: "modal-resetpsw-form" },
             React.createElement("div", { className: "modal-img", style: { height: 226 } },
@@ -156,22 +201,50 @@ var ProjectTasksPage = (function (_super) {
             React.createElement(antd_1.Form, { className: "reset-form" },
                 React.createElement(FormItem, null, getFieldDecorator(formGroupName, {
                     rules: [{ required: true, message: '分组名称不能为空' }],
-                })(React.createElement(antd_1.Input, { prefix: React.createElement(antd_1.Icon, { type: "link", style: { fontSize: 16 } }), placeholder: "分组名称" }))),
+                })(React.createElement(antd_1.Input, { prefix: React.createElement(antd_1.Icon, { type: "link", style: { fontSize: 16 } }), placeholder: "组别名称" }))),
                 React.createElement(FormItem, null,
                     React.createElement(antd_1.Select, { mode: "multiple", onChange: this.choiceUser, placeholder: "请选择分组组长", style: { width: 315 } }, dataSource.map(function (data, key) {
                         return React.createElement(Option, { value: data.value, key: key }, data.text);
                     }))),
                 React.createElement(FormItem, null,
                     React.createElement(antd_1.Button, { type: "primary", size: 'large', style: { width: '100%' }, onClick: this.submitAddGroup }, "\u5B8C\u6210\u5E76\u521B\u5EFA"))));
+        /**新建任务表单 */
+        var addTaskForm = React.createElement("div", { className: "modal-resetpsw-form" },
+            React.createElement("div", { className: "modal-img", style: { height: 226 } },
+                React.createElement("img", { src: "/static/reset-psw.png", alt: "" }),
+                React.createElement("p", null, "\u521B\u5EFA\u4E00\u4E2A\u65B0\u4EFB\u52A1")),
+            React.createElement(antd_1.Form, { className: "reset-form" },
+                React.createElement(FormItem, null, getFieldDecorator(formTaskName, {
+                    rules: [{ required: true, message: '任务名称不能为空' }],
+                })(React.createElement(antd_1.Input, { prefix: React.createElement(antd_1.Icon, { type: "link", style: { fontSize: 16 } }), placeholder: "任务名称" }))),
+                React.createElement(FormItem, null,
+                    React.createElement(antd_1.Select, { mode: "multiple", onChange: this.choiceExecutor, placeholder: "请选择任务执行者", style: { width: 315 } }, dataSource.map(function (data, key) {
+                        return React.createElement(Option, { value: data.value, key: Math.floor(Math.random() * 999) }, data.text);
+                    }))),
+                React.createElement(FormItem, null,
+                    React.createElement(antd_1.Button, { type: "primary", size: 'large', style: { width: '100%' }, onClick: this.submitAddTask }, "\u5B8C\u6210\u5E76\u521B\u5EFA"))));
         return React.createElement("div", { className: "project-tasks-page" },
             React.createElement("ul", { className: "groups-container" },
-                React.createElement("li", { className: " group" },
-                    React.createElement("p", null, "\u65B0\u5EFA\u9879\u76EE\u5206\u7EC4")),
+                groups.map(function (group, key) { return React.createElement("li", { key: key, className: "group" },
+                    React.createElement("h3", null, group.groupName),
+                    React.createElement("ul", { className: "task-list" },
+                        React.createElement("li", null, "1"),
+                        React.createElement("li", null, "1"),
+                        React.createElement("li", null, "1"),
+                        React.createElement("li", null, "1"),
+                        React.createElement("li", null, "1"),
+                        React.createElement("li", null, "1"),
+                        React.createElement("li", null, "1"),
+                        React.createElement("li", null, "1")),
+                    React.createElement("p", { className: "add-task", onClick: function () { return _this.addTask(group); } },
+                        React.createElement(antd_1.Icon, { type: "plus-circle", style: { marginRight: 10 } }),
+                        "\u6DFB\u52A0\u4EFB\u52A1")); }),
                 React.createElement("li", { className: "add-group group" },
                     React.createElement("p", { onClick: this.addGroup },
                         React.createElement(antd_1.Icon, { type: "plus-circle", style: { marginRight: 10 } }),
                         "\u65B0\u5EFA\u9879\u76EE\u5206\u7EC4"))),
-            React.createElement(antd_1.Modal, { title: "创建新项目", footer: null, visible: showGroupForm, onCancel: function () { return _this.setState({ showGroupForm: false }); }, style: { width: '400px !import', padding: '0 85px' } }, addGroupForm));
+            React.createElement(antd_1.Modal, { title: "创建新项目", footer: null, visible: showGroupForm, onCancel: function () { return _this.setState({ showGroupForm: false }); }, style: { width: '400px !import', padding: '0 85px' } }, addGroupForm),
+            React.createElement(antd_1.Modal, { title: "添加任务", footer: null, visible: showTaskForm, onCancel: function () { return _this.setState({ showTaskForm: false }); }, style: { width: '400px !import', padding: '0 85px' } }, addTaskForm));
     };
     return ProjectTasksPage;
 }(React.PureComponent));
@@ -2682,7 +2755,7 @@ exports = module.exports = __webpack_require__(1387)(undefined);
 
 
 // module
-exports.push([module.i, ".project-tasks-page {\n  overflow: hidden;\n  box-sizing: border-box;\n  padding: 15px 15px 0 15px;\n  /*定义滚动条轨道 内阴影+圆角*/\n}\n.project-tasks-page .groups-container {\n  overflow: scroll;\n  white-space: nowrap;\n  padding-bottom: 20px;\n  box-sizing: border-box;\n}\n.project-tasks-page .groups-container .group {\n  width: 280px;\n  padding: 10px;\n  height: 475px;\n  margin-right: 20px;\n  border-radius: 8px;\n  display: inline-block;\n  box-sizing: border-box;\n  background-color: #e9e9e9;\n  box-shadow: 10px 10px 10px #d9d9d9;\n}\n.project-tasks-page .groups-container .add-group {\n  box-shadow: none;\n  background-color: #fff;\n}\n.project-tasks-page .groups-container .add-group p {\n  cursor: pointer;\n  color: #108EE9;\n  border-radius: 8px;\n  padding: 8px 25px;\n  background-color: #e9e9e9;\n}\n.project-tasks-page .groups-container::-webkit-scrollbar {\n  width: 0;\n  height: 1;\n  background-color: #F5F5F5;\n}\n.project-tasks-page .groups-container::-webkit-scrollbar-track {\n  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);\n  border-radius: 10px;\n  background-color: #F5F5F5;\n}\n.project-tasks-page .groups-container::-webkit-scrollbar-thumb {\n  border-radius: 10px;\n  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);\n  background-color: #919191;\n}\n", ""]);
+exports.push([module.i, ".project-tasks-page {\n  overflow: hidden;\n  box-sizing: border-box;\n  padding: 15px 15px 0 15px;\n  /*定义滚动条轨道 内阴影+圆角*/\n}\n.project-tasks-page .groups-container {\n  overflow: scroll;\n  white-space: nowrap;\n  padding-bottom: 20px;\n  box-sizing: border-box;\n}\n.project-tasks-page .groups-container .group {\n  width: 280px;\n  padding: 10px;\n  height: 475px;\n  float: left;\n  position: relative;\n  margin-right: 20px;\n  border-radius: 8px;\n  display: inline-block;\n  box-sizing: border-box;\n  background-color: #f5f5f5;\n  box-shadow: 10px 10px 10px #d9d9d9;\n}\n.project-tasks-page .groups-container .group h3 {\n  margin-bottom: 3px;\n  font-size: 15px;\n}\n.project-tasks-page .groups-container .group .task-list {\n  height: 400px;\n  overflow: scroll;\n  position: relative;\n  padding-bottom: 30px;\n}\n.project-tasks-page .groups-container .group .task-list li {\n  border: 1px solid #000;\n  list-style: none;\n  padding: 10px 0;\n  border-radius: 5px;\n  background-color: #fff;\n  margin-bottom: 12px;\n}\n.project-tasks-page .groups-container .group .task-list::-webkit-scrollbar {\n  display: none;\n}\n.project-tasks-page .groups-container .group .add-task {\n  left: 0px;\n  width: 100%;\n  bottom: 0px;\n  cursor: pointer;\n  color: #108EE9;\n  position: absolute;\n  padding: 10px 12px;\n  border-radius: 5px;\n  box-sizing: border-box;\n  transition: all ease 0.4s;\n}\n.project-tasks-page .groups-container .group .add-task:hover {\n  background-color: #d9d9d9;\n}\n.project-tasks-page .groups-container .add-group {\n  box-shadow: none;\n  background-color: #fff;\n}\n.project-tasks-page .groups-container .add-group p {\n  cursor: pointer;\n  color: #108EE9;\n  border-radius: 8px;\n  padding: 8px 25px;\n  background-color: #e9e9e9;\n}\n.project-tasks-page .groups-container::-webkit-scrollbar {\n  width: 0;\n  height: 1;\n  background-color: #F5F5F5;\n}\n.project-tasks-page .groups-container::-webkit-scrollbar-track {\n  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);\n  border-radius: 10px;\n  background-color: #F5F5F5;\n}\n.project-tasks-page .groups-container::-webkit-scrollbar-thumb {\n  border-radius: 10px;\n  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);\n  background-color: #919191;\n}\n", ""]);
 
 // exports
 

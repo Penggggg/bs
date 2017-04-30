@@ -20,7 +20,7 @@ export let GroupSchema = new Mongoose.Schema({
     }]
 })
 
-
+/**新增分组 */
 GroupSchema.statics.mySave = function( arg ) {
     return new Promise(( resolve, reject ) => {
         let model = this.model('Group');
@@ -29,12 +29,32 @@ GroupSchema.statics.mySave = function( arg ) {
     })
 }
 
+
+/**自定义查询-populate */
 GroupSchema.statics.customFind$ = function( query, fields, options ) {
     return new Promise(( resolve, reject ) => {
         this.find( query, fields, options )
             .populate('leadersID', 'name _id')
-            // .populate('tasksID', 'title content finished priority')
+            .populate('tasksID', 'title _id content finished priority executorsID')
+            .populate('tasksID.executorsID', '_id name')
             .exec(( err, data) =>  returnData( err, resolve, reject, data ))
+    })
+}
+
+/**自定义查询 */
+GroupSchema.statics.customFind = function( query, fields, options ) {
+    return new Promise(( resolve, reject ) => {
+        this.find( query, fields, options )
+            .exec(( err, data) =>  returnData( err, resolve, reject, data ))
+    })
+}
+
+/**更新tasksID */
+GroupSchema.statics.updateTasksID = function( id, tasksID ) {
+    return new Promise(( resolve, reject ) => {
+        this
+            .update({ _id: id }, { tasksID })
+            .exec(( err, data ) => returnData( err, resolve, reject, data ))
     })
 }
 

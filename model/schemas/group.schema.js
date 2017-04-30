@@ -28,6 +28,7 @@ exports.GroupSchema = new Mongoose.Schema({
             type: Mongoose.Schema.Types.ObjectId
         }]
 });
+/**新增分组 */
 exports.GroupSchema.statics.mySave = function (arg) {
     var _this = this;
     return new Promise(function (resolve, reject) {
@@ -36,11 +37,31 @@ exports.GroupSchema.statics.mySave = function (arg) {
             .save(function (err, data) { return returnData(err, resolve, reject, data); });
     });
 };
+/**自定义查询-populate */
 exports.GroupSchema.statics.customFind$ = function (query, fields, options) {
     var _this = this;
     return new Promise(function (resolve, reject) {
         _this.find(query, fields, options)
             .populate('leadersID', 'name _id')
+            .populate('tasksID', 'title _id content finished priority executorsID')
+            .populate('tasksID.executorsID', '_id name')
+            .exec(function (err, data) { return returnData(err, resolve, reject, data); });
+    });
+};
+/**自定义查询 */
+exports.GroupSchema.statics.customFind = function (query, fields, options) {
+    var _this = this;
+    return new Promise(function (resolve, reject) {
+        _this.find(query, fields, options)
+            .exec(function (err, data) { return returnData(err, resolve, reject, data); });
+    });
+};
+/**更新tasksID */
+exports.GroupSchema.statics.updateTasksID = function (id, tasksID) {
+    var _this = this;
+    return new Promise(function (resolve, reject) {
+        _this
+            .update({ _id: id }, { tasksID: tasksID })
             .exec(function (err, data) { return returnData(err, resolve, reject, data); });
     });
 };

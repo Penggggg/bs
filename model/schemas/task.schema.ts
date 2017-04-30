@@ -32,7 +32,24 @@ export let TaskSchema = new Mongoose.Schema({
     }
 })
 
+
 TaskSchema.pre('save', function( next ){
     this.createdTime = Date.now( );
     next( );
 })
+
+TaskSchema.statics.mySave = function( args ) {
+    return new Promise(( resolve, reject ) => {
+        let model = this.model('Task');
+        new model({ ...args })
+            .save(( err, data ) => returnData( err, resolve, reject, data ))
+    })
+}
+
+function returnData ( err, resolve, reject, result? ) {
+    if ( err ) { 
+        console.log(`数据库查询错误: ${err}`);
+        reject( err )
+    }
+    resolve( result )
+}

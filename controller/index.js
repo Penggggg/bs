@@ -40,6 +40,7 @@ var login_1 = require("./auth/login");
 var reset_1 = require("./auth/reset");
 var signin_1 = require("./auth/signin");
 var add_chat_1 = require("./project/chat/add-chat");
+var add_task_1 = require("./project/task/add-task");
 var add_group_1 = require("./project/group/add-group");
 var invite_member_1 = require("./project/invite-member");
 var query_chat_1 = require("./project/chat/query-chat");
@@ -77,6 +78,8 @@ exports.default = function (router) {
     router.post('/api/v1/add-group', add_group_1.addNewGroup);
     /**项目模块：查询分组 */
     router.get('/api/v1/all-group', query_group_1.allGroup$);
+    /**项目模块：新增任务 */
+    router.post('/api/v1/add-task', add_task_1.addTask);
     /**用户模块：查询所有符合条件的用户 */
     router.post('/api/v1/all-user', query_controller_1.fetchAllUserByName);
     /**用户模块：查询项目下所有成员和组长 */

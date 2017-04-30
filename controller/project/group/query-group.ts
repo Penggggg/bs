@@ -9,11 +9,15 @@ export let allGroup$ = async( ctx: Koa.Context ) => {
     let result: Array<APP.Group> = [ ]; 
     let groups: Array<Schema.Group$> = await GroupModel.customFind$({ pid }, null, null );
 
+    console.log( groups[0].tasksID )
+
     result = groups.map(( group$ ) => {
+        
         let tasks = group$.tasksID.map(( task$ ) => {
             
             let appTask = Object.assign({ }, task$, 
                 { executors: [ ], taskTalks: [ ], childTasks: [ ]});
+
             delete appTask.executorsID;
             delete appTask.taskTalksID;
             delete appTask.childTasksID;
@@ -36,5 +40,5 @@ export let allGroup$ = async( ctx: Koa.Context ) => {
 
     })
 
-    ctx.body = result;
+    ctx.body = groups;
 }

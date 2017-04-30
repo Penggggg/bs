@@ -37,43 +37,37 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var group_model_1 = require("../../../model/models/group.model");
-var project_model_1 = require("../../../model/models/project.model");
-exports.addNewGroup = function (ctx) { return __awaiter(_this, void 0, void 0, function () {
-    var fromuid, touid, pid, groupName, saveGroup, oldProject, leader, group, box, newLeaders, newGroups, projectUpdate, _a, _b;
-    return __generator(this, function (_c) {
-        switch (_c.label) {
+exports.allGroup$ = function (ctx) { return __awaiter(_this, void 0, void 0, function () {
+    var pid, result, groups;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
             case 0:
-                fromuid = (_a = ctx.request.body, _a.fromuid), touid = _a.touid, pid = _a.pid, groupName = _a.groupName;
-                return [4 /*yield*/, group_model_1.GroupModel.mySave({
-                        pid: pid,
-                        groupName: groupName,
-                        creatorID: fromuid,
-                        leadersID: touid
-                    })
-                    /**2. 更新Porject表 */
-                    /**2-0. 查询Project数据 */
-                ];
+                pid = ctx.query.pid;
+                result = [];
+                return [4 /*yield*/, group_model_1.GroupModel.customFind$({ pid: pid }, null, null)];
             case 1:
-                saveGroup = _c.sent();
-                return [4 /*yield*/, project_model_1.default.findAllGroupAndLeader(pid)];
-            case 2:
-                oldProject = _c.sent();
-                leader = (_b = oldProject[0], _b.leader), group = _b.group;
-                box = [];
-                touid.map(function (uid) {
-                    if (!leader.find(function (leaderID) { return leaderID !== uid; })) {
-                        box.push(uid);
-                    }
+                groups = _a.sent();
+                result = groups.map(function (group$) {
+                    var tasks = group$.tasksID.map(function (task$) {
+                        var appTask = Object.assign({}, task$, { executors: [], taskTalks: [], childTasks: [] });
+                        delete appTask.executorsID;
+                        delete appTask.taskTalksID;
+                        delete appTask.childTasksID;
+                        appTask.executors = task$.executorsID;
+                        appTask.taskTalks = task$.taskTalksID;
+                        appTask.childTasks = task$.childTasksID;
+                        return appTask;
+                    });
+                    return {
+                        _id: group$._id,
+                        pid: group$.pid,
+                        creatorID: group$.creatorID,
+                        groupName: group$.groupName,
+                        tasks: tasks,
+                        leaders: group$.leadersID
+                    };
                 });
-                newLeaders = leader.concat(box);
-                newGroups = group.concat([saveGroup._id]);
-                return [4 /*yield*/, project_model_1.default.updateAllGroupAndLeader(pid, newLeaders, newGroups)];
-            case 3:
-                projectUpdate = _c.sent();
-                /**3. socket通知 */
-                /**3-1. 项目namesapce通知：推送新project(group、member) */
-                /**数据返回 */
-                ctx.body = { data: 'ok' };
+                ctx.body = result;
                 return [2 /*return*/];
         }
     });

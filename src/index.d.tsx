@@ -284,6 +284,7 @@ declare namespace APP {
         info: string
         cover: string
         creator: User
+        group: Array<APP.Group>
         member: Array<User>
         leader: Array<User>
         meta?: {
@@ -341,6 +342,53 @@ declare namespace APP {
         uid: string | APP.User
         pid: string | APP.Project
     }
+
+
+    /**子任务 */
+    export interface ChildTask {
+        _id?: string
+        content: string
+        taskID: string
+        finished: boolean
+        creatorID: string
+        createdTime: string
+    }
+
+    /**任务留言 */
+    export interface TaskTalk {
+        _id?: string
+        taskID: string
+        content: string
+        creator: APP.User
+        createdTime: string
+    }
+
+    /**任务 */
+    export interface Task {
+        _id?: string
+        title: string
+        content: string
+        priority: number
+        deadLine: string
+        finished: boolean
+        groupID: string
+        creatorID: string
+        createdTime: string
+        executors: Array<APP.User>
+        taskTalks: Array<APP.TaskTalk>
+        childTasks: Array<APP.ChildTask> 
+    }
+
+    /**分组 */
+    export interface Group {
+        _id?: string
+        pid: string
+        creatorID: string
+        groupName: string
+        tasks: Array<APP.Task>
+        leaders: Array<APP.User>
+    }
+
 }
 
 declare namespace Schema {
@@ -381,6 +429,7 @@ declare namespace Schema {
         info: string
         cover: string
         creator: APP.User
+        group: Schema.Group
         leader: Array<APP.User>
         member: Array<APP.User>
         meta: {
@@ -396,6 +445,79 @@ declare namespace Schema {
         groupName: string
         tasksID?: Array<string>
         leadersID: Array<string>
+    }
+
+    export interface Group$ {
+        _id?: string
+        pid: string
+        creatorID: string
+        groupName: string
+        tasksID?: Array<Schema.Task>
+        leadersID: Array<APP.User>
+    }
+
+    export interface Task {
+        _id?: string
+        title: string
+        content: string
+        priority: number
+        deadLine: string
+        finished: boolean
+        groupID: string
+        creatorID: string
+        createdTime: string
+        executorsID: Array<string>
+        taskTalksID: Array<string>
+        childTasksID: Array<string>
+    }
+
+    export interface Task$ {
+        _id?: string
+        title: string
+        content: string
+        priority: number
+        deadLine: string
+        finished: boolean
+        groupID: string
+        creatorID: string
+        createdTime: string
+        executorsID: Array<APP.User>
+        taskTalksID: Array<Schema.TaskTalk>
+        childTasksID: Array<Schema.ChildTask> 
+    }
+
+    export interface TaskTalk {
+        _id?: string
+        taskID: string
+        content: string
+        creatorID: string
+        createdTime: string
+    }
+
+    export interface TaskTalk$ {
+        _id?: string
+        taskID: string
+        content: string
+        creatorID: APP.User
+        createdTime: string
+    }
+
+    export interface ChildTask {
+        _id?: string
+        content: string
+        taskID: string
+        finished: boolean
+        creatorID: string
+        createdTime: string
+    }
+
+    export interface ChildTask$ {
+        _id?: string
+        content: string
+        taskID: string
+        finished: boolean
+        creatorID: string
+        createdTime: string
     }
 
 }

@@ -12,6 +12,7 @@ import { inviteMember } from './project/invite-member';
 import { getChatList } from './project/chat/query-chat';
 import { createProject } from './project/create-project';
 import { replyInvite } from './project/reply-invite';
+import { allGroup$ } from './project/group/query-group';
 import { download, upload, allFiles, deleteFile } from './project/files';
 import { fetchAllUserByName, allMemberInProject } from './user/query.controller';
 import { allProject, projectDetail } from './project/query-project';
@@ -47,6 +48,8 @@ export default ( router ) => {
     router.get('/api/v1/chat-list', getChatList );
     /**项目模块：新增分组 */
     router.post('/api/v1/add-group', addNewGroup )
+    /**项目模块：查询分组 */
+    router.get('/api/v1/all-group', allGroup$ )
 
 
     /**用户模块：查询所有符合条件的用户 */

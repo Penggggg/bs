@@ -96,6 +96,15 @@ var ProjectTasksPage = (function (_super) {
             })
                 .subscribe();
         };
+        /**http:获取 group$ */
+        _this.fetchGroups = function () {
+            var pid = _this.props.params.id;
+            http_service_1.default.get('/api/v1/all-group', { pid: pid })
+                .do(function (res) {
+                console.log(res);
+            })
+                .subscribe();
+        };
         /**提交表单 —— 新增任务分组 */
         _this.submitAddGroup = function () {
             var formGroupName = _this.formGroupName;
@@ -105,6 +114,7 @@ var ProjectTasksPage = (function (_super) {
                     http_service_1.default.post('/api/v1/add-group', { pid: pid, touid: _this.groupLeaderID, fromuid: _this.user._id, groupName: values[_this.formGroupName] })
                         .do(function (res) {
                         console.log(res);
+                        _this.groupLeaderID = [];
                     })
                         .subscribe();
                 }
@@ -118,7 +128,6 @@ var ProjectTasksPage = (function (_super) {
         };
         /**AutoComplete */
         _this.choiceUser = function (value) {
-            console.log(value);
             _this.groupLeaderID = value;
         };
         _this.state = {
@@ -129,6 +138,7 @@ var ProjectTasksPage = (function (_super) {
     }
     ProjectTasksPage.prototype.componentDidMount = function () {
         this.initData();
+        this.fetchGroups();
     };
     ProjectTasksPage.prototype.componentWillUnmount = function () {
         this.sub.unsubscribe();

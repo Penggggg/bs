@@ -17,7 +17,9 @@ export let addNewGroup = async( ctx: Koa.Context ) => {
      } as Schema.Group )
 
 
-    /**2. 查询Project数据 */
+    /**2. 更新Porject表 */
+
+    /**2-0. 查询Project数据 */
     let oldProject: Array<Partial<Schema.Project>> = await ProjectModel.findAllGroupAndLeader( pid );
     let { leader, group } = oldProject[ 0 ];
 
@@ -39,9 +41,8 @@ export let addNewGroup = async( ctx: Koa.Context ) => {
 
     /**3. socket通知 */
 
-    /**3-1. 项目namesapce通知：推送新project */
+    /**3-1. 项目namesapce通知：推送新project(group、member) */
 
-    /**3-2. 组长通知：message */
 
     /**数据返回 */
     ctx.body = { data: 'ok'}

@@ -32,6 +32,8 @@ GroupSchema.statics.mySave = function( arg ) {
 GroupSchema.statics.customFind$ = function( query, fields, options ) {
     return new Promise(( resolve, reject ) => {
         this.find( query, fields, options )
+            .populate('leadersID', 'name _id')
+            // .populate('tasksID', 'title content finished priority')
             .exec(( err, data) =>  returnData( err, resolve, reject, data ))
     })
 }

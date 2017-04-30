@@ -9,6 +9,7 @@ class ProjectStore {
     public data = new ProjectData( );
     public chat = new ProjectChat( );
     public file = new ProjectFile( );
+    public group;
 }
 
 export default new ProjectStore( )

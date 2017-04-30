@@ -45,6 +45,7 @@ var invite_member_1 = require("./project/invite-member");
 var query_chat_1 = require("./project/chat/query-chat");
 var create_project_1 = require("./project/create-project");
 var reply_invite_1 = require("./project/reply-invite");
+var query_group_1 = require("./project/group/query-group");
 var files_1 = require("./project/files");
 var query_controller_1 = require("./user/query.controller");
 var query_project_1 = require("./project/query-project");
@@ -74,6 +75,8 @@ exports.default = function (router) {
     router.get('/api/v1/chat-list', query_chat_1.getChatList);
     /**项目模块：新增分组 */
     router.post('/api/v1/add-group', add_group_1.addNewGroup);
+    /**项目模块：查询分组 */
+    router.get('/api/v1/all-group', query_group_1.allGroup$);
     /**用户模块：查询所有符合条件的用户 */
     router.post('/api/v1/all-user', query_controller_1.fetchAllUserByName);
     /**用户模块：查询项目下所有成员和组长 */

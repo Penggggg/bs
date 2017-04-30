@@ -36,6 +36,7 @@ class ProjectTasksPage extends React.PureComponent< IProps, IState > {
 
     componentDidMount( ) {
         this.initData( );
+        this.fetchGroups( );
     }
 
     componentWillUnmount( ) {
@@ -119,6 +120,16 @@ class ProjectTasksPage extends React.PureComponent< IProps, IState > {
             .subscribe( )
     }
 
+    /**http:获取 group$ */
+    fetchGroups = ( ) => {
+        let pid = this.props.params.id;
+        http.get<Array<APP.Group>, { pid: string } >('/api/v1/all-group', { pid })
+            .do( res => {
+                console.log( res );
+            })
+            .subscribe( )
+    }
+
     /**提交表单 —— 新增任务分组 */
     submitAddGroup = ( ) => {
 
@@ -131,7 +142,8 @@ class ProjectTasksPage extends React.PureComponent< IProps, IState > {
                 http.post<any, API.Query.AddNewGroup>('/api/v1/add-group', 
                     { pid, touid: this.groupLeaderID, fromuid: this.user._id, groupName: values[this.formGroupName] })
                     .do( res => {
-                        console.log( res )
+                        console.log( res );
+                        this.groupLeaderID = [];
                     })
                     .subscribe( )
 
@@ -146,7 +158,6 @@ class ProjectTasksPage extends React.PureComponent< IProps, IState > {
 
     /**AutoComplete */
     choiceUser = ( value: Array<string> ) => {
-        console.log( value );
         this.groupLeaderID = value;
     }
 
@@ -218,6 +229,7 @@ interface IProps extends RouteComponentProps<{id: string}, {}>{
 
 interface IState {
     showGroupForm: boolean
+    /**Selector数据源 */
     dataSource: Array<{
         value: string,
         text: string

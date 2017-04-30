@@ -300,9 +300,9 @@ class ProjectTasksPage extends React.PureComponent< IProps, IState > {
                                             <Checkbox />
                                         </div>
                                         <div className="content">
-                                            <h3>{ task.title }</h3>
+                                            <p>{ task.title }</p>
                                             <div className="tips-block">
-                                                <Tooltip title={ task.executorsID[0].name }>
+                                                <Tooltip title={ (task.executorsID.map( x => x.name )).join('、') }>
                                                     <span>
                                                         <Image src="/static/touxiang.png" />
                                                     </span>

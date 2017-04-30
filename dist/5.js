@@ -234,9 +234,9 @@ var ProjectTasksPage = (function (_super) {
                                 React.createElement("div", { className: "check-block" },
                                     React.createElement(antd_1.Checkbox, null)),
                                 React.createElement("div", { className: "content" },
-                                    React.createElement("h3", null, task.title),
+                                    React.createElement("p", null, task.title),
                                     React.createElement("div", { className: "tips-block" },
-                                        React.createElement(antd_1.Tooltip, { title: task.executorsID[0].name },
+                                        React.createElement(antd_1.Tooltip, { title: (task.executorsID.map(function (x) { return x.name; })).join('、') },
                                             React.createElement("span", null,
                                                 React.createElement(Image_component_1.default, { src: "/static/touxiang.png" }))))))
                             : ""; }),

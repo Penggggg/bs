@@ -43,10 +43,12 @@ exports.GroupSchema.statics.customFind$ = function (query, fields, options) {
     return new Promise(function (resolve, reject) {
         _this.find(query, fields, options)
             .populate({
-            path: 'leadersID'
+            path: 'leadersID',
+            select: 'name'
         })
             .populate({
             path: 'tasksID',
+            select: 'title finished priority executorsID childTasksID',
             populate: {
                 path: 'executorsID',
                 select: 'name'

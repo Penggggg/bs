@@ -28,12 +28,45 @@
 
         li {
 
-            border: 1px solid #000;
             list-style: none;
-            padding: 10px 0;
             border-radius: 5px;
-            background-color: #fff;
             margin-bottom: 12px;
+            position: relative;
+            background-color: #fff;
+            border: 1px solid #d9d9d9;
+             padding: 10px 10px 10px 40px;
+            
+            .check-block {
+
+                top: 10px;
+                left: 10px;
+                position: absolute;
+                display: inline-block;
+
+                .ant-checkbox-inner {
+                    transform: scale( 1.5 );
+                }
+
+                input.checkbox {
+                    transform: scale( 1.5 );
+                }
+            }
+
+            .content {
+
+                .tips-block {
+
+                    right: 20px;
+                    top: 10px;
+                    position: absolute;
+
+                    img {
+                        width: 25px;
+                        border-radius: 50%;
+                    }
+                }
+            }
+
         }
     }
 

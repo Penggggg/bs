@@ -3,13 +3,13 @@ import './tasks.less';
 import * as React from 'react';
 import { Subscription } from 'rxjs';
 import { RouteComponentProps } from 'react-router';
-import { Icon, Modal, Form, Input, Button, AutoComplete, Select } from 'antd';
-
+import { Icon, Modal, Form, Input, Button, AutoComplete, Select, Checkbox, Tooltip  } from 'antd';
 
 
 import userStore from '../../../store/user';
 import projectStore from '../../../store/project';
 import http from '../../../services/http.service';
+import Image from '../../../component/Image/Image.component';
 import notification from '../../../services/notification.service';
 
 
@@ -293,14 +293,32 @@ class ProjectTasksPage extends React.PureComponent< IProps, IState > {
                     groups.map(( group, key ) => <li key={key} className="group">
                         <h3>{ group.groupName }</h3>
                         <ul className="task-list">
-                            <li>1</li>
-                            <li>1</li>
-                            <li>1</li>
-                            <li>1</li>
-                            <li>1</li>
-                            <li>1</li>
-                            <li>1</li>
-                            <li>1</li>
+                            {
+                                group.tasksID.map(( task, key ) => !task.finished ? 
+                                    <li key={ key }>
+                                        <div className="check-block">
+                                            <Checkbox />
+                                        </div>
+                                        <div className="content">
+                                            <h3>{ task.title }</h3>
+                                            <div className="tips-block">
+                                                <Tooltip title={ task.executorsID[0].name }>
+                                                    <span>
+                                                        <Image src="/static/touxiang.png" />
+                                                    </span>
+                                                </Tooltip>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    : "" )
+                            }
+                            {
+                                group.tasksID.map(( task, key ) => task.finished ? 
+                                    <li key={ key }>
+                                        { task.title }
+                                    </li>
+                                    : "" )                 
+                            }
                         </ul>
                         <p className="add-task" onClick={()=>this.addTask( group )}>
                             <Icon type="plus-circle" style={{ marginRight: 10 }} />添加任务

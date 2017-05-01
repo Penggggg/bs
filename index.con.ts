@@ -46,7 +46,8 @@ export namespace ENUM {
 
     export const enum MsgType {
         InviteMember = 1, 
-        GroupLeader 
+        GroupLeader, 
+        NewTask
     }
 
     export const enum MsgFormType {

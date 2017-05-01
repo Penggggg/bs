@@ -61,7 +61,7 @@ export let addNewGroup = async( ctx: Koa.Context ) => {
             readed: false,
             title: '项目邀请',
             formType: ENUM.MsgFormType.noForm,
-            replyURL: '/api/v1/reply-invite'
+            replyURL: ''
         }
 
         let data: APP.Msg = await MsgModel.save( model );

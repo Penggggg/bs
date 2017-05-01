@@ -1,6 +1,10 @@
 import * as Koa from 'koa';
 
+
 import mySocket from '../../../socket';
+import { ENUM, CON } from '../../../index.con';
+import MsgModel from '../../../model/models/msg.model';
+import ProjectModel from '../../../model/models/project.model';
 import { TaskModel } from '../../../model/models/task.model';
 import { GroupModel } from '../../../model/models/group.model';
 
@@ -31,9 +35,49 @@ export let addTask = async( ctx: Koa.Context ) => {
     /**3-1. namespace-group */
     mySocket.projectSockets[pid].group.broadcast( );
 
+
+    let project: Array<Schema.Project> = await ProjectModel.customFind({ _id: pid }, 'name', null);
+
     /**3-2. socket通知 executorsID */
-    executorsID.map(( exeID ) => {
-        mySocket.projectSockets[pid].notification.broadcast({ msg: '您收到一条任务！'})
+    executorsID.map(async( exeID ) => {
+        
+        let model: APP.Msg;
+
+        /**1.消息保存到数据库 */
+        model = {
+            fromUID: creatorID, 
+            toUID: exeID, 
+            PID: pid, 
+            content: `您在项目【${project[0].name}】中，被安排了一条新任务。请注意查看`, 
+            type: ENUM.MsgType.NewTask,
+            dirty: false,
+            readed: false,
+            title: '项目消息',
+            formType: ENUM.MsgFormType.noForm,
+            replyURL: ''
+        }
+
+        let data: APP.Msg = await MsgModel.save( model );
+
+        let { userSocket } = mySocket;
+
+        /**2.用户在线：即时转发 */
+        if ( userSocket.checkIsOnline( exeID )) {
+            
+            console.log(`用户在线，准备转发`);
+
+            let { _id, content, title, readed, meta } = data;
+            userSocket.sendMsgTo( exeID, {
+                type: ENUM.MsgType.GroupLeader,
+                eventName: `${CON.socketEvent.msg}`,
+                content: {
+                    _id: _id, 
+                    content, title , readed, meta
+                } as SOK.Res.MsgInviteContent
+            })
+
+        } 
+
     })
 
     ctx.body = {

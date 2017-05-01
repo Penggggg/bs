@@ -94,7 +94,7 @@ exports.addNewGroup = function (ctx) { return __awaiter(_this, void 0, void 0, f
                                     readed: false,
                                     title: '项目邀请',
                                     formType: 1 /* noForm */,
-                                    replyURL: '/api/v1/reply-invite'
+                                    replyURL: ''
                                 };
                                 return [4 /*yield*/, msg_model_1.default.save(model)];
                             case 1:

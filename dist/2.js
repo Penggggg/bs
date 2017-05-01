@@ -1,6 +1,6 @@
 webpackJsonp([2],{
 
-/***/ 1386:
+/***/ 1389:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16,13 +16,13 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-__webpack_require__(1418);
+__webpack_require__(1421);
 var React = __webpack_require__(0);
-var antd_1 = __webpack_require__(68);
+var antd_1 = __webpack_require__(54);
 var user_1 = __webpack_require__(157);
-var project_1 = __webpack_require__(119);
+var project_1 = __webpack_require__(96);
 var http_service_1 = __webpack_require__(547);
-var Image_component_1 = __webpack_require__(1396);
+var Image_component_1 = __webpack_require__(1399);
 var notification_service_1 = __webpack_require__(242);
 var FormItem = antd_1.Form.Item;
 var Option = antd_1.Select.Option;
@@ -35,6 +35,7 @@ var ProjectTasksPage = (function (_super) {
         _this.formGroupName = "formGroupName";
         _this.watchGroups = function () {
             _this.sub2 = project_1.default.group.data$
+                .skip(1)
                 .do(function (e) { return _this.fetchGroups(); })
                 .subscribe();
         };
@@ -128,7 +129,6 @@ var ProjectTasksPage = (function (_super) {
             _this.setState({ spinning: true });
             http_service_1.default.get('/api/v1/all-group', { pid: pid })
                 .do(function (groups) {
-                console.log(groups);
                 _this.setState({
                     groups: groups,
                     spinning: false
@@ -257,7 +257,17 @@ var ProjectTasksPage = (function (_super) {
         /**全部任务列表 */
         var allGroup = React.createElement(antd_1.Spin, { spinning: spinning },
             React.createElement("ul", { className: "groups-container" }, groups.map(function (group, key) { return React.createElement("li", { key: key, className: "group" },
-                React.createElement("h3", null, group.groupName),
+                React.createElement("h3", null,
+                    group.groupName,
+                    (function () {
+                        var i = 0;
+                        group.tasksID.map(function (t) {
+                            if (!t.finished) {
+                                i++;
+                            }
+                        });
+                        return React.createElement("span", null, " \u00B7 " + i);
+                    })()),
                 React.createElement("ul", { className: "task-list" },
                     group.tasksID.map(function (task, key) { return !task.finished ?
                         React.createElement("li", { key: key },
@@ -286,7 +296,9 @@ var ProjectTasksPage = (function (_super) {
                     "\u6DFB\u52A0\u4EFB\u52A1")); })));
         return React.createElement("div", { className: "project-tasks-page" },
             React.createElement("div", { className: "add-group-block" },
-                React.createElement(antd_1.Button, { type: "primary", ghost: true, onClick: this.addGroup }, "\u65B0\u5EFA\u9879\u76EE\u5206\u7EC4")),
+                React.createElement(antd_1.Button, { type: "primary", onClick: this.addGroup, size: "small" },
+                    React.createElement(antd_1.Icon, { type: "plus-circle-o" }),
+                    "\u7EC4\u522B")),
             React.createElement(antd_1.Tabs, { defaultActiveKey: "1" },
                 React.createElement(TabPane, { tab: "全部任务", key: "1" }, allGroup),
                 React.createElement(TabPane, { tab: "我的任务", key: "2" }, "Content of Tab Pane 2")),
@@ -300,7 +312,7 @@ exports.default = antd_1.Form.create()(ProjectTasksPage);
 
 /***/ }),
 
-/***/ 1387:
+/***/ 1390:
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(Buffer) {/*
@@ -379,11 +391,11 @@ function toComment(sourceMap) {
   return '/*# ' + data + ' */';
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1390).Buffer))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1393).Buffer))
 
 /***/ }),
 
-/***/ 1388:
+/***/ 1391:
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -415,7 +427,7 @@ var stylesInDom = {},
 	singletonElement = null,
 	singletonCounter = 0,
 	styleElementsInsertedAtTop = [],
-	fixUrls = __webpack_require__(1393);
+	fixUrls = __webpack_require__(1396);
 
 module.exports = function(list, options) {
 	if(typeof DEBUG !== "undefined" && DEBUG) {
@@ -675,7 +687,7 @@ function updateLink(linkElement, options, obj) {
 
 /***/ }),
 
-/***/ 1389:
+/***/ 1392:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -797,7 +809,7 @@ function fromByteArray (uint8) {
 
 /***/ }),
 
-/***/ 1390:
+/***/ 1393:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -811,9 +823,9 @@ function fromByteArray (uint8) {
 
 
 
-var base64 = __webpack_require__(1389)
-var ieee754 = __webpack_require__(1392)
-var isArray = __webpack_require__(1391)
+var base64 = __webpack_require__(1392)
+var ieee754 = __webpack_require__(1395)
+var isArray = __webpack_require__(1394)
 
 exports.Buffer = Buffer
 exports.SlowBuffer = SlowBuffer
@@ -2591,11 +2603,11 @@ function isnan (val) {
   return val !== val // eslint-disable-line no-self-compare
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(27)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(28)))
 
 /***/ }),
 
-/***/ 1391:
+/***/ 1394:
 /***/ (function(module, exports) {
 
 var toString = {}.toString;
@@ -2607,7 +2619,7 @@ module.exports = Array.isArray || function (arr) {
 
 /***/ }),
 
-/***/ 1392:
+/***/ 1395:
 /***/ (function(module, exports) {
 
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
@@ -2698,7 +2710,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 
 /***/ }),
 
-/***/ 1393:
+/***/ 1396:
 /***/ (function(module, exports) {
 
 
@@ -2794,10 +2806,10 @@ module.exports = function (css) {
 
 /***/ }),
 
-/***/ 1394:
+/***/ 1397:
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(1387)(undefined);
+exports = module.exports = __webpack_require__(1390)(undefined);
 // imports
 
 
@@ -2809,16 +2821,16 @@ exports.push([module.i, ".my-img {\n  opacity: 0;\n  transition: all 0.4s ease;\
 
 /***/ }),
 
-/***/ 1395:
+/***/ 1398:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1394);
+var content = __webpack_require__(1397);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(1388)(content, {});
+var update = __webpack_require__(1391)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -2836,7 +2848,7 @@ if(false) {
 
 /***/ }),
 
-/***/ 1396:
+/***/ 1399:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2853,7 +2865,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
-__webpack_require__(1395);
+__webpack_require__(1398);
 var Image = (function (_super) {
     __extends(Image, _super);
     function Image() {
@@ -2880,31 +2892,31 @@ exports.default = Image;
 
 /***/ }),
 
-/***/ 1407:
+/***/ 1410:
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(1387)(undefined);
+exports = module.exports = __webpack_require__(1390)(undefined);
 // imports
 
 
 // module
-exports.push([module.i, ".project-tasks-page {\n  overflow: hidden;\n  position: relative;\n  box-sizing: border-box;\n  padding: 5px 15px 0 15px;\n  /*定义滚动条轨道 内阴影+圆角*/\n}\n.project-tasks-page .ant-tabs-bar {\n  margin-bottom: 0px;\n}\n.project-tasks-page .groups-container {\n  overflow: scroll;\n  white-space: nowrap;\n  padding-bottom: 20px;\n  box-sizing: border-box;\n  padding-top: 10px;\n}\n.project-tasks-page .groups-container .group {\n  width: 280px;\n  padding: 10px;\n  height: 465px;\n  position: relative;\n  margin-right: 20px;\n  border-radius: 8px;\n  display: inline-block;\n  box-sizing: border-box;\n  background-color: #f5f5f5;\n  box-shadow: 10px 10px 10px #d9d9d9;\n}\n.project-tasks-page .groups-container .group h3 {\n  margin-bottom: 3px;\n  font-size: 15px;\n}\n.project-tasks-page .groups-container .group .task-list {\n  height: 400px;\n  overflow: scroll;\n  position: relative;\n  padding-bottom: 30px;\n}\n.project-tasks-page .groups-container .group .task-list li {\n  list-style: none;\n  border-radius: 5px;\n  margin-bottom: 12px;\n  position: relative;\n  background-color: #fff;\n  border: 1px solid #d9d9d9;\n  padding: 10px 10px 10px 40px;\n}\n.project-tasks-page .groups-container .group .task-list li .check-block {\n  top: 10px;\n  left: 10px;\n  position: absolute;\n  display: inline-block;\n}\n.project-tasks-page .groups-container .group .task-list li .check-block .ant-checkbox-inner {\n  transform: scale(1.5);\n}\n.project-tasks-page .groups-container .group .task-list li .check-block input.checkbox {\n  transform: scale(1.5);\n}\n.project-tasks-page .groups-container .group .task-list li .content .tips-block {\n  right: 20px;\n  top: 10px;\n  position: absolute;\n}\n.project-tasks-page .groups-container .group .task-list li .content .tips-block img {\n  width: 25px;\n  border-radius: 50%;\n}\n.project-tasks-page .groups-container .group .task-list::-webkit-scrollbar {\n  display: none;\n}\n.project-tasks-page .groups-container .group .add-task {\n  left: 0px;\n  width: 100%;\n  bottom: 0px;\n  cursor: pointer;\n  color: #108EE9;\n  position: absolute;\n  padding: 10px 12px;\n  border-radius: 5px;\n  box-sizing: border-box;\n  transition: all ease 0.4s;\n}\n.project-tasks-page .groups-container .group .add-task:hover {\n  background-color: #d9d9d9;\n}\n.project-tasks-page .groups-container .add-group {\n  box-shadow: none;\n  background-color: #fff;\n}\n.project-tasks-page .groups-container .add-group p {\n  cursor: pointer;\n  color: #108EE9;\n  border-radius: 8px;\n  padding: 8px 25px;\n  background-color: #e9e9e9;\n  position: absolute;\n  top: 40px;\n  left: 0;\n  width: 100%;\n}\n.project-tasks-page .add-group-block {\n  top: 7px;\n  left: 250px;\n  z-index: 100;\n  position: absolute;\n}\n.project-tasks-page .groups-container::-webkit-scrollbar {\n  width: 0;\n  height: 1;\n  background-color: #F5F5F5;\n}\n.project-tasks-page .groups-container::-webkit-scrollbar-track {\n  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);\n  border-radius: 10px;\n  background-color: #F5F5F5;\n}\n.project-tasks-page .groups-container::-webkit-scrollbar-thumb {\n  border-radius: 10px;\n  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);\n  background-color: #919191;\n}\n", ""]);
+exports.push([module.i, ".project-tasks-page {\n  overflow: hidden;\n  position: relative;\n  box-sizing: border-box;\n  padding: 5px 15px 0 15px;\n  /*定义滚动条轨道 内阴影+圆角*/\n}\n.project-tasks-page .ant-tabs-bar {\n  margin-bottom: 0px;\n}\n.project-tasks-page .ant-tabs-bar .ant-tabs-nav-scroll {\n  text-align: center;\n}\n.project-tasks-page .ant-tabs-bar .ant-tabs-nav-scroll .ant-tabs-nav {\n  display: block;\n  width: 100%;\n}\n.project-tasks-page .groups-container {\n  overflow: scroll;\n  white-space: nowrap;\n  padding-bottom: 20px;\n  box-sizing: border-box;\n  padding-top: 10px;\n}\n.project-tasks-page .groups-container .group {\n  width: 280px;\n  padding: 10px;\n  height: 465px;\n  position: relative;\n  margin-right: 20px;\n  border-radius: 8px;\n  display: inline-block;\n  box-sizing: border-box;\n  background-color: #f5f5f5;\n  box-shadow: 10px 10px 10px #d9d9d9;\n}\n.project-tasks-page .groups-container .group h3 {\n  margin-bottom: 3px;\n  font-size: 15px;\n}\n.project-tasks-page .groups-container .group .task-list {\n  height: 400px;\n  overflow: scroll;\n  position: relative;\n  padding-bottom: 30px;\n}\n.project-tasks-page .groups-container .group .task-list li {\n  list-style: none;\n  border-radius: 5px;\n  margin-bottom: 12px;\n  position: relative;\n  background-color: #fff;\n  border: 1px solid #d9d9d9;\n  padding: 10px 10px 10px 40px;\n}\n.project-tasks-page .groups-container .group .task-list li .check-block {\n  top: 10px;\n  left: 10px;\n  position: absolute;\n  display: inline-block;\n}\n.project-tasks-page .groups-container .group .task-list li .check-block .ant-checkbox-inner {\n  transform: scale(1.5);\n}\n.project-tasks-page .groups-container .group .task-list li .check-block input.checkbox {\n  transform: scale(1.5);\n}\n.project-tasks-page .groups-container .group .task-list li .content .tips-block {\n  right: 20px;\n  top: 10px;\n  position: absolute;\n}\n.project-tasks-page .groups-container .group .task-list li .content .tips-block img {\n  width: 25px;\n  border-radius: 50%;\n}\n.project-tasks-page .groups-container .group .task-list::-webkit-scrollbar {\n  display: none;\n}\n.project-tasks-page .groups-container .group .add-task {\n  left: 0px;\n  width: 100%;\n  bottom: 0px;\n  cursor: pointer;\n  color: #108EE9;\n  position: absolute;\n  padding: 10px 12px;\n  border-radius: 5px;\n  box-sizing: border-box;\n  transition: all ease 0.4s;\n}\n.project-tasks-page .groups-container .group .add-task:hover {\n  background-color: #d9d9d9;\n}\n.project-tasks-page .groups-container .add-group {\n  box-shadow: none;\n  background-color: #fff;\n}\n.project-tasks-page .groups-container .add-group p {\n  cursor: pointer;\n  color: #108EE9;\n  border-radius: 8px;\n  padding: 8px 25px;\n  background-color: #e9e9e9;\n  position: absolute;\n  top: 40px;\n  left: 0;\n  width: 100%;\n}\n.project-tasks-page .add-group-block {\n  top: 10px;\n  right: 20px;\n  z-index: 100;\n  position: absolute;\n}\n.project-tasks-page .groups-container::-webkit-scrollbar {\n  width: 0;\n  height: 1;\n  background-color: #F5F5F5;\n}\n.project-tasks-page .groups-container::-webkit-scrollbar-track {\n  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);\n  border-radius: 10px;\n  background-color: #F5F5F5;\n}\n.project-tasks-page .groups-container::-webkit-scrollbar-thumb {\n  border-radius: 10px;\n  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);\n  background-color: #919191;\n}\n", ""]);
 
 // exports
 
 
 /***/ }),
 
-/***/ 1418:
+/***/ 1421:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1407);
+var content = __webpack_require__(1410);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(1388)(content, {});
+var update = __webpack_require__(1391)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {

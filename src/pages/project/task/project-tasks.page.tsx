@@ -56,6 +56,7 @@ class ProjectTasksPage extends React.PureComponent< IProps, IState > {
 
     watchGroups = ( ) => {
         this.sub2 = projectStore.group.data$
+            .skip( 1 )
             .do( e => this.fetchGroups( ))
             .subscribe( )
     }
@@ -162,7 +163,6 @@ class ProjectTasksPage extends React.PureComponent< IProps, IState > {
 
         http.get<Array<Schema.Group$>, { pid: string } >('/api/v1/all-group', { pid })
             .do( groups => {
-                console.log( groups );
                 this.setState({ 
                     groups,
                     spinning: false
@@ -324,7 +324,13 @@ class ProjectTasksPage extends React.PureComponent< IProps, IState > {
                 <ul className="groups-container">
                     {
                         groups.map(( group, key ) => <li key={key} className="group">
-                            <h3>{ group.groupName }</h3>
+                        <h3>{ group.groupName }{(()=>{
+                            let i = 0;
+                            group.tasksID.map( t => {
+                                if ( !t.finished ) { i++; }
+                            });
+                            return <span>{` · ${i}`}</span>;
+                        })( )}</h3>
                             <ul className="task-list">
                                 {
                                     group.tasksID.map(( task, key ) => !task.finished ? 
@@ -378,8 +384,8 @@ class ProjectTasksPage extends React.PureComponent< IProps, IState > {
         return <div className="project-tasks-page">
 
             <div className="add-group-block">
-                <Button type="primary" ghost onClick={this.addGroup}>
-                    新建项目分组</Button>
+                <Button type="primary" onClick={this.addGroup} size="small" >
+                   <Icon type="plus-circle-o" />组别</Button>
             </div>
 
             <Tabs defaultActiveKey="1" >

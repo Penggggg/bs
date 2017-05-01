@@ -37,10 +37,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var socket_1 = require("../../../socket");
+var index_con_1 = require("../../../index.con");
+var msg_model_1 = require("../../../model/models/msg.model");
+var project_model_1 = require("../../../model/models/project.model");
 var task_model_1 = require("../../../model/models/task.model");
 var group_model_1 = require("../../../model/models/group.model");
 exports.addTask = function (ctx) { return __awaiter(_this, void 0, void 0, function () {
-    var creatorID, title, groupID, executorsID, pid, save, oldGroup, newTasksID, update, _a;
+    var _this = this;
+    var creatorID, title, groupID, executorsID, pid, save, oldGroup, newTasksID, update, project, _a;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
@@ -65,10 +69,49 @@ exports.addTask = function (ctx) { return __awaiter(_this, void 0, void 0, funct
                 /**3. socket通知 */
                 /**3-1. namespace-group */
                 socket_1.default.projectSockets[pid].group.broadcast();
+                return [4 /*yield*/, project_model_1.default.customFind({ _id: pid }, 'name', null)];
+            case 4:
+                project = _b.sent();
                 /**3-2. socket通知 executorsID */
-                executorsID.map(function (exeID) {
-                    socket_1.default.projectSockets[pid].notification.broadcast({ msg: '您收到一条任务！' });
-                });
+                executorsID.map(function (exeID) { return __awaiter(_this, void 0, void 0, function () {
+                    var model, data, userSocket, _id, content, title_1, readed, meta;
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0:
+                                /**1.消息保存到数据库 */
+                                model = {
+                                    fromUID: creatorID,
+                                    toUID: exeID,
+                                    PID: pid,
+                                    content: "\u60A8\u5728\u9879\u76EE\u3010" + project[0].name + "\u3011\u4E2D\uFF0C\u88AB\u5B89\u6392\u4E86\u4E00\u6761\u65B0\u4EFB\u52A1\u3002\u8BF7\u6CE8\u610F\u67E5\u770B",
+                                    type: 3 /* NewTask */,
+                                    dirty: false,
+                                    readed: false,
+                                    title: '项目消息',
+                                    formType: 1 /* noForm */,
+                                    replyURL: ''
+                                };
+                                return [4 /*yield*/, msg_model_1.default.save(model)];
+                            case 1:
+                                data = _a.sent();
+                                userSocket = socket_1.default.userSocket;
+                                /**2.用户在线：即时转发 */
+                                if (userSocket.checkIsOnline(exeID)) {
+                                    console.log("\u7528\u6237\u5728\u7EBF\uFF0C\u51C6\u5907\u8F6C\u53D1");
+                                    _id = data._id, content = data.content, title_1 = data.title, readed = data.readed, meta = data.meta;
+                                    userSocket.sendMsgTo(exeID, {
+                                        type: 2 /* GroupLeader */,
+                                        eventName: "" + index_con_1.CON.socketEvent.msg,
+                                        content: {
+                                            _id: _id,
+                                            content: content, title: title_1, readed: readed, meta: meta
+                                        }
+                                    });
+                                }
+                                return [2 /*return*/];
+                        }
+                    });
+                }); });
                 ctx.body = {
                     status: '200'
                 };

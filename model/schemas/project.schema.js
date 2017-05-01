@@ -88,7 +88,7 @@ exports.PorjectSchema.statics.findAllGroupAndLeader = function (id) {
     var _this = this;
     return new Promise(function (resolve, reject) {
         _this
-            .find({ _id: id }, 'group leader')
+            .find({ _id: id }, 'group leader name')
             .exec(function (err, data) { return returnData(err, resolve, reject, data); });
     });
 };

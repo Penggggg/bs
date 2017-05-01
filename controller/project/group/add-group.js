@@ -36,9 +36,13 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
+var index_con_1 = require("../../../index.con");
+var socket_1 = require("../../../socket");
+var msg_model_1 = require("../../../model/models/msg.model");
 var group_model_1 = require("../../../model/models/group.model");
 var project_model_1 = require("../../../model/models/project.model");
 exports.addNewGroup = function (ctx) { return __awaiter(_this, void 0, void 0, function () {
+    var _this = this;
     var fromuid, touid, pid, groupName, saveGroup, oldProject, leader, group, box, newLeaders, newGroups, projectUpdate, _a, _b;
     return __generator(this, function (_c) {
         switch (_c.label) {
@@ -71,9 +75,50 @@ exports.addNewGroup = function (ctx) { return __awaiter(_this, void 0, void 0, f
             case 3:
                 projectUpdate = _c.sent();
                 /**3. socket通知 */
-                /**3-1. 项目namesapce通知：推送新project(group、member) */
+                /**3-1. 项目namesapce通知：groups变更 */
+                socket_1.default.projectSockets[pid].group.broadcast();
+                /**3-2. group-leader通知 */
+                touid.map(function (uid) { return __awaiter(_this, void 0, void 0, function () {
+                    var model, data, userSocket, _id, content, title, readed, meta;
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0:
+                                /**1.消息保存到数据库 */
+                                model = {
+                                    fromUID: fromuid,
+                                    toUID: uid,
+                                    PID: pid,
+                                    content: "\u60A8\u5DF2\u88AB\u5347\u4E3A\u3010" + oldProject[0].name + "\u3011\u7684\u3010" + groupName + "\u7EC4\u3011\u7EC4\u957F",
+                                    type: 2 /* GroupLeader */,
+                                    dirty: false,
+                                    readed: false,
+                                    title: '项目邀请',
+                                    formType: 1 /* noForm */,
+                                    replyURL: '/api/v1/reply-invite'
+                                };
+                                return [4 /*yield*/, msg_model_1.default.save(model)];
+                            case 1:
+                                data = _a.sent();
+                                userSocket = socket_1.default.userSocket;
+                                /**2.用户在线：即时转发 */
+                                if (userSocket.checkIsOnline(uid)) {
+                                    console.log("\u7528\u6237\u5728\u7EBF\uFF0C\u51C6\u5907\u8F6C\u53D1");
+                                    _id = data._id, content = data.content, title = data.title, readed = data.readed, meta = data.meta;
+                                    userSocket.sendMsgTo(uid, {
+                                        type: 2 /* GroupLeader */,
+                                        eventName: "" + index_con_1.CON.socketEvent.msg,
+                                        content: {
+                                            _id: _id,
+                                            content: content, title: title, readed: readed, meta: meta
+                                        }
+                                    });
+                                }
+                                return [2 /*return*/];
+                        }
+                    });
+                }); });
                 /**数据返回 */
-                ctx.body = { data: 'ok' };
+                ctx.body = { status: '200' };
                 return [2 /*return*/];
         }
     });

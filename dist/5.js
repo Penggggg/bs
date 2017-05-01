@@ -1,6 +1,6 @@
 webpackJsonp([5],{
 
-/***/ 1386:
+/***/ 1378:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16,246 +16,145 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-__webpack_require__(1418);
+__webpack_require__(1412);
 var React = __webpack_require__(0);
 var antd_1 = __webpack_require__(68);
-var user_1 = __webpack_require__(157);
-var project_1 = __webpack_require__(119);
-var http_service_1 = __webpack_require__(547);
 var Image_component_1 = __webpack_require__(1396);
-var FormItem = antd_1.Form.Item;
-var Option = antd_1.Select.Option;
-var ProjectTasksPage = (function (_super) {
-    __extends(ProjectTasksPage, _super);
-    function ProjectTasksPage() {
+var index_con_1 = __webpack_require__(59);
+var msg_1 = __webpack_require__(549);
+var user_1 = __webpack_require__(157);
+var http_service_1 = __webpack_require__(547);
+var Header = antd_1.Layout.Header, Footer = antd_1.Layout.Footer, Sider = antd_1.Layout.Sider, Content = antd_1.Layout.Content;
+var msgAllPage = (function (_super) {
+    __extends(msgAllPage, _super);
+    function msgAllPage() {
         var _this = _super.call(this) || this;
-        _this.formTaskName = "formTaskName";
-        _this.formGroupName = "formGroupName";
-        /**初始化user、project数据 */
-        _this.initData = function () {
-            setTimeout(function () {
-                _this.sub = user_1.default.data.userData$
-                    .combineLatest(project_1.default.data.data$)
-                    .do(function (data) {
-                    _this.user = data[0];
-                    _this.project = data[1];
-                })
-                    .subscribe();
-            }, 1000);
-        };
-        /**权限检查：总负责人 */
-        _this.checkAuth2 = function () {
-            var _id = _this.user._id;
-            var _a = _this.project, creator = _a.creator, leader = _a.leader;
-            if (creator._id === _id) {
-                return true;
-            }
-            return false;
-        };
-        /**权限检查：总负责人或组长 */
-        _this.checkAuth = function () {
-            var _id = _this.user._id;
-            var _a = _this.project, creator = _a.creator, leader = _a.leader;
-            if (creator._id === _id) {
-                return true;
-            }
-            else if (leader.find(function (l) { return l._id === _id; })) {
-                return true;
-            }
-            return false;
-        };
-        /**增加项目任务分组 */
-        _this.addGroup = function () {
-            if (!_this.checkAuth2()) {
-                return antd_1.Modal.warning({
-                    title: '消息',
-                    content: '抱歉。该项目中您还没有新增分组的权限'
-                });
-            }
+        _this.limit = 5;
+        _this.handleChange = function (readed) {
             _this.setState({
-                showGroupForm: true
+                currentPage: 1,
+                selectorValue: readed === 'false' ? 'false' : 'true',
+                msgType: readed === 'false' ? '未读消息' : '所有消息'
             });
-            _this.fetchUser();
+            _this.fetchMsgList(readed === 'false' ? false : true, 1);
         };
-        /**增加任务分组 */
-        _this.addTask = function (group) {
-            var _id = _this.user._id;
-            _this.selectGroupID = group._id;
-            if (_this.checkAuth2() || group.leadersID.find(function (leader) { return leader._id === _id; })) {
-                _this.setState({
-                    showTaskForm: true
-                });
-                _this.fetchUser();
-            }
-            else {
-                return antd_1.Modal.warning({
-                    title: '消息',
-                    content: '抱歉。该分组中您还没有新增任务的权限'
-                });
-            }
-        };
-        /**http:获取user */
-        _this.fetchUser = function () {
-            var pid = _this.props.params.id;
-            http_service_1.default
-                .get('/api/v1/all-member-leader', { pid: pid })
-                .map(function (res) {
-                return res.map(function (_a) {
-                    var _id = _a._id, name = _a.name, phone = _a.phone;
-                    return ({
-                        value: "" + _id,
-                        text: name + " - phone: " + phone + " "
-                    });
-                });
-            })
-                .do(function (res) {
-                _this.setState({
-                    dataSource: res
-                });
-            })
-                .subscribe();
-        };
-        /**http:获取 group$ */
-        _this.fetchGroups = function () {
-            var pid = _this.props.params.id;
-            http_service_1.default.get('/api/v1/all-group', { pid: pid })
-                .do(function (groups) {
-                console.log(groups);
-                _this.setState({ groups: groups });
-            })
-                .subscribe();
-        };
-        /**提交表单 —— 新增分组 */
-        _this.submitAddGroup = function () {
-            var formGroupName = _this.formGroupName;
-            var pid = _this.props.params.id;
-            _this.props.form.validateFields([formGroupName], function (err, values) {
-                if (!err && _this.groupLeaderID.length !== 0) {
-                    http_service_1.default.post('/api/v1/add-group', { pid: pid, touid: _this.groupLeaderID, fromuid: _this.user._id, groupName: values[_this.formGroupName] })
-                        .do(function (res) {
-                        console.log(res);
-                        _this.groupLeaderID = [];
-                    })
-                        .subscribe();
-                }
-                else if (!err && _this.groupLeaderID.length === 0) {
-                    antd_1.Modal.warning({
-                        title: "消息",
-                        content: '请选择组长'
-                    });
-                }
+        _this.handleSelect = function (currentPage) {
+            var msgType = _this.state.msgType;
+            _this.setState({
+                currentPage: currentPage
             });
+            _this.fetchMsgList(msgType === '未读消息' ? false : true, currentPage);
         };
-        /**提交表单 —— 新增任务 */
-        _this.submitAddTask = function () {
-            var _a = _this, formTaskName = _a.formTaskName, selectGroupID = _a.selectGroupID, taskExecutorID = _a.taskExecutorID;
-            var pid = _this.props.params.id;
-            _this.props.form.validateFields([formTaskName], function (err, values) {
-                if (!err && _this.taskExecutorID.length !== 0) {
-                    http_service_1.default.post('/api/v1/add-task', { creatorID: _this.user._id, title: values[formTaskName], groupID: selectGroupID, executorsID: taskExecutorID })
-                        .do(function (res) {
-                        console.log(res);
-                        _this.taskExecutorID = [];
-                    })
-                        .subscribe();
-                }
-                else if (!err && _this.taskExecutorID.length === 0) {
-                    antd_1.Modal.warning({
-                        title: "消息",
-                        content: '请选择任务执行者'
-                    });
-                }
-            });
-        };
-        /**AutoComplete */
-        _this.choiceUser = function (value) {
-            _this.groupLeaderID = value;
-        };
-        _this.choiceExecutor = function (value) {
-            _this.taskExecutorID = value;
+        _this.onEnter = function (msg, key) {
+            /**路由推送 */
+            _this.props.router.push("/msgs/" + msg._id);
+            /**右上角badge刷新 */
+            setTimeout(function () {
+                msg_1.default.data.refresh();
+            }, 300);
         };
         _this.state = {
-            groups: [],
-            dataSource: [],
-            showTaskForm: false,
-            showGroupForm: false
+            total: 0,
+            msgList: [],
+            spinning: false,
+            currentPage: 1,
+            msgType: '未读消息',
+            selectorValue: 'false'
         };
         return _this;
     }
-    ProjectTasksPage.prototype.componentDidMount = function () {
-        this.initData();
-        this.fetchGroups();
+    msgAllPage.prototype.componentDidMount = function () {
+        var _this = this;
+        if (!!this.props.children) {
+            this.setState({
+                msgType: '所有消息',
+                selectorValue: 'true'
+            });
+            this.fetchMsgList(true, 1);
+        }
+        else {
+            this.fetchMsgList(false, 1);
+        }
+        setTimeout(function () { return _this.watchSOK(); }, 200);
     };
-    ProjectTasksPage.prototype.componentWillUnmount = function () {
+    msgAllPage.prototype.componentWillUnmount = function () {
         this.sub.unsubscribe();
     };
-    ProjectTasksPage.prototype.render = function () {
+    msgAllPage.prototype.watchSOK = function () {
         var _this = this;
-        var _a = this, formGroupName = _a.formGroupName, formTaskName = _a.formTaskName;
-        var getFieldDecorator = this.props.form.getFieldDecorator;
-        var _b = this.state, showGroupForm = _b.showGroupForm, showTaskForm = _b.showTaskForm, dataSource = _b.dataSource, groups = _b.groups;
-        /**新建分组表单 */
-        var addGroupForm = React.createElement("div", { className: "modal-resetpsw-form" },
-            React.createElement("div", { className: "modal-img", style: { height: 226 } },
-                React.createElement("img", { src: "/static/reset-psw.png", alt: "" }),
-                React.createElement("p", null, "\u521B\u5EFA\u4E00\u4E2A\u65B0\u5206\u7EC4")),
-            React.createElement(antd_1.Form, { className: "reset-form" },
-                React.createElement(FormItem, null, getFieldDecorator(formGroupName, {
-                    rules: [{ required: true, message: '分组名称不能为空' }],
-                })(React.createElement(antd_1.Input, { prefix: React.createElement(antd_1.Icon, { type: "link", style: { fontSize: 16 } }), placeholder: "组别名称" }))),
-                React.createElement(FormItem, null,
-                    React.createElement(antd_1.Select, { mode: "multiple", onChange: this.choiceUser, placeholder: "请选择分组组长", style: { width: 315 } }, dataSource.map(function (data, key) {
-                        return React.createElement(Option, { value: data.value, key: key }, data.text);
-                    }))),
-                React.createElement(FormItem, null,
-                    React.createElement(antd_1.Button, { type: "primary", size: 'large', style: { width: '100%' }, onClick: this.submitAddGroup }, "\u5B8C\u6210\u5E76\u521B\u5EFA"))));
-        /**新建任务表单 */
-        var addTaskForm = React.createElement("div", { className: "modal-resetpsw-form" },
-            React.createElement("div", { className: "modal-img", style: { height: 226 } },
-                React.createElement("img", { src: "/static/reset-psw.png", alt: "" }),
-                React.createElement("p", null, "\u521B\u5EFA\u4E00\u4E2A\u65B0\u4EFB\u52A1")),
-            React.createElement(antd_1.Form, { className: "reset-form" },
-                React.createElement(FormItem, null, getFieldDecorator(formTaskName, {
-                    rules: [{ required: true, message: '任务名称不能为空' }],
-                })(React.createElement(antd_1.Input, { prefix: React.createElement(antd_1.Icon, { type: "link", style: { fontSize: 16 } }), placeholder: "任务名称" }))),
-                React.createElement(FormItem, null,
-                    React.createElement(antd_1.Select, { mode: "multiple", onChange: this.choiceExecutor, placeholder: "请选择任务执行者", style: { width: 315 } }, dataSource.map(function (data, key) {
-                        return React.createElement(Option, { value: data.value, key: Math.floor(Math.random() * 999) }, data.text);
-                    }))),
-                React.createElement(FormItem, null,
-                    React.createElement(antd_1.Button, { type: "primary", size: 'large', style: { width: '100%' }, onClick: this.submitAddTask }, "\u5B8C\u6210\u5E76\u521B\u5EFA"))));
-        return React.createElement("div", { className: "project-tasks-page" },
-            React.createElement("ul", { className: "groups-container" },
-                groups.map(function (group, key) { return React.createElement("li", { key: key, className: "group" },
-                    React.createElement("h3", null, group.groupName),
-                    React.createElement("ul", { className: "task-list" },
-                        group.tasksID.map(function (task, key) { return !task.finished ?
-                            React.createElement("li", { key: key },
-                                React.createElement("div", { className: "check-block" },
-                                    React.createElement(antd_1.Checkbox, null)),
-                                React.createElement("div", { className: "content" },
-                                    React.createElement("p", null, task.title),
-                                    React.createElement("div", { className: "tips-block" },
-                                        React.createElement(antd_1.Tooltip, { title: (task.executorsID.map(function (x) { return x.name; })).join('、') },
-                                            React.createElement("span", null,
-                                                React.createElement(Image_component_1.default, { src: "/static/touxiang.png" }))))))
-                            : ""; }),
-                        group.tasksID.map(function (task, key) { return task.finished ?
-                            React.createElement("li", { key: key }, task.title)
-                            : ""; })),
-                    React.createElement("p", { className: "add-task", onClick: function () { return _this.addTask(group); } },
-                        React.createElement(antd_1.Icon, { type: "plus-circle", style: { marginRight: 10 } }),
-                        "\u6DFB\u52A0\u4EFB\u52A1")); }),
-                React.createElement("li", { className: "add-group group" },
-                    React.createElement("p", { onClick: this.addGroup },
-                        React.createElement(antd_1.Icon, { type: "plus-circle", style: { marginRight: 10 } }),
-                        "\u65B0\u5EFA\u9879\u76EE\u5206\u7EC4"))),
-            React.createElement(antd_1.Modal, { title: "创建新项目", footer: null, visible: showGroupForm, onCancel: function () { return _this.setState({ showGroupForm: false }); }, style: { width: '400px !import', padding: '0 85px' } }, addGroupForm),
-            React.createElement(antd_1.Modal, { title: "添加任务", footer: null, visible: showTaskForm, onCancel: function () { return _this.setState({ showTaskForm: false }); }, style: { width: '400px !import', padding: '0 85px' } }, addTaskForm));
+        this.sub = msg_1.default.data.data$
+            .filter(function (sok) { return sok !== null; })
+            .skip(1)
+            .do(function (res) {
+            var _a = _this.state, currentPage = _a.currentPage, msgType = _a.msgType, msgList = _a.msgList;
+            _this.fetchMsgList(msgType === '所有消息' ? true : false, currentPage);
+        })
+            .subscribe();
     };
-    return ProjectTasksPage;
+    msgAllPage.prototype.fetchMsgList = function (readed, currentPage) {
+        var _this = this;
+        this.setState({ spinning: true });
+        var toUID;
+        var limit = this.limit;
+        var skip = (currentPage - 1) * limit;
+        var sub = user_1.default.data.userData$
+            .do(function (user) {
+            toUID = user._id;
+            setTimeout(function () { return index_con_1.Util.cancelSubscribe(sub); }, 16);
+        }).subscribe();
+        var sub2 = http_service_1.default
+            .post('/api/v1/msg-list', { toUID: toUID, readed: readed, skip: skip, limit: limit })
+            .do(function (res) {
+            _this.setState({
+                spinning: false,
+                total: res.count,
+                msgList: res.data
+            });
+            setTimeout(function () { return index_con_1.Util.cancelSubscribe(sub2); }, 16);
+        })
+            .subscribe();
+    };
+    msgAllPage.prototype.render = function () {
+        var _this = this;
+        var _a = this.state, msgType = _a.msgType, total = _a.total, currentPage = _a.currentPage, msgList = _a.msgList, spinning = _a.spinning, selectorValue = _a.selectorValue;
+        var msgContent = React.createElement("ul", null, msgList.map(function (msg, key) { return React.createElement("li", { key: key },
+            React.createElement("a", { onClick: function () { return _this.onEnter(msg, key); } },
+                React.createElement(Image_component_1.default, { src: "/static/touxiang.png" }),
+                !msg.readed && React.createElement(antd_1.Tag, { color: "#108ee9", className: "my-tag" }, "\u672A\u8BFB"),
+                React.createElement("h3", null, msg.title),
+                React.createElement("p", null, msg.content),
+                React.createElement("span", { className: "time" }, (new Date(msg.meta.createdTime)).toLocaleString()))); }));
+        return React.createElement("div", { className: "msg-all-page" },
+            React.createElement(antd_1.Layout, null,
+                React.createElement(Header, null,
+                    React.createElement(antd_1.Breadcrumb, null,
+                        React.createElement(antd_1.Breadcrumb.Item, { href: "/#/projects" }, "\u9879\u76EE"),
+                        React.createElement(antd_1.Breadcrumb.Item, null, "\u6211\u7684\u6D88\u606F"))),
+                React.createElement(Content, null,
+                    React.createElement(antd_1.Row, null,
+                        React.createElement(antd_1.Col, { span: 10, className: "msg-list-block" },
+                            React.createElement("div", { className: "msg-list" },
+                                React.createElement("div", { className: "title" },
+                                    React.createElement(antd_1.Select, { defaultValue: "false", value: selectorValue, style: { width: 120 }, onChange: this.handleChange },
+                                        React.createElement(antd_1.Select.Option, { value: "false" },
+                                            React.createElement(antd_1.Icon, { type: "tag-o" }), " ",
+                                            "\u672A\u8BFB\u6D88\u606F"),
+                                        React.createElement(antd_1.Select.Option, { value: "true" },
+                                            React.createElement(antd_1.Icon, { type: "bell" }), " ",
+                                            "\u6240\u6709\u6D88\u606F")),
+                                    React.createElement("span", { style: { color: '#666' } },
+                                        total,
+                                        "\u6761")),
+                                React.createElement("div", { className: "content" },
+                                    React.createElement(antd_1.Spin, { spinning: spinning, tip: "Loading...", size: "large", className: "my-spin" }, msgContent)),
+                                React.createElement("div", { className: "page-content" },
+                                    React.createElement(antd_1.Pagination, { simple: true, defaultCurrent: 1, total: total, current: currentPage, defaultPageSize: 5, onChange: this.handleSelect })))),
+                        React.createElement(antd_1.Col, { span: 14, className: "msg-content" }, this.props.children ||
+                            React.createElement("h3", { className: "tips" }, "\u9009\u62E9\u5DE6\u4FA7\u6D88\u606F\uFF0C\u67E5\u770B\u6D88\u606F\u8BE6\u60C5"))))));
+    };
+    return msgAllPage;
 }(React.PureComponent));
-exports.default = antd_1.Form.create()(ProjectTasksPage);
+exports.default = msgAllPage;
 
 
 /***/ }),
@@ -2840,7 +2739,7 @@ exports.default = Image;
 
 /***/ }),
 
-/***/ 1407:
+/***/ 1401:
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1387)(undefined);
@@ -2848,20 +2747,20 @@ exports = module.exports = __webpack_require__(1387)(undefined);
 
 
 // module
-exports.push([module.i, ".project-tasks-page {\n  overflow: hidden;\n  box-sizing: border-box;\n  padding: 15px 15px 0 15px;\n  /*定义滚动条轨道 内阴影+圆角*/\n}\n.project-tasks-page .groups-container {\n  overflow: scroll;\n  white-space: nowrap;\n  padding-bottom: 20px;\n  box-sizing: border-box;\n}\n.project-tasks-page .groups-container .group {\n  width: 280px;\n  padding: 10px;\n  height: 475px;\n  float: left;\n  position: relative;\n  margin-right: 20px;\n  border-radius: 8px;\n  display: inline-block;\n  box-sizing: border-box;\n  background-color: #f5f5f5;\n  box-shadow: 10px 10px 10px #d9d9d9;\n}\n.project-tasks-page .groups-container .group h3 {\n  margin-bottom: 3px;\n  font-size: 15px;\n}\n.project-tasks-page .groups-container .group .task-list {\n  height: 400px;\n  overflow: scroll;\n  position: relative;\n  padding-bottom: 30px;\n}\n.project-tasks-page .groups-container .group .task-list li {\n  list-style: none;\n  border-radius: 5px;\n  margin-bottom: 12px;\n  position: relative;\n  background-color: #fff;\n  border: 1px solid #d9d9d9;\n  padding: 10px 10px 10px 40px;\n}\n.project-tasks-page .groups-container .group .task-list li .check-block {\n  top: 10px;\n  left: 10px;\n  position: absolute;\n  display: inline-block;\n}\n.project-tasks-page .groups-container .group .task-list li .check-block .ant-checkbox-inner {\n  transform: scale(1.5);\n}\n.project-tasks-page .groups-container .group .task-list li .check-block input.checkbox {\n  transform: scale(1.5);\n}\n.project-tasks-page .groups-container .group .task-list li .content .tips-block {\n  right: 20px;\n  top: 10px;\n  position: absolute;\n}\n.project-tasks-page .groups-container .group .task-list li .content .tips-block img {\n  width: 25px;\n  border-radius: 50%;\n}\n.project-tasks-page .groups-container .group .task-list::-webkit-scrollbar {\n  display: none;\n}\n.project-tasks-page .groups-container .group .add-task {\n  left: 0px;\n  width: 100%;\n  bottom: 0px;\n  cursor: pointer;\n  color: #108EE9;\n  position: absolute;\n  padding: 10px 12px;\n  border-radius: 5px;\n  box-sizing: border-box;\n  transition: all ease 0.4s;\n}\n.project-tasks-page .groups-container .group .add-task:hover {\n  background-color: #d9d9d9;\n}\n.project-tasks-page .groups-container .add-group {\n  box-shadow: none;\n  background-color: #fff;\n}\n.project-tasks-page .groups-container .add-group p {\n  cursor: pointer;\n  color: #108EE9;\n  border-radius: 8px;\n  padding: 8px 25px;\n  background-color: #e9e9e9;\n}\n.project-tasks-page .groups-container::-webkit-scrollbar {\n  width: 0;\n  height: 1;\n  background-color: #F5F5F5;\n}\n.project-tasks-page .groups-container::-webkit-scrollbar-track {\n  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);\n  border-radius: 10px;\n  background-color: #F5F5F5;\n}\n.project-tasks-page .groups-container::-webkit-scrollbar-thumb {\n  border-radius: 10px;\n  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);\n  background-color: #919191;\n}\n", ""]);
+exports.push([module.i, "div {\n  box-sizing: border-box;\n}\n.msg-all-page .ant-layout {\n  background: #fff;\n}\n.msg-all-page .ant-layout .ant-layout-header {\n  height: 50px;\n  line-height: 50px;\n  margin-top: 6px;\n  border-bottom: 1px solid #e9e9e9;\n  background-color: #f5f5f5 !important;\n}\n.msg-all-page .ant-layout .ant-layout-content {\n  padding-bottom: 20px;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block {\n  padding-left: 80px;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list {\n  width: 400px;\n  margin-top: 20px;\n  border-radius: 8px;\n  position: relative;\n  padding: 10px 10px 50px;\n  border: 1px solid #e9e9e9;\n  box-shadow: 0px 5px 40px 5px #d9d9d9;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list .title {\n  padding: 12px 10px;\n  border-bottom: 1px solid #e9e9e9;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list .title .ant-select-selection {\n  border: none;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list .content {\n  height: 400px;\n  overflow: scroll;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list .content .my-spin {\n  top: 100px;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list .content ul li {\n  position: relative;\n  padding: 10px 20px 10px 70px;\n  border-bottom: 1px solid #e9e9e9;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list .content ul li .my-tag {\n  top: 5px;\n  left: 0;\n  position: absolute;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list .content ul li img {\n  left: 10px;\n  top: 15px;\n  width: 50px;\n  height: 50px;\n  position: absolute;\n  margin: 4px 8px 0 0;\n  border-radius: 50%;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list .content ul li h3 {\n  padding-bottom: 5px;\n  color: #666;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list .content ul li p {\n  color: #666;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list .content ul li span.time {\n  position: absolute;\n  right: 25px;\n  top: 9px;\n  color: #666;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list .content::-webkit-scrollbar {\n  display: none;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list .page-content {\n  left: 0;\n  bottom: 0px;\n  width: 100%;\n  height: 40px;\n  text-align: center;\n  position: absolute;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list .page-content .ant-pagination {\n  display: inline-block;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-content {\n  position: relative;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-content .tips {\n  font-size: 30px;\n  position: absolute;\n  top: 240px;\n  left: 120px;\n  font-weight: 500;\n  color: #919191;\n}\n", ""]);
 
 // exports
 
 
 /***/ }),
 
-/***/ 1418:
+/***/ 1412:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1407);
+var content = __webpack_require__(1401);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(1388)(content, {});
@@ -2870,8 +2769,8 @@ if(content.locals) module.exports = content.locals;
 if(false) {
 	// When the styles change, update the <style> tags
 	if(!content.locals) {
-		module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/less-loader/index.js!./tasks.less", function() {
-			var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/less-loader/index.js!./tasks.less");
+		module.hot.accept("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./msg-all.less", function() {
+			var newContent = require("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./msg-all.less");
 			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 			update(newContent);
 		});

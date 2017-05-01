@@ -91,7 +91,7 @@ PorjectSchema.statics.updateAllGroupAndLeader = function( id, newLeaders, newGro
 PorjectSchema.statics.findAllGroupAndLeader = function( id ) {
     return new Promise(( resolve, reject ) => {
         this
-            .find({ _id: id }, 'group leader')
+            .find({ _id: id }, 'group leader name')
             .exec(( err, data ) => returnData( err, resolve, reject, data ))
     })
 }

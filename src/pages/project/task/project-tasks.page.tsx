@@ -3,23 +3,26 @@ import './tasks.less';
 import * as React from 'react';
 import { Subscription } from 'rxjs';
 import { RouteComponentProps } from 'react-router';
-import { Icon, Modal, Form, Input, Button, AutoComplete, Select, Checkbox, Tooltip  } from 'antd';
+import { Icon, Modal, Form, Input, Button, AutoComplete, Select, Checkbox, Tooltip, Spin, Tabs } from 'antd';
 
 
 import userStore from '../../../store/user';
 import projectStore from '../../../store/project';
 import http from '../../../services/http.service';
 import Image from '../../../component/Image/Image.component';
-import notification from '../../../services/notification.service';
+import nitification from '../../../services/notification.service';
 
 
 const FormItem = Form.Item;
 const Option = Select.Option;
+const TabPane = Tabs.TabPane;
+
 
 
 class ProjectTasksPage extends React.PureComponent< IProps, IState > {
 
     private sub: Subscription;
+    private sub2: Subscription;
     private user: APP.User;
     private project: APP.Project;
     private groupLeaderID: Array<string>;
@@ -34,6 +37,7 @@ class ProjectTasksPage extends React.PureComponent< IProps, IState > {
         this.state = {
             groups: [ ],
             dataSource: [ ],
+            spinning: true,
             showTaskForm: false,
             showGroupForm: false
         }
@@ -42,10 +46,18 @@ class ProjectTasksPage extends React.PureComponent< IProps, IState > {
     componentDidMount( ) {
         this.initData( );
         this.fetchGroups( );
+        this.watchGroups( );
     }
 
     componentWillUnmount( ) {
         this.sub.unsubscribe( );
+        this.sub2.unsubscribe( );
+    }
+
+    watchGroups = ( ) => {
+        this.sub2 = projectStore.group.data$
+            .do( e => this.fetchGroups( ))
+            .subscribe( )
     }
 
     /**初始化user、project数据 */
@@ -92,7 +104,6 @@ class ProjectTasksPage extends React.PureComponent< IProps, IState > {
 
     /**增加项目任务分组 */
     addGroup = ( ) => {
-        
         if ( !this.checkAuth2( )) {
             return Modal.warning({
                 title: '消息',
@@ -146,10 +157,16 @@ class ProjectTasksPage extends React.PureComponent< IProps, IState > {
     /**http:获取 group$ */
     fetchGroups = ( ) => {
         let pid = this.props.params.id;
+
+        this.setState({ spinning: true })
+
         http.get<Array<Schema.Group$>, { pid: string } >('/api/v1/all-group', { pid })
             .do( groups => {
                 console.log( groups );
-                this.setState({ groups })
+                this.setState({ 
+                    groups,
+                    spinning: false
+                })
             })
             .subscribe( )
     }
@@ -166,7 +183,15 @@ class ProjectTasksPage extends React.PureComponent< IProps, IState > {
                 http.post<any, API.Query.AddNewGroup>('/api/v1/add-group', 
                     { pid, touid: this.groupLeaderID, fromuid: this.user._id, groupName: values[this.formGroupName] })
                     .do( res => {
-                        console.log( res );
+                        if ( res.status === '200') {
+                            nitification.open({
+                                title: '消息',
+                                msg: '新增组别成功！'
+                            })
+                        }
+                        this.setState({
+                            showGroupForm: false
+                        })
                         this.groupLeaderID = [];
                     })
                     .subscribe( )
@@ -189,10 +214,18 @@ class ProjectTasksPage extends React.PureComponent< IProps, IState > {
         this.props.form.validateFields([ formTaskName ], ( err, values ) => {
             if ( !err && this.taskExecutorID.length !== 0 ) {
                 
-                http.post<any, Partial<Schema.Task>>('/api/v1/add-task', 
-                    { creatorID: this.user._id, title: values[formTaskName], groupID: selectGroupID, executorsID: taskExecutorID })
+                http.post<any, API.Query.AddNewTask>('/api/v1/add-task', 
+                    { creatorID: this.user._id, title: values[formTaskName], groupID: selectGroupID, executorsID: taskExecutorID, pid })
                     .do( res => {
-                        console.log( res );
+                        if ( res.status === '200') {
+                            nitification.open({
+                                title: '消息',
+                                msg: '新增任务成功！'
+                            })
+                        }
+                        this.setState({
+                            showTaskForm: false
+                        })                        
                         this.taskExecutorID = [];
                     })
                     .subscribe( )
@@ -220,7 +253,7 @@ class ProjectTasksPage extends React.PureComponent< IProps, IState > {
 
         let { formGroupName, formTaskName } = this;
         let { getFieldDecorator } = this.props.form;
-        let { showGroupForm, showTaskForm, dataSource, groups } = this.state;
+        let { showGroupForm, showTaskForm, dataSource, groups, spinning } = this.state;
 
         /**新建分组表单 */
         let addGroupForm = <div className="modal-resetpsw-form">
@@ -286,50 +319,76 @@ class ProjectTasksPage extends React.PureComponent< IProps, IState > {
             </Form>
         </div>
 
+        /**全部任务列表 */
+        let allGroup =  <Spin spinning={ spinning }>
+                <ul className="groups-container">
+                    {
+                        groups.map(( group, key ) => <li key={key} className="group">
+                            <h3>{ group.groupName }</h3>
+                            <ul className="task-list">
+                                {
+                                    group.tasksID.map(( task, key ) => !task.finished ? 
+                                        <li key={ key }>
+                                            <div className="check-block">
+                                                <Checkbox />
+                                            </div>
+                                            <div className="content">
+                                                <p>{ task.title }</p>
+                                                <div className="tips-block">
+                                                    <Tooltip title={ (task.executorsID.map( x => x.name )).join('、') }>
+                                                        <span>
+                                                            <Image src="/static/touxiang.png" />
+                                                        </span>
+                                                    </Tooltip>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        : "" )
+                                }
+                                {
+                                    group.tasksID.map(( task, key ) => task.finished ? 
+                                        <li key={ key }>
+                                            <div className="check-block">
+                                                <Checkbox />
+                                            </div>
+                                            <div className="content">
+                                                <p>{ task.title }</p>
+                                                <div className="tips-block">
+                                                    <Tooltip title={ (task.executorsID.map( x => x.name )).join('、') }>
+                                                        <span>
+                                                            <Image src="/static/touxiang.png" />
+                                                        </span>
+                                                    </Tooltip>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        : "" )
+                                }
+                            </ul>
+                            <p className="add-task" onClick={()=>this.addTask( group )}>
+                                <Icon type="plus-circle" style={{ marginRight: 10 }} />添加任务
+                            </p>
+                        </li>)
+                    }
+                </ul>
+            </Spin>
+
+
  
         return <div className="project-tasks-page">
-            <ul className="groups-container">
-                {
-                    groups.map(( group, key ) => <li key={key} className="group">
-                        <h3>{ group.groupName }</h3>
-                        <ul className="task-list">
-                            {
-                                group.tasksID.map(( task, key ) => !task.finished ? 
-                                    <li key={ key }>
-                                        <div className="check-block">
-                                            <Checkbox />
-                                        </div>
-                                        <div className="content">
-                                            <p>{ task.title }</p>
-                                            <div className="tips-block">
-                                                <Tooltip title={ (task.executorsID.map( x => x.name )).join('、') }>
-                                                    <span>
-                                                        <Image src="/static/touxiang.png" />
-                                                    </span>
-                                                </Tooltip>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    : "" )
-                            }
-                            {
-                                group.tasksID.map(( task, key ) => task.finished ? 
-                                    <li key={ key }>
-                                        { task.title }
-                                    </li>
-                                    : "" )                 
-                            }
-                        </ul>
-                        <p className="add-task" onClick={()=>this.addTask( group )}>
-                            <Icon type="plus-circle" style={{ marginRight: 10 }} />添加任务
-                        </p>
-                    </li>)
-                }
-                <li className="add-group group">
-                    <p onClick={this.addGroup}>
-                        <Icon type="plus-circle" style={{ marginRight: 10 }} />新建项目分组</p>
-                </li>
-            </ul>
+
+            <div className="add-group-block">
+                <Button type="primary" ghost onClick={this.addGroup}>
+                    新建项目分组</Button>
+            </div>
+
+            <Tabs defaultActiveKey="1" >
+                <TabPane tab="全部任务" key="1">
+                    { allGroup }
+                </TabPane>
+                <TabPane tab="我的任务" key="2">Content of Tab Pane 2</TabPane>
+            </Tabs>
+
             <Modal  title="创建新项目"  footer={ null } visible={ showGroupForm }
                 onCancel={( ) => this.setState({showGroupForm: false})}
                 style={{ width: '400px !import', padding: '0 85px' }}>
@@ -352,6 +411,7 @@ interface IProps extends RouteComponentProps<{id: string}, {}>{
 }
 
 interface IState {
+    spinning: boolean
     showGroupForm: boolean
     showTaskForm: boolean
     /**Selector数据源 */
@@ -362,3 +422,4 @@ interface IState {
     /**组数据源 */
     groups: Array<Schema.Group$>
 }
+

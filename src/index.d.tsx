@@ -188,6 +188,11 @@ declare namespace API {
             groupName: string
         }
 
+        /**POST：增加任务 */
+        export interface AddNewTask extends Partial<Schema.Task> {
+            pid: string
+        }
+
     }
 
 }

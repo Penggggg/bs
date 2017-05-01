@@ -1,14 +1,18 @@
 import { Chat } from './chat';
 import { File } from './file';
+import { Group } from './group';
 import { Member } from './member';
 import { CON } from '../../index.con';
-
+import { Notification } from './notification';
 
 export class ProjectSocket {
 
+
     public file: File;
     public chat: Chat;
+    public group: Group;
     public member: Member;
+    public notification: Notification;
     private socket: SocketIO.Namespace;
 
 
@@ -28,7 +32,9 @@ export class ProjectSocket {
                 /**事件通讯 */
                 this.member = new Member( this.socket ); 
                 this.chat = new Chat( this.socket );
-                this.file = new File( this.socket )
+                this.file = new File( this.socket );
+                this.group = new Group( this.socket );
+                this.notification = new Notification( this.socket );
             })
     }
 

@@ -36,14 +36,15 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
+var socket_1 = require("../../../socket");
 var task_model_1 = require("../../../model/models/task.model");
 var group_model_1 = require("../../../model/models/group.model");
 exports.addTask = function (ctx) { return __awaiter(_this, void 0, void 0, function () {
-    var creatorID, title, groupID, executorsID, save, oldGroup, newTasksID, update, _a;
+    var creatorID, title, groupID, executorsID, pid, save, oldGroup, newTasksID, update, _a;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
-                creatorID = (_a = ctx.request.body, _a.creatorID), title = _a.title, groupID = _a.groupID, executorsID = _a.executorsID;
+                creatorID = (_a = ctx.request.body, _a.creatorID), title = _a.title, groupID = _a.groupID, executorsID = _a.executorsID, pid = _a.pid;
                 return [4 /*yield*/, task_model_1.TaskModel.mySave({ creatorID: creatorID, title: title, groupID: groupID, executorsID: executorsID,
                         content: "",
                         finished: false,
@@ -61,8 +62,15 @@ exports.addTask = function (ctx) { return __awaiter(_this, void 0, void 0, funct
                 return [4 /*yield*/, group_model_1.GroupModel.updateTasksID(groupID, newTasksID)];
             case 3:
                 update = _b.sent();
+                /**3. socket通知 */
+                /**3-1. namespace-group */
+                socket_1.default.projectSockets[pid].group.broadcast();
+                /**3-2. socket通知 executorsID */
+                executorsID.map(function (exeID) {
+                    socket_1.default.projectSockets[pid].notification.broadcast({ msg: '您收到一条任务！' });
+                });
                 ctx.body = {
-                    data: 'ok'
+                    status: '200'
                 };
                 return [2 /*return*/];
         }

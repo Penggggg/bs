@@ -1,6 +1,6 @@
 webpackJsonp([2],{
 
-/***/ 1382:
+/***/ 1386:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16,176 +16,286 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-__webpack_require__(1416);
+__webpack_require__(1418);
 var React = __webpack_require__(0);
 var antd_1 = __webpack_require__(68);
 var user_1 = __webpack_require__(157);
-var http_service_1 = __webpack_require__(547);
 var project_1 = __webpack_require__(119);
-var auth_login_service_1 = __webpack_require__(548);
+var http_service_1 = __webpack_require__(547);
 var Image_component_1 = __webpack_require__(1396);
 var notification_service_1 = __webpack_require__(242);
 var FormItem = antd_1.Form.Item;
-var ProjectAllPage = (function (_super) {
-    __extends(ProjectAllPage, _super);
-    function ProjectAllPage() {
+var Option = antd_1.Select.Option;
+var TabPane = antd_1.Tabs.TabPane;
+var ProjectTasksPage = (function (_super) {
+    __extends(ProjectTasksPage, _super);
+    function ProjectTasksPage() {
         var _this = _super.call(this) || this;
-        _this.watchingRole = false;
-        _this.formProjectName = 'projectName';
-        _this.formProjectInfo = 'projectInfo';
-        _this.userData = auth_login_service_1.default.userData();
-        _this.userStore = user_1.default;
-        _this.projectStore = project_1.default;
-        _this.fetchAllProject = function () {
-            http_service_1.default
-                .get('/api/v1/all-project')
-                .do(function (res) { return _this.setState({
-                projectAll: res.data
-            }); })
+        _this.formTaskName = "formTaskName";
+        _this.formGroupName = "formGroupName";
+        _this.watchGroups = function () {
+            _this.sub2 = project_1.default.group.data$
+                .do(function (e) { return _this.fetchGroups(); })
                 .subscribe();
         };
-        _this.onEnterProject = function (project) {
-            /**保存project数据 */
-            _this.projectStore.data.save(project);
-            /**项目角色判断 */
-            if (!_this.watchingRole) {
-                _this.watchingRole = true;
-                _this.watchRole();
+        /**初始化user、project数据 */
+        _this.initData = function () {
+            setTimeout(function () {
+                _this.sub = user_1.default.data.userData$
+                    .combineLatest(project_1.default.data.data$)
+                    .do(function (data) {
+                    _this.user = data[0];
+                    _this.project = data[1];
+                })
+                    .subscribe();
+            }, 1000);
+        };
+        /**权限检查：总负责人 */
+        _this.checkAuth2 = function () {
+            var _id = _this.user._id;
+            var _a = _this.project, creator = _a.creator, leader = _a.leader;
+            if (creator._id === _id) {
+                return true;
+            }
+            return false;
+        };
+        /**权限检查：总负责人或组长 */
+        _this.checkAuth = function () {
+            var _id = _this.user._id;
+            var _a = _this.project, creator = _a.creator, leader = _a.leader;
+            if (creator._id === _id) {
+                return true;
+            }
+            else if (leader.find(function (l) { return l._id === _id; })) {
+                return true;
+            }
+            return false;
+        };
+        /**增加项目任务分组 */
+        _this.addGroup = function () {
+            if (!_this.checkAuth2()) {
+                return antd_1.Modal.warning({
+                    title: '消息',
+                    content: '抱歉。该项目中您还没有新增分组的权限'
+                });
+            }
+            _this.setState({
+                showGroupForm: true
+            });
+            _this.fetchUser();
+        };
+        /**增加任务分组 */
+        _this.addTask = function (group) {
+            var _id = _this.user._id;
+            _this.selectGroupID = group._id;
+            if (_this.checkAuth2() || group.leadersID.find(function (leader) { return leader._id === _id; })) {
+                _this.setState({
+                    showTaskForm: true
+                });
+                _this.fetchUser();
+            }
+            else {
+                return antd_1.Modal.warning({
+                    title: '消息',
+                    content: '抱歉。该分组中您还没有新增任务的权限'
+                });
             }
         };
-        _this.watchRole = function () {
-            _this.sub = _this.projectStore.data.data$
-                .combineLatest(_this.userStore.data.userData$)
-                .debounceTime(500)
+        /**http:获取user */
+        _this.fetchUser = function () {
+            var pid = _this.props.params.id;
+            http_service_1.default
+                .get('/api/v1/all-member-leader', { pid: pid })
+                .map(function (res) {
+                return res.map(function (_a) {
+                    var _id = _a._id, name = _a.name, phone = _a.phone;
+                    return ({
+                        value: "" + _id,
+                        text: name + " - phone: " + phone + " "
+                    });
+                });
+            })
                 .do(function (res) {
-                console.log('权限判断中...');
-                var isLeader = false;
-                var isMember = false;
-                var isCreator = false;
-                var project = res[0], user = res[1];
-                var userID = user._id;
-                /**creator判断 */
-                if (userID === project.creator._id) {
-                    isCreator = true;
-                    _this.projectStore.role.save('creator');
-                    return _this.props.router.push("/project/" + project._id + "/tasks");
-                }
-                /**leader判断 */
-                if (project.leader.find(function (leader) { return leader._id === userID; })) {
-                    isLeader = true;
-                    _this.projectStore.role.save('leader');
-                    return _this.props.router.push("/project/" + project._id + "/tasks");
-                }
-                /**member判断 */
-                if (project.member.find(function (member) { return member._id === userID; })) {
-                    isMember = true;
-                    _this.projectStore.role.save('member');
-                    return _this.props.router.push("/project/" + project._id + "/tasks");
-                }
-                /**没有权限 */
-                return antd_1.Modal.warning({
-                    title: 'Warning',
-                    content: '您没有该项目的权限！请先申请权限'
+                _this.setState({
+                    dataSource: res
                 });
             })
                 .subscribe();
         };
-        _this.renderToJsx = function (project) {
-            return React.createElement(antd_1.Card, { key: project._id, className: "project-card", bodyStyle: { padding: 0, height: '100%' } },
-                React.createElement("div", { className: "image", onClick: function () { return _this.onEnterProject(project); } },
-                    React.createElement(Image_component_1.default, { src: project.cover })),
-                React.createElement("div", { className: "info", onClick: function () { return _this.onEnterProject(project); } },
-                    React.createElement("h3", null, project.name),
-                    React.createElement("p", null, project.info)));
+        /**http:获取 group$ */
+        _this.fetchGroups = function () {
+            var pid = _this.props.params.id;
+            _this.setState({ spinning: true });
+            http_service_1.default.get('/api/v1/all-group', { pid: pid })
+                .do(function (groups) {
+                console.log(groups);
+                _this.setState({
+                    groups: groups,
+                    spinning: false
+                });
+            })
+                .subscribe();
         };
-        _this.newProjectSubmit = function () {
-            var _a = _this, formProjectName = _a.formProjectName, formProjectInfo = _a.formProjectInfo;
-            _this.props.form.validateFields([formProjectName, formProjectInfo], function (err, values) {
-                if (!err) {
-                    _this.setState({
-                        formSubmiting: true
-                    });
-                    http_service_1.default.post('/api/v1/create-project', Object.assign(values, { creatorID: auth_login_service_1.default.userData()._id }))
-                        .do(_this.analyseProjectSubmit)
+        /**提交表单 —— 新增分组 */
+        _this.submitAddGroup = function () {
+            var formGroupName = _this.formGroupName;
+            var pid = _this.props.params.id;
+            _this.props.form.validateFields([formGroupName], function (err, values) {
+                if (!err && _this.groupLeaderID.length !== 0) {
+                    http_service_1.default.post('/api/v1/add-group', { pid: pid, touid: _this.groupLeaderID, fromuid: _this.user._id, groupName: values[_this.formGroupName] })
+                        .do(function (res) {
+                        if (res.status === '200') {
+                            notification_service_1.default.open({
+                                title: '消息',
+                                msg: '新增组别成功！'
+                            });
+                        }
+                        _this.setState({
+                            showGroupForm: false
+                        });
+                        _this.groupLeaderID = [];
+                    })
                         .subscribe();
+                }
+                else if (!err && _this.groupLeaderID.length === 0) {
+                    antd_1.Modal.warning({
+                        title: "消息",
+                        content: '请选择组长'
+                    });
                 }
             });
         };
-        _this.analyseProjectSubmit = function (res) {
-            notification_service_1.default.open({
-                title: '系统消息',
-                msg: res.msg,
-                type: res.status === '200' ? 'ok' : 'error'
+        /**提交表单 —— 新增任务 */
+        _this.submitAddTask = function () {
+            var _a = _this, formTaskName = _a.formTaskName, selectGroupID = _a.selectGroupID, taskExecutorID = _a.taskExecutorID;
+            var pid = _this.props.params.id;
+            _this.props.form.validateFields([formTaskName], function (err, values) {
+                if (!err && _this.taskExecutorID.length !== 0) {
+                    http_service_1.default.post('/api/v1/add-task', { creatorID: _this.user._id, title: values[formTaskName], groupID: selectGroupID, executorsID: taskExecutorID, pid: pid })
+                        .do(function (res) {
+                        if (res.status === '200') {
+                            notification_service_1.default.open({
+                                title: '消息',
+                                msg: '新增任务成功！'
+                            });
+                        }
+                        _this.setState({
+                            showTaskForm: false
+                        });
+                        _this.taskExecutorID = [];
+                    })
+                        .subscribe();
+                }
+                else if (!err && _this.taskExecutorID.length === 0) {
+                    antd_1.Modal.warning({
+                        title: "消息",
+                        content: '请选择任务执行者'
+                    });
+                }
             });
-            setTimeout(function () {
-                _this.setState({
-                    formSubmiting: false,
-                    dynamicFormShow: false
-                });
-                _this.props.form.resetFields();
-                _this.fetchAllProject();
-            }, 1500);
+        };
+        /**AutoComplete */
+        _this.choiceUser = function (value) {
+            _this.groupLeaderID = value;
+        };
+        _this.choiceExecutor = function (value) {
+            _this.taskExecutorID = value;
         };
         _this.state = {
-            dynamicFormShow: false,
-            formSubmiting: false,
-            projectAll: []
+            groups: [],
+            dataSource: [],
+            spinning: true,
+            showTaskForm: false,
+            showGroupForm: false
         };
         return _this;
     }
-    ProjectAllPage.prototype.componentDidMount = function () {
-        this.fetchAllProject();
+    ProjectTasksPage.prototype.componentDidMount = function () {
+        this.initData();
+        this.fetchGroups();
+        this.watchGroups();
     };
-    ProjectAllPage.prototype.componentWillUnmount = function () {
+    ProjectTasksPage.prototype.componentWillUnmount = function () {
         this.sub.unsubscribe();
+        this.sub2.unsubscribe();
     };
-    ProjectAllPage.prototype.render = function () {
+    ProjectTasksPage.prototype.render = function () {
         var _this = this;
+        var _a = this, formGroupName = _a.formGroupName, formTaskName = _a.formTaskName;
         var getFieldDecorator = this.props.form.getFieldDecorator;
-        var _a = this, formProjectName = _a.formProjectName, formProjectInfo = _a.formProjectInfo;
-        var _b = this.state, dynamicFormShow = _b.dynamicFormShow, formSubmiting = _b.formSubmiting, projectAll = _b.projectAll;
-        /**新增项目表单 */
-        var dynamicForm = React.createElement("div", { className: "modal-resetpsw-form" },
-            React.createElement("div", { className: "modal-img" },
+        var _b = this.state, showGroupForm = _b.showGroupForm, showTaskForm = _b.showTaskForm, dataSource = _b.dataSource, groups = _b.groups, spinning = _b.spinning;
+        /**新建分组表单 */
+        var addGroupForm = React.createElement("div", { className: "modal-resetpsw-form" },
+            React.createElement("div", { className: "modal-img", style: { height: 226 } },
                 React.createElement("img", { src: "/static/reset-psw.png", alt: "" }),
-                React.createElement("p", null, "\u521B\u5EFA\u4E00\u4E2A\u65B0\u9879\u76EE")),
+                React.createElement("p", null, "\u521B\u5EFA\u4E00\u4E2A\u65B0\u5206\u7EC4")),
             React.createElement(antd_1.Form, { className: "reset-form" },
-                React.createElement(FormItem, null, getFieldDecorator(formProjectName, {
-                    rules: [{ required: true, message: '项目名称不能为空' }],
-                })(React.createElement(antd_1.Input, { prefix: React.createElement(antd_1.Icon, { type: "file-text", style: { fontSize: 16 } }), placeholder: "项目名称" }))),
-                React.createElement(FormItem, null, getFieldDecorator(formProjectInfo, {})(React.createElement(antd_1.Input, { prefix: React.createElement(antd_1.Icon, { type: "link", style: { fontSize: 16 } }), placeholder: "项目简介（选项）" }))),
+                React.createElement(FormItem, null, getFieldDecorator(formGroupName, {
+                    rules: [{ required: true, message: '分组名称不能为空' }],
+                })(React.createElement(antd_1.Input, { prefix: React.createElement(antd_1.Icon, { type: "link", style: { fontSize: 16 } }), placeholder: "组别名称" }))),
                 React.createElement(FormItem, null,
-                    React.createElement(antd_1.Button, { type: "primary", size: 'large', style: { width: '100%' }, loading: formSubmiting, onClick: this.newProjectSubmit }, "\u5B8C\u6210\u5E76\u521B\u5EFA"))));
-        return React.createElement("div", { className: "project-all-page" },
-            React.createElement("div", { className: "my-project" },
-                React.createElement("div", { className: "title" },
-                    React.createElement("h2", null, "\u6211\u5DF2\u62E5\u6709\u7684\u9879\u76EE"),
-                    React.createElement("span", null)),
-                React.createElement("div", { className: "projects-block" },
-                    projectAll.map(function (project) {
-                        if (_this.userData._id === project.creator._id) {
-                            return _this.renderToJsx(project);
-                        }
-                        if (project.leader.find(function (leader) { return leader._id === _this.userData._id; })) {
-                            return _this.renderToJsx(project);
-                        }
-                        if (project.member.find(function (member) { return member._id === _this.userData._id; })) {
-                            return _this.renderToJsx(project);
-                        }
-                    }),
-                    React.createElement(antd_1.Card, { className: "project-card add-project-card", bodyStyle: { padding: 0, height: '100%' } },
-                        React.createElement(antd_1.Icon, { type: "plus-circle", className: "icon", onClick: function () { return _this.setState({ dynamicFormShow: true }); } }),
-                        React.createElement("p", null, "\u521B\u5EFA\u65B0\u9879\u76EE")))),
-            React.createElement("div", { className: "all-project" },
-                React.createElement("div", { className: "title" },
-                    React.createElement("h2", null, "\u5168\u90E8\u7684\u9879\u76EE"),
-                    React.createElement("span", null)),
-                React.createElement("div", { className: "projects-block" }, projectAll.map(this.renderToJsx))),
-            React.createElement(antd_1.Modal, { title: "创建新项目", footer: null, visible: dynamicFormShow, onCancel: function () { return _this.setState({ dynamicFormShow: false }); }, style: { width: '400px !import', padding: '0 85px' } }, dynamicForm));
+                    React.createElement(antd_1.Select, { mode: "multiple", onChange: this.choiceUser, placeholder: "请选择分组组长", style: { width: 315 } }, dataSource.map(function (data, key) {
+                        return React.createElement(Option, { value: data.value, key: key }, data.text);
+                    }))),
+                React.createElement(FormItem, null,
+                    React.createElement(antd_1.Button, { type: "primary", size: 'large', style: { width: '100%' }, onClick: this.submitAddGroup }, "\u5B8C\u6210\u5E76\u521B\u5EFA"))));
+        /**新建任务表单 */
+        var addTaskForm = React.createElement("div", { className: "modal-resetpsw-form" },
+            React.createElement("div", { className: "modal-img", style: { height: 226 } },
+                React.createElement("img", { src: "/static/reset-psw.png", alt: "" }),
+                React.createElement("p", null, "\u521B\u5EFA\u4E00\u4E2A\u65B0\u4EFB\u52A1")),
+            React.createElement(antd_1.Form, { className: "reset-form" },
+                React.createElement(FormItem, null, getFieldDecorator(formTaskName, {
+                    rules: [{ required: true, message: '任务名称不能为空' }],
+                })(React.createElement(antd_1.Input, { prefix: React.createElement(antd_1.Icon, { type: "link", style: { fontSize: 16 } }), placeholder: "任务名称" }))),
+                React.createElement(FormItem, null,
+                    React.createElement(antd_1.Select, { mode: "multiple", onChange: this.choiceExecutor, placeholder: "请选择任务执行者", style: { width: 315 } }, dataSource.map(function (data, key) {
+                        return React.createElement(Option, { value: data.value, key: Math.floor(Math.random() * 999) }, data.text);
+                    }))),
+                React.createElement(FormItem, null,
+                    React.createElement(antd_1.Button, { type: "primary", size: 'large', style: { width: '100%' }, onClick: this.submitAddTask }, "\u5B8C\u6210\u5E76\u521B\u5EFA"))));
+        /**全部任务列表 */
+        var allGroup = React.createElement(antd_1.Spin, { spinning: spinning },
+            React.createElement("ul", { className: "groups-container" }, groups.map(function (group, key) { return React.createElement("li", { key: key, className: "group" },
+                React.createElement("h3", null, group.groupName),
+                React.createElement("ul", { className: "task-list" },
+                    group.tasksID.map(function (task, key) { return !task.finished ?
+                        React.createElement("li", { key: key },
+                            React.createElement("div", { className: "check-block" },
+                                React.createElement(antd_1.Checkbox, null)),
+                            React.createElement("div", { className: "content" },
+                                React.createElement("p", null, task.title),
+                                React.createElement("div", { className: "tips-block" },
+                                    React.createElement(antd_1.Tooltip, { title: (task.executorsID.map(function (x) { return x.name; })).join('、') },
+                                        React.createElement("span", null,
+                                            React.createElement(Image_component_1.default, { src: "/static/touxiang.png" }))))))
+                        : ""; }),
+                    group.tasksID.map(function (task, key) { return task.finished ?
+                        React.createElement("li", { key: key },
+                            React.createElement("div", { className: "check-block" },
+                                React.createElement(antd_1.Checkbox, null)),
+                            React.createElement("div", { className: "content" },
+                                React.createElement("p", null, task.title),
+                                React.createElement("div", { className: "tips-block" },
+                                    React.createElement(antd_1.Tooltip, { title: (task.executorsID.map(function (x) { return x.name; })).join('、') },
+                                        React.createElement("span", null,
+                                            React.createElement(Image_component_1.default, { src: "/static/touxiang.png" }))))))
+                        : ""; })),
+                React.createElement("p", { className: "add-task", onClick: function () { return _this.addTask(group); } },
+                    React.createElement(antd_1.Icon, { type: "plus-circle", style: { marginRight: 10 } }),
+                    "\u6DFB\u52A0\u4EFB\u52A1")); })));
+        return React.createElement("div", { className: "project-tasks-page" },
+            React.createElement("div", { className: "add-group-block" },
+                React.createElement(antd_1.Button, { type: "primary", ghost: true, onClick: this.addGroup }, "\u65B0\u5EFA\u9879\u76EE\u5206\u7EC4")),
+            React.createElement(antd_1.Tabs, { defaultActiveKey: "1" },
+                React.createElement(TabPane, { tab: "全部任务", key: "1" }, allGroup),
+                React.createElement(TabPane, { tab: "我的任务", key: "2" }, "Content of Tab Pane 2")),
+            React.createElement(antd_1.Modal, { title: "创建新项目", footer: null, visible: showGroupForm, onCancel: function () { return _this.setState({ showGroupForm: false }); }, style: { width: '400px !import', padding: '0 85px' } }, addGroupForm),
+            React.createElement(antd_1.Modal, { title: "添加任务", footer: null, visible: showTaskForm, onCancel: function () { return _this.setState({ showTaskForm: false }); }, style: { width: '400px !import', padding: '0 85px' } }, addTaskForm));
     };
-    return ProjectAllPage;
+    return ProjectTasksPage;
 }(React.PureComponent));
-exports.default = antd_1.Form.create()(ProjectAllPage);
+exports.default = antd_1.Form.create()(ProjectTasksPage);
 
 
 /***/ }),
@@ -2770,7 +2880,7 @@ exports.default = Image;
 
 /***/ }),
 
-/***/ 1405:
+/***/ 1407:
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1387)(undefined);
@@ -2778,20 +2888,20 @@ exports = module.exports = __webpack_require__(1387)(undefined);
 
 
 // module
-exports.push([module.i, "/**2个大block */\n/**标题 */\n/**展示区 */\n/**card */\n/**card: hover */\n.project-all-page {\n  padding: 30px 100px;\n}\n.project-all-page .my-project {\n  margin-bottom: 30px;\n}\n.project-all-page .my-project .title {\n  position: relative;\n}\n.project-all-page .my-project .title h2 {\n  position: relative;\n  font-size: 24px;\n  font-weight: 400;\n  color: #666;\n  padding-bottom: 30px;\n}\n.project-all-page .my-project .title span {\n  display: block;\n  position: absolute;\n  height: 1px;\n  width: 80%;\n  left: 16%;\n  top: 30%;\n  background: linear-gradient(to right, #d9d9d9, #e9e9e9);\n}\n.project-all-page .my-project .projects-block .project-card {\n  width: 240px;\n  padding: 0;\n  display: inline-block;\n  margin: 10px 20px 10px;\n  position: relative;\n  cursor: pointer;\n  transition: all ease 0.4s;\n}\n.project-all-page .my-project .projects-block .project-card .image {\n  display: block;\n  width: 100%;\n}\n.project-all-page .my-project .projects-block .project-card .image img {\n  width: 100%;\n  display: block;\n}\n.project-all-page .my-project .projects-block .project-card .image p {\n  padding-top: 10px;\n}\n.project-all-page .my-project .projects-block .project-card .info {\n  position: absolute;\n  padding: 10px 16px;\n  background: rgba(0, 0, 0, 0.2);\n  width: 100%;\n  left: 0;\n  bottom: 0px;\n  border-radius: 0 0 4px 4px;\n}\n.project-all-page .my-project .projects-block .project-card .info h3 {\n  color: #fff;\n}\n.project-all-page .my-project .projects-block .project-card .info p {\n  color: #fff;\n}\n.project-all-page .my-project .projects-block .project-card:hover {\n  box-shadow: 10px 10px 10px #d9d9d9;\n  border: 1px solid #e9e9e9;\n}\n.project-all-page .my-project .projects-block .add-project-card {\n  min-height: 126px;\n  text-align: center;\n}\n.project-all-page .my-project .projects-block .add-project-card .icon {\n  transition: all 0.4s ease;\n  font-size: 45px;\n  color: #d9d9d9;\n  padding: 20px 0;\n  cursor: pointer;\n}\n.project-all-page .my-project .projects-block .add-project-card p {\n  transition: all 0.4s ease;\n  color: #999;\n  font-size: 16px;\n}\n.project-all-page .my-project .projects-block .add-project-card .ant-card-body:hover .icon,\n.project-all-page .my-project .projects-block .add-project-card .ant-card-body:hover p {\n  color: #49a9ee;\n}\n.project-all-page .all-project {\n  margin-bottom: 30px;\n}\n.project-all-page .all-project .title {\n  position: relative;\n}\n.project-all-page .all-project .title h2 {\n  position: relative;\n  font-size: 24px;\n  font-weight: 400;\n  color: #666;\n  padding-bottom: 30px;\n}\n.project-all-page .all-project .title span {\n  display: block;\n  position: absolute;\n  height: 1px;\n  width: 80%;\n  left: 16%;\n  top: 30%;\n  background: linear-gradient(to right, #d9d9d9, #e9e9e9);\n}\n.project-all-page .all-project .projects-block .project-card {\n  width: 240px;\n  padding: 0;\n  display: inline-block;\n  margin: 10px 20px 10px;\n  position: relative;\n  cursor: pointer;\n  transition: all ease 0.4s;\n}\n.project-all-page .all-project .projects-block .project-card .image {\n  display: block;\n  width: 100%;\n}\n.project-all-page .all-project .projects-block .project-card .image img {\n  width: 100%;\n  display: block;\n}\n.project-all-page .all-project .projects-block .project-card .image p {\n  padding-top: 10px;\n}\n.project-all-page .all-project .projects-block .project-card .info {\n  position: absolute;\n  padding: 10px 16px;\n  background: rgba(0, 0, 0, 0.2);\n  width: 100%;\n  left: 0;\n  bottom: 0px;\n  border-radius: 0 0 4px 4px;\n}\n.project-all-page .all-project .projects-block .project-card .info h3 {\n  color: #fff;\n}\n.project-all-page .all-project .projects-block .project-card .info p {\n  color: #fff;\n}\n.project-all-page .all-project .projects-block .project-card:hover {\n  box-shadow: 10px 10px 10px #d9d9d9;\n  border: 1px solid #e9e9e9;\n}\n", ""]);
+exports.push([module.i, ".project-tasks-page {\n  overflow: hidden;\n  position: relative;\n  box-sizing: border-box;\n  padding: 5px 15px 0 15px;\n  /*定义滚动条轨道 内阴影+圆角*/\n}\n.project-tasks-page .ant-tabs-bar {\n  margin-bottom: 0px;\n}\n.project-tasks-page .groups-container {\n  overflow: scroll;\n  white-space: nowrap;\n  padding-bottom: 20px;\n  box-sizing: border-box;\n  padding-top: 10px;\n}\n.project-tasks-page .groups-container .group {\n  width: 280px;\n  padding: 10px;\n  height: 465px;\n  position: relative;\n  margin-right: 20px;\n  border-radius: 8px;\n  display: inline-block;\n  box-sizing: border-box;\n  background-color: #f5f5f5;\n  box-shadow: 10px 10px 10px #d9d9d9;\n}\n.project-tasks-page .groups-container .group h3 {\n  margin-bottom: 3px;\n  font-size: 15px;\n}\n.project-tasks-page .groups-container .group .task-list {\n  height: 400px;\n  overflow: scroll;\n  position: relative;\n  padding-bottom: 30px;\n}\n.project-tasks-page .groups-container .group .task-list li {\n  list-style: none;\n  border-radius: 5px;\n  margin-bottom: 12px;\n  position: relative;\n  background-color: #fff;\n  border: 1px solid #d9d9d9;\n  padding: 10px 10px 10px 40px;\n}\n.project-tasks-page .groups-container .group .task-list li .check-block {\n  top: 10px;\n  left: 10px;\n  position: absolute;\n  display: inline-block;\n}\n.project-tasks-page .groups-container .group .task-list li .check-block .ant-checkbox-inner {\n  transform: scale(1.5);\n}\n.project-tasks-page .groups-container .group .task-list li .check-block input.checkbox {\n  transform: scale(1.5);\n}\n.project-tasks-page .groups-container .group .task-list li .content .tips-block {\n  right: 20px;\n  top: 10px;\n  position: absolute;\n}\n.project-tasks-page .groups-container .group .task-list li .content .tips-block img {\n  width: 25px;\n  border-radius: 50%;\n}\n.project-tasks-page .groups-container .group .task-list::-webkit-scrollbar {\n  display: none;\n}\n.project-tasks-page .groups-container .group .add-task {\n  left: 0px;\n  width: 100%;\n  bottom: 0px;\n  cursor: pointer;\n  color: #108EE9;\n  position: absolute;\n  padding: 10px 12px;\n  border-radius: 5px;\n  box-sizing: border-box;\n  transition: all ease 0.4s;\n}\n.project-tasks-page .groups-container .group .add-task:hover {\n  background-color: #d9d9d9;\n}\n.project-tasks-page .groups-container .add-group {\n  box-shadow: none;\n  background-color: #fff;\n}\n.project-tasks-page .groups-container .add-group p {\n  cursor: pointer;\n  color: #108EE9;\n  border-radius: 8px;\n  padding: 8px 25px;\n  background-color: #e9e9e9;\n  position: absolute;\n  top: 40px;\n  left: 0;\n  width: 100%;\n}\n.project-tasks-page .add-group-block {\n  top: 7px;\n  left: 250px;\n  z-index: 100;\n  position: absolute;\n}\n.project-tasks-page .groups-container::-webkit-scrollbar {\n  width: 0;\n  height: 1;\n  background-color: #F5F5F5;\n}\n.project-tasks-page .groups-container::-webkit-scrollbar-track {\n  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);\n  border-radius: 10px;\n  background-color: #F5F5F5;\n}\n.project-tasks-page .groups-container::-webkit-scrollbar-thumb {\n  border-radius: 10px;\n  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);\n  background-color: #919191;\n}\n", ""]);
 
 // exports
 
 
 /***/ }),
 
-/***/ 1416:
+/***/ 1418:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1405);
+var content = __webpack_require__(1407);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(1388)(content, {});
@@ -2800,8 +2910,8 @@ if(content.locals) module.exports = content.locals;
 if(false) {
 	// When the styles change, update the <style> tags
 	if(!content.locals) {
-		module.hot.accept("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./project-all.less", function() {
-			var newContent = require("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./project-all.less");
+		module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/less-loader/index.js!./tasks.less", function() {
+			var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/less-loader/index.js!./tasks.less");
 			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 			update(newContent);
 		});

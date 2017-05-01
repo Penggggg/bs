@@ -5,6 +5,8 @@ import { EventProjectMember } from './event-project-member';
 import { EventProjectGetIn } from './event-project-getIn';
 import { EventProjectChat } from './event-project-chat';
 import { EventProjectFile } from './event-project-file';
+import { EventProjectGroup } from './event-project-group';
+import { EventProjectNotification } from './event-notification';
 
 class socketService {
 
@@ -54,6 +56,8 @@ class socketService {
         this.connectingProjectSocket[pid].events.push( new EventProjectGetIn( socketClient ));
         this.connectingProjectSocket[pid].events.push( new EventProjectChat( socketClient ))
         this.connectingProjectSocket[pid].events.push( new EventProjectFile( socketClient ));
+        this.connectingProjectSocket[pid].events.push( new EventProjectGroup( socketClient ));
+        this.connectingProjectSocket[pid].events.push( new EventProjectNotification( socketClient ));
     }
 
     public disconnectNsp( name: string ) {

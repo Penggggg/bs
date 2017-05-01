@@ -24,6 +24,12 @@ export namespace CON {
 
             /**文件信息 */
             export const file = 'file'
+
+            /**任务组别 */
+            export const group = "group";
+
+            /**通知 */
+            export const notification = 'notification';
         }
     }
 
@@ -39,7 +45,8 @@ export namespace CON {
 export namespace ENUM {
 
     export const enum MsgType {
-        InviteMember = 1
+        InviteMember = 1, 
+        GroupLeader 
     }
 
     export const enum MsgFormType {

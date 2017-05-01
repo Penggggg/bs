@@ -4,8 +4,7 @@
 
     width: 280px;
     padding: 10px;
-    height: 475px;
-    float: left;
+    height: 465px;
     position: relative;
     margin-right: 20px;
     border-radius: 8px;
@@ -97,9 +96,13 @@
 
     
     overflow: hidden;
+    position: relative;
     box-sizing: border-box;
-    padding: 15px 15px 0 15px;
+    padding: 5px 15px 0 15px;
     
+    .ant-tabs-bar {
+        margin-bottom: 0px;
+    }
 
     .groups-container {
 
@@ -107,6 +110,7 @@
         white-space:nowrap;
         padding-bottom: 20px;
         box-sizing: border-box;
+        padding-top: 10px;
 
         .group {
 
@@ -125,8 +129,21 @@
                 border-radius: 8px;
                 padding: 8px 25px;
                 background-color: #e9e9e9;
+
+                position: absolute;
+                top: 40px;
+                left: 0;
+                width: 100%;
+
             }
         }
+    }
+
+    .add-group-block {
+        top: 7px;
+        left: 250px;
+        z-index: 100;
+        position: absolute;
     }
 
 

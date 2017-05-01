@@ -22,6 +22,10 @@ var CON;
             project.chat = 'chat';
             /**文件信息 */
             project.file = 'file';
+            /**任务组别 */
+            project.group = "group";
+            /**通知 */
+            project.notification = 'notification';
         })(project = socketEvent.project || (socketEvent.project = {}));
     })(socketEvent = CON.socketEvent || (CON.socketEvent = {}));
     /**socket命名空间 */

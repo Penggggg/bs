@@ -1,7 +1,7 @@
 
 import { CON } from '../../index.con';
 
-export class Group {
+export class Notification {
 
     private io: SocketIO.Namespace
 
@@ -9,8 +9,8 @@ export class Group {
         this.io = io;
     }
 
-    public broadcast(  ) {
-        this.io.emit(`${CON.socketEvent.project.group}`, { })
+    public broadcast( arg: { msg: string } ) {
+        this.io.emit(`${CON.socketEvent.project.notification}`, { ...arg })
     }
 
 }

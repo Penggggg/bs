@@ -10,12 +10,14 @@ var role_store_1 = __webpack_require__(1370);
 var data_store_1 = __webpack_require__(1368);
 var chat_store_1 = __webpack_require__(1367);
 var file_store_1 = __webpack_require__(1369);
+var group_store_1 = __webpack_require__(1428);
 var ProjectStore = (function () {
     function ProjectStore() {
         this.role = new role_store_1.default();
         this.data = new data_store_1.default();
         this.chat = new chat_store_1.ProjectChat();
         this.file = new file_store_1.ProjectFile();
+        this.group = new group_store_1.ProjectGroup();
     }
     return ProjectStore;
 }());
@@ -570,6 +572,98 @@ exports.default = UserSignIn;
 
 /***/ }),
 
+/***/ 1428:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var rxjs_1 = __webpack_require__(29);
+var ProjectGroup = (function () {
+    function ProjectGroup() {
+        var _this = this;
+        var subject = new rxjs_1.ReplaySubject(1);
+        var source = rxjs_1.Observable.create(function (observer) {
+            _this.data$$ = observer;
+            observer.next();
+        }).startWith(null);
+        this.data$ = source.multicast(subject).refCount();
+        this.data$.subscribe();
+    }
+    ProjectGroup.prototype.save = function () {
+        this.data$$.next(1);
+    };
+    return ProjectGroup;
+}());
+exports.ProjectGroup = ProjectGroup;
+
+
+/***/ }),
+
+/***/ 1429:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var antd_1 = __webpack_require__(68);
+var rxjs_1 = __webpack_require__(29);
+var index_con_1 = __webpack_require__(59);
+var project_1 = __webpack_require__(119);
+var EventProjectGroup = (function () {
+    function EventProjectGroup(io) {
+        this.init(io);
+    }
+    EventProjectGroup.prototype.init = function (io) {
+        this.sub = rxjs_1.Observable
+            .fromEvent(io, "" + index_con_1.CON.socketEvent.project.group)
+            .do(function (res) {
+            antd_1.message.success('项目状态有更新~');
+            project_1.default.group.save();
+        })
+            .subscribe();
+    };
+    EventProjectGroup.prototype.cancelSub = function () {
+        this.sub.unsubscribe();
+    };
+    return EventProjectGroup;
+}());
+exports.EventProjectGroup = EventProjectGroup;
+
+
+/***/ }),
+
+/***/ 1430:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var antd_1 = __webpack_require__(68);
+var rxjs_1 = __webpack_require__(29);
+var index_con_1 = __webpack_require__(59);
+var EventProjectNotification = (function () {
+    function EventProjectNotification(io) {
+        this.init(io);
+    }
+    EventProjectNotification.prototype.init = function (io) {
+        this.sub = rxjs_1.Observable
+            .fromEvent(io, "" + index_con_1.CON.socketEvent.project.notification)
+            .do(function (res) {
+            antd_1.message.success(res.msg);
+        })
+            .subscribe();
+    };
+    EventProjectNotification.prototype.cancelSub = function () {
+        this.sub.unsubscribe();
+    };
+    return EventProjectNotification;
+}());
+exports.EventProjectNotification = EventProjectNotification;
+
+
+/***/ }),
+
 /***/ 157:
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -642,7 +736,7 @@ exports.default = {
             path: 'projects',
             onEnter: auth_login_service_1.default.requireLogin,
             getComponent: function (nextstate, cb) {
-                __webpack_require__.e/* import() */(2).then(__webpack_require__.bind(null, 1382)).then(function (module) {
+                __webpack_require__.e/* import() */(3).then(__webpack_require__.bind(null, 1382)).then(function (module) {
                     cb(null, module.default);
                 }).catch(function (err) { return showMessage(err, './project-all.page'); });
             }
@@ -659,7 +753,7 @@ exports.default = {
                     path: 'tasks',
                     onEnter: auth_login_service_1.default.requireLogin,
                     getComponent: function (nextstate, cb) {
-                        __webpack_require__.e/* import() */(5).then(__webpack_require__.bind(null, 1386)).then(function (module) {
+                        __webpack_require__.e/* import() */(2).then(__webpack_require__.bind(null, 1386)).then(function (module) {
                             cb(null, module.default);
                         }).catch(function (err) { return showMessage(err, './project-tasks.page'); });
                     }
@@ -677,7 +771,7 @@ exports.default = {
                     path: 'chats',
                     onEnter: auth_login_service_1.default.requireLogin,
                     getComponent: function (nextstate, cb) {
-                        __webpack_require__.e/* import() */(3).then(__webpack_require__.bind(null, 1380)).then(function (module) {
+                        __webpack_require__.e/* import() */(4).then(__webpack_require__.bind(null, 1380)).then(function (module) {
                             cb(null, module.default);
                         }).catch(function (err) { return showMessage(err, './project-chat.page'); });
                     }
@@ -704,7 +798,7 @@ exports.default = {
         }, {
             path: 'msgs',
             getComponent: function (nextstate, cb) {
-                __webpack_require__.e/* import() */(4).then(__webpack_require__.bind(null, 1378)).then(function (module) {
+                __webpack_require__.e/* import() */(5).then(__webpack_require__.bind(null, 1378)).then(function (module) {
                     cb(null, module.default);
                 }).catch(function (err) { return showMessage(err, './msg-all.page'); });
             },
@@ -957,6 +1051,8 @@ var event_project_member_1 = __webpack_require__(1364);
 var event_project_getIn_1 = __webpack_require__(1363);
 var event_project_chat_1 = __webpack_require__(1361);
 var event_project_file_1 = __webpack_require__(1362);
+var event_project_group_1 = __webpack_require__(1429);
+var event_notification_1 = __webpack_require__(1430);
 var socketService = (function () {
     function socketService() {
         this.SignIn = event_signIn_1.default;
@@ -989,6 +1085,8 @@ var socketService = (function () {
         this.connectingProjectSocket[pid].events.push(new event_project_getIn_1.EventProjectGetIn(socketClient));
         this.connectingProjectSocket[pid].events.push(new event_project_chat_1.EventProjectChat(socketClient));
         this.connectingProjectSocket[pid].events.push(new event_project_file_1.EventProjectFile(socketClient));
+        this.connectingProjectSocket[pid].events.push(new event_project_group_1.EventProjectGroup(socketClient));
+        this.connectingProjectSocket[pid].events.push(new event_notification_1.EventProjectNotification(socketClient));
     };
     socketService.prototype.disconnectNsp = function (name) {
         this.connectedNameSpace[name].disconnect();
@@ -1037,6 +1135,10 @@ var CON;
             project.chat = 'chat';
             /**文件信息 */
             project.file = 'file';
+            /**任务组别 */
+            project.group = "group";
+            /**通知 */
+            project.notification = 'notification';
         })(project = socketEvent.project || (socketEvent.project = {}));
     })(socketEvent = CON.socketEvent || (CON.socketEvent = {}));
     /**socket命名空间 */

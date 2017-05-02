@@ -57,6 +57,10 @@ TaskSchema.statics.findOne$ = function( id ) {
     return new Promise(( resolve, reject ) => {
         this.find({ _id: id }, null, null )
             .populate({
+                path: 'childTasksID',
+                select: 'content createdTime finished'
+            })
+            .populate({
                 path: 'taskTalksID',
                 select: 'content createdTime creatorID',
                 populate: {

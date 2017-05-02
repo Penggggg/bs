@@ -96,6 +96,12 @@ declare namespace API {
             status: '200' | '400' | '500'        
         }
 
+        /**POST：新建任务的子任务 */
+        export interface AddChildTask {
+            data: Schema.Task$,
+            status: '200' | '400' | '500'  
+        }
+
 
     }
 
@@ -216,6 +222,10 @@ declare namespace API {
             pid: string
         }
 
+        /**POST：新建任务的子任务 */
+        export interface AddChildTask extends Partial<Schema.ChildTask> {
+            pid: string
+        }
     }
 
 }

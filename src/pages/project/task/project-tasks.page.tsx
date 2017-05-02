@@ -3,7 +3,7 @@ import './tasks.less';
 import * as React from 'react';
 import { Subscription } from 'rxjs';
 import { RouteComponentProps } from 'react-router';
-import { Icon, Modal, Form, Input, Button, AutoComplete, Select, Checkbox, Tooltip, Spin, Tabs, Row, Col, DatePicker  } from 'antd';
+import { Icon, Modal, Form, Input, Button, AutoComplete, Select, Checkbox, Tooltip, Spin, Tabs, Row, Col, DatePicker, Tag } from 'antd';
 
 import { IModel } from '../../../component/IModal';
 import userStore from '../../../store/user';
@@ -347,13 +347,16 @@ class ProjectTasksPage extends React.PureComponent< IProps, IState > {
                                                 <Checkbox />
                                             </div>
                                             <div className="content" onClick={()=>this.showTask(task._id)}>
-                                                <p>{ task.title }</p>
+                                                <h5>{ task.title }</h5>
                                                 <div className="tips-block">
                                                     <Tooltip title={ (task.executorsID.map( x => x.name )).join('、') }>
                                                         <span>
                                                             <Image src="/static/touxiang.png" />
                                                         </span>
                                                     </Tooltip>
+                                                </div>
+                                                <div className="other">
+                                                    <Tag color="#108ee9">1/2</Tag>'
                                                 </div>
                                             </div>
                                         </li>

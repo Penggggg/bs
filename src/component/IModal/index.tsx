@@ -1,7 +1,7 @@
 import './index.less'
 import * as React from 'react';
 import * as ReactDom from 'react-dom';
-import { Modal, Spin, Row, Col, DatePicker, Select, Tooltip, Button, message } from 'antd';
+import { Modal, Spin, Row, Col, DatePicker, Select, Tooltip, Button, message, Checkbox  } from 'antd';
 
 import userStore from '../../store/user';
 import http from '../../services/http.service';
@@ -36,10 +36,12 @@ export class IModel extends React.PureComponent< IProps, IState > {
         super( );
         this.state = {
             task: null,
-            spinning: true,
-            showContentEdit: false,
+            spinning: true,          
             chatValue: '',
-            contentValue: ''
+            contentValue: '',
+            childTaskValue: '',
+            showContentEdit: false,
+            showChildTaskEdit: false
         }
     }
 
@@ -138,7 +140,6 @@ export class IModel extends React.PureComponent< IProps, IState > {
             .do( res => {
                 if ( res.status === '200' ) {
                     this.setState({
-                        chatValue: '',
                         task: res.data,
                         contentValue: res.data.content,
                         showContentEdit: false
@@ -148,9 +149,39 @@ export class IModel extends React.PureComponent< IProps, IState > {
                         content: '成功更新任务内容！'
                     })
                 }
-                console.log(res)
             })
             .subscribe( )
+        }
+    }
+
+    submitTask = ( ) => {
+
+        let { uid } = this;
+        let { tid } = this.props;
+        let { childTaskValue } = this.state;
+        let { pid } = this.state.task.groupID;
+
+        if ( this.authCheck( )) {
+
+            http.post< API.Res.AddChildTask, API.Query.AddChildTask>('/api/v1/add-child-task', {
+                content: childTaskValue, creatorID: uid, taskID: tid, pid
+            })
+            .do( res => {
+                if ( res.status === '200' ) {
+                    this.setState({
+                        task: res.data,
+                        childTaskValue: '',
+                        showChildTaskEdit: false
+                    })
+                    message.success({
+                        title: '消息',
+                        content: '成功添加一条子任务！'
+                    })
+                }
+                console.log(res)
+            })
+            .subscribe( )       
+
         }
     }
 
@@ -161,7 +192,7 @@ export class IModel extends React.PureComponent< IProps, IState > {
     }
 
     render( ) {
-        let { spinning, task, chatValue, contentValue, showContentEdit } = this.state;
+        let { spinning, task, chatValue, contentValue, showContentEdit, childTaskValue, showChildTaskEdit } = this.state;
         return(
             <Modal title={`任务详情`} visible={ true } onCancel={ this.onNo } footer={ null } className="task-detail-modal">
                 <Spin spinning={ spinning } size="large">
@@ -205,11 +236,27 @@ export class IModel extends React.PureComponent< IProps, IState > {
                             }
                         </div>
                         <div className="child-task-list">
+                            <h5>子任务列表</h5>
+                            <Button className="open" onClick={() => this.setState({ showChildTaskEdit: true, childTaskValue: '' })}>添加</Button>
                         {
                             task.childTasksID.length !== 0 ?
-                            <ul>123</ul>
-                            :
-                            <h5>点击添加子任务</h5>
+                            <ul style={{ paddingTop: 15 }}>
+                            {
+                                task.childTasksID.map(( childtask , k ) => <li key={ k }>
+                                    <Checkbox value={ childtask.finished} />
+                                    <h5>{ childtask.content }</h5>
+                                    <span className="time">{ ( new Date( childtask.createdTime )).toLocaleString( ) }</span>
+                                </li>)
+                            }
+                            </ul>
+                            :""
+                        }
+                        {
+                            <div className={ showChildTaskEdit? "edit-block show" : "edit-block" }>
+                                <textarea type="textarea" className="ant-input" rows={2} 
+                                        value={ childTaskValue } onChange={(e: any) => this.setState({ childTaskValue: e.target.value }) } />
+                                    <Button onClick={this.submitTask}>确定</Button>
+                            </div>           
                         }
                         </div>
                         <div className="member">
@@ -275,9 +322,14 @@ interface IProps {
 }
 
 interface IState {
+
     spinning: boolean
+    task: Schema.Task$ | null
+    
     chatValue: string
     contentValue: string
+    childTaskValue: string
+
     showContentEdit: boolean
-    task: Schema.Task$ | null
+    showChildTaskEdit: boolean
 }

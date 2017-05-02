@@ -283,11 +283,14 @@ var ProjectTasksPage = (function (_super) {
                             React.createElement("div", { className: "check-block" },
                                 React.createElement(antd_1.Checkbox, null)),
                             React.createElement("div", { className: "content", onClick: function () { return _this.showTask(task._id); } },
-                                React.createElement("p", null, task.title),
+                                React.createElement("h5", null, task.title),
                                 React.createElement("div", { className: "tips-block" },
                                     React.createElement(antd_1.Tooltip, { title: (task.executorsID.map(function (x) { return x.name; })).join('、') },
                                         React.createElement("span", null,
-                                            React.createElement(Image_component_1.default, { src: "/static/touxiang.png" }))))))
+                                            React.createElement(Image_component_1.default, { src: "/static/touxiang.png" })))),
+                                React.createElement("div", { className: "other" },
+                                    React.createElement(antd_1.Tag, { color: "#108ee9" }, "1/2"),
+                                    "'")))
                         : ""; }),
                     group.tasksID.map(function (task, key) { return task.finished ?
                         React.createElement("li", { key: key },
@@ -2910,7 +2913,7 @@ exports = module.exports = __webpack_require__(1390)(undefined);
 
 
 // module
-exports.push([module.i, ".task-detail-modal {\n  z-index: 110;\n  top: 65px !important;\n  width: 580px !important;\n}\n.task-detail-modal .ant-modal-header {\n  background-color: #f7f7f7;\n}\n.task-detail-modal .ant-modal-body {\n  height: 420px;\n  overflow: scroll;\n}\n.task-detail-modal .ant-modal-body::-webkit-scrollbar {\n  display: none;\n}\n.task-detail-modal .ant-modal-content {\n  padding-bottom: 80px;\n  position: relative;\n  background-color: #f7f7f7;\n}\n.task-detail-modal .ant-modal-content .title {\n  margin-bottom: 10px;\n}\n.task-detail-modal .ant-modal-content .header-bar {\n  position: relative;\n  border: 1px solid #e9e9e9;\n  background: #fff;\n  border-radius: 6px;\n  box-sizing: border-box;\n  padding: 8px 5px 8px 20px;\n  margin-bottom: 10px;\n}\n.task-detail-modal .ant-modal-content .header-bar .ant-col-8 {\n  padding: 3px;\n  position: relative;\n  box-sizing: border-box;\n}\n.task-detail-modal .ant-modal-content .header-bar .ant-col-8 p.small-title {\n  padding-bottom: 5px;\n}\n.task-detail-modal .ant-modal-content .header-bar .ant-col-8 img {\n  top: 28px;\n  left: 3px;\n  width: 25px;\n  position: absolute;\n  border-radius: 50%;\n}\n.task-detail-modal .ant-modal-content .header-bar .line {\n  border-right: 1px solid #e9e9e9;\n}\n.task-detail-modal .ant-modal-content .content {\n  position: relative;\n  border: 1px solid #e9e9e9;\n  background: #fff;\n  border-radius: 6px;\n  box-sizing: border-box;\n  padding: 8px 5px 8px 20px;\n  margin-bottom: 10px;\n  min-height: 50px;\n}\n.task-detail-modal .ant-modal-content .content button.edit {\n  top: 10px;\n  right: 10px;\n  position: absolute;\n}\n.task-detail-modal .ant-modal-content .content .edit-block {\n  height: 0;\n  opacity: 0;\n  position: relative;\n  margin-top: 20px;\n  transform: scale(0);\n  transition: all ease 0.4s;\n}\n.task-detail-modal .ant-modal-content .content .edit-block textarea {\n  padding: 10px 100px 10px 15px;\n}\n.task-detail-modal .ant-modal-content .content .edit-block button {\n  right: 20px;\n  bottom: 10px;\n  position: absolute;\n}\n.task-detail-modal .ant-modal-content .content .edit-block.show {\n  height: auto;\n  opacity: 1;\n  transform: scale(1);\n}\n.task-detail-modal .ant-modal-content .child-task-list {\n  position: relative;\n  border: 1px solid #e9e9e9;\n  background: #fff;\n  border-radius: 6px;\n  box-sizing: border-box;\n  padding: 8px 5px 8px 20px;\n  margin-bottom: 10px;\n}\n.task-detail-modal .ant-modal-content .member {\n  position: relative;\n  border: 1px solid #e9e9e9;\n  background: #fff;\n  border-radius: 6px;\n  box-sizing: border-box;\n  padding: 8px 5px 8px 20px;\n  margin-bottom: 10px;\n}\n.task-detail-modal .ant-modal-content .member img {\n  width: 25px;\n  border-radius: 50%;\n  margin-right: 8px;\n}\n.task-detail-modal .ant-modal-content .member h5 {\n  margin-bottom: 5px;\n}\n.task-detail-modal .ant-modal-content .chat-list {\n  min-height: 50px;\n  position: relative;\n  border: 1px solid #e9e9e9;\n  background: #fff;\n  border-radius: 6px;\n  box-sizing: border-box;\n  padding: 8px 5px 8px 20px;\n  margin-bottom: 10px;\n}\n.task-detail-modal .ant-modal-content .chat-list li {\n  position: relative;\n  padding: 0 0px 10px 45px;\n  box-sizing: border-box;\n  margin: 5px 0 5px 0;\n  border-bottom: 1px solid #f5f5f5;\n}\n.task-detail-modal .ant-modal-content .chat-list li img {\n  top: 10px;\n  left: 0px;\n  width: 30px;\n  height: 30px;\n  position: absolute;\n  border-radius: 50%;\n}\n.task-detail-modal .ant-modal-content .chat-list li span.time {\n  top: 0px;\n  right: 10px;\n  position: absolute;\n}\n.task-detail-modal .ant-modal-content .add-chat {\n  left: 3%;\n  bottom: 20px;\n  width: 94%;\n  position: absolute;\n}\n.task-detail-modal .ant-modal-content .add-chat textarea {\n  padding: 10px 100px 10px 15px;\n}\n.task-detail-modal .ant-modal-content .add-chat button {\n  right: 20px;\n  bottom: 10px;\n  position: absolute;\n}\n", ""]);
+exports.push([module.i, ".task-detail-modal {\n  z-index: 110;\n  top: 65px !important;\n  width: 580px !important;\n}\n.task-detail-modal .ant-modal-header {\n  background-color: #f7f7f7;\n}\n.task-detail-modal .ant-modal-body {\n  height: 420px;\n  overflow: scroll;\n}\n.task-detail-modal .ant-modal-body::-webkit-scrollbar {\n  display: none;\n}\n.task-detail-modal .ant-modal-content {\n  padding-bottom: 80px;\n  position: relative;\n  background-color: #f7f7f7;\n}\n.task-detail-modal .ant-modal-content .title {\n  margin-bottom: 10px;\n}\n.task-detail-modal .ant-modal-content .header-bar {\n  position: relative;\n  border: 1px solid #e9e9e9;\n  background: #fff;\n  border-radius: 6px;\n  box-sizing: border-box;\n  padding: 8px 5px 8px 20px;\n  margin-bottom: 10px;\n}\n.task-detail-modal .ant-modal-content .header-bar .ant-col-8 {\n  padding: 3px;\n  position: relative;\n  box-sizing: border-box;\n}\n.task-detail-modal .ant-modal-content .header-bar .ant-col-8 p.small-title {\n  padding-bottom: 5px;\n}\n.task-detail-modal .ant-modal-content .header-bar .ant-col-8 img {\n  top: 28px;\n  left: 3px;\n  width: 25px;\n  position: absolute;\n  border-radius: 50%;\n}\n.task-detail-modal .ant-modal-content .header-bar .line {\n  border-right: 1px solid #e9e9e9;\n}\n.task-detail-modal .ant-modal-content .content {\n  position: relative;\n  border: 1px solid #e9e9e9;\n  background: #fff;\n  border-radius: 6px;\n  box-sizing: border-box;\n  padding: 8px 5px 8px 20px;\n  margin-bottom: 10px;\n  min-height: 50px;\n}\n.task-detail-modal .ant-modal-content .content button.edit {\n  top: 10px;\n  right: 10px;\n  position: absolute;\n}\n.task-detail-modal .ant-modal-content .content .edit-block {\n  height: 0;\n  opacity: 0;\n  position: relative;\n  margin-top: 20px;\n  transform: scale(0);\n  transition: all ease 0.4s;\n}\n.task-detail-modal .ant-modal-content .content .edit-block textarea {\n  padding: 10px 100px 10px 15px;\n}\n.task-detail-modal .ant-modal-content .content .edit-block button {\n  right: 20px;\n  bottom: 10px;\n  position: absolute;\n}\n.task-detail-modal .ant-modal-content .content .edit-block.show {\n  height: auto;\n  opacity: 1;\n  transform: scale(1);\n}\n.task-detail-modal .ant-modal-content .child-task-list {\n  min-height: 50px;\n  position: relative;\n  border: 1px solid #e9e9e9;\n  background: #fff;\n  border-radius: 6px;\n  box-sizing: border-box;\n  padding: 8px 5px 8px 20px;\n  margin-bottom: 10px;\n}\n.task-detail-modal .ant-modal-content .child-task-list button.open {\n  top: 10px;\n  right: 10px;\n  position: absolute;\n}\n.task-detail-modal .ant-modal-content .child-task-list li {\n  margin-bottom: 5px;\n  margin: 5px 0 5px 0;\n  position: relative;\n  box-sizing: border-box;\n  padding: 0 150px 10px 20px;\n  border-bottom: 1px solid #f5f5f5;\n}\n.task-detail-modal .ant-modal-content .child-task-list li h5 {\n  padding-left: 5px;\n}\n.task-detail-modal .ant-modal-content .child-task-list li span.time {\n  top: 0px;\n  right: 10px;\n  position: absolute;\n}\n.task-detail-modal .ant-modal-content .child-task-list li .ant-checkbox-inner {\n  transform: scale(1.5);\n}\n.task-detail-modal .ant-modal-content .child-task-list li .ant-checkbox-wrapper {\n  top: 3px;\n  left: 0;\n  position: absolute;\n}\n.task-detail-modal .ant-modal-content .child-task-list .edit-block {\n  height: 0;\n  opacity: 0;\n  position: relative;\n  margin-top: 20px;\n  transform: scale(0);\n  transition: all ease 0.4s;\n}\n.task-detail-modal .ant-modal-content .child-task-list .edit-block textarea {\n  padding: 10px 100px 10px 15px;\n}\n.task-detail-modal .ant-modal-content .child-task-list .edit-block button {\n  right: 20px;\n  bottom: 10px;\n  position: absolute;\n}\n.task-detail-modal .ant-modal-content .child-task-list .edit-block.show {\n  height: auto;\n  opacity: 1;\n  transform: scale(1);\n}\n.task-detail-modal .ant-modal-content .member {\n  position: relative;\n  border: 1px solid #e9e9e9;\n  background: #fff;\n  border-radius: 6px;\n  box-sizing: border-box;\n  padding: 8px 5px 8px 20px;\n  margin-bottom: 10px;\n}\n.task-detail-modal .ant-modal-content .member img {\n  width: 25px;\n  border-radius: 50%;\n  margin-right: 8px;\n}\n.task-detail-modal .ant-modal-content .member h5 {\n  margin-bottom: 5px;\n}\n.task-detail-modal .ant-modal-content .chat-list {\n  min-height: 50px;\n  position: relative;\n  border: 1px solid #e9e9e9;\n  background: #fff;\n  border-radius: 6px;\n  box-sizing: border-box;\n  padding: 8px 5px 8px 20px;\n  margin-bottom: 10px;\n}\n.task-detail-modal .ant-modal-content .chat-list li {\n  position: relative;\n  padding: 0 0px 10px 45px;\n  box-sizing: border-box;\n  margin: 5px 0 5px 0;\n  border-bottom: 1px solid #f5f5f5;\n}\n.task-detail-modal .ant-modal-content .chat-list li img {\n  top: 10px;\n  left: 0px;\n  width: 30px;\n  height: 30px;\n  position: absolute;\n  border-radius: 50%;\n}\n.task-detail-modal .ant-modal-content .chat-list li span.time {\n  top: 0px;\n  right: 10px;\n  position: absolute;\n}\n.task-detail-modal .ant-modal-content .add-chat {\n  left: 3%;\n  bottom: 20px;\n  width: 94%;\n  position: absolute;\n}\n.task-detail-modal .ant-modal-content .add-chat textarea {\n  padding: 10px 100px 10px 15px;\n}\n.task-detail-modal .ant-modal-content .add-chat button {\n  right: 20px;\n  bottom: 10px;\n  position: absolute;\n}\n", ""]);
 
 // exports
 
@@ -3095,7 +3098,6 @@ var IModel = (function (_super) {
                     .do(function (res) {
                     if (res.status === '200') {
                         _this.setState({
-                            chatValue: '',
                             task: res.data,
                             contentValue: res.data.content,
                             showContentEdit: false
@@ -3103,6 +3105,31 @@ var IModel = (function (_super) {
                         antd_1.message.success({
                             title: '消息',
                             content: '成功更新任务内容！'
+                        });
+                    }
+                })
+                    .subscribe();
+            }
+        };
+        _this.submitTask = function () {
+            var uid = _this.uid;
+            var tid = _this.props.tid;
+            var childTaskValue = _this.state.childTaskValue;
+            var pid = _this.state.task.groupID.pid;
+            if (_this.authCheck()) {
+                http_service_1.default.post('/api/v1/add-child-task', {
+                    content: childTaskValue, creatorID: uid, taskID: tid, pid: pid
+                })
+                    .do(function (res) {
+                    if (res.status === '200') {
+                        _this.setState({
+                            task: res.data,
+                            childTaskValue: '',
+                            showChildTaskEdit: false
+                        });
+                        antd_1.message.success({
+                            title: '消息',
+                            content: '成功添加一条子任务！'
                         });
                     }
                     console.log(res);
@@ -3119,9 +3146,11 @@ var IModel = (function (_super) {
         _this.state = {
             task: null,
             spinning: true,
-            showContentEdit: false,
             chatValue: '',
-            contentValue: ''
+            contentValue: '',
+            childTaskValue: '',
+            showContentEdit: false,
+            showChildTaskEdit: false
         };
         return _this;
     }
@@ -3139,7 +3168,7 @@ var IModel = (function (_super) {
     };
     IModel.prototype.render = function () {
         var _this = this;
-        var _a = this.state, spinning = _a.spinning, task = _a.task, chatValue = _a.chatValue, contentValue = _a.contentValue, showContentEdit = _a.showContentEdit;
+        var _a = this.state, spinning = _a.spinning, task = _a.task, chatValue = _a.chatValue, contentValue = _a.contentValue, showContentEdit = _a.showContentEdit, childTaskValue = _a.childTaskValue, showChildTaskEdit = _a.showChildTaskEdit;
         return (React.createElement(antd_1.Modal, { title: "\u4EFB\u52A1\u8BE6\u60C5", visible: true, onCancel: this.onNo, footer: null, className: "task-detail-modal" },
             React.createElement(antd_1.Spin, { spinning: spinning, size: "large" }, task ?
                 React.createElement("div", null,
@@ -3167,10 +3196,18 @@ var IModel = (function (_super) {
                         React.createElement("div", { className: showContentEdit ? "edit-block show" : "edit-block" },
                             React.createElement("textarea", { type: "textarea", className: "ant-input", rows: 3, value: contentValue, onChange: function (e) { return _this.setState({ contentValue: e.target.value }); } }),
                             React.createElement(antd_1.Button, { onClick: this.submitContent }, "\u786E\u5B9A"))),
-                    React.createElement("div", { className: "child-task-list" }, task.childTasksID.length !== 0 ?
-                        React.createElement("ul", null, "123")
-                        :
-                            React.createElement("h5", null, "\u70B9\u51FB\u6DFB\u52A0\u5B50\u4EFB\u52A1")),
+                    React.createElement("div", { className: "child-task-list" },
+                        React.createElement("h5", null, "\u5B50\u4EFB\u52A1\u5217\u8868"),
+                        React.createElement(antd_1.Button, { className: "open", onClick: function () { return _this.setState({ showChildTaskEdit: true, childTaskValue: '' }); } }, "\u6DFB\u52A0"),
+                        task.childTasksID.length !== 0 ?
+                            React.createElement("ul", { style: { paddingTop: 15 } }, task.childTasksID.map(function (childtask, k) { return React.createElement("li", { key: k },
+                                React.createElement(antd_1.Checkbox, { value: childtask.finished }),
+                                React.createElement("h5", null, childtask.content),
+                                React.createElement("span", { className: "time" }, (new Date(childtask.createdTime)).toLocaleString())); }))
+                            : "",
+                        React.createElement("div", { className: showChildTaskEdit ? "edit-block show" : "edit-block" },
+                            React.createElement("textarea", { type: "textarea", className: "ant-input", rows: 2, value: childTaskValue, onChange: function (e) { return _this.setState({ childTaskValue: e.target.value }); } }),
+                            React.createElement(antd_1.Button, { onClick: this.submitTask }, "\u786E\u5B9A"))),
                     React.createElement("div", { className: "member" },
                         React.createElement("h5", null, "\u4EFB\u52A1\u53C2\u4E0E\u8005"),
                         React.createElement(antd_1.Tooltip, { title: task.groupID.creatorID.name },

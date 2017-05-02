@@ -30,6 +30,14 @@ exports.ChildTaskSchema.pre('save', function (next) {
     this.createdTime = Date.now();
     next();
 });
+exports.ChildTaskSchema.statics.customUpdate = function (query, fields) {
+    var _this = this;
+    return new Promise(function (resolve, reject) {
+        _this
+            .update(query, fields)
+            .exec(function (err, data) { return returnData(err, resolve, reject, data); });
+    });
+};
 exports.ChildTaskSchema.statics.mySave = function (args) {
     var _this = this;
     return new Promise(function (resolve, reject) {

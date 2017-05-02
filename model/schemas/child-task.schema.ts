@@ -23,6 +23,14 @@ ChildTaskSchema.pre('save', function( next ){
     next( );
 })
 
+ChildTaskSchema.statics.customUpdate = function( query, fields ) {
+    return new Promise(( resolve, reject ) => {
+        this
+            .update( query, fields )
+            .exec(( err, data) =>  returnData( err, resolve, reject, data ))
+    })
+}
+
 
 ChildTaskSchema.statics.mySave = function( args ) {
     return new Promise(( resolve, reject ) => {

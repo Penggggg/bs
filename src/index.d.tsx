@@ -102,6 +102,12 @@ declare namespace API {
             status: '200' | '400' | '500'  
         }
 
+        /**POST：更新子任务状态 */
+        export interface UpdateChildTask {
+            data: Schema.Task$,
+            status: '200' | '400' | '500'  
+        }
+
     }
 
     export namespace Req {
@@ -224,6 +230,12 @@ declare namespace API {
         /**POST：新建任务的子任务 */
         export interface AddChildTask extends Partial<Schema.ChildTask> {
             pid: string
+        }
+
+        /**POST：更新子任务状态 */
+        export interface UpdateChildTask extends Partial<Schema.ChildTask> {
+            pid: string
+            taskID: string
         }
 
     }

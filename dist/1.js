@@ -18,7 +18,7 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
 var msgListPopBadge_container_1 = __webpack_require__(1428);
-var antd_1 = __webpack_require__(54);
+var antd_1 = __webpack_require__(60);
 var auth_login_service_1 = __webpack_require__(548);
 __webpack_require__(1415);
 var Header = antd_1.Layout.Header, Content = antd_1.Layout.Content, Footer = antd_1.Layout.Footer;
@@ -2768,7 +2768,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
-var antd_1 = __webpack_require__(54);
+var antd_1 = __webpack_require__(60);
 __webpack_require__(1413);
 var PopoverBadge = (function (_super) {
     __extends(PopoverBadge, _super);

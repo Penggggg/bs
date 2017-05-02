@@ -13,6 +13,7 @@ import { inviteMember } from './project/invite-member';
 import { getChatList } from './project/chat/query-chat';
 import { taskDetail$ } from './project/task/query-task';
 import { addChildTask } from './project/task/add-child-task';
+import { updateChildTask } from './project/task/update-child-task';
 import { createProject } from './project/create-project';
 import { replyInvite } from './project/reply-invite';
 import { allGroup$ } from './project/group/query-group';
@@ -63,7 +64,9 @@ export default ( router ) => {
     /**项目模块：更新任务内容 */
     router.post('/api/v1/update-task-content', updateTaskContent );
     /**项目模块：新增子任务 */
-    router.post('/api/v1/add-child-task', addChildTask )
+    router.post('/api/v1/add-child-task', addChildTask );
+    /**项目模块：子任务状态更改 */
+    router.post('/api/v1/update-child-task', updateChildTask )
 
 
     /**用户模块：查询所有符合条件的用户 */

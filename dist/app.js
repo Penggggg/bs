@@ -127,7 +127,7 @@ exports.default = new Msg();
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var antd_1 = __webpack_require__(54);
+var antd_1 = __webpack_require__(60);
 var rxjs_1 = __webpack_require__(23);
 var index_con_1 = __webpack_require__(47);
 var EventProjectNotification = (function () {
@@ -158,7 +158,7 @@ exports.EventProjectNotification = EventProjectNotification;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var antd_1 = __webpack_require__(54);
+var antd_1 = __webpack_require__(60);
 var rxjs_1 = __webpack_require__(23);
 var index_con_1 = __webpack_require__(47);
 var project_1 = __webpack_require__(96);
@@ -192,7 +192,7 @@ exports.EventProjectChat = EventProjectChat;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var antd_1 = __webpack_require__(54);
+var antd_1 = __webpack_require__(60);
 var rxjs_1 = __webpack_require__(23);
 var index_con_1 = __webpack_require__(47);
 var project_1 = __webpack_require__(96);
@@ -225,7 +225,7 @@ exports.EventProjectFile = EventProjectFile;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var antd_1 = __webpack_require__(54);
+var antd_1 = __webpack_require__(60);
 var rxjs_1 = __webpack_require__(23);
 var index_con_1 = __webpack_require__(47);
 var EventProjectGetIn = (function () {
@@ -256,7 +256,6 @@ exports.EventProjectGetIn = EventProjectGetIn;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var antd_1 = __webpack_require__(54);
 var rxjs_1 = __webpack_require__(23);
 var index_con_1 = __webpack_require__(47);
 var project_1 = __webpack_require__(96);
@@ -268,7 +267,8 @@ var EventProjectGroup = (function () {
         this.sub = rxjs_1.Observable
             .fromEvent(io, "" + index_con_1.CON.socketEvent.project.group)
             .do(function (res) {
-            antd_1.message.success('项目状态有更新~');
+            console.log('????');
+            // message.success('项目状态有更新~');
             project_1.default.group.save();
         })
             .subscribe();
@@ -289,7 +289,7 @@ exports.EventProjectGroup = EventProjectGroup;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var antd_1 = __webpack_require__(54);
+var antd_1 = __webpack_require__(60);
 var rxjs_1 = __webpack_require__(23);
 var index_con_1 = __webpack_require__(47);
 var project_1 = __webpack_require__(96);
@@ -665,7 +665,7 @@ exports.default = new UserStore();
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
-var antd_1 = __webpack_require__(54);
+var antd_1 = __webpack_require__(60);
 var NotificationService = (function () {
     function NotificationService() {
     }

@@ -42,8 +42,7 @@ GroupSchema.statics.customFind$ = function( query, fields, options ) {
                 path: 'tasksID',
                 select: 'title finished priority executorsID childTasksID',
                 populate: {
-                    path: 'executorsID',
-                    select: 'name'
+                    path: 'executorsID childTasksID'
                 }
             })
             .exec(( err, data) =>  returnData( err, resolve, reject, data ))

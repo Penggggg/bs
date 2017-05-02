@@ -50,8 +50,7 @@ exports.GroupSchema.statics.customFind$ = function (query, fields, options) {
             path: 'tasksID',
             select: 'title finished priority executorsID childTasksID',
             populate: {
-                path: 'executorsID',
-                select: 'name'
+                path: 'executorsID childTasksID'
             }
         })
             .exec(function (err, data) { return returnData(err, resolve, reject, data); });

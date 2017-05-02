@@ -18,7 +18,7 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 __webpack_require__(1420);
 var React = __webpack_require__(0);
-var antd_1 = __webpack_require__(54);
+var antd_1 = __webpack_require__(60);
 var user_1 = __webpack_require__(157);
 var project_1 = __webpack_require__(96);
 var http_service_1 = __webpack_require__(547);

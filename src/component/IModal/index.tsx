@@ -185,6 +185,35 @@ export class IModel extends React.PureComponent< IProps, IState > {
         }
     }
 
+    submitCheckBox = ( childTask: Schema.ChildTask$ ) => {
+        
+
+        let { tid } = this.props;
+        let { pid } = this.state.task.groupID;
+
+        if ( this.authCheck( )) {
+
+            http.post< API.Res.UpdateChildTask, API.Query.UpdateChildTask>('/api/v1/update-child-task', {
+                pid, finished: !childTask.finished, _id: childTask._id, taskID: tid
+            })
+            .do( res => {
+                if ( res.status === '200' ) {
+                    this.setState({
+                        task: res.data
+                    })
+                    message.success({
+                        title: '消息',
+                        content: '成功更改子任务状态！'
+                    })
+                }
+                console.log( res )
+            })
+            .subscribe( )       
+
+        }
+
+    }
+
     onNo = ( ) => {
         // 销毁
         ReactDom.unmountComponentAtNode( this._container );
@@ -243,7 +272,7 @@ export class IModel extends React.PureComponent< IProps, IState > {
                             <ul style={{ paddingTop: 15 }}>
                             {
                                 task.childTasksID.map(( childtask , k ) => <li key={ k }>
-                                    <Checkbox value={ childtask.finished} />
+                                    <Checkbox checked={ childtask.finished} onChange={() => this.submitCheckBox(childtask)} />
                                     <h5>{ childtask.content }</h5>
                                     <span className="time">{ ( new Date( childtask.createdTime )).toLocaleString( ) }</span>
                                 </li>)

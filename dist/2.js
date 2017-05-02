@@ -18,7 +18,7 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 __webpack_require__(1423);
 var React = __webpack_require__(0);
-var antd_1 = __webpack_require__(54);
+var antd_1 = __webpack_require__(60);
 var IModal_1 = __webpack_require__(1425);
 var user_1 = __webpack_require__(157);
 var project_1 = __webpack_require__(96);
@@ -3018,7 +3018,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 __webpack_require__(1412);
 var React = __webpack_require__(0);
 var ReactDom = __webpack_require__(13);
-var antd_1 = __webpack_require__(54);
+var antd_1 = __webpack_require__(60);
 var user_1 = __webpack_require__(157);
 var http_service_1 = __webpack_require__(547);
 var Image_component_1 = __webpack_require__(1397);
@@ -3147,6 +3147,28 @@ var IModel = (function (_super) {
                     .subscribe();
             }
         };
+        _this.submitCheckBox = function (childTask) {
+            var tid = _this.props.tid;
+            var pid = _this.state.task.groupID.pid;
+            if (_this.authCheck()) {
+                http_service_1.default.post('/api/v1/update-child-task', {
+                    pid: pid, finished: !childTask.finished, _id: childTask._id, taskID: tid
+                })
+                    .do(function (res) {
+                    if (res.status === '200') {
+                        _this.setState({
+                            task: res.data
+                        });
+                        antd_1.message.success({
+                            title: '消息',
+                            content: '成功更改子任务状态！'
+                        });
+                    }
+                    console.log(res);
+                })
+                    .subscribe();
+            }
+        };
         _this.onNo = function () {
             // 销毁
             ReactDom.unmountComponentAtNode(_this._container);
@@ -3211,7 +3233,7 @@ var IModel = (function (_super) {
                         React.createElement(antd_1.Button, { className: "open", onClick: function () { return _this.setState({ showChildTaskEdit: true, childTaskValue: '' }); } }, "\u6DFB\u52A0"),
                         task.childTasksID.length !== 0 ?
                             React.createElement("ul", { style: { paddingTop: 15 } }, task.childTasksID.map(function (childtask, k) { return React.createElement("li", { key: k },
-                                React.createElement(antd_1.Checkbox, { value: childtask.finished }),
+                                React.createElement(antd_1.Checkbox, { checked: childtask.finished, onChange: function () { return _this.submitCheckBox(childtask); } }),
                                 React.createElement("h5", null, childtask.content),
                                 React.createElement("span", { className: "time" }, (new Date(childtask.createdTime)).toLocaleString())); }))
                             : "",

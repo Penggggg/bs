@@ -11,6 +11,7 @@ import { addTask } from './project/task/add-task';
 import { addNewGroup } from './project/group/add-group';
 import { inviteMember } from './project/invite-member'; 
 import { getChatList } from './project/chat/query-chat';
+import { taskDetail$ } from './project/task/query-task';
 import { createProject } from './project/create-project';
 import { replyInvite } from './project/reply-invite';
 import { allGroup$ } from './project/group/query-group';
@@ -53,6 +54,8 @@ export default ( router ) => {
     router.get('/api/v1/all-group', allGroup$ );
     /**项目模块：新增任务 */
     router.post('/api/v1/add-task', addTask );
+    /**项目模块：查询任务 */
+    router.get('/api/v1/task-detail', taskDetail$ );
 
 
     /**用户模块：查询所有符合条件的用户 */

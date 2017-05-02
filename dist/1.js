@@ -17,10 +17,10 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
-var msgListPopBadge_container_1 = __webpack_require__(1425);
+var msgListPopBadge_container_1 = __webpack_require__(1428);
 var antd_1 = __webpack_require__(54);
 var auth_login_service_1 = __webpack_require__(548);
-__webpack_require__(1413);
+__webpack_require__(1415);
 var Header = antd_1.Layout.Header, Content = antd_1.Layout.Content, Footer = antd_1.Layout.Footer;
 var AppPage = (function (_super) {
     __extends(AppPage, _super);
@@ -2584,48 +2584,6 @@ module.exports = function (css) {
 /***/ 1397:
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(1390)(undefined);
-// imports
-
-
-// module
-exports.push([module.i, ".my-img {\n  opacity: 0;\n  transition: all 0.4s ease;\n}\n.my-img.loaded {\n  opacity: 1;\n}\n", ""]);
-
-// exports
-
-
-/***/ }),
-
-/***/ 1398:
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(1397);
-if(typeof content === 'string') content = [[module.i, content, '']];
-// add the styles to the DOM
-var update = __webpack_require__(1391)(content, {});
-if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
-if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./Image.less", function() {
-			var newContent = require("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./Image.less");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
-	module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
-
-/***/ 1399:
-/***/ (function(module, exports, __webpack_require__) {
-
 "use strict";
 
 var __extends = (this && this.__extends) || (function () {
@@ -2640,7 +2598,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
-__webpack_require__(1398);
+__webpack_require__(1399);
 var Image = (function (_super) {
     __extends(Image, _super);
     function Image() {
@@ -2667,7 +2625,49 @@ exports.default = Image;
 
 /***/ }),
 
-/***/ 1400:
+/***/ 1398:
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(1390)(undefined);
+// imports
+
+
+// module
+exports.push([module.i, ".my-img {\n  opacity: 0;\n  transition: all 0.4s ease;\n}\n.my-img.loaded {\n  opacity: 1;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ 1399:
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(1398);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(1391)(content, {});
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./Image.less", function() {
+			var newContent = require("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./Image.less");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+
+/***/ 1401:
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1390)(undefined);
@@ -2682,7 +2682,7 @@ exports.push([module.i, ".my-nav-pop {\n  width: 320px;\n  top: 65px !important;
 
 /***/ }),
 
-/***/ 1402:
+/***/ 1403:
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1390)(undefined);
@@ -2697,13 +2697,13 @@ exports.push([module.i, "* {\n  font-size: 14px;\n}\ndiv {\n  box-sizing: border
 
 /***/ }),
 
-/***/ 1411:
+/***/ 1413:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1400);
+var content = __webpack_require__(1401);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(1391)(content, {});
@@ -2724,13 +2724,13 @@ if(false) {
 
 /***/ }),
 
-/***/ 1413:
+/***/ 1415:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1402);
+var content = __webpack_require__(1403);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(1391)(content, {});
@@ -2751,7 +2751,7 @@ if(false) {
 
 /***/ }),
 
-/***/ 1423:
+/***/ 1426:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2769,7 +2769,7 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
 var antd_1 = __webpack_require__(54);
-__webpack_require__(1411);
+__webpack_require__(1413);
 var PopoverBadge = (function (_super) {
     __extends(PopoverBadge, _super);
     function PopoverBadge() {
@@ -2788,20 +2788,20 @@ exports.PopoverBadge = PopoverBadge;
 
 /***/ }),
 
-/***/ 1425:
+/***/ 1428:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var PopoverBadge_component_1 = __webpack_require__(1423);
-var msgList_decorate_1 = __webpack_require__(1428);
+var PopoverBadge_component_1 = __webpack_require__(1426);
+var msgList_decorate_1 = __webpack_require__(1431);
 exports.MsgPopBadge = msgList_decorate_1.InjectMsgList(PopoverBadge_component_1.PopoverBadge);
 
 
 /***/ }),
 
-/***/ 1428:
+/***/ 1431:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2829,7 +2829,7 @@ var React = __webpack_require__(0);
 var react_router_1 = __webpack_require__(156);
 var index_con_1 = __webpack_require__(47);
 var msg_1 = __webpack_require__(549);
-var Image_component_1 = __webpack_require__(1399);
+var Image_component_1 = __webpack_require__(1397);
 exports.InjectMsgList = function (PopoverBadge) {
     var Wrapper = (function (_super) {
         __extends(Wrapper, _super);

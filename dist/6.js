@@ -16,7 +16,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-__webpack_require__(1418);
+__webpack_require__(1420);
 var React = __webpack_require__(0);
 var antd_1 = __webpack_require__(54);
 var user_1 = __webpack_require__(157);
@@ -2688,7 +2688,7 @@ module.exports = function (css) {
 
 /***/ }),
 
-/***/ 1407:
+/***/ 1408:
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1390)(undefined);
@@ -2703,13 +2703,13 @@ exports.push([module.i, ".project-files-page {\n  margin-top: 20px;\n  padding-b
 
 /***/ }),
 
-/***/ 1418:
+/***/ 1420:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1407);
+var content = __webpack_require__(1408);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(1391)(content, {});

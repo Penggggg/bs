@@ -1,0 +1,134 @@
+
+
+.block-mixin() {
+
+    border: 1px solid #e9e9e9;
+    background: #fff;
+    border-radius: 6px;
+    box-sizing: border-box;
+    padding: 8px 5px 8px 20px;
+    margin-bottom: 10px;
+}
+
+
+.task-detail-modal {
+
+    z-index: 110;
+    top: 65px !important;
+    width: 580px !important;
+    
+
+    .ant-modal-header {
+
+        background-color: #f7f7f7;
+    }
+
+    .ant-modal-body {
+        height: 420px;
+        overflow: scroll;
+    }
+
+    .ant-modal-body::-webkit-scrollbar {
+        display:none
+    } 
+
+
+    .ant-modal-content {
+
+        
+        padding-bottom: 80px;
+        position: relative;
+        background-color: #f7f7f7;
+
+        .title {
+            
+            margin-bottom: 10px;
+        }
+
+        .header-bar {
+
+            .block-mixin( ); 
+
+            .ant-col-8 {
+
+                padding: 3px;
+                position: relative;
+                box-sizing: border-box;
+
+                p.small-title {
+
+                    padding-bottom: 5px;
+                }
+
+                img {
+                    top: 28px;
+                    left: 3px;
+                    width: 25px;
+                    position: absolute;
+                    border-radius: 50%;
+                }
+            }
+
+            .line {
+                border-right: 1px solid #e9e9e9;
+            }
+        }
+
+
+        .content {
+            
+            .block-mixin( );
+            min-height: 50px;    
+        }
+
+        .child-task-list {
+
+            .block-mixin( );
+        }
+
+        .member {
+
+            position: relative;
+            .block-mixin( );
+
+            img {
+
+                width: 25px;
+                border-radius: 50%;
+                margin-right: 8px;
+            }
+
+            h5 {
+                margin-bottom: 5px;
+            }
+        }
+
+        .chat-list {
+
+            min-height: 50px;
+            .block-mixin( );
+        }
+
+        .add-chat {
+
+            left: 3%;
+            bottom: 20px;
+            width: 94%;
+            position: absolute;
+
+            textarea {
+                padding: 10px 100px 10px 15px;
+            }
+
+            button {
+
+                right: 20px;
+                bottom: 10px;
+                position: absolute;
+            }
+        }
+
+    }
+
+
+}

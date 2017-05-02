@@ -16,13 +16,14 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-__webpack_require__(1421);
+__webpack_require__(1423);
 var React = __webpack_require__(0);
 var antd_1 = __webpack_require__(54);
+var IModal_1 = __webpack_require__(1425);
 var user_1 = __webpack_require__(157);
 var project_1 = __webpack_require__(96);
 var http_service_1 = __webpack_require__(547);
-var Image_component_1 = __webpack_require__(1399);
+var Image_component_1 = __webpack_require__(1397);
 var notification_service_1 = __webpack_require__(242);
 var FormItem = antd_1.Form.Item;
 var Option = antd_1.Select.Option;
@@ -101,6 +102,10 @@ var ProjectTasksPage = (function (_super) {
                     content: '抱歉。该分组中您还没有新增任务的权限'
                 });
             }
+        };
+        /**展示任务 */
+        _this.showTask = function (tid) {
+            IModal_1.IModel.show(tid);
         };
         /**http:获取user */
         _this.fetchUser = function () {
@@ -198,6 +203,7 @@ var ProjectTasksPage = (function (_super) {
         _this.choiceUser = function (value) {
             _this.groupLeaderID = value;
         };
+        /**selector */
         _this.choiceExecutor = function (value) {
             _this.taskExecutorID = value;
         };
@@ -205,8 +211,11 @@ var ProjectTasksPage = (function (_super) {
             groups: [],
             dataSource: [],
             spinning: true,
+            selectTask: null,
             showTaskForm: false,
-            showGroupForm: false
+            showGroupForm: false,
+            showTaskDetail: false,
+            taskDetailFetching: false
         };
         return _this;
     }
@@ -223,7 +232,7 @@ var ProjectTasksPage = (function (_super) {
         var _this = this;
         var _a = this, formGroupName = _a.formGroupName, formTaskName = _a.formTaskName;
         var getFieldDecorator = this.props.form.getFieldDecorator;
-        var _b = this.state, showGroupForm = _b.showGroupForm, showTaskForm = _b.showTaskForm, dataSource = _b.dataSource, groups = _b.groups, spinning = _b.spinning;
+        var _b = this.state, showGroupForm = _b.showGroupForm, showTaskForm = _b.showTaskForm, dataSource = _b.dataSource, groups = _b.groups, spinning = _b.spinning, showTaskDetail = _b.showTaskDetail, taskDetailFetching = _b.taskDetailFetching, selectTask = _b.selectTask;
         /**新建分组表单 */
         var addGroupForm = React.createElement("div", { className: "modal-resetpsw-form" },
             React.createElement("div", { className: "modal-img", style: { height: 226 } },
@@ -273,7 +282,7 @@ var ProjectTasksPage = (function (_super) {
                         React.createElement("li", { key: key },
                             React.createElement("div", { className: "check-block" },
                                 React.createElement(antd_1.Checkbox, null)),
-                            React.createElement("div", { className: "content" },
+                            React.createElement("div", { className: "content", onClick: function () { return _this.showTask(task._id); } },
                                 React.createElement("p", null, task.title),
                                 React.createElement("div", { className: "tips-block" },
                                     React.createElement(antd_1.Tooltip, { title: (task.executorsID.map(function (x) { return x.name; })).join('、') },
@@ -294,6 +303,7 @@ var ProjectTasksPage = (function (_super) {
                 React.createElement("p", { className: "add-task", onClick: function () { return _this.addTask(group); } },
                     React.createElement(antd_1.Icon, { type: "plus-circle", style: { marginRight: 10 } }),
                     "\u6DFB\u52A0\u4EFB\u52A1")); })));
+        /** */
         return React.createElement("div", { className: "project-tasks-page" },
             React.createElement("div", { className: "add-group-block" },
                 React.createElement(antd_1.Button, { type: "primary", onClick: this.addGroup, size: "small" },
@@ -2809,48 +2819,6 @@ module.exports = function (css) {
 /***/ 1397:
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(1390)(undefined);
-// imports
-
-
-// module
-exports.push([module.i, ".my-img {\n  opacity: 0;\n  transition: all 0.4s ease;\n}\n.my-img.loaded {\n  opacity: 1;\n}\n", ""]);
-
-// exports
-
-
-/***/ }),
-
-/***/ 1398:
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(1397);
-if(typeof content === 'string') content = [[module.i, content, '']];
-// add the styles to the DOM
-var update = __webpack_require__(1391)(content, {});
-if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
-if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./Image.less", function() {
-			var newContent = require("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./Image.less");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
-	module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
-
-/***/ 1399:
-/***/ (function(module, exports, __webpack_require__) {
-
 "use strict";
 
 var __extends = (this && this.__extends) || (function () {
@@ -2865,7 +2833,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
-__webpack_require__(1398);
+__webpack_require__(1399);
 var Image = (function (_super) {
     __extends(Image, _super);
     function Image() {
@@ -2892,7 +2860,7 @@ exports.default = Image;
 
 /***/ }),
 
-/***/ 1410:
+/***/ 1398:
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1390)(undefined);
@@ -2900,20 +2868,104 @@ exports = module.exports = __webpack_require__(1390)(undefined);
 
 
 // module
-exports.push([module.i, ".project-tasks-page {\n  overflow: hidden;\n  position: relative;\n  box-sizing: border-box;\n  padding: 5px 15px 0 15px;\n  /*定义滚动条轨道 内阴影+圆角*/\n}\n.project-tasks-page .ant-tabs-bar {\n  margin-bottom: 0px;\n}\n.project-tasks-page .ant-tabs-bar .ant-tabs-nav-scroll {\n  text-align: center;\n}\n.project-tasks-page .ant-tabs-bar .ant-tabs-nav-scroll .ant-tabs-nav {\n  display: block;\n  width: 100%;\n}\n.project-tasks-page .groups-container {\n  overflow: scroll;\n  white-space: nowrap;\n  padding-bottom: 20px;\n  box-sizing: border-box;\n  padding-top: 10px;\n}\n.project-tasks-page .groups-container .group {\n  width: 280px;\n  padding: 10px;\n  height: 465px;\n  position: relative;\n  margin-right: 20px;\n  border-radius: 8px;\n  display: inline-block;\n  box-sizing: border-box;\n  background-color: #f5f5f5;\n  box-shadow: 10px 10px 10px #d9d9d9;\n}\n.project-tasks-page .groups-container .group h3 {\n  margin-bottom: 3px;\n  font-size: 15px;\n}\n.project-tasks-page .groups-container .group .task-list {\n  height: 400px;\n  overflow: scroll;\n  position: relative;\n  padding-bottom: 30px;\n}\n.project-tasks-page .groups-container .group .task-list li {\n  list-style: none;\n  border-radius: 5px;\n  margin-bottom: 12px;\n  position: relative;\n  background-color: #fff;\n  border: 1px solid #d9d9d9;\n  padding: 10px 10px 10px 40px;\n}\n.project-tasks-page .groups-container .group .task-list li .check-block {\n  top: 10px;\n  left: 10px;\n  position: absolute;\n  display: inline-block;\n}\n.project-tasks-page .groups-container .group .task-list li .check-block .ant-checkbox-inner {\n  transform: scale(1.5);\n}\n.project-tasks-page .groups-container .group .task-list li .check-block input.checkbox {\n  transform: scale(1.5);\n}\n.project-tasks-page .groups-container .group .task-list li .content .tips-block {\n  right: 20px;\n  top: 10px;\n  position: absolute;\n}\n.project-tasks-page .groups-container .group .task-list li .content .tips-block img {\n  width: 25px;\n  border-radius: 50%;\n}\n.project-tasks-page .groups-container .group .task-list::-webkit-scrollbar {\n  display: none;\n}\n.project-tasks-page .groups-container .group .add-task {\n  left: 0px;\n  width: 100%;\n  bottom: 0px;\n  cursor: pointer;\n  color: #108EE9;\n  position: absolute;\n  padding: 10px 12px;\n  border-radius: 5px;\n  box-sizing: border-box;\n  transition: all ease 0.4s;\n}\n.project-tasks-page .groups-container .group .add-task:hover {\n  background-color: #d9d9d9;\n}\n.project-tasks-page .groups-container .add-group {\n  box-shadow: none;\n  background-color: #fff;\n}\n.project-tasks-page .groups-container .add-group p {\n  cursor: pointer;\n  color: #108EE9;\n  border-radius: 8px;\n  padding: 8px 25px;\n  background-color: #e9e9e9;\n  position: absolute;\n  top: 40px;\n  left: 0;\n  width: 100%;\n}\n.project-tasks-page .add-group-block {\n  top: 10px;\n  right: 20px;\n  z-index: 100;\n  position: absolute;\n}\n.project-tasks-page .groups-container::-webkit-scrollbar {\n  width: 0;\n  height: 1;\n  background-color: #F5F5F5;\n}\n.project-tasks-page .groups-container::-webkit-scrollbar-track {\n  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);\n  border-radius: 10px;\n  background-color: #F5F5F5;\n}\n.project-tasks-page .groups-container::-webkit-scrollbar-thumb {\n  border-radius: 10px;\n  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);\n  background-color: #919191;\n}\n", ""]);
+exports.push([module.i, ".my-img {\n  opacity: 0;\n  transition: all 0.4s ease;\n}\n.my-img.loaded {\n  opacity: 1;\n}\n", ""]);
 
 // exports
 
 
 /***/ }),
 
-/***/ 1421:
+/***/ 1399:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1410);
+var content = __webpack_require__(1398);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(1391)(content, {});
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./Image.less", function() {
+			var newContent = require("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./Image.less");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+
+/***/ 1400:
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(1390)(undefined);
+// imports
+
+
+// module
+exports.push([module.i, ".task-detail-modal {\n  z-index: 110;\n  top: 65px !important;\n  width: 580px !important;\n}\n.task-detail-modal .ant-modal-header {\n  background-color: #f7f7f7;\n}\n.task-detail-modal .ant-modal-body {\n  height: 420px;\n  overflow: scroll;\n}\n.task-detail-modal .ant-modal-body::-webkit-scrollbar {\n  display: none;\n}\n.task-detail-modal .ant-modal-content {\n  padding-bottom: 80px;\n  position: relative;\n  background-color: #f7f7f7;\n}\n.task-detail-modal .ant-modal-content .title {\n  margin-bottom: 10px;\n}\n.task-detail-modal .ant-modal-content .header-bar {\n  border: 1px solid #e9e9e9;\n  background: #fff;\n  border-radius: 6px;\n  box-sizing: border-box;\n  padding: 8px 5px 8px 20px;\n  margin-bottom: 10px;\n}\n.task-detail-modal .ant-modal-content .header-bar .ant-col-8 {\n  padding: 3px;\n  position: relative;\n  box-sizing: border-box;\n}\n.task-detail-modal .ant-modal-content .header-bar .ant-col-8 p.small-title {\n  padding-bottom: 5px;\n}\n.task-detail-modal .ant-modal-content .header-bar .ant-col-8 img {\n  top: 28px;\n  left: 3px;\n  width: 25px;\n  position: absolute;\n  border-radius: 50%;\n}\n.task-detail-modal .ant-modal-content .header-bar .line {\n  border-right: 1px solid #e9e9e9;\n}\n.task-detail-modal .ant-modal-content .content {\n  border: 1px solid #e9e9e9;\n  background: #fff;\n  border-radius: 6px;\n  box-sizing: border-box;\n  padding: 8px 5px 8px 20px;\n  margin-bottom: 10px;\n  min-height: 50px;\n}\n.task-detail-modal .ant-modal-content .child-task-list {\n  border: 1px solid #e9e9e9;\n  background: #fff;\n  border-radius: 6px;\n  box-sizing: border-box;\n  padding: 8px 5px 8px 20px;\n  margin-bottom: 10px;\n}\n.task-detail-modal .ant-modal-content .member {\n  position: relative;\n  border: 1px solid #e9e9e9;\n  background: #fff;\n  border-radius: 6px;\n  box-sizing: border-box;\n  padding: 8px 5px 8px 20px;\n  margin-bottom: 10px;\n}\n.task-detail-modal .ant-modal-content .member img {\n  width: 25px;\n  border-radius: 50%;\n  margin-right: 8px;\n}\n.task-detail-modal .ant-modal-content .member h5 {\n  margin-bottom: 5px;\n}\n.task-detail-modal .ant-modal-content .chat-list {\n  min-height: 50px;\n  border: 1px solid #e9e9e9;\n  background: #fff;\n  border-radius: 6px;\n  box-sizing: border-box;\n  padding: 8px 5px 8px 20px;\n  margin-bottom: 10px;\n}\n.task-detail-modal .ant-modal-content .add-chat {\n  left: 3%;\n  bottom: 20px;\n  width: 94%;\n  position: absolute;\n}\n.task-detail-modal .ant-modal-content .add-chat textarea {\n  padding: 10px 100px 10px 15px;\n}\n.task-detail-modal .ant-modal-content .add-chat button {\n  right: 20px;\n  bottom: 10px;\n  position: absolute;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ 1411:
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(1390)(undefined);
+// imports
+
+
+// module
+exports.push([module.i, ".project-tasks-page {\n  overflow: hidden;\n  position: relative;\n  box-sizing: border-box;\n  padding: 5px 15px 0 15px;\n  /*定义滚动条轨道 内阴影+圆角*/\n}\n.project-tasks-page .ant-tabs-bar {\n  margin-bottom: 0px;\n}\n.project-tasks-page .ant-tabs-bar .ant-tabs-nav-scroll {\n  text-align: center;\n}\n.project-tasks-page .ant-tabs-bar .ant-tabs-nav-scroll .ant-tabs-nav {\n  display: block;\n  width: 100%;\n}\n.project-tasks-page .groups-container {\n  height: 512px;\n  overflow: scroll;\n  white-space: nowrap;\n  padding-bottom: 20px;\n  box-sizing: border-box;\n  padding-top: 10px;\n}\n.project-tasks-page .groups-container .group {\n  width: 280px;\n  padding: 10px;\n  height: 465px;\n  position: relative;\n  margin-right: 20px;\n  border-radius: 8px;\n  display: inline-block;\n  box-sizing: border-box;\n  background-color: #f5f5f5;\n  box-shadow: 10px 10px 10px #d9d9d9;\n}\n.project-tasks-page .groups-container .group h3 {\n  margin-bottom: 3px;\n  font-size: 15px;\n}\n.project-tasks-page .groups-container .group .task-list {\n  height: 400px;\n  overflow: scroll;\n  position: relative;\n  padding-bottom: 30px;\n}\n.project-tasks-page .groups-container .group .task-list li {\n  list-style: none;\n  border-radius: 5px;\n  margin-bottom: 12px;\n  position: relative;\n  background-color: #fff;\n  border: 1px solid #d9d9d9;\n  padding: 10px 10px 10px 40px;\n}\n.project-tasks-page .groups-container .group .task-list li .check-block {\n  top: 10px;\n  left: 10px;\n  position: absolute;\n  display: inline-block;\n}\n.project-tasks-page .groups-container .group .task-list li .check-block .ant-checkbox-inner {\n  transform: scale(1.5);\n}\n.project-tasks-page .groups-container .group .task-list li .check-block input.checkbox {\n  transform: scale(1.5);\n}\n.project-tasks-page .groups-container .group .task-list li .content {\n  cursor: pointer;\n}\n.project-tasks-page .groups-container .group .task-list li .content .tips-block {\n  right: 20px;\n  top: 10px;\n  position: absolute;\n}\n.project-tasks-page .groups-container .group .task-list li .content .tips-block img {\n  width: 25px;\n  border-radius: 50%;\n}\n.project-tasks-page .groups-container .group .task-list::-webkit-scrollbar {\n  display: none;\n}\n.project-tasks-page .groups-container .group .add-task {\n  left: 0px;\n  width: 100%;\n  bottom: 0px;\n  cursor: pointer;\n  color: #108EE9;\n  position: absolute;\n  padding: 10px 12px;\n  border-radius: 5px;\n  box-sizing: border-box;\n  transition: all ease 0.4s;\n}\n.project-tasks-page .groups-container .group .add-task:hover {\n  background-color: #d9d9d9;\n}\n.project-tasks-page .groups-container .add-group {\n  box-shadow: none;\n  background-color: #fff;\n}\n.project-tasks-page .groups-container .add-group p {\n  cursor: pointer;\n  color: #108EE9;\n  border-radius: 8px;\n  padding: 8px 25px;\n  background-color: #e9e9e9;\n  position: absolute;\n  top: 40px;\n  left: 0;\n  width: 100%;\n}\n.project-tasks-page .add-group-block {\n  top: 10px;\n  right: 20px;\n  z-index: 100;\n  position: absolute;\n}\n.project-tasks-page .groups-container::-webkit-scrollbar {\n  width: 0;\n  height: 1;\n  background-color: #F5F5F5;\n}\n.project-tasks-page .groups-container::-webkit-scrollbar-track {\n  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);\n  border-radius: 10px;\n  background-color: #F5F5F5;\n}\n.project-tasks-page .groups-container::-webkit-scrollbar-thumb {\n  border-radius: 10px;\n  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);\n  background-color: #919191;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ 1412:
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(1400);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(1391)(content, {});
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./index.less", function() {
+			var newContent = require("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./index.less");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+
+/***/ 1423:
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(1411);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(1391)(content, {});
@@ -2931,6 +2983,130 @@ if(false) {
 	// When the module is disposed, remove the <style> tags
 	module.hot.dispose(function() { update(); });
 }
+
+/***/ }),
+
+/***/ 1425:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+__webpack_require__(1412);
+var React = __webpack_require__(0);
+var ReactDom = __webpack_require__(13);
+var antd_1 = __webpack_require__(54);
+var http_service_1 = __webpack_require__(547);
+var Image_component_1 = __webpack_require__(1397);
+var Option = antd_1.Select.Option;
+var IModel = (function (_super) {
+    __extends(IModel, _super);
+    function IModel() {
+        var _this = _super.call(this) || this;
+        _this._promise = new Promise(function (resolve, reject) {
+            _this._resolve = resolve;
+            _this._reject = reject;
+        });
+        _this.fetchTask = function (tid) {
+            http_service_1.default.get('/api/v1/task-detail', { tid: tid })
+                .do(function (res) {
+                console.log(res);
+                _this.setState({
+                    task: res,
+                    spinning: false
+                });
+            })
+                .subscribe();
+        };
+        _this.onNo = function () {
+            // 销毁
+            ReactDom.unmountComponentAtNode(_this._container);
+            _this._dom.remove();
+            ;
+        };
+        _this.state = {
+            task: null,
+            spinning: true
+        };
+        return _this;
+    }
+    IModel.show = function (tid) {
+        var div = document.createElement('div');
+        var _model = ReactDom.render(React.createElement(IModel, { tid: tid }), div);
+        var dom = document.querySelector('body').appendChild(div);
+        _model._container = div;
+        _model._dom = dom;
+        return _model._promise;
+    };
+    IModel.prototype.componentDidMount = function () {
+        this.fetchTask(this.props.tid);
+    };
+    IModel.prototype.render = function () {
+        var _a = this.state, spinning = _a.spinning, task = _a.task;
+        return (React.createElement(antd_1.Modal, { title: "\u4EFB\u52A1\u8BE6\u60C5", visible: true, onCancel: this.onNo, footer: null, className: "task-detail-modal" },
+            React.createElement(antd_1.Spin, { spinning: spinning, size: "large" }, task ?
+                React.createElement("div", null,
+                    React.createElement("div", { className: "title" },
+                        React.createElement("h1", null, task.title)),
+                    React.createElement("div", { className: "header-bar" },
+                        React.createElement(antd_1.Row, null,
+                            React.createElement(antd_1.Col, { span: 8, className: "line" },
+                                React.createElement("h5", { className: "small-title" }, "\u6267\u884C\u8005"),
+                                React.createElement("p", { style: { padding: '5px 0 0 30px' } }, (task.executorsID.map(function (x) { return x.name; })).join('、')),
+                                React.createElement(Image_component_1.default, { src: "/static/touxiang.png" })),
+                            React.createElement(antd_1.Col, { span: 8, className: "line" },
+                                React.createElement("h5", { className: "small-title" }, "\u622A\u6B62\u65F6\u95F4"),
+                                React.createElement(antd_1.DatePicker, { disabled: true, style: { width: 150 } })),
+                            React.createElement(antd_1.Col, { span: 8 },
+                                React.createElement("h5", { className: "small-title" }, "\u4F18\u5148\u7EA7"),
+                                React.createElement(antd_1.Select, { defaultValue: "1", style: { width: 150 }, disabled: true },
+                                    React.createElement(Option, { value: "1" }, "\u4E00\u822C"),
+                                    React.createElement(Option, { value: "2" }, "\u7D27\u6025"),
+                                    React.createElement(Option, { value: "3" }, "\u975E\u5E38\u7D27\u6025"))))),
+                    React.createElement("div", { className: "content" },
+                        React.createElement("h5", null, "\u4EFB\u52A1\u5185\u5BB9"),
+                        task.content),
+                    React.createElement("div", { className: "child-task-list" }, task.childTasksID.length !== 0 ?
+                        React.createElement("ul", null, "123")
+                        :
+                            React.createElement("h5", null, "\u70B9\u51FB\u6DFB\u52A0\u5B50\u4EFB\u52A1")),
+                    React.createElement("div", { className: "member" },
+                        React.createElement("h5", null, "\u4EFB\u52A1\u53C2\u4E0E\u8005"),
+                        React.createElement(antd_1.Tooltip, { title: task.groupID.creatorID.name },
+                            React.createElement("span", null,
+                                React.createElement(Image_component_1.default, { src: "/static/touxiang.png" }))),
+                        task.groupID.leadersID.map(function (leader, k) { return React.createElement(antd_1.Tooltip, { title: leader.name, key: k },
+                            React.createElement("span", null,
+                                React.createElement(Image_component_1.default, { src: "/static/touxiang.png" }))); }),
+                        task.executorsID.map(function (exe, k) { return React.createElement(antd_1.Tooltip, { title: exe.name, key: k },
+                            React.createElement("span", null,
+                                React.createElement(Image_component_1.default, { src: "/static/touxiang.png" }))); })),
+                    React.createElement("div", { className: "chat-list" },
+                        React.createElement("h5", null, "\u4EFB\u52A1\u7559\u8A00"),
+                        task.taskTalksID.length !== 0 ?
+                            React.createElement("ul", null)
+                            : ""))
+                : ""),
+            task ?
+                React.createElement("div", { className: "add-chat" },
+                    React.createElement("textarea", { type: "textarea", className: "ant-input", rows: 3, placeholder: "添加任务留言" }),
+                    React.createElement(antd_1.Button, { type: "primary" }, "\u53D1\u9001"))
+                : ""));
+    };
+    return IModel;
+}(React.PureComponent));
+exports.IModel = IModel;
+
 
 /***/ })
 

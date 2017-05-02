@@ -38,6 +38,35 @@ TaskSchema.pre('save', function( next ){
     next( );
 })
 
+TaskSchema.statics.findOne$ = function( id ) {
+    return new Promise(( resolve, reject ) => {
+        this.find({ _id: id }, null, null )
+            .populate({
+                path: 'Childtask'
+            })
+            .populate({
+                path: 'Tasktalk'
+            })
+            .populate({
+                path: 'creatorID',
+                select: 'name'
+            })
+            .populate({
+                path: 'executorsID',
+                select: 'name'
+            })
+            .populate({
+                path: 'groupID',
+                select: 'creatorID leadersID',
+                populate: {
+                    path: 'creatorID leadersID',
+                    select: 'name'
+                },
+            })
+            .exec(( err, data) =>  returnData( err, resolve, reject, data ))
+    })
+}
+
 TaskSchema.statics.mySave = function( args ) {
     return new Promise(( resolve, reject ) => {
         let model = this.model('Task');

@@ -44,6 +44,35 @@ exports.TaskSchema.pre('save', function (next) {
     this.createdTime = Date.now();
     next();
 });
+exports.TaskSchema.statics.findOne$ = function (id) {
+    var _this = this;
+    return new Promise(function (resolve, reject) {
+        _this.find({ _id: id }, null, null)
+            .populate({
+            path: 'Childtask'
+        })
+            .populate({
+            path: 'Tasktalk'
+        })
+            .populate({
+            path: 'creatorID',
+            select: 'name'
+        })
+            .populate({
+            path: 'executorsID',
+            select: 'name'
+        })
+            .populate({
+            path: 'groupID',
+            select: 'creatorID leadersID',
+            populate: {
+                path: 'creatorID leadersID',
+                select: 'name'
+            },
+        })
+            .exec(function (err, data) { return returnData(err, resolve, reject, data); });
+    });
+};
 exports.TaskSchema.statics.mySave = function (args) {
     var _this = this;
     return new Promise(function (resolve, reject) {

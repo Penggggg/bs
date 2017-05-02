@@ -455,7 +455,7 @@ declare namespace Schema {
     export interface Group$ {
         _id?: string
         pid: string
-        creatorID: string
+        creatorID: APP.User
         groupName: string
         tasksID?: Array<Schema.Task$>
         leadersID: Array<APP.User>
@@ -483,8 +483,8 @@ declare namespace Schema {
         priority: number
         deadLine: string
         finished: boolean
-        groupID: string
-        creatorID: string
+        groupID: Schema.Group$
+        creatorID: APP.User
         createdTime: string
         executorsID: Array<APP.User>
         taskTalksID: Array<Schema.TaskTalk$>

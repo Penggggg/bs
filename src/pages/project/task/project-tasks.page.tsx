@@ -3,9 +3,9 @@ import './tasks.less';
 import * as React from 'react';
 import { Subscription } from 'rxjs';
 import { RouteComponentProps } from 'react-router';
-import { Icon, Modal, Form, Input, Button, AutoComplete, Select, Checkbox, Tooltip, Spin, Tabs } from 'antd';
+import { Icon, Modal, Form, Input, Button, AutoComplete, Select, Checkbox, Tooltip, Spin, Tabs, Row, Col, DatePicker  } from 'antd';
 
-
+import { IModel } from '../../../component/IModal';
 import userStore from '../../../store/user';
 import projectStore from '../../../store/project';
 import http from '../../../services/http.service';
@@ -38,8 +38,11 @@ class ProjectTasksPage extends React.PureComponent< IProps, IState > {
             groups: [ ],
             dataSource: [ ],
             spinning: true,
+            selectTask: null,
             showTaskForm: false,
-            showGroupForm: false
+            showGroupForm: false,
+            showTaskDetail: false,
+            taskDetailFetching: false
         }
     }
 
@@ -134,6 +137,11 @@ class ProjectTasksPage extends React.PureComponent< IProps, IState > {
             })
         }
 
+    }
+
+    /**展示任务 */
+    showTask = ( tid: string ) => {
+        IModel.show( tid );
     }
 
     /**http:获取user */
@@ -244,7 +252,7 @@ class ProjectTasksPage extends React.PureComponent< IProps, IState > {
         this.groupLeaderID = value;
     }
 
-
+    /**selector */
     choiceExecutor = ( value: Array<string> ) => {
         this.taskExecutorID = value;
     }
@@ -253,7 +261,7 @@ class ProjectTasksPage extends React.PureComponent< IProps, IState > {
 
         let { formGroupName, formTaskName } = this;
         let { getFieldDecorator } = this.props.form;
-        let { showGroupForm, showTaskForm, dataSource, groups, spinning } = this.state;
+        let { showGroupForm, showTaskForm, dataSource, groups, spinning, showTaskDetail, taskDetailFetching, selectTask } = this.state;
 
         /**新建分组表单 */
         let addGroupForm = <div className="modal-resetpsw-form">
@@ -338,7 +346,7 @@ class ProjectTasksPage extends React.PureComponent< IProps, IState > {
                                             <div className="check-block">
                                                 <Checkbox />
                                             </div>
-                                            <div className="content">
+                                            <div className="content" onClick={()=>this.showTask(task._id)}>
                                                 <p>{ task.title }</p>
                                                 <div className="tips-block">
                                                     <Tooltip title={ (task.executorsID.map( x => x.name )).join('、') }>
@@ -378,9 +386,9 @@ class ProjectTasksPage extends React.PureComponent< IProps, IState > {
                     }
                 </ul>
             </Spin>
-
-
- 
+        
+        
+        /** */
         return <div className="project-tasks-page">
 
             <div className="add-group-block">
@@ -420,6 +428,8 @@ interface IState {
     spinning: boolean
     showGroupForm: boolean
     showTaskForm: boolean
+    showTaskDetail: boolean
+    taskDetailFetching: boolean
     /**Selector数据源 */
     dataSource: Array<{
         value: string,
@@ -427,5 +437,6 @@ interface IState {
     }> 
     /**组数据源 */
     groups: Array<Schema.Group$>
+    selectTask: Schema.Task$ | null
 }
 

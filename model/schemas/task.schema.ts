@@ -38,14 +38,31 @@ TaskSchema.pre('save', function( next ){
     next( );
 })
 
+TaskSchema.statics.customFind = function( query, fields, options ) {
+    return new Promise(( resolve, reject ) => {
+        this.find( query, fields, options, ( err, data) =>  returnData( err, resolve, reject, data ))
+    })
+}
+
+TaskSchema.statics.customUpdate = function( query, fields ) {
+    return new Promise(( resolve, reject ) => {
+        this
+            .update( query, fields )
+            .exec(( err, data) =>  returnData( err, resolve, reject, data ))
+    })
+}
+
+
 TaskSchema.statics.findOne$ = function( id ) {
     return new Promise(( resolve, reject ) => {
         this.find({ _id: id }, null, null )
             .populate({
-                path: 'Childtask'
-            })
-            .populate({
-                path: 'Tasktalk'
+                path: 'taskTalksID',
+                select: 'content createdTime creatorID',
+                populate: {
+                    path: 'creatorID',
+                    select: 'name'
+                }
             })
             .populate({
                 path: 'creatorID',
@@ -57,7 +74,7 @@ TaskSchema.statics.findOne$ = function( id ) {
             })
             .populate({
                 path: 'groupID',
-                select: 'creatorID leadersID',
+                select: 'creatorID leadersID pid',
                 populate: {
                     path: 'creatorID leadersID',
                     select: 'name'

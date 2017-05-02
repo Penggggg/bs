@@ -84,6 +84,13 @@ declare namespace API {
             status: '200' | '400' | '500'
         }
 
+        /**POST：增加任务聊天 */
+        export interface AddNewTaskTalk {
+            data: Schema.Task$,
+            status: '200' | '400' | '500'
+        }
+
+
     }
 
     export namespace Req {
@@ -190,6 +197,11 @@ declare namespace API {
 
         /**POST：增加任务 */
         export interface AddNewTask extends Partial<Schema.Task> {
+            pid: string
+        }
+
+        /**POST：增加任务聊天 */
+        export interface AddNewTaskTalk extends Partial<Schema.TaskTalk> {
             pid: string
         }
 

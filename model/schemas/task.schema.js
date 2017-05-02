@@ -44,15 +44,31 @@ exports.TaskSchema.pre('save', function (next) {
     this.createdTime = Date.now();
     next();
 });
+exports.TaskSchema.statics.customFind = function (query, fields, options) {
+    var _this = this;
+    return new Promise(function (resolve, reject) {
+        _this.find(query, fields, options, function (err, data) { return returnData(err, resolve, reject, data); });
+    });
+};
+exports.TaskSchema.statics.customUpdate = function (query, fields) {
+    var _this = this;
+    return new Promise(function (resolve, reject) {
+        _this
+            .update(query, fields)
+            .exec(function (err, data) { return returnData(err, resolve, reject, data); });
+    });
+};
 exports.TaskSchema.statics.findOne$ = function (id) {
     var _this = this;
     return new Promise(function (resolve, reject) {
         _this.find({ _id: id }, null, null)
             .populate({
-            path: 'Childtask'
-        })
-            .populate({
-            path: 'Tasktalk'
+            path: 'taskTalksID',
+            select: 'content createdTime creatorID',
+            populate: {
+                path: 'creatorID',
+                select: 'name'
+            }
         })
             .populate({
             path: 'creatorID',
@@ -64,7 +80,7 @@ exports.TaskSchema.statics.findOne$ = function (id) {
         })
             .populate({
             path: 'groupID',
-            select: 'creatorID leadersID',
+            select: 'creatorID leadersID pid',
             populate: {
                 path: 'creatorID leadersID',
                 select: 'name'

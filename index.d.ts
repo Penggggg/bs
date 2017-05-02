@@ -84,6 +84,13 @@ declare namespace API {
             status: '200' | '400' | '500'
         }
 
+        /**POST：增加任务聊天 */
+        export interface AddNewTaskTalk {
+            data: Schema.Task$,
+            status: '200' | '400' | '500'
+        }
+
+
     }
 
     export namespace Req {
@@ -193,6 +200,11 @@ declare namespace API {
             pid: string
         }
 
+        /**POST：增加任务聊天 */
+        export interface AddNewTaskTalk extends Partial<Schema.TaskTalk> {
+            pid: string
+        }
+
     }
 
 }
@@ -246,7 +258,7 @@ declare namespace SOK {
             uid: string
             content: string
             userName: string
-            createdTime: string | number
+            createdTime: string
         }
 
         /**消息推送：新增文件 */
@@ -522,7 +534,6 @@ declare namespace Schema {
     }
 
 }
-
 
 /**webpack2 import */
 declare var System: {

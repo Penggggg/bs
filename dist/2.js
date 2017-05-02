@@ -2910,7 +2910,7 @@ exports = module.exports = __webpack_require__(1390)(undefined);
 
 
 // module
-exports.push([module.i, ".task-detail-modal {\n  z-index: 110;\n  top: 65px !important;\n  width: 580px !important;\n}\n.task-detail-modal .ant-modal-header {\n  background-color: #f7f7f7;\n}\n.task-detail-modal .ant-modal-body {\n  height: 420px;\n  overflow: scroll;\n}\n.task-detail-modal .ant-modal-body::-webkit-scrollbar {\n  display: none;\n}\n.task-detail-modal .ant-modal-content {\n  padding-bottom: 80px;\n  position: relative;\n  background-color: #f7f7f7;\n}\n.task-detail-modal .ant-modal-content .title {\n  margin-bottom: 10px;\n}\n.task-detail-modal .ant-modal-content .header-bar {\n  border: 1px solid #e9e9e9;\n  background: #fff;\n  border-radius: 6px;\n  box-sizing: border-box;\n  padding: 8px 5px 8px 20px;\n  margin-bottom: 10px;\n}\n.task-detail-modal .ant-modal-content .header-bar .ant-col-8 {\n  padding: 3px;\n  position: relative;\n  box-sizing: border-box;\n}\n.task-detail-modal .ant-modal-content .header-bar .ant-col-8 p.small-title {\n  padding-bottom: 5px;\n}\n.task-detail-modal .ant-modal-content .header-bar .ant-col-8 img {\n  top: 28px;\n  left: 3px;\n  width: 25px;\n  position: absolute;\n  border-radius: 50%;\n}\n.task-detail-modal .ant-modal-content .header-bar .line {\n  border-right: 1px solid #e9e9e9;\n}\n.task-detail-modal .ant-modal-content .content {\n  border: 1px solid #e9e9e9;\n  background: #fff;\n  border-radius: 6px;\n  box-sizing: border-box;\n  padding: 8px 5px 8px 20px;\n  margin-bottom: 10px;\n  min-height: 50px;\n}\n.task-detail-modal .ant-modal-content .child-task-list {\n  border: 1px solid #e9e9e9;\n  background: #fff;\n  border-radius: 6px;\n  box-sizing: border-box;\n  padding: 8px 5px 8px 20px;\n  margin-bottom: 10px;\n}\n.task-detail-modal .ant-modal-content .member {\n  position: relative;\n  border: 1px solid #e9e9e9;\n  background: #fff;\n  border-radius: 6px;\n  box-sizing: border-box;\n  padding: 8px 5px 8px 20px;\n  margin-bottom: 10px;\n}\n.task-detail-modal .ant-modal-content .member img {\n  width: 25px;\n  border-radius: 50%;\n  margin-right: 8px;\n}\n.task-detail-modal .ant-modal-content .member h5 {\n  margin-bottom: 5px;\n}\n.task-detail-modal .ant-modal-content .chat-list {\n  min-height: 50px;\n  border: 1px solid #e9e9e9;\n  background: #fff;\n  border-radius: 6px;\n  box-sizing: border-box;\n  padding: 8px 5px 8px 20px;\n  margin-bottom: 10px;\n}\n.task-detail-modal .ant-modal-content .add-chat {\n  left: 3%;\n  bottom: 20px;\n  width: 94%;\n  position: absolute;\n}\n.task-detail-modal .ant-modal-content .add-chat textarea {\n  padding: 10px 100px 10px 15px;\n}\n.task-detail-modal .ant-modal-content .add-chat button {\n  right: 20px;\n  bottom: 10px;\n  position: absolute;\n}\n", ""]);
+exports.push([module.i, ".task-detail-modal {\n  z-index: 110;\n  top: 65px !important;\n  width: 580px !important;\n}\n.task-detail-modal .ant-modal-header {\n  background-color: #f7f7f7;\n}\n.task-detail-modal .ant-modal-body {\n  height: 420px;\n  overflow: scroll;\n}\n.task-detail-modal .ant-modal-body::-webkit-scrollbar {\n  display: none;\n}\n.task-detail-modal .ant-modal-content {\n  padding-bottom: 80px;\n  position: relative;\n  background-color: #f7f7f7;\n}\n.task-detail-modal .ant-modal-content .title {\n  margin-bottom: 10px;\n}\n.task-detail-modal .ant-modal-content .header-bar {\n  border: 1px solid #e9e9e9;\n  background: #fff;\n  border-radius: 6px;\n  box-sizing: border-box;\n  padding: 8px 5px 8px 20px;\n  margin-bottom: 10px;\n}\n.task-detail-modal .ant-modal-content .header-bar .ant-col-8 {\n  padding: 3px;\n  position: relative;\n  box-sizing: border-box;\n}\n.task-detail-modal .ant-modal-content .header-bar .ant-col-8 p.small-title {\n  padding-bottom: 5px;\n}\n.task-detail-modal .ant-modal-content .header-bar .ant-col-8 img {\n  top: 28px;\n  left: 3px;\n  width: 25px;\n  position: absolute;\n  border-radius: 50%;\n}\n.task-detail-modal .ant-modal-content .header-bar .line {\n  border-right: 1px solid #e9e9e9;\n}\n.task-detail-modal .ant-modal-content .content {\n  border: 1px solid #e9e9e9;\n  background: #fff;\n  border-radius: 6px;\n  box-sizing: border-box;\n  padding: 8px 5px 8px 20px;\n  margin-bottom: 10px;\n  min-height: 50px;\n}\n.task-detail-modal .ant-modal-content .child-task-list {\n  border: 1px solid #e9e9e9;\n  background: #fff;\n  border-radius: 6px;\n  box-sizing: border-box;\n  padding: 8px 5px 8px 20px;\n  margin-bottom: 10px;\n}\n.task-detail-modal .ant-modal-content .member {\n  position: relative;\n  border: 1px solid #e9e9e9;\n  background: #fff;\n  border-radius: 6px;\n  box-sizing: border-box;\n  padding: 8px 5px 8px 20px;\n  margin-bottom: 10px;\n}\n.task-detail-modal .ant-modal-content .member img {\n  width: 25px;\n  border-radius: 50%;\n  margin-right: 8px;\n}\n.task-detail-modal .ant-modal-content .member h5 {\n  margin-bottom: 5px;\n}\n.task-detail-modal .ant-modal-content .chat-list {\n  min-height: 50px;\n  border: 1px solid #e9e9e9;\n  background: #fff;\n  border-radius: 6px;\n  box-sizing: border-box;\n  padding: 8px 5px 8px 20px;\n  margin-bottom: 10px;\n}\n.task-detail-modal .ant-modal-content .chat-list li {\n  position: relative;\n  padding: 0 0px 10px 45px;\n  box-sizing: border-box;\n  margin: 5px 0 5px 0;\n  border-bottom: 1px solid #f5f5f5;\n}\n.task-detail-modal .ant-modal-content .chat-list li img {\n  top: 10px;\n  left: 0px;\n  width: 30px;\n  height: 30px;\n  position: absolute;\n  border-radius: 50%;\n}\n.task-detail-modal .ant-modal-content .chat-list li span.time {\n  top: 0px;\n  right: 10px;\n  position: absolute;\n}\n.task-detail-modal .ant-modal-content .add-chat {\n  left: 3%;\n  bottom: 20px;\n  width: 94%;\n  position: absolute;\n}\n.task-detail-modal .ant-modal-content .add-chat textarea {\n  padding: 10px 100px 10px 15px;\n}\n.task-detail-modal .ant-modal-content .add-chat button {\n  right: 20px;\n  bottom: 10px;\n  position: absolute;\n}\n", ""]);
 
 // exports
 
@@ -3006,6 +3006,7 @@ __webpack_require__(1412);
 var React = __webpack_require__(0);
 var ReactDom = __webpack_require__(13);
 var antd_1 = __webpack_require__(54);
+var user_1 = __webpack_require__(157);
 var http_service_1 = __webpack_require__(547);
 var Image_component_1 = __webpack_require__(1397);
 var Option = antd_1.Select.Option;
@@ -3017,6 +3018,14 @@ var IModel = (function (_super) {
             _this._resolve = resolve;
             _this._reject = reject;
         });
+        _this.init = function () {
+            var sub = user_1.default.data.userData$
+                .do(function (res) {
+                _this.uid = res._id;
+                setTimeout(function () { return sub.unsubscribe(); }, 100);
+            })
+                .subscribe();
+        };
         _this.fetchTask = function (tid) {
             http_service_1.default.get('/api/v1/task-detail', { tid: tid })
                 .do(function (res) {
@@ -3028,6 +3037,50 @@ var IModel = (function (_super) {
             })
                 .subscribe();
         };
+        /**执行者丶组长丶负责人 */
+        _this.authCheck = function () {
+            var uid = _this.uid;
+            var executorsID = _this.state.task.executorsID;
+            var _a = _this.state.task.groupID, leadersID = _a.leadersID, creatorID = _a.creatorID;
+            if (executorsID.find(function (exe) { return exe._id === uid; })) {
+                return true;
+            }
+            else if (creatorID._id === uid) {
+                return true;
+            }
+            else if (leadersID.find(function (leader) { return leader._id === uid; })) {
+                return true;
+            }
+            antd_1.Modal.warning({
+                title: '消息',
+                content: '抱歉。在该任务中您还没有执行操作的权限'
+            });
+            return false;
+        };
+        _this.submitChat = function () {
+            var uid = _this.uid;
+            var tid = _this.props.tid;
+            var chatValue = _this.state.chatValue;
+            var pid = _this.state.task.groupID.pid;
+            if (_this.authCheck()) {
+                http_service_1.default.post('/api/v1/add-task-talk', {
+                    content: chatValue, creatorID: uid, taskID: tid, pid: pid
+                })
+                    .do(function (res) {
+                    if (res.status === '200') {
+                        _this.setState({
+                            chatValue: '',
+                            task: res.data
+                        });
+                        antd_1.message.success({
+                            title: '消息',
+                            content: '添加任务留言成功'
+                        });
+                    }
+                })
+                    .subscribe();
+            }
+        };
         _this.onNo = function () {
             // 销毁
             ReactDom.unmountComponentAtNode(_this._container);
@@ -3036,7 +3089,8 @@ var IModel = (function (_super) {
         };
         _this.state = {
             task: null,
-            spinning: true
+            spinning: true,
+            chatValue: ''
         };
         return _this;
     }
@@ -3049,10 +3103,12 @@ var IModel = (function (_super) {
         return _model._promise;
     };
     IModel.prototype.componentDidMount = function () {
+        this.init();
         this.fetchTask(this.props.tid);
     };
     IModel.prototype.render = function () {
-        var _a = this.state, spinning = _a.spinning, task = _a.task;
+        var _this = this;
+        var _a = this.state, spinning = _a.spinning, task = _a.task, chatValue = _a.chatValue;
         return (React.createElement(antd_1.Modal, { title: "\u4EFB\u52A1\u8BE6\u60C5", visible: true, onCancel: this.onNo, footer: null, className: "task-detail-modal" },
             React.createElement(antd_1.Spin, { spinning: spinning, size: "large" }, task ?
                 React.createElement("div", null,
@@ -3094,13 +3150,17 @@ var IModel = (function (_super) {
                     React.createElement("div", { className: "chat-list" },
                         React.createElement("h5", null, "\u4EFB\u52A1\u7559\u8A00"),
                         task.taskTalksID.length !== 0 ?
-                            React.createElement("ul", null)
+                            React.createElement("ul", null, task.taskTalksID.map(function (talk, k) { return React.createElement("li", { key: k },
+                                React.createElement(Image_component_1.default, { src: "/static/touxiang.png" }),
+                                React.createElement("h3", null, talk.creatorID.name),
+                                React.createElement("p", null, talk.content),
+                                React.createElement("span", { className: "time" }, (new Date(talk.createdTime)).toLocaleString())); }))
                             : ""))
                 : ""),
             task ?
                 React.createElement("div", { className: "add-chat" },
-                    React.createElement("textarea", { type: "textarea", className: "ant-input", rows: 3, placeholder: "添加任务留言" }),
-                    React.createElement(antd_1.Button, { type: "primary" }, "\u53D1\u9001"))
+                    React.createElement("textarea", { type: "textarea", className: "ant-input", rows: 3, placeholder: "添加任务留言", value: chatValue, onChange: function (e) { return _this.setState({ chatValue: e.target.value }); } }),
+                    React.createElement(antd_1.Button, { type: "primary", onClick: this.submitChat }, "\u53D1\u9001"))
                 : ""));
     };
     return IModel;

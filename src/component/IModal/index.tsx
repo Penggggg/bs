@@ -1,8 +1,9 @@
 import './index.less'
 import * as React from 'react';
 import * as ReactDom from 'react-dom';
-import { Modal, Spin, Row, Col, DatePicker, Select, Tooltip, Button } from 'antd';
+import { Modal, Spin, Row, Col, DatePicker, Select, Tooltip, Button, message } from 'antd';
 
+import userStore from '../../store/user';
 import http from '../../services/http.service';
 import Image from '../../component/Image/Image.component';
 
@@ -29,16 +30,29 @@ export class IModel extends React.PureComponent< IProps, IState > {
     }
     
 
+    private uid: string;
+
     constructor( ) {
         super( );
         this.state = {
             task: null,
-            spinning: true
+            spinning: true,
+            chatValue: ''
         }
     }
 
     componentDidMount( ) {
+        this.init( );
         this.fetchTask( this.props.tid );
+    }
+
+    init = ( ) => {
+        let sub = userStore.data.userData$
+            .do( res => {
+                this.uid = res._id;
+                setTimeout(( ) => sub.unsubscribe( ), 100 );
+            })
+            .subscribe( );
     }
 
     fetchTask = ( tid: string ) => {
@@ -53,6 +67,60 @@ export class IModel extends React.PureComponent< IProps, IState > {
             .subscribe( )
     }
 
+    /**执行者丶组长丶负责人 */
+    authCheck = ( ) => {
+
+        let { uid } = this;
+        let { executorsID } = this.state.task;
+        let { leadersID, creatorID } = this.state.task.groupID;
+        
+        if ( executorsID.find( exe => exe._id === uid )) {
+            return true;
+        } else if ( creatorID._id === uid ) {
+            return true;
+        } else if ( leadersID.find( leader => leader._id === uid )) {
+            return true;
+        }
+
+        Modal.warning({
+            title: '消息',
+            content: '抱歉。在该任务中您还没有执行操作的权限'
+        })
+        
+        return false;
+
+    }
+
+    submitChat = ( ) => {
+
+        let { uid } = this;
+        let { tid } = this.props;
+        let { chatValue } = this.state;
+        let { pid } = this.state.task.groupID;
+
+        if ( this.authCheck( )) {
+            
+            http.post< API.Res.AddNewTaskTalk, API.Query.AddNewTaskTalk>('/api/v1/add-task-talk', {
+                content: chatValue, creatorID: uid, taskID: tid, pid
+            })
+            .do( res => {
+                if ( res.status === '200' ) {
+                    this.setState({
+                        chatValue: '',
+                        task: res.data
+                    })
+                    message.success({
+                        title: '消息',
+                        content: '添加任务留言成功'
+                    })
+                }
+            })
+            .subscribe( )
+
+        }
+
+    }
+
     onNo = ( ) => {
         // 销毁
         ReactDom.unmountComponentAtNode( this._container );
@@ -60,7 +128,7 @@ export class IModel extends React.PureComponent< IProps, IState > {
     }
 
     render( ) {
-        let { spinning, task } = this.state;
+        let { spinning, task, chatValue } = this.state;
         return(
             <Modal title={`任务详情`} visible={ true } onCancel={ this.onNo } footer={ null } className="task-detail-modal">
                 <Spin spinning={ spinning } size="large">
@@ -131,7 +199,14 @@ export class IModel extends React.PureComponent< IProps, IState > {
                         {
                             task.taskTalksID.length !== 0 ?
                             <ul>
-
+                            {
+                                task.taskTalksID.map(( talk, k ) => <li key={ k }>
+                                    <Image src="/static/touxiang.png" />
+                                    <h3>{ talk.creatorID.name }</h3>
+                                    <p>{ talk.content }</p>
+                                    <span className="time">{ (new Date( talk.createdTime)).toLocaleString( ) }</span>
+                                </li>)
+                            }
                             </ul>
                             : ""
                         }
@@ -143,8 +218,9 @@ export class IModel extends React.PureComponent< IProps, IState > {
                 {
                     task ?
                         <div className="add-chat">
-                            <textarea type="textarea" className="ant-input" rows={3} placeholder="添加任务留言" />
-                            <Button type="primary" >发送</Button>
+                            <textarea type="textarea" className="ant-input" rows={3} placeholder="添加任务留言"
+                                value={ chatValue } onChange={(e: any) => this.setState({ chatValue: e.target.value }) } />
+                            <Button type="primary" onClick={this.submitChat}>发送</Button>
                         </div>
                     : ""
                 } 
@@ -159,5 +235,6 @@ interface IProps {
 
 interface IState {
     spinning: boolean
+    chatValue: string
     task: Schema.Task$ | null
 }

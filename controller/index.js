@@ -48,6 +48,7 @@ var query_task_1 = require("./project/task/query-task");
 var create_project_1 = require("./project/create-project");
 var reply_invite_1 = require("./project/reply-invite");
 var query_group_1 = require("./project/group/query-group");
+var add_task_talk_1 = require("./project/task/add-task-talk");
 var files_1 = require("./project/files");
 var query_controller_1 = require("./user/query.controller");
 var query_project_1 = require("./project/query-project");
@@ -83,6 +84,8 @@ exports.default = function (router) {
     router.post('/api/v1/add-task', add_task_1.addTask);
     /**项目模块：查询任务 */
     router.get('/api/v1/task-detail', query_task_1.taskDetail$);
+    /**项目模块：新增任务聊天 */
+    router.post('/api/v1/add-task-talk', add_task_talk_1.addTaskTalk);
     /**用户模块：查询所有符合条件的用户 */
     router.post('/api/v1/all-user', query_controller_1.fetchAllUserByName);
     /**用户模块：查询项目下所有成员和组长 */

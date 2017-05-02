@@ -356,7 +356,21 @@ class ProjectTasksPage extends React.PureComponent< IProps, IState > {
                                                     </Tooltip>
                                                 </div>
                                                 <div className="other">
-                                                    <Tag color="#108ee9">1/2</Tag>'
+                                                {
+                                                    task.childTasksID.length !== 0 ?
+                                                    <div>
+                                                        <Tag color="#49a9ee">任务进度</Tag>
+                                                        <Icon type="bars" />
+                                                        { (( ) => {
+                                                            let i = 0;
+                                                            task.childTasksID.map( ctask => {
+                                                                if ( ctask.finished ) { i++; }
+                                                            })
+                                                            return i;
+                                                        })( )}
+                                                        { `/${task.childTasksID.length}` }
+                                                    </div> : ""
+                                                }
                                                 </div>
                                             </div>
                                         </li>

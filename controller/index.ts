@@ -15,7 +15,7 @@ import { taskDetail$ } from './project/task/query-task';
 import { createProject } from './project/create-project';
 import { replyInvite } from './project/reply-invite';
 import { allGroup$ } from './project/group/query-group';
-import { addTaskTalk } from './project/task/add-task-talk';
+import { addTaskTalk, updateTaskContent } from './project/task/add-task-talk';
 import { download, upload, allFiles, deleteFile } from './project/files';
 import { fetchAllUserByName, allMemberInProject } from './user/query.controller';
 import { allProject, projectDetail } from './project/query-project';
@@ -59,6 +59,8 @@ export default ( router ) => {
     router.get('/api/v1/task-detail', taskDetail$ );
     /**项目模块：新增任务聊天 */
     router.post('/api/v1/add-task-talk', addTaskTalk );
+    /**项目模块：更新任务内容 */
+    router.post('/api/v1/update-task-content', updateTaskContent );
 
 
     /**用户模块：查询所有符合条件的用户 */

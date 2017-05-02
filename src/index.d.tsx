@@ -90,6 +90,12 @@ declare namespace API {
             status: '200' | '400' | '500'
         }
 
+        /**POST：更新任务内容 */
+        export interface UpdateTaskContent {
+            data: Schema.Task$,
+            status: '200' | '400' | '500'        
+        }
+
 
     }
 
@@ -202,6 +208,11 @@ declare namespace API {
 
         /**POST：增加任务聊天 */
         export interface AddNewTaskTalk extends Partial<Schema.TaskTalk> {
+            pid: string
+        }
+
+        /**POST：更新任务内容 */
+        export interface UpdateTaskContent extends Partial<Schema.Task> {
             pid: string
         }
 

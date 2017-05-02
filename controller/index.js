@@ -86,6 +86,8 @@ exports.default = function (router) {
     router.get('/api/v1/task-detail', query_task_1.taskDetail$);
     /**项目模块：新增任务聊天 */
     router.post('/api/v1/add-task-talk', add_task_talk_1.addTaskTalk);
+    /**项目模块：更新任务内容 */
+    router.post('/api/v1/update-task-content', add_task_talk_1.updateTaskContent);
     /**用户模块：查询所有符合条件的用户 */
     router.post('/api/v1/all-user', query_controller_1.fetchAllUserByName);
     /**用户模块：查询项目下所有成员和组长 */

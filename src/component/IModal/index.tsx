@@ -37,7 +37,9 @@ export class IModel extends React.PureComponent< IProps, IState > {
         this.state = {
             task: null,
             spinning: true,
-            chatValue: ''
+            showContentEdit: false,
+            chatValue: '',
+            contentValue: ''
         }
     }
 
@@ -59,8 +61,10 @@ export class IModel extends React.PureComponent< IProps, IState > {
         http.get<Schema.Task$, { tid: string }>('/api/v1/task-detail', { tid })
             .do( res => {
                 console.log( res );
+                let { content } = res;
                 this.setState({
                     task: res,
+                    contentValue: content,
                     spinning: false
                 })
             })
@@ -121,6 +125,35 @@ export class IModel extends React.PureComponent< IProps, IState > {
 
     }
 
+    submitContent = ( ) => {
+        let { uid } = this;
+        let { tid } = this.props;
+        let { contentValue } = this.state;
+        let { pid } = this.state.task.groupID;
+
+        if ( this.authCheck( )) {
+            http.post< API.Res.UpdateTaskContent, API.Query.UpdateTaskContent>('/api/v1/update-task-content', {
+                content: contentValue, creatorID: uid, _id: tid, pid
+            })
+            .do( res => {
+                if ( res.status === '200' ) {
+                    this.setState({
+                        chatValue: '',
+                        task: res.data,
+                        contentValue: res.data.content,
+                        showContentEdit: false
+                    })
+                    message.success({
+                        title: '消息',
+                        content: '成功更新任务内容！'
+                    })
+                }
+                console.log(res)
+            })
+            .subscribe( )
+        }
+    }
+
     onNo = ( ) => {
         // 销毁
         ReactDom.unmountComponentAtNode( this._container );
@@ -128,7 +161,7 @@ export class IModel extends React.PureComponent< IProps, IState > {
     }
 
     render( ) {
-        let { spinning, task, chatValue } = this.state;
+        let { spinning, task, chatValue, contentValue, showContentEdit } = this.state;
         return(
             <Modal title={`任务详情`} visible={ true } onCancel={ this.onNo } footer={ null } className="task-detail-modal">
                 <Spin spinning={ spinning } size="large">
@@ -161,7 +194,15 @@ export class IModel extends React.PureComponent< IProps, IState > {
                         </div>
                         <div className="content">
                             <h5>任务内容</h5>
-                            { task.content }
+                            <Button className="edit" onClick={( ) => this.setState({ showContentEdit: !showContentEdit })}>编辑</Button>
+                            <pre style={{ paddingTop: 10 }}>{ task.content }</pre>
+                            {
+                                <div className={ showContentEdit? "edit-block show" : "edit-block" }>
+                                    <textarea type="textarea" className="ant-input" rows={3} 
+                                        value={ contentValue } onChange={(e: any) => this.setState({ contentValue: e.target.value }) } />
+                                    <Button onClick={this.submitContent}>确定</Button>
+                                </div>           
+                            }
                         </div>
                         <div className="child-task-list">
                         {
@@ -236,5 +277,7 @@ interface IProps {
 interface IState {
     spinning: boolean
     chatValue: string
+    contentValue: string
+    showContentEdit: boolean
     task: Schema.Task$ | null
 }

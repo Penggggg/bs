@@ -69,3 +69,24 @@ exports.addTaskTalk = function (ctx) { return __awaiter(_this, void 0, void 0, f
         }
     });
 }); };
+exports.updateTaskContent = function (ctx) { return __awaiter(_this, void 0, void 0, function () {
+    var content, _id, updateTask, task$, result, _a;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
+            case 0:
+                content = (_a = ctx.request.body, _a.content), _id = _a._id;
+                return [4 /*yield*/, task_model_1.TaskModel.customUpdate({ _id: _id }, { content: content })];
+            case 1:
+                updateTask = _b.sent();
+                return [4 /*yield*/, task_model_1.TaskModel.findOne$(_id)];
+            case 2:
+                task$ = _b.sent();
+                result = {
+                    data: task$[0],
+                    status: '200'
+                };
+                ctx.body = result;
+                return [2 /*return*/];
+        }
+    });
+}); };

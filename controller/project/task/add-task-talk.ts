@@ -28,3 +28,26 @@ export let addTaskTalk = async( ctx: Koa.Context ) => {
     ctx.body = result;
 
 }
+
+
+export let updateTaskContent = async( ctx: Koa.Context ) => {
+
+    let { content, _id } = ctx.request.body as API.Query.UpdateTaskContent;
+
+    /**1. 查询旧数据 */
+    // let oldTask: Schema.Task = await TaskModel.customFind({ _id }, 'content' );
+
+    /**2. 更新task表 */
+    let updateTask = await TaskModel.customUpdate({ _id }, { content });
+
+    /**3. 查询Task$ */
+    let task$: Array<Schema.Task$> = await TaskModel.findOne$( _id );
+
+    /**4. 返回数据 */
+    let result: API.Res.UpdateTaskContent = {
+        data: task$[0],
+        status: '200'
+    }
+    ctx.body = result;
+
+}

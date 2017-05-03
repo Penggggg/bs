@@ -3168,7 +3168,22 @@ var IModel = (function (_super) {
                         });
                         antd_1.message.success('成功更改任务截止日期！');
                     }
-                    console.log(res);
+                })
+                    .subscribe();
+            }
+        };
+        _this.submitPriority = function (priority) {
+            var tid = _this.props.tid;
+            var pid = _this.state.task.groupID.pid;
+            if (_this.authCheck()) {
+                http_service_1.default.post('/api/v1/update-priority', { _id: tid, pid: pid, priority: Number(priority) })
+                    .do(function (res) {
+                    if (res.status === '200') {
+                        _this.setState({
+                            task: res.data
+                        });
+                        antd_1.message.success('成功更改任务优先级！');
+                    }
                 })
                     .subscribe();
             }
@@ -3221,7 +3236,7 @@ var IModel = (function (_super) {
                                 React.createElement(antd_1.DatePicker, { value: task.deadLine ? moment(task.deadLine) : null, onChange: this.submitDate, style: { width: 150 } })),
                             React.createElement(antd_1.Col, { span: 8 },
                                 React.createElement("h5", { className: "small-title" }, "\u4F18\u5148\u7EA7"),
-                                React.createElement(antd_1.Select, { defaultValue: "1", style: { width: 150 }, disabled: true },
+                                React.createElement(antd_1.Select, { value: String(task.priority), style: { width: 150 }, onChange: function (v) { return _this.submitPriority(v); } },
                                     React.createElement(Option, { value: "1" }, "\u4E00\u822C"),
                                     React.createElement(Option, { value: "2" }, "\u7D27\u6025"),
                                     React.createElement(Option, { value: "3" }, "\u975E\u5E38\u7D27\u6025"))))),

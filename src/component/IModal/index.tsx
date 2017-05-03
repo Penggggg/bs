@@ -217,12 +217,32 @@ export class IModel extends React.PureComponent< IProps, IState > {
                         })
                         message.success('成功更改任务截止日期！')
                     }
-                    console.log( res )
                 })
                 .subscribe( )
 
         }
 
+    }
+
+    submitPriority = ( priority: number ) => {
+        
+        let { tid } = this.props;
+        let { pid } = this.state.task.groupID;
+
+        if ( this.authCheck( )) {
+
+            http.post<API.Res.UpdatePriority, API.Query.UpdatePriority>('/api/v1/update-priority', { _id: tid,  pid, priority: Number(priority) })
+                .do( res => {
+                    if ( res.status === '200' ) {
+                        this.setState({
+                            task: res.data
+                        })
+                        message.success('成功更改任务优先级！')
+                    }
+                })
+                .subscribe( )
+
+        }
     }
 
     onNo = ( ) => {
@@ -255,7 +275,7 @@ export class IModel extends React.PureComponent< IProps, IState > {
                                 </Col>
                                 <Col span={ 8 }>
                                     <h5 className="small-title">优先级</h5>
-                                    <Select defaultValue="1" style={{ width: 150 }} disabled >
+                                    <Select value={ String(task.priority) } style={{ width: 150 }} onChange={( v: any ) => this.submitPriority( v )} >
                                         <Option value="1">一般</Option>
                                         <Option value="2">紧急</Option>
                                         <Option value="3">非常紧急</Option>

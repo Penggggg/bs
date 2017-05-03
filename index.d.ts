@@ -114,6 +114,12 @@ declare namespace API {
             status: '200' | '400' | '500'  
         }
 
+        /**POST：更改任务优先级 */
+        export interface UpdatePriority {
+            data: Schema.Task$,
+            status: '200' | '400' | '500'  
+        }
+
     }
 
     export namespace Req {
@@ -249,6 +255,11 @@ declare namespace API {
             
         }
 
+        /**POST：更改任务优先级 */
+        export interface UpdatePriority extends Partial<Schema.Task> {
+            pid: string
+        }
+
     }
 
 }
@@ -371,7 +382,6 @@ declare namespace APP {
         content: string,
         PID: Partial<APP.Project>
     }
-
 
     /**聊天记录列表 */
     export interface ChatList {

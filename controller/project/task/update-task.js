@@ -36,6 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
+var socket_1 = require("../../../socket");
 var task_model_1 = require("../../../model/models/task.model");
 exports.updateDeadline = function (ctx) { return __awaiter(_this, void 0, void 0, function () {
     var _id, deadLine, save, task$, result, _a;
@@ -49,8 +50,29 @@ exports.updateDeadline = function (ctx) { return __awaiter(_this, void 0, void 0
                 return [4 /*yield*/, task_model_1.TaskModel.findOne$(_id)];
             case 2:
                 task$ = _b.sent();
-                console.log(deadLine);
-                console.log(task$[0].deadLine);
+                result = {
+                    data: task$[0],
+                    status: '200'
+                };
+                ctx.body = result;
+                return [2 /*return*/];
+        }
+    });
+}); };
+exports.updatePriority = function (ctx) { return __awaiter(_this, void 0, void 0, function () {
+    var _id, pid, priority, save, task$, result, _a;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
+            case 0:
+                _id = (_a = ctx.request.body, _a._id), pid = _a.pid, priority = _a.priority;
+                return [4 /*yield*/, task_model_1.TaskModel.customUpdate({ _id: _id }, { priority: priority })];
+            case 1:
+                save = _b.sent();
+                return [4 /*yield*/, task_model_1.TaskModel.findOne$(_id)];
+            case 2:
+                task$ = _b.sent();
+                /**3. socket-group */
+                socket_1.default.projectSockets[pid].group.broadcast();
                 result = {
                     data: task$[0],
                     status: '200'

@@ -114,6 +114,12 @@ declare namespace API {
             status: '200' | '400' | '500'  
         }
 
+        /**POST：更改任务优先级 */
+        export interface UpdatePriority {
+            data: Schema.Task$,
+            status: '200' | '400' | '500'  
+        }
+
     }
 
     export namespace Req {
@@ -247,6 +253,11 @@ declare namespace API {
         /**POST：更改任务截止日期 */
         export interface UpdateDeadline extends Partial<Schema.Task> {
             
+        }
+
+        /**POST：更改任务优先级 */
+        export interface UpdatePriority extends Partial<Schema.Task> {
+            pid: string
         }
 
     }

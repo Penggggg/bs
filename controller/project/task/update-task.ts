@@ -9,15 +9,14 @@ export let updateDeadline = async( ctx: Koa.Context ) => {
 
     let { _id, deadLine } = ctx.request.body as API.Query.UpdateDeadline;
 
-    /**更新task表 */    
+    /**1. 更新task表 */    
     let save = await TaskModel.customUpdate({ _id }, { deadLine });
 
-    /**查询task$ */
+    /**2. 查询task$ */
     let task$: Array<Schema.Task$> = await TaskModel.findOne$( _id );
 
-    console.log( deadLine )
-    console.log( task$[0].deadLine )
 
+    /**3. 返回数据 */
     let result: API.Res.UpdateDeadline = {
         data: task$[0],
         status: '200'
@@ -25,5 +24,28 @@ export let updateDeadline = async( ctx: Koa.Context ) => {
     
     ctx.body = result;
 
+
+}
+
+export let updatePriority = async( ctx: Koa.Context ) => {
+
+    let { _id, pid, priority } = ctx.request.body as API.Query.UpdatePriority;
+
+    /**1. 更新task表 */
+    let save = await TaskModel.customUpdate({ _id }, { priority });
+
+    /**2. 查询TASk$ */
+    let task$: Array<Schema.Task$> = await TaskModel.findOne$( _id );
+
+    /**3. socket-group */
+    mySocket.projectSockets[pid].group.broadcast( );
+
+    /**4. 返回数据 */
+    let result: API.Res.UpdateDeadline = {
+        data: task$[0],
+        status: '200'
+    }
+    
+    ctx.body = result;
 
 }

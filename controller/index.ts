@@ -11,7 +11,7 @@ import { addTask } from './project/task/add-task';
 import { addNewGroup } from './project/group/add-group';
 import { inviteMember } from './project/invite-member'; 
 import { getChatList } from './project/chat/query-chat';
-import {  updateDeadline} from './project/task/update-task';
+import {  updateDeadline, updatePriority } from './project/task/update-task';
 import { taskDetail$ } from './project/task/query-task';
 import { addChildTask } from './project/task/add-child-task';
 import { updateChildTask } from './project/task/update-child-task';
@@ -70,12 +70,15 @@ export default ( router ) => {
     router.post('/api/v1/update-child-task', updateChildTask );
     /**项目模块：任务截止日期更改 */
     router.post('/api/v1/update-deadline', updateDeadline );
+    /**项目模块：任务优先级更改 */
+    router.post('/api/v1/update-priority', updatePriority )
 
 
     /**用户模块：查询所有符合条件的用户 */
     router.post('/api/v1/all-user', fetchAllUserByName )
     /**用户模块：查询项目下所有成员和组长 */
-    router.get('/api/v1/all-member-leader', allMemberInProject )
+    router.get('/api/v1/all-member-leader', allMemberInProject );
+    
 
 
     /**消息模块：查询所有符合条件的消息 */

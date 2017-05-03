@@ -97,6 +97,8 @@ exports.default = function (router) {
     router.post('/api/v1/update-child-task', update_child_task_1.updateChildTask);
     /**项目模块：任务截止日期更改 */
     router.post('/api/v1/update-deadline', update_task_1.updateDeadline);
+    /**项目模块：任务优先级更改 */
+    router.post('/api/v1/update-priority', update_task_1.updatePriority);
     /**用户模块：查询所有符合条件的用户 */
     router.post('/api/v1/all-user', query_controller_1.fetchAllUserByName);
     /**用户模块：查询项目下所有成员和组长 */

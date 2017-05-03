@@ -267,7 +267,7 @@ var EventProjectGroup = (function () {
         this.sub = rxjs_1.Observable
             .fromEvent(io, "" + index_con_1.CON.socketEvent.project.group)
             .do(function (res) {
-            console.log('????');
+            // console.log('????')
             // message.success('项目状态有更新~');
             project_1.default.group.save();
         })

@@ -44,6 +44,7 @@ var add_task_1 = require("./project/task/add-task");
 var add_group_1 = require("./project/group/add-group");
 var invite_member_1 = require("./project/invite-member");
 var query_chat_1 = require("./project/chat/query-chat");
+var update_task_1 = require("./project/task/update-task");
 var query_task_1 = require("./project/task/query-task");
 var add_child_task_1 = require("./project/task/add-child-task");
 var update_child_task_1 = require("./project/task/update-child-task");
@@ -94,6 +95,8 @@ exports.default = function (router) {
     router.post('/api/v1/add-child-task', add_child_task_1.addChildTask);
     /**项目模块：子任务状态更改 */
     router.post('/api/v1/update-child-task', update_child_task_1.updateChildTask);
+    /**项目模块：任务截止日期更改 */
+    router.post('/api/v1/update-deadline', update_task_1.updateDeadline);
     /**用户模块：查询所有符合条件的用户 */
     router.post('/api/v1/all-user', query_controller_1.fetchAllUserByName);
     /**用户模块：查询项目下所有成员和组长 */

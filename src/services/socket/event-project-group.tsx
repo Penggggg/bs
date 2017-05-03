@@ -16,7 +16,7 @@ export class EventProjectGroup implements APP.ProjectEvent {
         this.sub = Observable
             .fromEvent( io, `${CON.socketEvent.project.group}`)
             .do( res => {
-                console.log('????')
+                // console.log('????')
                 // message.success('项目状态有更新~');
                 projectStore.group.save( );
             })

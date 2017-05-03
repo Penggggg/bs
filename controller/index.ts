@@ -11,6 +11,7 @@ import { addTask } from './project/task/add-task';
 import { addNewGroup } from './project/group/add-group';
 import { inviteMember } from './project/invite-member'; 
 import { getChatList } from './project/chat/query-chat';
+import {  updateDeadline} from './project/task/update-task';
 import { taskDetail$ } from './project/task/query-task';
 import { addChildTask } from './project/task/add-child-task';
 import { updateChildTask } from './project/task/update-child-task';
@@ -66,7 +67,9 @@ export default ( router ) => {
     /**项目模块：新增子任务 */
     router.post('/api/v1/add-child-task', addChildTask );
     /**项目模块：子任务状态更改 */
-    router.post('/api/v1/update-child-task', updateChildTask )
+    router.post('/api/v1/update-child-task', updateChildTask );
+    /**项目模块：任务截止日期更改 */
+    router.post('/api/v1/update-deadline', updateDeadline );
 
 
     /**用户模块：查询所有符合条件的用户 */

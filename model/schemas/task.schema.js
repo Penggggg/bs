@@ -13,7 +13,9 @@ exports.TaskSchema = new Mongoose.Schema({
     title: String,
     content: String,
     priority: Number,
-    deadLine: String,
+    deadLine: {
+        type: Date
+    },
     finished: Boolean,
     groupID: {
         ref: 'Group',

@@ -108,6 +108,12 @@ declare namespace API {
             status: '200' | '400' | '500'  
         }
 
+        /**POST：更改任务截止日期 */
+        export interface UpdateDeadline {
+            data: Schema.Task$,
+            status: '200' | '400' | '500'  
+        }
+
     }
 
     export namespace Req {
@@ -236,6 +242,11 @@ declare namespace API {
         export interface UpdateChildTask extends Partial<Schema.ChildTask> {
             pid: string
             taskID: string
+        }
+
+        /**POST：更改任务截止日期 */
+        export interface UpdateDeadline extends Partial<Schema.Task> {
+            
         }
 
     }

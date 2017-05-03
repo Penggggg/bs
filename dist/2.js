@@ -3016,6 +3016,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 __webpack_require__(1412);
+var moment = __webpack_require__(2);
 var React = __webpack_require__(0);
 var ReactDom = __webpack_require__(13);
 var antd_1 = __webpack_require__(60);
@@ -3087,10 +3088,7 @@ var IModel = (function (_super) {
                             chatValue: '',
                             task: res.data
                         });
-                        antd_1.message.success({
-                            title: '消息',
-                            content: '添加任务留言成功'
-                        });
+                        antd_1.message.success('添加任务留言成功');
                     }
                 })
                     .subscribe();
@@ -3112,10 +3110,7 @@ var IModel = (function (_super) {
                             contentValue: res.data.content,
                             showContentEdit: false
                         });
-                        antd_1.message.success({
-                            title: '消息',
-                            content: '成功更新任务内容！'
-                        });
+                        antd_1.message.success('成功更新任务内容！');
                     }
                 })
                     .subscribe();
@@ -3137,10 +3132,7 @@ var IModel = (function (_super) {
                             childTaskValue: '',
                             showChildTaskEdit: false
                         });
-                        antd_1.message.success({
-                            title: '消息',
-                            content: '成功添加一条子任务！'
-                        });
+                        antd_1.message.success('成功添加一条子任务！');
                     }
                     console.log(res);
                 })
@@ -3159,10 +3151,22 @@ var IModel = (function (_super) {
                         _this.setState({
                             task: res.data
                         });
-                        antd_1.message.success({
-                            title: '消息',
-                            content: '成功更改子任务状态！'
+                        antd_1.message.success('成功更改子任务状态！');
+                    }
+                })
+                    .subscribe();
+            }
+        };
+        _this.submitDate = function (date, dateString) {
+            var tid = _this.props.tid;
+            if (_this.authCheck()) {
+                http_service_1.default.post('/api/v1/update-deadline', { _id: tid, deadLine: String((new Date(dateString)).getTime()) })
+                    .do(function (res) {
+                    if (res.status === '200') {
+                        _this.setState({
+                            task: res.data
                         });
+                        antd_1.message.success('成功更改任务截止日期！');
                     }
                     console.log(res);
                 })
@@ -3214,7 +3218,7 @@ var IModel = (function (_super) {
                                 React.createElement(Image_component_1.default, { src: "/static/touxiang.png" })),
                             React.createElement(antd_1.Col, { span: 8, className: "line" },
                                 React.createElement("h5", { className: "small-title" }, "\u622A\u6B62\u65F6\u95F4"),
-                                React.createElement(antd_1.DatePicker, { disabled: true, style: { width: 150 } })),
+                                React.createElement(antd_1.DatePicker, { value: task.deadLine ? moment(task.deadLine) : null, onChange: this.submitDate, style: { width: 150 } })),
                             React.createElement(antd_1.Col, { span: 8 },
                                 React.createElement("h5", { className: "small-title" }, "\u4F18\u5148\u7EA7"),
                                 React.createElement(antd_1.Select, { defaultValue: "1", style: { width: 150 }, disabled: true },

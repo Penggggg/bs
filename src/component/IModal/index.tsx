@@ -1,4 +1,5 @@
 import './index.less'
+import * as moment from 'moment';
 import * as React from 'react';
 import * as ReactDom from 'react-dom';
 import { Modal, Spin, Row, Col, DatePicker, Select, Tooltip, Button, message, Checkbox  } from 'antd';
@@ -115,10 +116,7 @@ export class IModel extends React.PureComponent< IProps, IState > {
                         chatValue: '',
                         task: res.data
                     })
-                    message.success({
-                        title: '消息',
-                        content: '添加任务留言成功'
-                    })
+                    message.success('添加任务留言成功')
                 }
             })
             .subscribe( )
@@ -144,10 +142,7 @@ export class IModel extends React.PureComponent< IProps, IState > {
                         contentValue: res.data.content,
                         showContentEdit: false
                     })
-                    message.success({
-                        title: '消息',
-                        content: '成功更新任务内容！'
-                    })
+                    message.success('成功更新任务内容！')
                 }
             })
             .subscribe( )
@@ -173,10 +168,7 @@ export class IModel extends React.PureComponent< IProps, IState > {
                         childTaskValue: '',
                         showChildTaskEdit: false
                     })
-                    message.success({
-                        title: '消息',
-                        content: '成功添加一条子任务！'
-                    })
+                    message.success('成功添加一条子任务！')
                 }
                 console.log(res)
             })
@@ -201,14 +193,33 @@ export class IModel extends React.PureComponent< IProps, IState > {
                     this.setState({
                         task: res.data
                     })
-                    message.success({
-                        title: '消息',
-                        content: '成功更改子任务状态！'
-                    })
+                    message.success('成功更改子任务状态！')
                 }
-                console.log( res )
             })
             .subscribe( )       
+
+        }
+
+    }
+
+    submitDate = (date: any, dateString: string) => {
+
+        let { tid } = this.props;
+
+        if ( this.authCheck( )) {
+
+            http.post<API.Res.UpdateDeadline, API.Query.UpdateDeadline>('/api/v1/update-deadline', 
+                { _id: tid, deadLine: String((new Date( dateString )).getTime( )) })
+                .do( res => {
+                    if ( res.status === '200' ) {
+                        this.setState({
+                            task: res.data
+                        })
+                        message.success('成功更改任务截止日期！')
+                    }
+                    console.log( res )
+                })
+                .subscribe( )
 
         }
 
@@ -240,7 +251,7 @@ export class IModel extends React.PureComponent< IProps, IState > {
                                 </Col>
                                 <Col span={ 8 } className="line">
                                     <h5 className="small-title">截止时间</h5>
-                                    <DatePicker disabled style={{ width: 150 }} />
+                                    <DatePicker value={ task.deadLine ? moment( task.deadLine ) : null } onChange={this.submitDate} style={{ width: 150 }} />
                                 </Col>
                                 <Col span={ 8 }>
                                     <h5 className="small-title">优先级</h5>

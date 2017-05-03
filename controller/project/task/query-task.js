@@ -51,3 +51,20 @@ exports.taskDetail$ = function (ctx) { return __awaiter(_this, void 0, void 0, f
         }
     });
 }); };
+exports.allUserTask$ = function (ctx) { return __awaiter(_this, void 0, void 0, function () {
+    var result, uid;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                uid = ctx.query.uid;
+                return [4 /*yield*/, task_model_1.TaskModel.findUserTask$(uid)];
+            case 1:
+                result = _a.sent();
+                ctx.body = {
+                    status: '200',
+                    data: result
+                };
+                return [2 /*return*/];
+        }
+    });
+}); };

@@ -60,6 +60,29 @@ exports.TaskSchema.statics.customUpdate = function (query, fields) {
             .exec(function (err, data) { return returnData(err, resolve, reject, data); });
     });
 };
+exports.TaskSchema.statics.findUserTask$ = function (uid) {
+    var _this = this;
+    return new Promise(function (resolve, reject) {
+        _this.find({ "executorsID": uid }, 'content title deadLine priority childTasksID finished groupID executorsID', null)
+            .populate({
+            path: 'childTasksID',
+            select: 'content createdTime finished'
+        })
+            .populate({
+            path: 'executorsID',
+            select: 'name'
+        })
+            .populate({
+            path: 'groupID',
+            select: 'creatorID leadersID pid',
+            populate: {
+                path: 'creatorID leadersID',
+                select: 'name'
+            },
+        })
+            .exec(function (err, data) { return returnData(err, resolve, reject, data); });
+    });
+};
 exports.TaskSchema.statics.findOne$ = function (id) {
     var _this = this;
     return new Promise(function (resolve, reject) {

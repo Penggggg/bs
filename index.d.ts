@@ -120,6 +120,12 @@ declare namespace API {
             status: '200' | '400' | '500'  
         }
 
+        /**GET: 个人任务列表 */
+        export interface UserTasks {
+            data: Array<Partial<Schema.Task$>>
+            status: '200' | '400' | '500'
+        }
+
     }
 
     export namespace Req {
@@ -382,6 +388,7 @@ declare namespace APP {
         content: string,
         PID: Partial<APP.Project>
     }
+
 
     /**聊天记录列表 */
     export interface ChatList {

@@ -87,6 +87,8 @@ exports.default = function (router) {
     router.post('/api/v1/add-task', add_task_1.addTask);
     /**项目模块：查询任务 */
     router.get('/api/v1/task-detail', query_task_1.taskDetail$);
+    /**项目模块：查询个人任务 */
+    router.get('/api/v1/my-task', query_task_1.allUserTask$);
     /**项目模块：新增任务聊天 */
     router.post('/api/v1/add-task-talk', add_task_talk_1.addTaskTalk);
     /**项目模块：更新任务内容 */

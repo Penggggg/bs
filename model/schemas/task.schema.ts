@@ -54,6 +54,28 @@ TaskSchema.statics.customUpdate = function( query, fields ) {
     })
 }
 
+TaskSchema.statics.findUserTask$ = function( uid ) {
+    return new Promise(( resolve, reject ) => {
+        this.find({ "executorsID": uid }, 'content title deadLine priority childTasksID finished groupID executorsID', null )
+            .populate({
+                path: 'childTasksID',
+                select: 'content createdTime finished'
+            })
+            .populate({
+                path: 'executorsID',
+                select: 'name'
+            })
+            .populate({
+                path: 'groupID',
+                select: 'creatorID leadersID pid',
+                populate: {
+                    path: 'creatorID leadersID',
+                    select: 'name'
+                },
+            })
+            .exec(( err, data) =>  returnData( err, resolve, reject, data ))
+    })
+}
 
 TaskSchema.statics.findOne$ = function( id ) {
     return new Promise(( resolve, reject ) => {

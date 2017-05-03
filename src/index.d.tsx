@@ -120,6 +120,12 @@ declare namespace API {
             status: '200' | '400' | '500'  
         }
 
+        /**GET: 个人任务列表 */
+        export interface UserTasks {
+            data: Array<Partial<Schema.Task$>>
+            status: '200' | '400' | '500'
+        }
+
     }
 
     export namespace Req {

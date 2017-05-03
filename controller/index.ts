@@ -12,7 +12,7 @@ import { addNewGroup } from './project/group/add-group';
 import { inviteMember } from './project/invite-member'; 
 import { getChatList } from './project/chat/query-chat';
 import {  updateDeadline, updatePriority } from './project/task/update-task';
-import { taskDetail$ } from './project/task/query-task';
+import { taskDetail$, allUserTask$ } from './project/task/query-task';
 import { addChildTask } from './project/task/add-child-task';
 import { updateChildTask } from './project/task/update-child-task';
 import { createProject } from './project/create-project';
@@ -60,6 +60,8 @@ export default ( router ) => {
     router.post('/api/v1/add-task', addTask );
     /**项目模块：查询任务 */
     router.get('/api/v1/task-detail', taskDetail$ );
+    /**项目模块：查询个人任务 */
+    router.get('/api/v1/my-task', allUserTask$ );
     /**项目模块：新增任务聊天 */
     router.post('/api/v1/add-task-talk', addTaskTalk );
     /**项目模块：更新任务内容 */

@@ -1,6 +1,7 @@
 
 import './tasks.less';
 import * as React from 'react';
+import * as moment from 'moment';
 import { Subscription } from 'rxjs';
 import { RouteComponentProps } from 'react-router';
 import { Icon, Modal, Form, Input, Button, AutoComplete, Select, Checkbox, Tooltip, Spin, Tabs, Row, Col, DatePicker, Tag } from 'antd';
@@ -17,7 +18,7 @@ const FormItem = Form.Item;
 const Option = Select.Option;
 const TabPane = Tabs.TabPane;
 
-
+type userTask$ = Array<Partial<Schema.Task$>>
 
 class ProjectTasksPage extends React.PureComponent< IProps, IState > {
 
@@ -37,6 +38,7 @@ class ProjectTasksPage extends React.PureComponent< IProps, IState > {
         this.state = {
             groups: [ ],
             dataSource: [ ],
+            userTasks: [ ],
             spinning: true,
             selectTask: null,
             showTaskForm: false,
@@ -50,6 +52,7 @@ class ProjectTasksPage extends React.PureComponent< IProps, IState > {
         this.initData( );
         this.fetchGroups( );
         this.watchGroups( );
+        setTimeout(( ) => this.fetchUserTask( ), 1000)
     }
 
     componentWillUnmount( ) {
@@ -60,7 +63,10 @@ class ProjectTasksPage extends React.PureComponent< IProps, IState > {
     watchGroups = ( ) => {
         this.sub2 = projectStore.group.data$
             .skip( 1 )
-            .do( e => this.fetchGroups( ))
+            .do( e => {
+                this.fetchGroups( );
+                this.fetchUserTask( );
+            })
             .subscribe( )
     }
 
@@ -179,6 +185,21 @@ class ProjectTasksPage extends React.PureComponent< IProps, IState > {
             .subscribe( )
     }
 
+    /**http：获取个人任务 */
+    fetchUserTask = ( ) => {
+        let { user } = this;
+
+        http.get<API.Res.UserTasks, { uid: string }>('/api/v1/my-task', { uid: user._id })
+            .do( res => {
+                console.log( res.data );
+                this.setState({
+                    userTasks: res.data
+                })
+            })
+            .subscribe( )
+
+    }
+
     /**提交表单 —— 新增分组 */
     submitAddGroup = ( ) => {
 
@@ -261,7 +282,7 @@ class ProjectTasksPage extends React.PureComponent< IProps, IState > {
 
         let { formGroupName, formTaskName } = this;
         let { getFieldDecorator } = this.props.form;
-        let { showGroupForm, showTaskForm, dataSource, groups, spinning, showTaskDetail, taskDetailFetching, selectTask } = this.state;
+        let { showGroupForm, showTaskForm, dataSource, groups, spinning, showTaskDetail, taskDetailFetching, selectTask, userTasks } = this.state;
 
         /**新建分组表单 */
         let addGroupForm = <div className="modal-resetpsw-form">
@@ -378,7 +399,7 @@ class ProjectTasksPage extends React.PureComponent< IProps, IState > {
                                 }
                                 {
                                     group.tasksID.map(( task, key ) => task.finished ? 
-                                        <li key={ key }>
+                                        <li key={ key } className={ task.priority === 0 ? "" : task.priority === 1 ? "urgent" : "very-urgent" } >
                                             <div className="check-block">
                                                 <Checkbox />
                                             </div>
@@ -421,7 +442,114 @@ class ProjectTasksPage extends React.PureComponent< IProps, IState > {
                 </ul>
             </Spin>
         
-        
+
+        /**我的任务 */
+        let myTask = <div className="user-tasks-block">
+            <div className="container">
+                <ul>
+                {
+                    userTasks.map(( task, k ) => !task.finished ? <li key={ k } onClick={( ) => this.showTask( task._id )}>
+                        <h1 className="title">{ task.title }<small>{ task.deadLine ? `· ${(new Date( task.deadLine ).toLocaleDateString( ))} 截止` : "" }</small></h1>
+                        <div className="content">
+                            <h3 style={{ marginBottom: 30 }}>{ task.content }</h3>
+                            <div className="other">
+                            {
+                                task.childTasksID.length !== 0 ?
+                                    <div>
+                                        <Tag color="#49a9ee">任务进度</Tag>
+                                            <div style={{ fontSize: 18, textAlign: 'center' }} >
+                                                <Icon type="bars"  style={{ fontSize: 18 }} />
+                                                { (( ) => {
+                                                    let i = 0;
+                                                    task.childTasksID.map( ctask => {
+                                                        if ( ctask.finished ) { i++; }
+                                                    })
+                                                    return i;
+                                                })( )}
+                                                { `/${task.childTasksID.length}` }
+                                            </div>
+                                    </div> : ""
+                            }
+                            </div>
+                            <div className="member">
+                                <h3>参与者</h3>
+                                <Tooltip title={ task.groupID.creatorID.name }>
+                                    <span >
+                                        <Image src="/static/touxiang.png" />
+                                    </span>
+                                </Tooltip>
+                                {
+                                    task.groupID.leadersID.map(( leader, k ) => <Tooltip title={ leader.name } key={ k }>
+                                        <span >
+                                            <Image src="/static/touxiang.png" />
+                                        </span>
+                                    </Tooltip>)
+                                }
+                                {
+                                    task.executorsID.map(( exe, k ) => <Tooltip title={ exe.name } key={ k }>
+                                        <span >
+                                            <Image src="/static/touxiang.png" />
+                                        </span>
+                                    </Tooltip>)
+                                }
+                            </div>
+                        </div>
+                    </li> : "")
+                }
+                {
+                    userTasks.map(( task, k ) => task.finished ? <li key={ k } onClick={( ) => this.showTask( task._id )}>
+                        <h1 className="title">{ task.title }<small>·已完成 </small></h1>
+                        <div className="content">
+                            <h3 style={{ marginBottom: 30 }}>{ task.content }</h3>
+                            <div className="other">
+                            {
+                                task.childTasksID.length !== 0 ?
+                                    <div>
+                                        <Tag color="#49a9ee">任务进度</Tag>
+                                            <div style={{ fontSize: 18, textAlign: 'center' }} >
+                                                <Icon type="bars"  style={{ fontSize: 18 }} />
+                                                { (( ) => {
+                                                    let i = 0;
+                                                    task.childTasksID.map( ctask => {
+                                                        if ( ctask.finished ) { i++; }
+                                                    })
+                                                    return i;
+                                                })( )}
+                                                { `/${task.childTasksID.length}` }
+                                            </div>
+                                    </div> : ""
+                            }
+                            </div>
+                            <div className="member">
+                                <h3>参与者</h3>
+                                <Tooltip title={ task.groupID.creatorID.name }>
+                                    <span >
+                                        <Image src="/static/touxiang.png" />
+                                    </span>
+                                </Tooltip>
+                                {
+                                    task.groupID.leadersID.map(( leader, k ) => <Tooltip title={ leader.name } key={ k }>
+                                        <span >
+                                            <Image src="/static/touxiang.png" />
+                                        </span>
+                                    </Tooltip>)
+                                }
+                                {
+                                    task.executorsID.map(( exe, k ) => <Tooltip title={ exe.name } key={ k }>
+                                        <span >
+                                            <Image src="/static/touxiang.png" />
+                                        </span>
+                                    </Tooltip>)
+                                }
+                            </div>
+                        </div>
+                    </li> : "")
+                }
+                </ul>
+            </div>
+        </div>
+
+            
         /** */
         return <div className="project-tasks-page">
 
@@ -434,7 +562,9 @@ class ProjectTasksPage extends React.PureComponent< IProps, IState > {
                 <TabPane tab="全部任务" key="1">
                     { allGroup }
                 </TabPane>
-                <TabPane tab="我的任务" key="2">Content of Tab Pane 2</TabPane>
+                <TabPane tab="我的任务" key="2">
+                    { myTask }
+                </TabPane>
             </Tabs>
 
             <Modal  title="创建新项目"  footer={ null } visible={ showGroupForm }
@@ -459,18 +589,24 @@ interface IProps extends RouteComponentProps<{id: string}, {}>{
 }
 
 interface IState {
+
     spinning: boolean
+    taskDetailFetching: boolean
+
     showGroupForm: boolean
     showTaskForm: boolean
     showTaskDetail: boolean
-    taskDetailFetching: boolean
+
+    
     /**Selector数据源 */
     dataSource: Array<{
         value: string,
         text: string
     }> 
+
     /**组数据源 */
     groups: Array<Schema.Group$>
     selectTask: Schema.Task$ | null
+    userTasks: Array<Partial<Schema.Task$>>
 }
 

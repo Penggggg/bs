@@ -1,5 +1,6 @@
 import * as Koa from 'koa';
 
+import mySocket from '../../../socket';
 import { TaskModel } from '../../../model/models/task.model';
 import { TaskTalkModel } from '../../../model/models/task-talk.model';
 
@@ -25,14 +26,14 @@ export let addTaskTalk = async( ctx: Koa.Context ) => {
         status: '200',
         data: task$[0] 
     }
-    ctx.body = result;
+    ctx.body = result;;
 
 }
 
 
 export let updateTaskContent = async( ctx: Koa.Context ) => {
 
-    let { content, _id } = ctx.request.body as API.Query.UpdateTaskContent;
+    let { content, _id, pid } = ctx.request.body as API.Query.UpdateTaskContent;
 
     /**1. 查询旧数据 */
     // let oldTask: Schema.Task = await TaskModel.customFind({ _id }, 'content' );
@@ -42,6 +43,9 @@ export let updateTaskContent = async( ctx: Koa.Context ) => {
 
     /**3. 查询Task$ */
     let task$: Array<Schema.Task$> = await TaskModel.findOne$( _id );
+
+    /**3. socket-group */
+    mySocket.projectSockets[pid].group.broadcast( );
 
     /**4. 返回数据 */
     let result: API.Res.UpdateTaskContent = {

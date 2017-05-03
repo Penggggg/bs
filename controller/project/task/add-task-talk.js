@@ -36,6 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
+var socket_1 = require("../../../socket");
 var task_model_1 = require("../../../model/models/task.model");
 var task_talk_model_1 = require("../../../model/models/task-talk.model");
 exports.addTaskTalk = function (ctx) { return __awaiter(_this, void 0, void 0, function () {
@@ -65,22 +66,25 @@ exports.addTaskTalk = function (ctx) { return __awaiter(_this, void 0, void 0, f
                     data: task$[0]
                 };
                 ctx.body = result;
+                ;
                 return [2 /*return*/];
         }
     });
 }); };
 exports.updateTaskContent = function (ctx) { return __awaiter(_this, void 0, void 0, function () {
-    var content, _id, updateTask, task$, result, _a;
+    var content, _id, pid, updateTask, task$, result, _a;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
-                content = (_a = ctx.request.body, _a.content), _id = _a._id;
+                content = (_a = ctx.request.body, _a.content), _id = _a._id, pid = _a.pid;
                 return [4 /*yield*/, task_model_1.TaskModel.customUpdate({ _id: _id }, { content: content })];
             case 1:
                 updateTask = _b.sent();
                 return [4 /*yield*/, task_model_1.TaskModel.findOne$(_id)];
             case 2:
                 task$ = _b.sent();
+                /**3. socket-group */
+                socket_1.default.projectSockets[pid].group.broadcast();
                 result = {
                     data: task$[0],
                     status: '200'

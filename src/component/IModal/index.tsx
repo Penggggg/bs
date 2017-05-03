@@ -203,11 +203,12 @@ export class IModel extends React.PureComponent< IProps, IState > {
     submitDate = (date: any, dateString: string) => {
 
         let { tid } = this.props;
+        let { pid } = this.state.task.groupID;
 
         if ( this.authCheck( )) {
 
             http.post<API.Res.UpdateDeadline, API.Query.UpdateDeadline>('/api/v1/update-deadline', 
-                { _id: tid, deadLine: String((new Date( dateString )).getTime( )) })
+                { pid, _id: tid, deadLine: String((new Date( dateString )).getTime( )) })
                 .do( res => {
                     if ( res.status === '200' ) {
                         this.setState({

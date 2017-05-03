@@ -449,9 +449,9 @@ class ProjectTasksPage extends React.PureComponent< IProps, IState > {
                 <ul>
                 {
                     userTasks.map(( task, k ) => !task.finished ? <li key={ k } onClick={( ) => this.showTask( task._id )}>
-                        <h1 className="title">{ task.title }<small>{ task.deadLine ? `· ${(new Date( task.deadLine ).toLocaleDateString( ))} 截止` : "" }</small></h1>
+                        <h1 className="title">{ task.title }<small>{ task.deadLine ? `${(new Date( task.deadLine ).toLocaleDateString( ))} 截止` : "" }</small></h1>
                         <div className="content">
-                            <h3 style={{ marginBottom: 30 }}>{ task.content }</h3>
+                            <h3 style={{ marginBottom: 30, fontSize: 18 }}>{ task.content }</h3>
                             <div className="other">
                             {
                                 task.childTasksID.length !== 0 ?
@@ -473,20 +473,20 @@ class ProjectTasksPage extends React.PureComponent< IProps, IState > {
                             </div>
                             <div className="member">
                                 <h3>参与者</h3>
-                                <Tooltip title={ task.groupID.creatorID.name }>
+                                <Tooltip title={`总负责人: ${task.groupID.creatorID.name}`}>
                                     <span >
                                         <Image src="/static/touxiang.png" />
                                     </span>
                                 </Tooltip>
                                 {
-                                    task.groupID.leadersID.map(( leader, k ) => <Tooltip title={ leader.name } key={ k }>
+                                    task.groupID.leadersID.map(( leader, k ) => <Tooltip title={`组长：${leader.name}`} key={ k }>
                                         <span >
                                             <Image src="/static/touxiang.png" />
                                         </span>
                                     </Tooltip>)
                                 }
                                 {
-                                    task.executorsID.map(( exe, k ) => <Tooltip title={ exe.name } key={ k }>
+                                    task.executorsID.map(( exe, k ) => <Tooltip title={`执行者：${exe.name}`} key={ k }>
                                         <span >
                                             <Image src="/static/touxiang.png" />
                                         </span>
@@ -498,9 +498,9 @@ class ProjectTasksPage extends React.PureComponent< IProps, IState > {
                 }
                 {
                     userTasks.map(( task, k ) => task.finished ? <li key={ k } onClick={( ) => this.showTask( task._id )}>
-                        <h1 className="title">{ task.title }<small>·已完成 </small></h1>
+                        <h1 className="title">{ task.title }<small>已完成 </small></h1>
                         <div className="content">
-                            <h3 style={{ marginBottom: 30 }}>{ task.content }</h3>
+                            <h3 style={{ marginBottom: 30, fontSize: 18 }}>{ task.content }</h3>
                             <div className="other">
                             {
                                 task.childTasksID.length !== 0 ?
@@ -522,20 +522,20 @@ class ProjectTasksPage extends React.PureComponent< IProps, IState > {
                             </div>
                             <div className="member">
                                 <h3>参与者</h3>
-                                <Tooltip title={ task.groupID.creatorID.name }>
+                                <Tooltip title={`总负责人: ${task.groupID.creatorID.name}`}>
                                     <span >
                                         <Image src="/static/touxiang.png" />
                                     </span>
                                 </Tooltip>
                                 {
-                                    task.groupID.leadersID.map(( leader, k ) => <Tooltip title={ leader.name } key={ k }>
+                                    task.groupID.leadersID.map(( leader, k ) => <Tooltip title={`组长：${leader.name}`} key={ k }>
                                         <span >
                                             <Image src="/static/touxiang.png" />
                                         </span>
                                     </Tooltip>)
                                 }
                                 {
-                                    task.executorsID.map(( exe, k ) => <Tooltip title={ exe.name } key={ k }>
+                                    task.executorsID.map(( exe, k ) => <Tooltip title={`执行者：${exe.name}`} key={ k }>
                                         <span >
                                             <Image src="/static/touxiang.png" />
                                         </span>

@@ -258,7 +258,7 @@ declare namespace API {
 
         /**POST：更改任务截止日期 */
         export interface UpdateDeadline extends Partial<Schema.Task> {
-            
+            pid: string
         }
 
         /**POST：更改任务优先级 */

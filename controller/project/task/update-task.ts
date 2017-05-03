@@ -7,7 +7,7 @@ import { GroupModel } from '../../../model/models/group.model';
 
 export let updateDeadline = async( ctx: Koa.Context ) => {
 
-    let { _id, deadLine } = ctx.request.body as API.Query.UpdateDeadline;
+    let { _id, deadLine, pid } = ctx.request.body as API.Query.UpdateDeadline;
 
     /**1. 更新task表 */    
     let save = await TaskModel.customUpdate({ _id }, { deadLine });
@@ -15,6 +15,8 @@ export let updateDeadline = async( ctx: Koa.Context ) => {
     /**2. 查询task$ */
     let task$: Array<Schema.Task$> = await TaskModel.findOne$( _id );
 
+    /**3. socket-group */
+    mySocket.projectSockets[pid].group.broadcast( );
 
     /**3. 返回数据 */
     let result: API.Res.UpdateDeadline = {

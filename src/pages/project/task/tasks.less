@@ -28,12 +28,14 @@
         li {
 
             list-style: none;
-            border-radius: 5px;
-            margin-bottom: 12px;
             position: relative;
+            border-radius: 5px;
+            margin-bottom: 12px;    
+            transition: all ease 0.4s;
             background-color: #fff;
             border: 1px solid #d9d9d9;
-             padding: 10px 10px 10px 40px;
+            padding: 10px 10px 10px 40px;
+            border-left-width: 5px;
             
             .check-block {
 
@@ -73,6 +75,18 @@
                 }
             }
 
+        }
+
+        li.urgent {
+            border-left-color: #FFAF38;
+        }
+
+        li.very-urgent {
+            border-left-color: #FF4F3E;
+        }
+
+        li:hover {
+            border-left-width: 8px;
         }
     }
 

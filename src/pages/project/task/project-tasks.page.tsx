@@ -315,7 +315,7 @@ class ProjectTasksPage extends React.PureComponent< IProps, IState > {
                         style={{ width: 315 }}>
                         {
                             dataSource.map(( data, key ) => {
-                            return <Option value={data.value} key={Math.floor(Math.random( )*999)}>{ data.text }</Option>
+                                return <Option value={data.value} key={Math.floor(Math.random( )*999)}>{ data.text }</Option>
                             })
                         }
                     </Select>
@@ -342,7 +342,7 @@ class ProjectTasksPage extends React.PureComponent< IProps, IState > {
                             <ul className="task-list">
                                 {
                                     group.tasksID.map(( task, key ) => !task.finished ? 
-                                        <li key={ key }>
+                                        <li key={ key } className={ task.priority === 0 ? "" : task.priority === 1 ? "urgent" : "very-urgent" } >
                                             <div className="check-block">
                                                 <Checkbox />
                                             </div>
@@ -382,14 +382,31 @@ class ProjectTasksPage extends React.PureComponent< IProps, IState > {
                                             <div className="check-block">
                                                 <Checkbox />
                                             </div>
-                                            <div className="content">
-                                                <p>{ task.title }</p>
+                                            <div className="content" onClick={()=>this.showTask(task._id)}>
+                                                <h5>{ task.title }</h5>
                                                 <div className="tips-block">
                                                     <Tooltip title={ (task.executorsID.map( x => x.name )).join('、') }>
                                                         <span>
                                                             <Image src="/static/touxiang.png" />
                                                         </span>
                                                     </Tooltip>
+                                                </div>
+                                                <div className="other">
+                                                {
+                                                    task.childTasksID.length !== 0 ?
+                                                    <div>
+                                                        <Tag color="#49a9ee">任务进度</Tag>
+                                                        <Icon type="bars" />
+                                                        { (( ) => {
+                                                            let i = 0;
+                                                            task.childTasksID.map( ctask => {
+                                                                if ( ctask.finished ) { i++; }
+                                                            })
+                                                            return i;
+                                                        })( )}
+                                                        { `/${task.childTasksID.length}` }
+                                                    </div> : ""
+                                                }
                                                 </div>
                                             </div>
                                         </li>

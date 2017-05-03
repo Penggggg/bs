@@ -63,7 +63,6 @@ export class IModel extends React.PureComponent< IProps, IState > {
     fetchTask = ( tid: string ) => {
         http.get<Schema.Task$, { tid: string }>('/api/v1/task-detail', { tid })
             .do( res => {
-                console.log( res );
                 let { content } = res;
                 this.setState({
                     task: res,
@@ -170,7 +169,6 @@ export class IModel extends React.PureComponent< IProps, IState > {
                     })
                     message.success('成功添加一条子任务！')
                 }
-                console.log(res)
             })
             .subscribe( )       
 
@@ -276,9 +274,9 @@ export class IModel extends React.PureComponent< IProps, IState > {
                                 <Col span={ 8 }>
                                     <h5 className="small-title">优先级</h5>
                                     <Select value={ String(task.priority) } style={{ width: 150 }} onChange={( v: any ) => this.submitPriority( v )} >
-                                        <Option value="1">一般</Option>
-                                        <Option value="2">紧急</Option>
-                                        <Option value="3">非常紧急</Option>
+                                        <Option value="0">一般</Option>
+                                        <Option value="1">紧急</Option>
+                                        <Option value="2">非常紧急</Option>
                                     </Select>
                                 </Col>
                             </Row>

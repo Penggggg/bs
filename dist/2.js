@@ -279,7 +279,7 @@ var ProjectTasksPage = (function (_super) {
                     })()),
                 React.createElement("ul", { className: "task-list" },
                     group.tasksID.map(function (task, key) { return !task.finished ?
-                        React.createElement("li", { key: key },
+                        React.createElement("li", { key: key, className: task.priority === 0 ? "" : task.priority === 1 ? "urgent" : "very-urgent" },
                             React.createElement("div", { className: "check-block" },
                                 React.createElement(antd_1.Checkbox, null)),
                             React.createElement("div", { className: "content", onClick: function () { return _this.showTask(task._id); } },
@@ -306,12 +306,25 @@ var ProjectTasksPage = (function (_super) {
                         React.createElement("li", { key: key },
                             React.createElement("div", { className: "check-block" },
                                 React.createElement(antd_1.Checkbox, null)),
-                            React.createElement("div", { className: "content" },
-                                React.createElement("p", null, task.title),
+                            React.createElement("div", { className: "content", onClick: function () { return _this.showTask(task._id); } },
+                                React.createElement("h5", null, task.title),
                                 React.createElement("div", { className: "tips-block" },
                                     React.createElement(antd_1.Tooltip, { title: (task.executorsID.map(function (x) { return x.name; })).join('、') },
                                         React.createElement("span", null,
-                                            React.createElement(Image_component_1.default, { src: "/static/touxiang.png" }))))))
+                                            React.createElement(Image_component_1.default, { src: "/static/touxiang.png" })))),
+                                React.createElement("div", { className: "other" }, task.childTasksID.length !== 0 ?
+                                    React.createElement("div", null,
+                                        React.createElement(antd_1.Tag, { color: "#49a9ee" }, "\u4EFB\u52A1\u8FDB\u5EA6"),
+                                        React.createElement(antd_1.Icon, { type: "bars" }),
+                                        (function () {
+                                            var i = 0;
+                                            task.childTasksID.map(function (ctask) {
+                                                if (ctask.finished) {
+                                                    i++;
+                                                }
+                                            });
+                                            return i;
+                                        })(), "/" + task.childTasksID.length) : "")))
                         : ""; })),
                 React.createElement("p", { className: "add-task", onClick: function () { return _this.addTask(group); } },
                     React.createElement(antd_1.Icon, { type: "plus-circle", style: { marginRight: 10 } }),
@@ -2938,7 +2951,7 @@ exports = module.exports = __webpack_require__(1390)(undefined);
 
 
 // module
-exports.push([module.i, ".project-tasks-page {\n  overflow: hidden;\n  position: relative;\n  box-sizing: border-box;\n  padding: 5px 15px 0 15px;\n  /*定义滚动条轨道 内阴影+圆角*/\n}\n.project-tasks-page .ant-tabs-bar {\n  margin-bottom: 0px;\n}\n.project-tasks-page .ant-tabs-bar .ant-tabs-nav-scroll {\n  text-align: center;\n}\n.project-tasks-page .ant-tabs-bar .ant-tabs-nav-scroll .ant-tabs-nav {\n  display: block;\n  width: 100%;\n}\n.project-tasks-page .groups-container {\n  height: 512px;\n  overflow: scroll;\n  white-space: nowrap;\n  padding-bottom: 20px;\n  box-sizing: border-box;\n  padding-top: 10px;\n}\n.project-tasks-page .groups-container .group {\n  width: 280px;\n  padding: 10px;\n  height: 465px;\n  position: relative;\n  margin-right: 20px;\n  border-radius: 8px;\n  display: inline-block;\n  box-sizing: border-box;\n  background-color: #f5f5f5;\n  box-shadow: 10px 10px 10px #d9d9d9;\n}\n.project-tasks-page .groups-container .group h3 {\n  margin-bottom: 3px;\n  font-size: 15px;\n}\n.project-tasks-page .groups-container .group .task-list {\n  height: 400px;\n  overflow: scroll;\n  position: relative;\n  padding-bottom: 30px;\n}\n.project-tasks-page .groups-container .group .task-list li {\n  list-style: none;\n  border-radius: 5px;\n  margin-bottom: 12px;\n  position: relative;\n  background-color: #fff;\n  border: 1px solid #d9d9d9;\n  padding: 10px 10px 10px 40px;\n}\n.project-tasks-page .groups-container .group .task-list li .check-block {\n  top: 10px;\n  left: 10px;\n  position: absolute;\n  display: inline-block;\n}\n.project-tasks-page .groups-container .group .task-list li .check-block .ant-checkbox-inner {\n  transform: scale(1.2);\n}\n.project-tasks-page .groups-container .group .task-list li .check-block input.checkbox {\n  transform: scale(1.2);\n}\n.project-tasks-page .groups-container .group .task-list li .content {\n  cursor: pointer;\n}\n.project-tasks-page .groups-container .group .task-list li .content .tips-block {\n  right: 20px;\n  top: 10px;\n  position: absolute;\n}\n.project-tasks-page .groups-container .group .task-list li .content .tips-block img {\n  width: 25px;\n  border-radius: 50%;\n}\n.project-tasks-page .groups-container .group .task-list li .content .other {\n  margin-top: 5px;\n}\n.project-tasks-page .groups-container .group .task-list::-webkit-scrollbar {\n  display: none;\n}\n.project-tasks-page .groups-container .group .add-task {\n  left: 0px;\n  width: 100%;\n  bottom: 0px;\n  cursor: pointer;\n  color: #108EE9;\n  position: absolute;\n  padding: 10px 12px;\n  border-radius: 5px;\n  box-sizing: border-box;\n  transition: all ease 0.4s;\n}\n.project-tasks-page .groups-container .group .add-task:hover {\n  background-color: #d9d9d9;\n}\n.project-tasks-page .groups-container .add-group {\n  box-shadow: none;\n  background-color: #fff;\n}\n.project-tasks-page .groups-container .add-group p {\n  cursor: pointer;\n  color: #108EE9;\n  border-radius: 8px;\n  padding: 8px 25px;\n  background-color: #e9e9e9;\n  position: absolute;\n  top: 40px;\n  left: 0;\n  width: 100%;\n}\n.project-tasks-page .add-group-block {\n  top: 10px;\n  right: 20px;\n  z-index: 100;\n  position: absolute;\n}\n.project-tasks-page .groups-container::-webkit-scrollbar {\n  width: 0;\n  height: 1;\n  background-color: #F5F5F5;\n}\n.project-tasks-page .groups-container::-webkit-scrollbar-track {\n  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);\n  border-radius: 10px;\n  background-color: #F5F5F5;\n}\n.project-tasks-page .groups-container::-webkit-scrollbar-thumb {\n  border-radius: 10px;\n  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);\n  background-color: #919191;\n}\n", ""]);
+exports.push([module.i, ".project-tasks-page {\n  overflow: hidden;\n  position: relative;\n  box-sizing: border-box;\n  padding: 5px 15px 0 15px;\n  /*定义滚动条轨道 内阴影+圆角*/\n}\n.project-tasks-page .ant-tabs-bar {\n  margin-bottom: 0px;\n}\n.project-tasks-page .ant-tabs-bar .ant-tabs-nav-scroll {\n  text-align: center;\n}\n.project-tasks-page .ant-tabs-bar .ant-tabs-nav-scroll .ant-tabs-nav {\n  display: block;\n  width: 100%;\n}\n.project-tasks-page .groups-container {\n  height: 512px;\n  overflow: scroll;\n  white-space: nowrap;\n  padding-bottom: 20px;\n  box-sizing: border-box;\n  padding-top: 10px;\n}\n.project-tasks-page .groups-container .group {\n  width: 280px;\n  padding: 10px;\n  height: 465px;\n  position: relative;\n  margin-right: 20px;\n  border-radius: 8px;\n  display: inline-block;\n  box-sizing: border-box;\n  background-color: #f5f5f5;\n  box-shadow: 10px 10px 10px #d9d9d9;\n}\n.project-tasks-page .groups-container .group h3 {\n  margin-bottom: 3px;\n  font-size: 15px;\n}\n.project-tasks-page .groups-container .group .task-list {\n  height: 400px;\n  overflow: scroll;\n  position: relative;\n  padding-bottom: 30px;\n}\n.project-tasks-page .groups-container .group .task-list li {\n  list-style: none;\n  position: relative;\n  border-radius: 5px;\n  margin-bottom: 12px;\n  transition: all ease 0.4s;\n  background-color: #fff;\n  border: 1px solid #d9d9d9;\n  padding: 10px 10px 10px 40px;\n  border-left-width: 5px;\n}\n.project-tasks-page .groups-container .group .task-list li .check-block {\n  top: 10px;\n  left: 10px;\n  position: absolute;\n  display: inline-block;\n}\n.project-tasks-page .groups-container .group .task-list li .check-block .ant-checkbox-inner {\n  transform: scale(1.2);\n}\n.project-tasks-page .groups-container .group .task-list li .check-block input.checkbox {\n  transform: scale(1.2);\n}\n.project-tasks-page .groups-container .group .task-list li .content {\n  cursor: pointer;\n}\n.project-tasks-page .groups-container .group .task-list li .content .tips-block {\n  right: 20px;\n  top: 10px;\n  position: absolute;\n}\n.project-tasks-page .groups-container .group .task-list li .content .tips-block img {\n  width: 25px;\n  border-radius: 50%;\n}\n.project-tasks-page .groups-container .group .task-list li .content .other {\n  margin-top: 5px;\n}\n.project-tasks-page .groups-container .group .task-list li.urgent {\n  border-left-color: #FFAF38;\n}\n.project-tasks-page .groups-container .group .task-list li.very-urgent {\n  border-left-color: #FF4F3E;\n}\n.project-tasks-page .groups-container .group .task-list li:hover {\n  border-left-width: 8px;\n}\n.project-tasks-page .groups-container .group .task-list::-webkit-scrollbar {\n  display: none;\n}\n.project-tasks-page .groups-container .group .add-task {\n  left: 0px;\n  width: 100%;\n  bottom: 0px;\n  cursor: pointer;\n  color: #108EE9;\n  position: absolute;\n  padding: 10px 12px;\n  border-radius: 5px;\n  box-sizing: border-box;\n  transition: all ease 0.4s;\n}\n.project-tasks-page .groups-container .group .add-task:hover {\n  background-color: #d9d9d9;\n}\n.project-tasks-page .groups-container .add-group {\n  box-shadow: none;\n  background-color: #fff;\n}\n.project-tasks-page .groups-container .add-group p {\n  cursor: pointer;\n  color: #108EE9;\n  border-radius: 8px;\n  padding: 8px 25px;\n  background-color: #e9e9e9;\n  position: absolute;\n  top: 40px;\n  left: 0;\n  width: 100%;\n}\n.project-tasks-page .add-group-block {\n  top: 10px;\n  right: 20px;\n  z-index: 100;\n  position: absolute;\n}\n.project-tasks-page .groups-container::-webkit-scrollbar {\n  width: 0;\n  height: 1;\n  background-color: #F5F5F5;\n}\n.project-tasks-page .groups-container::-webkit-scrollbar-track {\n  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);\n  border-radius: 10px;\n  background-color: #F5F5F5;\n}\n.project-tasks-page .groups-container::-webkit-scrollbar-thumb {\n  border-radius: 10px;\n  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);\n  background-color: #919191;\n}\n", ""]);
 
 // exports
 
@@ -3043,7 +3056,6 @@ var IModel = (function (_super) {
         _this.fetchTask = function (tid) {
             http_service_1.default.get('/api/v1/task-detail', { tid: tid })
                 .do(function (res) {
-                console.log(res);
                 var content = res.content;
                 _this.setState({
                     task: res,
@@ -3134,7 +3146,6 @@ var IModel = (function (_super) {
                         });
                         antd_1.message.success('成功添加一条子任务！');
                     }
-                    console.log(res);
                 })
                     .subscribe();
             }
@@ -3237,9 +3248,9 @@ var IModel = (function (_super) {
                             React.createElement(antd_1.Col, { span: 8 },
                                 React.createElement("h5", { className: "small-title" }, "\u4F18\u5148\u7EA7"),
                                 React.createElement(antd_1.Select, { value: String(task.priority), style: { width: 150 }, onChange: function (v) { return _this.submitPriority(v); } },
-                                    React.createElement(Option, { value: "1" }, "\u4E00\u822C"),
-                                    React.createElement(Option, { value: "2" }, "\u7D27\u6025"),
-                                    React.createElement(Option, { value: "3" }, "\u975E\u5E38\u7D27\u6025"))))),
+                                    React.createElement(Option, { value: "0" }, "\u4E00\u822C"),
+                                    React.createElement(Option, { value: "1" }, "\u7D27\u6025"),
+                                    React.createElement(Option, { value: "2" }, "\u975E\u5E38\u7D27\u6025"))))),
                     React.createElement("div", { className: "content" },
                         React.createElement("h5", null, "\u4EFB\u52A1\u5185\u5BB9"),
                         React.createElement(antd_1.Button, { className: "edit", onClick: function () { return _this.setState({ showContentEdit: !showContentEdit }); } }, "\u7F16\u8F91"),

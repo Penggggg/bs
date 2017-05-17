@@ -43,6 +43,7 @@ var add_chat_1 = require("./project/chat/add-chat");
 var add_task_1 = require("./project/task/add-task");
 var add_group_1 = require("./project/group/add-group");
 var invite_member_1 = require("./project/invite-member");
+var add_schedules_1 = require("./project/schedules/add-schedules");
 var query_chat_1 = require("./project/chat/query-chat");
 var update_task_1 = require("./project/task/update-task");
 var query_task_1 = require("./project/task/query-task");
@@ -101,6 +102,8 @@ exports.default = function (router) {
     router.post('/api/v1/update-deadline', update_task_1.updateDeadline);
     /**项目模块：任务优先级更改 */
     router.post('/api/v1/update-priority', update_task_1.updatePriority);
+    /**项目模块：新增日程 */
+    router.post('/api/v1/add-schedules', add_schedules_1.addSchedules);
     /**用户模块：查询所有符合条件的用户 */
     router.post('/api/v1/all-user', query_controller_1.fetchAllUserByName);
     /**用户模块：查询项目下所有成员和组长 */

@@ -16,7 +16,7 @@ export class TaskDetail extends React.PureComponent< IProps, IState > {
     }
 
     componentDidMount( ) {
-        console.log( this.props )
+        
     }
 
     render( ) {

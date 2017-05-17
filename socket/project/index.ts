@@ -28,14 +28,14 @@ export class ProjectSocket {
             this.socket.on('connection', ( socket ) => {
                 socket.emit(`${CON.socketEvent.project.getIn}`,
                     { msg: '您已进入该项目的实时通讯频道' } as SOK.Res.getInProject);
-
+            })
+            
                 /**事件通讯 */
                 this.member = new Member( this.socket ); 
                 this.chat = new Chat( this.socket );
                 this.file = new File( this.socket );
                 this.group = new Group( this.socket );
                 this.notification = new Notification( this.socket );
-            })
     }
 
     public broadcast( ) {

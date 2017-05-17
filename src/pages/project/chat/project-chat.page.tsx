@@ -65,7 +65,7 @@ export default class ProjectChatPage extends React.PureComponent< IProps, IState
 
                 if ( !SOK ) {
                     // 首次加载
-                    // console.log(`首次加载`)
+                    console.log(`首次加载`)
                     this.setState({
                         chatList: chatData
                     })
@@ -75,19 +75,22 @@ export default class ProjectChatPage extends React.PureComponent< IProps, IState
 
                     if ( !lastChatFromFetch && chatData.length === 0 ) {
                         // 首次数据来自于SOK
+                        console.log(`首次数据来自于SOK`)
                         return this.setState({
-                            chatList: [ SOK ]
+                            chatList: [ ...chatList, SOK ]
                         })
                         
                     }
                     if ( SOK._id !== lastChatFromFetch._id ) {
                         // 更新来自于SOK
+                        console.log(`更新来自于SOK`)
                         this.setState({
                             chatList: [ ...chatList, SOK ]
                         })
 
                     } else {
                         // 二次进入
+                        console.log(`二次进入`)
                         this.setState({
                             chatList: chatData
                         })

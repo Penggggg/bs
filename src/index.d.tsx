@@ -126,6 +126,12 @@ declare namespace API {
             status: '200' | '400' | '500'
         }
 
+        /**POST：回应项目邀请 */
+        export interface AddSchedule {
+            msg: string
+            status: '200' | '400' | '500'
+        }
+
     }
 
     export namespace Req {
@@ -263,6 +269,17 @@ declare namespace API {
 
         /**POST：更改任务优先级 */
         export interface UpdatePriority extends Partial<Schema.Task> {
+            pid: string
+        }
+
+        export interface AddSchedule {
+            title: string,
+            place: string,
+            startDate: string,
+            startTime: string,
+            endDate: string,
+            endTime: string,
+            member: string[ ],
             pid: string
         }
 

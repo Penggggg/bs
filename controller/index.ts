@@ -10,6 +10,7 @@ import { addChat } from './project/chat/add-chat';
 import { addTask } from './project/task/add-task';
 import { addNewGroup } from './project/group/add-group';
 import { inviteMember } from './project/invite-member'; 
+import { addSchedules } from './project/schedules/add-schedules';
 import { getChatList } from './project/chat/query-chat';
 import {  updateDeadline, updatePriority } from './project/task/update-task';
 import { taskDetail$, allUserTask$ } from './project/task/query-task';
@@ -73,7 +74,9 @@ export default ( router ) => {
     /**项目模块：任务截止日期更改 */
     router.post('/api/v1/update-deadline', updateDeadline );
     /**项目模块：任务优先级更改 */
-    router.post('/api/v1/update-priority', updatePriority )
+    router.post('/api/v1/update-priority', updatePriority );
+    /**项目模块：新增日程 */
+    router.post('/api/v1/add-schedules', addSchedules )
 
 
     /**用户模块：查询所有符合条件的用户 */

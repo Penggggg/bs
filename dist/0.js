@@ -16,14 +16,14 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-__webpack_require__(1422);
+__webpack_require__(1423);
 var React = __webpack_require__(0);
 var antd_1 = __webpack_require__(60);
 var http_service_1 = __webpack_require__(547);
 var project_1 = __webpack_require__(96);
 var socket_1 = __webpack_require__(550);
-var bread_container_1 = __webpack_require__(1429);
-var memberSlider_container_1 = __webpack_require__(1430);
+var bread_container_1 = __webpack_require__(1431);
+var memberSlider_container_1 = __webpack_require__(1432);
 var Header = antd_1.Layout.Header, Footer = antd_1.Layout.Footer, Sider = antd_1.Layout.Sider, Content = antd_1.Layout.Content;
 var ProjectPage = (function (_super) {
     __extends(ProjectPage, _super);
@@ -2724,7 +2724,7 @@ exports.push([module.i, ".project-page .my-layout {\n  background-color: #fff;\n
 
 /***/ }),
 
-/***/ 1414:
+/***/ 1415:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
@@ -2751,7 +2751,7 @@ if(false) {
 
 /***/ }),
 
-/***/ 1422:
+/***/ 1423:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
@@ -2778,7 +2778,7 @@ if(false) {
 
 /***/ }),
 
-/***/ 1424:
+/***/ 1426:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2799,7 +2799,7 @@ exports.default = function (_a) {
 
 /***/ }),
 
-/***/ 1427:
+/***/ 1429:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2817,7 +2817,7 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
 var antd_1 = __webpack_require__(60);
-__webpack_require__(1414);
+__webpack_require__(1415);
 var Slider = (function (_super) {
     __extends(Slider, _super);
     function Slider() {
@@ -2838,33 +2838,33 @@ exports.default = Slider;
 
 /***/ }),
 
-/***/ 1429:
+/***/ 1431:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var bread_decorate_1 = __webpack_require__(1432);
-var Bread_component_1 = __webpack_require__(1424);
+var bread_decorate_1 = __webpack_require__(1434);
+var Bread_component_1 = __webpack_require__(1426);
 exports.ProjectBread = bread_decorate_1.InjectProjectBread(Bread_component_1.default);
 
 
 /***/ }),
 
-/***/ 1430:
+/***/ 1432:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var Slider_component_1 = __webpack_require__(1427);
-var member_decorate_1 = __webpack_require__(1433);
+var Slider_component_1 = __webpack_require__(1429);
+var member_decorate_1 = __webpack_require__(1435);
 exports.MemberSlider = member_decorate_1.InjectMember(Slider_component_1.default);
 
 
 /***/ }),
 
-/***/ 1432:
+/***/ 1434:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2929,7 +2929,7 @@ exports.InjectProjectBread = function (Bread) {
 
 /***/ }),
 
-/***/ 1433:
+/***/ 1435:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

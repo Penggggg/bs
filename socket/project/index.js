@@ -12,18 +12,17 @@ var ProjectSocket = (function () {
         this.init(io, pid);
     }
     ProjectSocket.prototype.init = function (io, pid) {
-        var _this = this;
         this.socket = io
             .of("" + pid);
         this.socket.on('connection', function (socket) {
             socket.emit("" + index_con_1.CON.socketEvent.project.getIn, { msg: '您已进入该项目的实时通讯频道' });
-            /**事件通讯 */
-            _this.member = new member_1.Member(_this.socket);
-            _this.chat = new chat_1.Chat(_this.socket);
-            _this.file = new file_1.File(_this.socket);
-            _this.group = new group_1.Group(_this.socket);
-            _this.notification = new notification_1.Notification(_this.socket);
         });
+        /**事件通讯 */
+        this.member = new member_1.Member(this.socket);
+        this.chat = new chat_1.Chat(this.socket);
+        this.file = new file_1.File(this.socket);
+        this.group = new group_1.Group(this.socket);
+        this.notification = new notification_1.Notification(this.socket);
     };
     ProjectSocket.prototype.broadcast = function () {
     };

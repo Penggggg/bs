@@ -16,10 +16,10 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-__webpack_require__(1423);
+__webpack_require__(1425);
 var React = __webpack_require__(0);
 var antd_1 = __webpack_require__(60);
-var IModal_1 = __webpack_require__(1425);
+var IModal_1 = __webpack_require__(1427);
 var user_1 = __webpack_require__(157);
 var project_1 = __webpack_require__(96);
 var http_service_1 = __webpack_require__(547);
@@ -3027,7 +3027,7 @@ exports.push([module.i, ".task-detail-modal {\n  z-index: 110;\n  top: 65px !imp
 
 /***/ }),
 
-/***/ 1411:
+/***/ 1412:
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1390)(undefined);
@@ -3042,7 +3042,7 @@ exports.push([module.i, ".project-tasks-page {\n  overflow: hidden;\n  position:
 
 /***/ }),
 
-/***/ 1412:
+/***/ 1413:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
@@ -3069,13 +3069,13 @@ if(false) {
 
 /***/ }),
 
-/***/ 1423:
+/***/ 1425:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1411);
+var content = __webpack_require__(1412);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(1391)(content, {});
@@ -3096,7 +3096,7 @@ if(false) {
 
 /***/ }),
 
-/***/ 1425:
+/***/ 1427:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3112,7 +3112,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-__webpack_require__(1412);
+__webpack_require__(1413);
 var moment = __webpack_require__(2);
 var React = __webpack_require__(0);
 var ReactDom = __webpack_require__(13);

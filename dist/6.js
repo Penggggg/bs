@@ -1,6 +1,6 @@
 webpackJsonp([6],{
 
-/***/ 1384:
+/***/ 1387:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16,180 +16,199 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-__webpack_require__(1420);
+__webpack_require__(1424);
 var React = __webpack_require__(0);
+var moment = __webpack_require__(2);
 var antd_1 = __webpack_require__(60);
 var user_1 = __webpack_require__(157);
-var project_1 = __webpack_require__(96);
 var http_service_1 = __webpack_require__(547);
-var notification_service_1 = __webpack_require__(242);
-var ProjectFilesPage = (function (_super) {
-    __extends(ProjectFilesPage, _super);
-    function ProjectFilesPage() {
+var project_1 = __webpack_require__(96);
+var local_storage_service_1 = __webpack_require__(1359);
+var Option = antd_1.Select.Option;
+var ProjectSchedulesPage = (function (_super) {
+    __extends(ProjectSchedulesPage, _super);
+    function ProjectSchedulesPage() {
         var _this = _super.call(this) || this;
-        _this.init = function () {
-            var sub = user_1.default.data.userData$
-                .do(function (user) {
-                _this.setState({
-                    uid: user._id
+        /**初始化user、project数据 */
+        _this.initData = function () {
+            setTimeout(function () {
+                _this.sub = user_1.default.data.userData$
+                    .combineLatest(project_1.default.data.data$)
+                    .do(function (data) {
+                    _this.user = local_storage_service_1.default.getItem('user');
+                    _this.project = data[1];
+                })
+                    .subscribe();
+            }, 1000);
+        };
+        /**权限检查：总负责人或组长 */
+        _this.checkAuth = function () {
+            var _id = _this.user._id;
+            var _a = _this.project, creator = _a.creator, leader = _a.leader;
+            if (creator._id === _id) {
+                return true;
+            }
+            else if (leader.find(function (l) { return l._id === _id; })) {
+                return true;
+            }
+            console.log('asdasdd');
+            antd_1.Modal.warning({
+                title: '消息',
+                content: '抱歉。您还没有新增日程的权限',
+            });
+            return false;
+        };
+        /**http:获取user */
+        _this.fetchUser = function () {
+            var pid = _this.props.params.id;
+            http_service_1.default
+                .get('/api/v1/all-member-leader', { pid: pid })
+                .map(function (res) {
+                return res.map(function (_a) {
+                    var _id = _a._id, name = _a.name, phone = _a.phone;
+                    return ({
+                        value: "" + _id,
+                        text: name + " - phone: " + phone + " "
+                    });
                 });
-                setTimeout(function () { return sub.unsubscribe(); }, 100);
+            })
+                .do(function (res) {
+                _this.setState({
+                    dataSource: res
+                });
             })
                 .subscribe();
         };
-        _this.initCol = function () {
-            var pid = _this.props.params.id;
-            _this.columns = [{
-                    title: '文件名称',
-                    dataIndex: 'fileName',
-                    key: 'fileName'
-                }, {
-                    title: '上传者',
-                    dataIndex: 'name',
-                    key: 'name',
-                }, {
-                    title: '上传时间',
-                    dataIndex: 'updatedTime',
-                    key: 'updatedTime'
-                }, {
-                    title: '操作',
-                    key: 'action',
-                    render: function (text, record) { return (React.createElement("span", null,
-                        React.createElement("a", { href: "/api/v1/download?pid=" + pid + "&fileName=" + text.fileName, download: true }, "\u4E0B\u8F7D"),
-                        React.createElement("span", { className: "ant-divider" }),
-                        React.createElement("a", { onClick: function () { return _this.handleDelete(text); } }, "\u5220\u9664"))); }
-                }];
+        /**展示表单 */
+        _this.showForm = function () {
+            _this.setState({ showForm: true });
+            _this.fetchUser();
         };
-        _this.onUpload = function (info) {
-            if (info.file.status === 'done') {
-                notification_service_1.default.open({
+        /**关闭表单 */
+        _this.closeForm = function () {
+            _this.setState({
+                showForm: false,
+                formTitle: '',
+                formPlace: '',
+                formStartDate: null,
+                formEndDate: null,
+                formEndTime: null,
+                formStartTime: null,
+                formSelect: []
+            });
+        };
+        /**开始日期 */
+        _this.changeStartDate = function (date, dateString) {
+            _this.setState({
+                formStartDate: moment(new Date(dateString))
+            });
+        };
+        /**结束日期 */
+        _this.changeEndDate = function (date, dateString) {
+            _this.setState({
+                formEndDate: moment(new Date(dateString))
+            });
+        };
+        /**开始时间 */
+        _this.changeStartTime = function (date, dateString) {
+            _this.setState({
+                formStartTime: date
+            });
+        };
+        /**结束时间 */
+        _this.changeEndTime = function (date, dateString) {
+            _this.setState({
+                formEndTime: date
+            });
+        };
+        /**选择参与者 */
+        _this.selectUser = function (value) {
+            _this.setState({
+                formSelect: value
+            });
+        };
+        /**提交表单 */
+        _this.submit = function () {
+            var _a = _this.state, formTitle = _a.formTitle, formPlace = _a.formPlace, formStartDate = _a.formStartDate, formEndDate = _a.formEndDate, formStartTime = _a.formStartTime, formEndTime = _a.formEndTime, formSelect = _a.formSelect;
+            if (!_this.checkAuth()) {
+                return;
+            }
+            if (!(formTitle && formPlace && formStartDate && formEndDate && formStartTime && formEndTime && formSelect.length !== 0)) {
+                return antd_1.Modal.warning({
                     title: '消息',
-                    msg: '文件已成功上传'
+                    content: '请填写完整信息',
                 });
             }
-            else if (info.file.status === 'error') {
-                notification_service_1.default.open({
-                    title: '消息',
-                    msg: '文件长传失败',
-                    type: 'error'
-                });
-            }
-        };
-        _this.handleDelete = function (file) {
-            var _a = _this.state, uid = _a.uid, dataSource = _a.dataSource;
-            var fileName = file.fileName;
-            var pid = _this.props.params.id;
-            // 1. 权限判断
-            var hasAuth = uid === file.user._id;
-            // 1-1. 通过
-            if (hasAuth) {
-                http_service_1.default.get('/api/v1/delete-file', { pid: pid, fileName: fileName })
-                    .do(function (res) {
-                    if (res.status === '200') {
-                        antd_1.message.success('删除文件成功！');
-                        var index = dataSource.findIndex(function (data) { return String(data.key) === String(file.key); });
-                        dataSource.splice(index, 1);
-                        var a = dataSource.slice();
-                        _this.setState({
-                            dataSource: a
-                        });
-                    }
-                })
-                    .subscribe();
-            }
-            // 1-2. 不通过
-            if (!hasAuth) {
-                antd_1.Modal.warning({
-                    title: '消息',
-                    content: '抱歉。您没有删除该文件的权限！'
-                });
-            }
-        };
-        _this.mapOriginToDataSource = function (data) {
-            return data.map(function (file, key) { return ({
-                key: "" + Math.floor(Math.random() * 9999),
-                name: file.user.name,
-                fileName: file.fileName,
-                updatedTime: (new Date(file.updatedTime)).toLocaleString(),
-                user: file.user
-            }); });
-        };
-        _this.combineFlow = function () {
-            var pid = _this.props.params.id;
-            _this.sub = http_service_1.default.get('/api/v1/all-files', { pid: pid })
-                .combineLatest(project_1.default.file.data$)
+            http_service_1.default
+                .post('/api/v1/add-schedules', {
+                title: formTitle,
+                place: formPlace,
+                startDate: formStartDate,
+                startTime: formStartTime,
+                endDate: formEndDate,
+                endTime: formEndTime,
+                member: formSelect,
+                pid: _this.props.params.id
+            })
                 .do(function (res) {
-                var dataSource = _this.state.dataSource;
-                var fromFetch = res[0], fromSOK = res[1];
-                if (!fromSOK) {
-                    // console.log('首次加载')
-                    _this.setState({
-                        loading: false,
-                        dataSource: _this.mapOriginToDataSource(fromFetch)
-                    });
-                }
-                else {
-                    /**fetch的时候是sort: -1 */
-                    var lastFromFetch = fromFetch[0];
-                    if (fromFetch.length === 0) {
-                        // console.log('首次数据来自于SOK')
-                        return _this.setState({
-                            loading: false,
-                            dataSource: _this.mapOriginToDataSource([fromSOK]).concat(dataSource)
-                        });
-                    }
-                    if (fromSOK._id !== lastFromFetch._id) {
-                        // console.log('更新来自于SOK')
-                        _this.setState({
-                            loading: false,
-                            dataSource: _this.mapOriginToDataSource([fromSOK].concat(fromFetch))
-                        });
-                    }
-                    else {
-                        // console.log('二次进入')
-                        _this.setState({
-                            loading: false,
-                            dataSource: _this.mapOriginToDataSource(fromFetch.slice())
-                        });
-                    }
-                }
+                console.log(res);
             })
                 .subscribe();
         };
         _this.state = {
-            uid: '',
-            loading: true,
-            dataSource: []
+            showForm: false,
+            dataSource: [],
+            formTitle: '',
+            formPlace: '',
+            formEndDate: null,
+            formStartDate: null,
+            formEndTime: null,
+            formStartTime: null,
+            formSelect: []
         };
         return _this;
     }
-    ProjectFilesPage.prototype.componentDidMount = function () {
-        this.init();
-        this.initCol();
-        this.combineFlow();
+    ProjectSchedulesPage.prototype.componentDidMount = function () {
+        this.initData();
     };
-    ProjectFilesPage.prototype.componentWillUnmount = function () {
-        this.sub.unsubscribe();
+    ProjectSchedulesPage.prototype.render = function () {
+        var _this = this;
+        var _a = this.state, showForm = _a.showForm, dataSource = _a.dataSource, formTitle = _a.formTitle, formPlace = _a.formPlace, formStartDate = _a.formStartDate, formEndDate = _a.formEndDate, formStartTime = _a.formStartTime, formEndTime = _a.formEndTime, formSelect = _a.formSelect;
+        /**form */
+        var myForm = React.createElement("div", null,
+            React.createElement("div", { className: "msg" },
+                React.createElement("input", { placeholder: "日程标题", className: "my-input title-input", value: formTitle, onChange: function (e) { return _this.setState({ formTitle: e.target.value }); } }),
+                React.createElement("input", { placeholder: "地点", className: "my-input", value: formPlace, onChange: function (e) { return _this.setState({ formPlace: e.target.value }); } })),
+            React.createElement("div", { className: "time" },
+                React.createElement(antd_1.Row, null,
+                    React.createElement(antd_1.Col, { span: 12 },
+                        React.createElement("h5", null, "\u5F00\u59CB\u65F6\u95F4"),
+                        React.createElement(antd_1.DatePicker, { placeholder: "开始日期", value: formStartDate, onChange: this.changeStartDate }),
+                        React.createElement(antd_1.TimePicker, { placeholder: "开始时间", value: formStartTime, onChange: this.changeStartTime })),
+                    React.createElement(antd_1.Col, { span: 12 },
+                        React.createElement("h5", null, "\u7ED3\u675F\u65F6\u95F4"),
+                        React.createElement(antd_1.DatePicker, { placeholder: "结束日期", value: formEndDate, onChange: this.changeEndDate }),
+                        React.createElement(antd_1.TimePicker, { placeholder: "结束时间", value: formEndTime, onChange: this.changeEndTime })))),
+            React.createElement("div", { className: "member" },
+                React.createElement("h5", null, "\u53C2\u4E0E\u8005"),
+                React.createElement(antd_1.Select, { mode: "multiple", placeholder: "请选择日程参与者", onChange: this.selectUser, value: formSelect, style: { width: 315 } }, dataSource.map(function (data, key) {
+                    return React.createElement(Option, { value: data.value, key: Math.floor(Math.random() * 999) }, data.text);
+                }))),
+            React.createElement("div", { style: { marginTop: 15 } },
+                React.createElement(antd_1.Button, { type: "primary", style: { width: '100%' }, onClick: this.submit }, "\u5B8C\u6210\u5E76\u521B\u5EFA")));
+        return React.createElement("div", { className: "project-schedules-page" },
+            React.createElement("div", { className: "container" },
+                React.createElement("div", { className: "header", onClick: this.showForm },
+                    React.createElement("h3", null,
+                        React.createElement("span", null,
+                            React.createElement(antd_1.Icon, { type: "plus-circle", style: { fontSize: 16 } })),
+                        "\u6DFB\u52A0\u65E5\u7A0B")),
+                React.createElement("div", { className: "content" })),
+            React.createElement(antd_1.Modal, { title: "添加日程", footer: null, visible: showForm, className: "schedules-form", onCancel: this.closeForm }, myForm));
     };
-    ProjectFilesPage.prototype.render = function () {
-        var _a = this.state, uid = _a.uid, dataSource = _a.dataSource, loading = _a.loading;
-        var id = this.props.params.id;
-        return React.createElement("div", { className: "project-files-page" },
-            React.createElement("div", { className: "main-block" },
-                React.createElement("div", { className: "header" },
-                    React.createElement("h3", null, "\u6587\u4EF6\u5E93"),
-                    React.createElement("div", { className: "upload-block" },
-                        React.createElement(antd_1.Upload, { action: "/api/v1/upload/" + id + "/" + uid, onChange: this.onUpload },
-                            React.createElement(antd_1.Button, null,
-                                React.createElement(antd_1.Icon, { type: "upload" }),
-                                " Upload")))),
-                React.createElement("div", { className: "content" },
-                    React.createElement(antd_1.Spin, { spinning: loading, size: 'large' },
-                        React.createElement(antd_1.Table, { columns: this.columns, pagination: false, dataSource: dataSource })))));
-    };
-    return ProjectFilesPage;
+    return ProjectSchedulesPage;
 }(React.PureComponent));
-exports.default = ProjectFilesPage;
+exports.default = ProjectSchedulesPage;
 
 
 /***/ }),
@@ -2688,7 +2707,7 @@ module.exports = function (css) {
 
 /***/ }),
 
-/***/ 1408:
+/***/ 1411:
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1390)(undefined);
@@ -2696,20 +2715,20 @@ exports = module.exports = __webpack_require__(1390)(undefined);
 
 
 // module
-exports.push([module.i, ".project-files-page {\n  margin-top: 20px;\n  padding-bottom: 20px;\n  box-sizing: border-box;\n}\n.project-files-page .main-block {\n  width: 70%;\n  margin: 0 auto;\n  border-radius: 8px;\n  position: relative;\n  box-sizing: border-box;\n  padding: 10px;\n  border: 1px solid #e9e9e9;\n  box-shadow: 0px 5px 40px 5px #d9d9d9;\n}\n.project-files-page .main-block .header {\n  height: 40px;\n  position: relative;\n  box-sizing: border-box;\n  padding: 5px 15px 10px 15px;\n  border-bottom: 1px solid #d9d9d9;\n}\n.project-files-page .main-block .header .upload-block {\n  top: 0px;\n  right: 30px;\n  position: absolute;\n}\n.project-files-page .main-block .header .upload-block .ant-upload-select {\n  border-radius: 8px;\n}\n.project-files-page .main-block .header .upload-block .ant-upload-select button {\n  color: #108ee9;\n}\n.project-files-page .main-block .header .upload-block .ant-upload-list {\n  display: none;\n}\n.project-files-page .main-block .header h3 {\n  color: #666;\n  font-size: 15px;\n}\n.project-files-page .main-block .content {\n  height: 400px;\n  overflow: scroll;\n}\n.project-files-page .main-block .content .ant-table-thead th {\n  color: #666;\n  background-color: #fff;\n}\n.project-files-page .main-block .content::-webkit-scrollbar {\n  display: none;\n}\n", ""]);
+exports.push([module.i, ".project-schedules-page {\n  padding-top: 20px;\n  padding-bottom: 20px;\n}\n.project-schedules-page .container {\n  width: 70%;\n  margin: 0 auto;\n  border-radius: 5px;\n  border: 1px solid #e9e9e9;\n  background-color: #fff;\n  box-shadow: 0px 5px 40px 5px #d9d9d9;\n}\n.project-schedules-page .container .header {\n  height: 50px;\n  border-radius: 5px 5px 0 0 ;\n  margin-bottom: 40px;\n  background-color: #fff;\n  border: 1px solid #e9e9e9;\n  box-shadow: 0px 5px 25px 3px #f5f5f5;\n}\n.project-schedules-page .container .header h3 {\n  font-size: 16px;\n  font-weight: 500;\n  color: #49a9ee;\n  line-height: 50px;\n  cursor: pointer;\n  text-align: center;\n}\n.project-schedules-page .container .header h3 span {\n  margin-right: 10px;\n}\n.project-schedules-page .container .content {\n  height: 370px;\n  border: 1px solid #e9e9e9;\n  background-color: #fff;\n  border-radius: 0 0  5px 5px;\n  box-shadow: 0px -5px 25px 3px #f5f5f5;\n}\n.schedules-form {\n  width: 580px !important;\n}\n.schedules-form .ant-modal-title {\n  font-size: 18px;\n}\n.schedules-form .ant-modal-header {\n  background: #f7f7f7;\n}\n.schedules-form .ant-modal-content {\n  background: #f7f7f7;\n}\n.schedules-form .msg {\n  padding: 10px;\n  background: #fff;\n  margin-bottom: 15px;\n  border-radius: 5px;\n  border: 1px solid #d9d9d9;\n  padding: 8px 0 8px 0;\n}\n.schedules-form .msg .title-input {\n  margin-bottom: 10px;\n}\n.schedules-form .msg input {\n  width: 100%;\n  padding: 8px 15px;\n  display: block;\n}\n.schedules-form .msg .my-input {\n  border: none;\n  font-size: 14px;\n  outline: none !important;\n}\n.schedules-form .msg .my-input:focus {\n  border: none;\n  outline: none !important;\n}\n.schedules-form .msg .my-input:hover {\n  border: none;\n  outline: none !important;\n}\n.schedules-form .msg .my-input:active {\n  border: none;\n  outline: none !important;\n}\n.schedules-form .time {\n  padding: 10px;\n  background: #fff;\n  margin-bottom: 15px;\n  border-radius: 5px;\n  border: 1px solid #d9d9d9;\n}\n.schedules-form .time input {\n  border: none;\n}\n.schedules-form .time h5 {\n  margin-bottom: 8px;\n}\n.schedules-form .member {\n  padding: 10px;\n  background: #fff;\n  margin-bottom: 15px;\n  border-radius: 5px;\n  border: 1px solid #d9d9d9;\n}\n.schedules-form .member .ant-select {\n  margin-top: 10px;\n  width: 100% !important;\n}\n.schedules-form .member .ant-select-selection {\n  border: none;\n}\ninput:focus {\n  outline: none !important;\n}\n", ""]);
 
 // exports
 
 
 /***/ }),
 
-/***/ 1420:
+/***/ 1424:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1408);
+var content = __webpack_require__(1411);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(1391)(content, {});
@@ -2718,8 +2737,8 @@ if(content.locals) module.exports = content.locals;
 if(false) {
 	// When the styles change, update the <style> tags
 	if(!content.locals) {
-		module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/less-loader/index.js!./project-files.less", function() {
-			var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/less-loader/index.js!./project-files.less");
+		module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/less-loader/index.js!./index.less", function() {
+			var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/less-loader/index.js!./index.less");
 			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 			update(newContent);
 		});

@@ -16,7 +16,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-__webpack_require__(1419);
+__webpack_require__(1420);
 var React = __webpack_require__(0);
 var antd_1 = __webpack_require__(60);
 var Image_component_1 = __webpack_require__(1397);
@@ -51,7 +51,7 @@ var ProjectChatPage = (function (_super) {
                 var chatData = res[0], SOK = res[1];
                 if (!SOK) {
                     // 首次加载
-                    // console.log(`首次加载`)
+                    console.log("\u9996\u6B21\u52A0\u8F7D");
                     _this.setState({
                         chatList: chatData
                     });
@@ -60,18 +60,21 @@ var ProjectChatPage = (function (_super) {
                     var lastChatFromFetch = chatData[chatData.length - 1];
                     if (!lastChatFromFetch && chatData.length === 0) {
                         // 首次数据来自于SOK
+                        console.log("\u9996\u6B21\u6570\u636E\u6765\u81EA\u4E8ESOK");
                         return _this.setState({
-                            chatList: [SOK]
+                            chatList: chatList.concat([SOK])
                         });
                     }
                     if (SOK._id !== lastChatFromFetch._id) {
                         // 更新来自于SOK
+                        console.log("\u66F4\u65B0\u6765\u81EA\u4E8ESOK");
                         _this.setState({
                             chatList: chatList.concat([SOK])
                         });
                     }
                     else {
                         // 二次进入
+                        console.log("\u4E8C\u6B21\u8FDB\u5165");
                         _this.setState({
                             chatList: chatData
                         });
@@ -2746,7 +2749,7 @@ exports.push([module.i, ".project-chat-page {\n  padding-bottom: 20px;\n  margin
 
 /***/ }),
 
-/***/ 1419:
+/***/ 1420:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag

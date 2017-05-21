@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Subscription } from 'rxjs';
 import * as moment from 'moment';
 import { RouteComponentProps } from 'react-router';
-import { Icon, Modal, Input, Row, Col, DatePicker, TimePicker, Button, Select } from 'antd';
+import { Icon, Modal, Input, Row, Col, DatePicker, TimePicker, Button, Select ,Tooltip } from 'antd';
 
 
 
@@ -11,12 +11,14 @@ import userStore from '../../../store/user';
 import http from '../../../services/http.service';
 import projectStore from '../../../store/project';
 import ls from '../../../services/local-storage.service';
+import Image from '../../../component/Image/Image.component';
 
 const Option = Select.Option;
 
 export default class ProjectSchedulesPage extends React.PureComponent< IProps, IState > {
 
     private sub: Subscription;
+    private flow: Subscription;
     private user: APP.User;
     private project: APP.Project;
 
@@ -31,12 +33,19 @@ export default class ProjectSchedulesPage extends React.PureComponent< IProps, I
             formStartDate: null,
             formEndTime: null,
             formStartTime: null,
-            formSelect: []
+            formSelect: [],
+            scheduleList: []
         }
     }
 
     componentDidMount( ) {
         this.initData( );
+        this.combineFlow( );
+    }
+
+    componentWillUnmount( ) {
+        this.sub.unsubscribe( );
+        this.flow.unsubscribe( );
     }
 
     /**初始化user、project数据 */
@@ -93,6 +102,56 @@ export default class ProjectSchedulesPage extends React.PureComponent< IProps, I
                 })
             })
             .subscribe( )
+    }
+
+    /**http获取schedules */
+    combineFlow = ( ) => {
+        let pid = this.props.params.id;
+        let flow =  http
+            .get<Schema.Schedule$[], { pid }>('/api/v1/all-schedules', { pid })
+            .combineLatest(projectStore.schedule.data$)
+            .do( res => {
+                
+                let { scheduleList } = this.state;
+                let [ fromFetch, fromSOK ] = res;
+
+                if( !fromSOK ) {
+
+                    // console.log('首次加载')
+                    this.setState({
+                        scheduleList: fromFetch
+                    })
+
+                } else {
+
+                    /**fetch的时候是sort: -1 */
+                    let lastFromFetch = fromFetch[ 0 ];
+
+                    if ( fromFetch.length === 0 ) {
+                        // console.log('首次数据来自于SOK')
+                        return this.setState({
+                            scheduleList: [ fromSOK, ...scheduleList ]
+                        })
+                    }
+
+                    if ( fromSOK._id !== lastFromFetch._id ) {
+                        // console.log('更新来自于SOK')
+                        this.setState({
+                            scheduleList: [ fromSOK, ...fromFetch ]
+                        })
+                    } else {
+                        // console.log('二次进入')
+                        this.setState({
+                            scheduleList: fromFetch
+                        })
+                    }
+
+
+                }
+
+
+            })
+            .subscribe( )        
     }
 
     /**展示表单 */
@@ -186,10 +245,13 @@ export default class ProjectSchedulesPage extends React.PureComponent< IProps, I
                 endDate: formEndDate,
                 endTime: formEndTime,
                 member: formSelect,
-                pid: this.props.params.id
+                pid: this.props.params.id,
+                uid: this.user._id
             })
             .do( res => {
-                console.log( res )
+                if ( res.status === '200' ) {
+                    this.closeForm( )
+                }
             })
             .subscribe( )
 
@@ -198,7 +260,7 @@ export default class ProjectSchedulesPage extends React.PureComponent< IProps, I
 
     render( ) {
 
-        let { showForm, dataSource, formTitle, formPlace, formStartDate, formEndDate, formStartTime, formEndTime, formSelect } = this.state;
+        let { showForm, dataSource, formTitle, formPlace, formStartDate, formEndDate, formStartTime, formEndTime, formSelect, scheduleList } = this.state;
 
         /**form */
         let myForm = <div>
@@ -244,6 +306,11 @@ export default class ProjectSchedulesPage extends React.PureComponent< IProps, I
 
         </div>
 
+        if ( scheduleList.length !== 0 ) {
+            console.log( moment( scheduleList[0].startDate ).toDate( ).toLocaleDateString( ) )
+            console.log( moment( scheduleList[0].startTime ).toDate( ).toLocaleTimeString( ) )
+        }
+
         return <div className="project-schedules-page">
             <div className="container">
 
@@ -252,7 +319,38 @@ export default class ProjectSchedulesPage extends React.PureComponent< IProps, I
                 </div>
 
                 <div className="content">
-                
+                    <ul className="list">
+                    {
+                        scheduleList.map(( s, k ) => <li key={ k }>
+                            <h3 className="start-time">{ `${moment( s.startDate ).toDate( ).toLocaleDateString( )} ~ ${moment( s.endDate ).toDate( ).toLocaleDateString( )}` }</h3>
+                            <div className="main">
+
+                                <div className="time-block">
+                                    <p>{ moment( s.startTime ).toDate( ).toLocaleTimeString( ) }</p>
+                                    <p>~</p>
+                                    <p>{ moment( s.endTime ).toDate( ).toLocaleTimeString( ) }</p>
+                                </div>
+                                <h1 className="title">{ s.title }</h1>
+                                <h3 className="place"><Icon type="environment" style={{ color: '#49a9ee', marginRight: 5 }}/>{ s.place }</h3>
+                                <p style={{ marginTop: 10, marginBottom: 10 }}>参与者</p>
+                                <p className="member">
+                                    <Tooltip title={ `创建者：${s.creator.name}` }>
+                                        <span >
+                                            <Image src="/static/touxiang.png" />
+                                        </span>
+                                    </Tooltip>
+                                    {
+                                        s.member.map(( m, k ) => <Tooltip title={ m.name } key={ k }>
+                                            <span >
+                                                <Image src="/static/touxiang.png" />
+                                            </span>
+                                        </Tooltip>)
+                                    }
+                                </p>
+                            </div>
+                        </li>)
+                    }
+                    </ul>
                 </div>
 
             </div>
@@ -277,6 +375,9 @@ interface IState {
         value: string,
         text: string
     }>
+
+    /**展示信息 */
+    scheduleList: Schema.Schedule$[ ]
 
     /**表单信息 */
     formTitle: string

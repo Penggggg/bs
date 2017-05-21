@@ -26,6 +26,8 @@ var CON;
             project.group = "group";
             /**通知 */
             project.notification = 'notification';
+            /**日程 */
+            project.schedule = 'schedule';
         })(project = socketEvent.project || (socketEvent.project = {}));
     })(socketEvent = CON.socketEvent || (CON.socketEvent = {}));
     /**socket命名空间 */

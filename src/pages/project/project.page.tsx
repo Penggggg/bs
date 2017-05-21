@@ -87,8 +87,6 @@ export default class ProjectPage extends React.PureComponent< IProps, IState > {
                             <Menu mode="horizontal" defaultSelectedKeys={[ menuKey ]} onSelect={this.onEnter}>
                                 <Menu.Item key="tasks">
                                     任务 </Menu.Item>
-                                <Menu.Item key="shares">
-                                    分享 </Menu.Item>
                                 <Menu.Item key="files">
                                     文件 </Menu.Item>
                                 <Menu.Item key="schedules">

@@ -36,11 +36,37 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
+var socket_1 = require("../../../socket");
+var schedule_model_1 = require("../../../model/models/schedule.model");
 exports.addSchedules = function (ctx) { return __awaiter(_this, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        ctx.body = {
-            date: 'ok'
-        };
-        return [2 /*return*/];
+    var title, place, startDate, startTime, endDate, endTime, member, pid, uid, save, data, _a;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
+            case 0:
+                title = (_a = ctx.request.body, _a.title), place = _a.place, startDate = _a.startDate, startTime = _a.startTime, endDate = _a.endDate, endTime = _a.endTime, member = _a.member, pid = _a.pid, uid = _a.uid;
+                return [4 /*yield*/, schedule_model_1.ScheduleModel.save({
+                        title: title,
+                        place: place,
+                        startDate: startDate,
+                        startTime: startTime,
+                        endDate: endDate,
+                        endTime: endTime,
+                        pid: pid,
+                        member: member,
+                        creator: uid
+                    })];
+            case 1:
+                save = _b.sent();
+                return [4 /*yield*/, schedule_model_1.ScheduleModel.customFind$({ _id: save._id }, null, null)];
+            case 2:
+                data = _b.sent();
+                /**2. socket广播 */
+                socket_1.default.projectSockets[pid].schedule.broadcast(data[0]);
+                /**3. 返回数据 */
+                ctx.body = {
+                    status: '200'
+                };
+                return [2 /*return*/];
+        }
     });
 }); };

@@ -30,6 +30,9 @@ export namespace CON {
 
             /**通知 */
             export const notification = 'notification';
+            
+            /**日程 */
+            export const schedule = 'schedule';
         }
     }
 

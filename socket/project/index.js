@@ -4,6 +4,7 @@ var chat_1 = require("./chat");
 var file_1 = require("./file");
 var group_1 = require("./group");
 var member_1 = require("./member");
+var schedule_1 = require("./schedule");
 var index_con_1 = require("../../index.con");
 var notification_1 = require("./notification");
 var ProjectSocket = (function () {
@@ -22,6 +23,7 @@ var ProjectSocket = (function () {
         this.chat = new chat_1.Chat(this.socket);
         this.file = new file_1.File(this.socket);
         this.group = new group_1.Group(this.socket);
+        this.schedule = new schedule_1.Schedule(this.socket);
         this.notification = new notification_1.Notification(this.socket);
     };
     ProjectSocket.prototype.broadcast = function () {

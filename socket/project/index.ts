@@ -2,6 +2,7 @@ import { Chat } from './chat';
 import { File } from './file';
 import { Group } from './group';
 import { Member } from './member';
+import { Schedule } from './schedule';
 import { CON } from '../../index.con';
 import { Notification } from './notification';
 
@@ -12,6 +13,7 @@ export class ProjectSocket {
     public chat: Chat;
     public group: Group;
     public member: Member;
+    public schedule: Schedule;
     public notification: Notification;
     private socket: SocketIO.Namespace;
 
@@ -35,6 +37,7 @@ export class ProjectSocket {
                 this.chat = new Chat( this.socket );
                 this.file = new File( this.socket );
                 this.group = new Group( this.socket );
+                this.schedule = new Schedule( this.socket );
                 this.notification = new Notification( this.socket );
     }
 

@@ -1,6 +1,6 @@
 webpackJsonp([0],{
 
-/***/ 1386:
+/***/ 1388:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16,14 +16,14 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-__webpack_require__(1423);
+__webpack_require__(1425);
 var React = __webpack_require__(0);
-var antd_1 = __webpack_require__(60);
+var antd_1 = __webpack_require__(54);
 var http_service_1 = __webpack_require__(547);
-var project_1 = __webpack_require__(96);
-var socket_1 = __webpack_require__(550);
-var bread_container_1 = __webpack_require__(1431);
-var memberSlider_container_1 = __webpack_require__(1432);
+var project_1 = __webpack_require__(80);
+var socket_1 = __webpack_require__(551);
+var bread_container_1 = __webpack_require__(1433);
+var memberSlider_container_1 = __webpack_require__(1434);
 var Header = antd_1.Layout.Header, Footer = antd_1.Layout.Footer, Sider = antd_1.Layout.Sider, Content = antd_1.Layout.Content;
 var ProjectPage = (function (_super) {
     __extends(ProjectPage, _super);
@@ -90,7 +90,6 @@ var ProjectPage = (function (_super) {
                         React.createElement(antd_1.Col, { span: 10, className: "menu-block" },
                             React.createElement(antd_1.Menu, { mode: "horizontal", defaultSelectedKeys: [menuKey], onSelect: this.onEnter },
                                 React.createElement(antd_1.Menu.Item, { key: "tasks" }, "\u4EFB\u52A1 "),
-                                React.createElement(antd_1.Menu.Item, { key: "shares" }, "\u5206\u4EAB "),
                                 React.createElement(antd_1.Menu.Item, { key: "files" }, "\u6587\u4EF6 "),
                                 React.createElement(antd_1.Menu.Item, { key: "schedules" }, "\u65E5\u7A0B "),
                                 React.createElement(antd_1.Menu.Item, { key: "chats" }, "\u7FA4\u804A  "))),
@@ -114,7 +113,7 @@ exports.default = ProjectPage;
 
 /***/ }),
 
-/***/ 1390:
+/***/ 1392:
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(Buffer) {/*
@@ -193,11 +192,11 @@ function toComment(sourceMap) {
   return '/*# ' + data + ' */';
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1393).Buffer))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1395).Buffer))
 
 /***/ }),
 
-/***/ 1391:
+/***/ 1393:
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -229,7 +228,7 @@ var stylesInDom = {},
 	singletonElement = null,
 	singletonCounter = 0,
 	styleElementsInsertedAtTop = [],
-	fixUrls = __webpack_require__(1396);
+	fixUrls = __webpack_require__(1398);
 
 module.exports = function(list, options) {
 	if(typeof DEBUG !== "undefined" && DEBUG) {
@@ -489,7 +488,7 @@ function updateLink(linkElement, options, obj) {
 
 /***/ }),
 
-/***/ 1392:
+/***/ 1394:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -611,7 +610,7 @@ function fromByteArray (uint8) {
 
 /***/ }),
 
-/***/ 1393:
+/***/ 1395:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -625,9 +624,9 @@ function fromByteArray (uint8) {
 
 
 
-var base64 = __webpack_require__(1392)
-var ieee754 = __webpack_require__(1395)
-var isArray = __webpack_require__(1394)
+var base64 = __webpack_require__(1394)
+var ieee754 = __webpack_require__(1397)
+var isArray = __webpack_require__(1396)
 
 exports.Buffer = Buffer
 exports.SlowBuffer = SlowBuffer
@@ -2409,7 +2408,7 @@ function isnan (val) {
 
 /***/ }),
 
-/***/ 1394:
+/***/ 1396:
 /***/ (function(module, exports) {
 
 var toString = {}.toString;
@@ -2421,7 +2420,7 @@ module.exports = Array.isArray || function (arr) {
 
 /***/ }),
 
-/***/ 1395:
+/***/ 1397:
 /***/ (function(module, exports) {
 
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
@@ -2512,7 +2511,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 
 /***/ }),
 
-/***/ 1396:
+/***/ 1398:
 /***/ (function(module, exports) {
 
 
@@ -2608,7 +2607,7 @@ module.exports = function (css) {
 
 /***/ }),
 
-/***/ 1397:
+/***/ 1399:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2625,7 +2624,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
-__webpack_require__(1399);
+__webpack_require__(1401);
 var Image = (function (_super) {
     __extends(Image, _super);
     function Image() {
@@ -2652,10 +2651,10 @@ exports.default = Image;
 
 /***/ }),
 
-/***/ 1398:
+/***/ 1400:
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(1390)(undefined);
+exports = module.exports = __webpack_require__(1392)(undefined);
 // imports
 
 
@@ -2667,16 +2666,16 @@ exports.push([module.i, ".my-img {\n  opacity: 0;\n  transition: all 0.4s ease;\
 
 /***/ }),
 
-/***/ 1399:
+/***/ 1401:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1398);
+var content = __webpack_require__(1400);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(1391)(content, {});
+var update = __webpack_require__(1393)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -2694,10 +2693,10 @@ if(false) {
 
 /***/ }),
 
-/***/ 1402:
+/***/ 1404:
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(1390)(undefined);
+exports = module.exports = __webpack_require__(1392)(undefined);
 // imports
 
 
@@ -2709,10 +2708,10 @@ exports.push([module.i, ".c-Slider {\n  background-color: #f5f5f5;\n  width: 350
 
 /***/ }),
 
-/***/ 1410:
+/***/ 1412:
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(1390)(undefined);
+exports = module.exports = __webpack_require__(1392)(undefined);
 // imports
 
 
@@ -2724,16 +2723,16 @@ exports.push([module.i, ".project-page .my-layout {\n  background-color: #fff;\n
 
 /***/ }),
 
-/***/ 1415:
+/***/ 1417:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1402);
+var content = __webpack_require__(1404);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(1391)(content, {});
+var update = __webpack_require__(1393)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -2751,16 +2750,16 @@ if(false) {
 
 /***/ }),
 
-/***/ 1423:
+/***/ 1425:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1410);
+var content = __webpack_require__(1412);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(1391)(content, {});
+var update = __webpack_require__(1393)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -2778,14 +2777,14 @@ if(false) {
 
 /***/ }),
 
-/***/ 1426:
+/***/ 1428:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
-var antd_1 = __webpack_require__(60);
+var antd_1 = __webpack_require__(54);
 exports.default = function (_a) {
     var data = _a.data;
     return React.createElement(antd_1.Breadcrumb, null, data.map(function (bread, key) {
@@ -2799,7 +2798,7 @@ exports.default = function (_a) {
 
 /***/ }),
 
-/***/ 1429:
+/***/ 1431:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2816,8 +2815,8 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
-var antd_1 = __webpack_require__(60);
-__webpack_require__(1415);
+var antd_1 = __webpack_require__(54);
+__webpack_require__(1417);
 var Slider = (function (_super) {
     __extends(Slider, _super);
     function Slider() {
@@ -2838,33 +2837,33 @@ exports.default = Slider;
 
 /***/ }),
 
-/***/ 1431:
+/***/ 1433:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var bread_decorate_1 = __webpack_require__(1434);
-var Bread_component_1 = __webpack_require__(1426);
+var bread_decorate_1 = __webpack_require__(1436);
+var Bread_component_1 = __webpack_require__(1428);
 exports.ProjectBread = bread_decorate_1.InjectProjectBread(Bread_component_1.default);
 
 
 /***/ }),
 
-/***/ 1432:
+/***/ 1434:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var Slider_component_1 = __webpack_require__(1429);
-var member_decorate_1 = __webpack_require__(1435);
+var Slider_component_1 = __webpack_require__(1431);
+var member_decorate_1 = __webpack_require__(1437);
 exports.MemberSlider = member_decorate_1.InjectMember(Slider_component_1.default);
 
 
 /***/ }),
 
-/***/ 1434:
+/***/ 1436:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2881,7 +2880,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
-var project_1 = __webpack_require__(96);
+var project_1 = __webpack_require__(80);
 exports.InjectProjectBread = function (Bread) {
     var Wrapper = (function (_super) {
         __extends(Wrapper, _super);
@@ -2929,7 +2928,7 @@ exports.InjectProjectBread = function (Bread) {
 
 /***/ }),
 
-/***/ 1435:
+/***/ 1437:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2954,12 +2953,12 @@ var __assign = (this && this.__assign) || Object.assign || function(t) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
-var antd_1 = __webpack_require__(60);
+var antd_1 = __webpack_require__(54);
 var user_1 = __webpack_require__(157);
-var project_1 = __webpack_require__(96);
+var project_1 = __webpack_require__(80);
 var http_service_1 = __webpack_require__(547);
 var notification_service_1 = __webpack_require__(242);
-var Image_component_1 = __webpack_require__(1397);
+var Image_component_1 = __webpack_require__(1399);
 exports.InjectMember = function (Slider) {
     var Wrapper = (function (_super) {
         __extends(Wrapper, _super);

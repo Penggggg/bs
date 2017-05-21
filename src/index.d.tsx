@@ -280,7 +280,8 @@ declare namespace API {
             endDate: string,
             endTime: string,
             member: string[ ],
-            pid: string
+            pid: string,
+            uid: string
         }
 
     }
@@ -613,6 +614,34 @@ declare namespace Schema {
         finished: boolean
         creatorID: string
         createdTime: string
+    }
+
+    export interface Schedule {
+        _id?: string,
+        title: string,
+        place: string,
+        startDate: string,
+        startTime: string,
+        endDate: string,
+        endTime: string,
+        member: string[ ],
+        pid: string,
+        createdTime: string,
+        creator: string
+    }
+
+    export interface Schedule$ {
+        _id: string,
+        title: string,
+        place: string,
+        startDate: string,
+        startTime: string,
+        endDate: string,
+        endTime: string,
+        member: Partial<APP.User>[ ],
+        pid: Partial<Schema.Project$>,
+        createdTime: string,
+        creator:  Partial<APP.User>
     }
 
 }

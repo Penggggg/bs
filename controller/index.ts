@@ -18,6 +18,7 @@ import { addChildTask } from './project/task/add-child-task';
 import { updateChildTask } from './project/task/update-child-task';
 import { createProject } from './project/create-project';
 import { replyInvite } from './project/reply-invite';
+import { allSchedules } from './project/schedules/query';
 import { allGroup$ } from './project/group/query-group';
 import { addTaskTalk, updateTaskContent } from './project/task/add-task-talk';
 import { download, upload, allFiles, deleteFile } from './project/files';
@@ -76,7 +77,9 @@ export default ( router ) => {
     /**项目模块：任务优先级更改 */
     router.post('/api/v1/update-priority', updatePriority );
     /**项目模块：新增日程 */
-    router.post('/api/v1/add-schedules', addSchedules )
+    router.post('/api/v1/add-schedules', addSchedules );
+    /**项目模块：所有日程 */
+    router.get('/api/v1/all-schedules', allSchedules )
 
 
     /**用户模块：查询所有符合条件的用户 */

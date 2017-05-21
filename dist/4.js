@@ -1,6 +1,6 @@
 webpackJsonp([4],{
 
-/***/ 1383:
+/***/ 1385:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16,12 +16,12 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-__webpack_require__(1420);
+__webpack_require__(1422);
 var React = __webpack_require__(0);
-var antd_1 = __webpack_require__(60);
-var Image_component_1 = __webpack_require__(1397);
+var antd_1 = __webpack_require__(54);
+var Image_component_1 = __webpack_require__(1399);
 var user_1 = __webpack_require__(157);
-var project_1 = __webpack_require__(96);
+var project_1 = __webpack_require__(80);
 var http_service_1 = __webpack_require__(547);
 var ProjectChatPage = (function (_super) {
     __extends(ProjectChatPage, _super);
@@ -154,7 +154,7 @@ exports.default = ProjectChatPage;
 
 /***/ }),
 
-/***/ 1390:
+/***/ 1392:
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(Buffer) {/*
@@ -233,11 +233,11 @@ function toComment(sourceMap) {
   return '/*# ' + data + ' */';
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1393).Buffer))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1395).Buffer))
 
 /***/ }),
 
-/***/ 1391:
+/***/ 1393:
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -269,7 +269,7 @@ var stylesInDom = {},
 	singletonElement = null,
 	singletonCounter = 0,
 	styleElementsInsertedAtTop = [],
-	fixUrls = __webpack_require__(1396);
+	fixUrls = __webpack_require__(1398);
 
 module.exports = function(list, options) {
 	if(typeof DEBUG !== "undefined" && DEBUG) {
@@ -529,7 +529,7 @@ function updateLink(linkElement, options, obj) {
 
 /***/ }),
 
-/***/ 1392:
+/***/ 1394:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -651,7 +651,7 @@ function fromByteArray (uint8) {
 
 /***/ }),
 
-/***/ 1393:
+/***/ 1395:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -665,9 +665,9 @@ function fromByteArray (uint8) {
 
 
 
-var base64 = __webpack_require__(1392)
-var ieee754 = __webpack_require__(1395)
-var isArray = __webpack_require__(1394)
+var base64 = __webpack_require__(1394)
+var ieee754 = __webpack_require__(1397)
+var isArray = __webpack_require__(1396)
 
 exports.Buffer = Buffer
 exports.SlowBuffer = SlowBuffer
@@ -2449,7 +2449,7 @@ function isnan (val) {
 
 /***/ }),
 
-/***/ 1394:
+/***/ 1396:
 /***/ (function(module, exports) {
 
 var toString = {}.toString;
@@ -2461,7 +2461,7 @@ module.exports = Array.isArray || function (arr) {
 
 /***/ }),
 
-/***/ 1395:
+/***/ 1397:
 /***/ (function(module, exports) {
 
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
@@ -2552,7 +2552,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 
 /***/ }),
 
-/***/ 1396:
+/***/ 1398:
 /***/ (function(module, exports) {
 
 
@@ -2648,7 +2648,7 @@ module.exports = function (css) {
 
 /***/ }),
 
-/***/ 1397:
+/***/ 1399:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2665,7 +2665,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
-__webpack_require__(1399);
+__webpack_require__(1401);
 var Image = (function (_super) {
     __extends(Image, _super);
     function Image() {
@@ -2692,10 +2692,10 @@ exports.default = Image;
 
 /***/ }),
 
-/***/ 1398:
+/***/ 1400:
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(1390)(undefined);
+exports = module.exports = __webpack_require__(1392)(undefined);
 // imports
 
 
@@ -2707,16 +2707,16 @@ exports.push([module.i, ".my-img {\n  opacity: 0;\n  transition: all 0.4s ease;\
 
 /***/ }),
 
-/***/ 1399:
+/***/ 1401:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1398);
+var content = __webpack_require__(1400);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(1391)(content, {});
+var update = __webpack_require__(1393)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -2734,10 +2734,10 @@ if(false) {
 
 /***/ }),
 
-/***/ 1407:
+/***/ 1409:
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(1390)(undefined);
+exports = module.exports = __webpack_require__(1392)(undefined);
 // imports
 
 
@@ -2749,16 +2749,16 @@ exports.push([module.i, ".project-chat-page {\n  padding-bottom: 20px;\n  margin
 
 /***/ }),
 
-/***/ 1420:
+/***/ 1422:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1407);
+var content = __webpack_require__(1409);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(1391)(content, {});
+var update = __webpack_require__(1393)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {

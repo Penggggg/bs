@@ -1,6 +1,6 @@
 webpackJsonp([6],{
 
-/***/ 1387:
+/***/ 1389:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16,14 +16,15 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-__webpack_require__(1424);
+__webpack_require__(1426);
 var React = __webpack_require__(0);
 var moment = __webpack_require__(2);
-var antd_1 = __webpack_require__(60);
+var antd_1 = __webpack_require__(54);
 var user_1 = __webpack_require__(157);
 var http_service_1 = __webpack_require__(547);
-var project_1 = __webpack_require__(96);
-var local_storage_service_1 = __webpack_require__(1359);
+var project_1 = __webpack_require__(80);
+var local_storage_service_1 = __webpack_require__(550);
+var Image_component_1 = __webpack_require__(1399);
 var Option = antd_1.Select.Option;
 var ProjectSchedulesPage = (function (_super) {
     __extends(ProjectSchedulesPage, _super);
@@ -76,6 +77,46 @@ var ProjectSchedulesPage = (function (_super) {
                 _this.setState({
                     dataSource: res
                 });
+            })
+                .subscribe();
+        };
+        /**http获取schedules */
+        _this.combineFlow = function () {
+            var pid = _this.props.params.id;
+            var flow = http_service_1.default
+                .get('/api/v1/all-schedules', { pid: pid })
+                .combineLatest(project_1.default.schedule.data$)
+                .do(function (res) {
+                var scheduleList = _this.state.scheduleList;
+                var fromFetch = res[0], fromSOK = res[1];
+                if (!fromSOK) {
+                    // console.log('首次加载')
+                    _this.setState({
+                        scheduleList: fromFetch
+                    });
+                }
+                else {
+                    /**fetch的时候是sort: -1 */
+                    var lastFromFetch = fromFetch[0];
+                    if (fromFetch.length === 0) {
+                        // console.log('首次数据来自于SOK')
+                        return _this.setState({
+                            scheduleList: [fromSOK].concat(scheduleList)
+                        });
+                    }
+                    if (fromSOK._id !== lastFromFetch._id) {
+                        // console.log('更新来自于SOK')
+                        _this.setState({
+                            scheduleList: [fromSOK].concat(fromFetch)
+                        });
+                    }
+                    else {
+                        // console.log('二次进入')
+                        _this.setState({
+                            scheduleList: fromFetch
+                        });
+                    }
+                }
             })
                 .subscribe();
         };
@@ -148,10 +189,13 @@ var ProjectSchedulesPage = (function (_super) {
                 endDate: formEndDate,
                 endTime: formEndTime,
                 member: formSelect,
-                pid: _this.props.params.id
+                pid: _this.props.params.id,
+                uid: _this.user._id
             })
                 .do(function (res) {
-                console.log(res);
+                if (res.status === '200') {
+                    _this.closeForm();
+                }
             })
                 .subscribe();
         };
@@ -164,16 +208,22 @@ var ProjectSchedulesPage = (function (_super) {
             formStartDate: null,
             formEndTime: null,
             formStartTime: null,
-            formSelect: []
+            formSelect: [],
+            scheduleList: []
         };
         return _this;
     }
     ProjectSchedulesPage.prototype.componentDidMount = function () {
         this.initData();
+        this.combineFlow();
+    };
+    ProjectSchedulesPage.prototype.componentWillUnmount = function () {
+        this.sub.unsubscribe();
+        this.flow.unsubscribe();
     };
     ProjectSchedulesPage.prototype.render = function () {
         var _this = this;
-        var _a = this.state, showForm = _a.showForm, dataSource = _a.dataSource, formTitle = _a.formTitle, formPlace = _a.formPlace, formStartDate = _a.formStartDate, formEndDate = _a.formEndDate, formStartTime = _a.formStartTime, formEndTime = _a.formEndTime, formSelect = _a.formSelect;
+        var _a = this.state, showForm = _a.showForm, dataSource = _a.dataSource, formTitle = _a.formTitle, formPlace = _a.formPlace, formStartDate = _a.formStartDate, formEndDate = _a.formEndDate, formStartTime = _a.formStartTime, formEndTime = _a.formEndTime, formSelect = _a.formSelect, scheduleList = _a.scheduleList;
         /**form */
         var myForm = React.createElement("div", null,
             React.createElement("div", { className: "msg" },
@@ -196,6 +246,10 @@ var ProjectSchedulesPage = (function (_super) {
                 }))),
             React.createElement("div", { style: { marginTop: 15 } },
                 React.createElement(antd_1.Button, { type: "primary", style: { width: '100%' }, onClick: this.submit }, "\u5B8C\u6210\u5E76\u521B\u5EFA")));
+        if (scheduleList.length !== 0) {
+            console.log(moment(scheduleList[0].startDate).toDate().toLocaleDateString());
+            console.log(moment(scheduleList[0].startTime).toDate().toLocaleTimeString());
+        }
         return React.createElement("div", { className: "project-schedules-page" },
             React.createElement("div", { className: "container" },
                 React.createElement("div", { className: "header", onClick: this.showForm },
@@ -203,7 +257,26 @@ var ProjectSchedulesPage = (function (_super) {
                         React.createElement("span", null,
                             React.createElement(antd_1.Icon, { type: "plus-circle", style: { fontSize: 16 } })),
                         "\u6DFB\u52A0\u65E5\u7A0B")),
-                React.createElement("div", { className: "content" })),
+                React.createElement("div", { className: "content" },
+                    React.createElement("ul", { className: "list" }, scheduleList.map(function (s, k) { return React.createElement("li", { key: k },
+                        React.createElement("h3", { className: "start-time" }, moment(s.startDate).toDate().toLocaleDateString() + " ~ " + moment(s.endDate).toDate().toLocaleDateString()),
+                        React.createElement("div", { className: "main" },
+                            React.createElement("div", { className: "time-block" },
+                                React.createElement("p", null, moment(s.startTime).toDate().toLocaleTimeString()),
+                                React.createElement("p", null, "~"),
+                                React.createElement("p", null, moment(s.endTime).toDate().toLocaleTimeString())),
+                            React.createElement("h1", { className: "title" }, s.title),
+                            React.createElement("h3", { className: "place" },
+                                React.createElement(antd_1.Icon, { type: "environment", style: { color: '#49a9ee', marginRight: 5 } }),
+                                s.place),
+                            React.createElement("p", { style: { marginTop: 10, marginBottom: 10 } }, "\u53C2\u4E0E\u8005"),
+                            React.createElement("p", { className: "member" },
+                                React.createElement(antd_1.Tooltip, { title: "\u521B\u5EFA\u8005\uFF1A" + s.creator.name },
+                                    React.createElement("span", null,
+                                        React.createElement(Image_component_1.default, { src: "/static/touxiang.png" }))),
+                                s.member.map(function (m, k) { return React.createElement(antd_1.Tooltip, { title: m.name, key: k },
+                                    React.createElement("span", null,
+                                        React.createElement(Image_component_1.default, { src: "/static/touxiang.png" }))); })))); })))),
             React.createElement(antd_1.Modal, { title: "添加日程", footer: null, visible: showForm, className: "schedules-form", onCancel: this.closeForm }, myForm));
     };
     return ProjectSchedulesPage;
@@ -213,7 +286,7 @@ exports.default = ProjectSchedulesPage;
 
 /***/ }),
 
-/***/ 1390:
+/***/ 1392:
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(Buffer) {/*
@@ -292,11 +365,11 @@ function toComment(sourceMap) {
   return '/*# ' + data + ' */';
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1393).Buffer))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1395).Buffer))
 
 /***/ }),
 
-/***/ 1391:
+/***/ 1393:
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -328,7 +401,7 @@ var stylesInDom = {},
 	singletonElement = null,
 	singletonCounter = 0,
 	styleElementsInsertedAtTop = [],
-	fixUrls = __webpack_require__(1396);
+	fixUrls = __webpack_require__(1398);
 
 module.exports = function(list, options) {
 	if(typeof DEBUG !== "undefined" && DEBUG) {
@@ -588,7 +661,7 @@ function updateLink(linkElement, options, obj) {
 
 /***/ }),
 
-/***/ 1392:
+/***/ 1394:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -710,7 +783,7 @@ function fromByteArray (uint8) {
 
 /***/ }),
 
-/***/ 1393:
+/***/ 1395:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -724,9 +797,9 @@ function fromByteArray (uint8) {
 
 
 
-var base64 = __webpack_require__(1392)
-var ieee754 = __webpack_require__(1395)
-var isArray = __webpack_require__(1394)
+var base64 = __webpack_require__(1394)
+var ieee754 = __webpack_require__(1397)
+var isArray = __webpack_require__(1396)
 
 exports.Buffer = Buffer
 exports.SlowBuffer = SlowBuffer
@@ -2508,7 +2581,7 @@ function isnan (val) {
 
 /***/ }),
 
-/***/ 1394:
+/***/ 1396:
 /***/ (function(module, exports) {
 
 var toString = {}.toString;
@@ -2520,7 +2593,7 @@ module.exports = Array.isArray || function (arr) {
 
 /***/ }),
 
-/***/ 1395:
+/***/ 1397:
 /***/ (function(module, exports) {
 
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
@@ -2611,7 +2684,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 
 /***/ }),
 
-/***/ 1396:
+/***/ 1398:
 /***/ (function(module, exports) {
 
 
@@ -2707,31 +2780,117 @@ module.exports = function (css) {
 
 /***/ }),
 
-/***/ 1411:
+/***/ 1399:
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(1390)(undefined);
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var React = __webpack_require__(0);
+__webpack_require__(1401);
+var Image = (function (_super) {
+    __extends(Image, _super);
+    function Image() {
+        var _this = _super.call(this) || this;
+        _this.onLoadHandler = function () {
+            _this.setState({
+                imgLoaded: true
+            });
+        };
+        _this.state = {
+            imgLoaded: false
+        };
+        return _this;
+    }
+    Image.prototype.render = function () {
+        var imgLoaded = this.state.imgLoaded;
+        var _a = this.props, src = _a.src, _b = _a.alt, alt = _b === void 0 ? '' : _b;
+        return React.createElement("img", { src: src, alt: alt, onLoad: this.onLoadHandler, className: imgLoaded ? "my-img loaded" : "my-img" });
+    };
+    return Image;
+}(React.PureComponent));
+exports.default = Image;
+
+
+/***/ }),
+
+/***/ 1400:
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(1392)(undefined);
 // imports
 
 
 // module
-exports.push([module.i, ".project-schedules-page {\n  padding-top: 20px;\n  padding-bottom: 20px;\n}\n.project-schedules-page .container {\n  width: 70%;\n  margin: 0 auto;\n  border-radius: 5px;\n  border: 1px solid #e9e9e9;\n  background-color: #fff;\n  box-shadow: 0px 5px 40px 5px #d9d9d9;\n}\n.project-schedules-page .container .header {\n  height: 50px;\n  border-radius: 5px 5px 0 0 ;\n  margin-bottom: 40px;\n  background-color: #fff;\n  border: 1px solid #e9e9e9;\n  box-shadow: 0px 5px 25px 3px #f5f5f5;\n}\n.project-schedules-page .container .header h3 {\n  font-size: 16px;\n  font-weight: 500;\n  color: #49a9ee;\n  line-height: 50px;\n  cursor: pointer;\n  text-align: center;\n}\n.project-schedules-page .container .header h3 span {\n  margin-right: 10px;\n}\n.project-schedules-page .container .content {\n  height: 370px;\n  border: 1px solid #e9e9e9;\n  background-color: #fff;\n  border-radius: 0 0  5px 5px;\n  box-shadow: 0px -5px 25px 3px #f5f5f5;\n}\n.schedules-form {\n  width: 580px !important;\n}\n.schedules-form .ant-modal-title {\n  font-size: 18px;\n}\n.schedules-form .ant-modal-header {\n  background: #f7f7f7;\n}\n.schedules-form .ant-modal-content {\n  background: #f7f7f7;\n}\n.schedules-form .msg {\n  padding: 10px;\n  background: #fff;\n  margin-bottom: 15px;\n  border-radius: 5px;\n  border: 1px solid #d9d9d9;\n  padding: 8px 0 8px 0;\n}\n.schedules-form .msg .title-input {\n  margin-bottom: 10px;\n}\n.schedules-form .msg input {\n  width: 100%;\n  padding: 8px 15px;\n  display: block;\n}\n.schedules-form .msg .my-input {\n  border: none;\n  font-size: 14px;\n  outline: none !important;\n}\n.schedules-form .msg .my-input:focus {\n  border: none;\n  outline: none !important;\n}\n.schedules-form .msg .my-input:hover {\n  border: none;\n  outline: none !important;\n}\n.schedules-form .msg .my-input:active {\n  border: none;\n  outline: none !important;\n}\n.schedules-form .time {\n  padding: 10px;\n  background: #fff;\n  margin-bottom: 15px;\n  border-radius: 5px;\n  border: 1px solid #d9d9d9;\n}\n.schedules-form .time input {\n  border: none;\n}\n.schedules-form .time h5 {\n  margin-bottom: 8px;\n}\n.schedules-form .member {\n  padding: 10px;\n  background: #fff;\n  margin-bottom: 15px;\n  border-radius: 5px;\n  border: 1px solid #d9d9d9;\n}\n.schedules-form .member .ant-select {\n  margin-top: 10px;\n  width: 100% !important;\n}\n.schedules-form .member .ant-select-selection {\n  border: none;\n}\ninput:focus {\n  outline: none !important;\n}\n", ""]);
+exports.push([module.i, ".my-img {\n  opacity: 0;\n  transition: all 0.4s ease;\n}\n.my-img.loaded {\n  opacity: 1;\n}\n", ""]);
 
 // exports
 
 
 /***/ }),
 
-/***/ 1424:
+/***/ 1401:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1411);
+var content = __webpack_require__(1400);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(1391)(content, {});
+var update = __webpack_require__(1393)(content, {});
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./Image.less", function() {
+			var newContent = require("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./Image.less");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+
+/***/ 1413:
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(1392)(undefined);
+// imports
+
+
+// module
+exports.push([module.i, ".project-schedules-page {\n  padding-top: 20px;\n  padding-bottom: 20px;\n}\n.project-schedules-page .container {\n  width: 70%;\n  margin: 0 auto;\n  border-radius: 5px;\n  border: 1px solid #e9e9e9;\n  background-color: #fff;\n  box-shadow: 0px 5px 40px 5px #d9d9d9;\n}\n.project-schedules-page .container .header {\n  height: 50px;\n  border-radius: 5px 5px 0 0 ;\n  margin-bottom: 40px;\n  background-color: #fff;\n  border: 1px solid #e9e9e9;\n  box-shadow: 0px 5px 25px 3px #f5f5f5;\n}\n.project-schedules-page .container .header h3 {\n  font-size: 16px;\n  font-weight: 500;\n  color: #49a9ee;\n  line-height: 50px;\n  cursor: pointer;\n  text-align: center;\n}\n.project-schedules-page .container .header h3 span {\n  margin-right: 10px;\n}\n.project-schedules-page .container .content {\n  height: 370px;\n  border: 1px solid #e9e9e9;\n  background-color: #fff;\n  border-radius: 0 0  5px 5px;\n  box-shadow: 0px -5px 25px 3px #f5f5f5;\n}\n.project-schedules-page .container .content ul.list {\n  height: 100%;\n  width: 100%;\n  overflow-y: scroll;\n  box-sizing: border-box;\n  padding: 10px 10px;\n}\n.project-schedules-page .container .content ul.list li {\n  position: relative;\n}\n.project-schedules-page .container .content ul.list li .start-time {\n  padding-left: 8px;\n  color: #666;\n  font-size: 21px;\n  font-weight: 500;\n  padding: 0px 0px 10px 8px;\n  border-bottom: 1px solid #e9e9e9;\n}\n.project-schedules-page .container .content ul.list li .main {\n  position: relative;\n  box-sizing: border-box;\n  padding: 15px 0 15px 150px;\n  margin-bottom: 15px;\n}\n.project-schedules-page .container .content ul.list li .main .time-block {\n  left: 12px;\n  top: 25px;\n  height: 80px;\n  width: 100px;\n  position: absolute;\n}\n.project-schedules-page .container .content ul.list li .main .time-block p {\n  color: #A6A6A6;\n}\n.project-schedules-page .container .content ul.list li .main .title {\n  font-weight: 400;\n}\n.project-schedules-page .container .content ul.list li .main .place {\n  font-size: 18px;\n  font-weight: 400;\n}\n.project-schedules-page .container .content ul.list li .main .member img {\n  width: 35px;\n  height: 35px;\n  border-radius: 50%;\n  margin-right: 8px;\n}\n.project-schedules-page .container .content ul.list li ul::-webkit-scrollbar {\n  display: none;\n}\n.project-schedules-page .container .content ul.list li .main::-webkit-scrollbar {\n  display: none;\n}\n.project-schedules-page .container .content ul.list::-webkit-scrollbar {\n  display: none;\n}\n.schedules-form {\n  width: 580px !important;\n}\n.schedules-form .ant-modal-title {\n  font-size: 18px;\n}\n.schedules-form .ant-modal-header {\n  background: #f7f7f7;\n}\n.schedules-form .ant-modal-content {\n  background: #f7f7f7;\n}\n.schedules-form .msg {\n  padding: 10px;\n  background: #fff;\n  margin-bottom: 15px;\n  border-radius: 5px;\n  border: 1px solid #d9d9d9;\n  padding: 8px 0 8px 0;\n}\n.schedules-form .msg .title-input {\n  margin-bottom: 10px;\n}\n.schedules-form .msg input {\n  width: 100%;\n  padding: 8px 15px;\n  display: block;\n}\n.schedules-form .msg .my-input {\n  border: none;\n  font-size: 14px;\n  outline: none !important;\n}\n.schedules-form .msg .my-input:focus {\n  border: none;\n  outline: none !important;\n}\n.schedules-form .msg .my-input:hover {\n  border: none;\n  outline: none !important;\n}\n.schedules-form .msg .my-input:active {\n  border: none;\n  outline: none !important;\n}\n.schedules-form .time {\n  padding: 10px;\n  background: #fff;\n  margin-bottom: 15px;\n  border-radius: 5px;\n  border: 1px solid #d9d9d9;\n}\n.schedules-form .time input {\n  border: none;\n}\n.schedules-form .time h5 {\n  margin-bottom: 8px;\n}\n.schedules-form .member {\n  padding: 10px;\n  background: #fff;\n  margin-bottom: 15px;\n  border-radius: 5px;\n  border: 1px solid #d9d9d9;\n}\n.schedules-form .member .ant-select {\n  margin-top: 10px;\n  width: 100% !important;\n}\n.schedules-form .member .ant-select-selection {\n  border: none;\n}\ninput:focus {\n  outline: none !important;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ 1426:
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(1413);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(1393)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {

@@ -3,6 +3,7 @@ import ProjectData from './data.store';
 import { ProjectChat } from './chat.store';
 import { ProjectFile } from './file.store';
 import { ProjectGroup } from './group.store';
+import { ProjectSchedule } from './schedule.store';
 
 class ProjectStore {
 
@@ -11,6 +12,7 @@ class ProjectStore {
     public chat = new ProjectChat( );
     public file = new ProjectFile( );
     public group = new ProjectGroup( );
+    public schedule = new ProjectSchedule( );
 }
 
 export default new ProjectStore( )

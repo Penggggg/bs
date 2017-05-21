@@ -39,12 +39,11 @@ export default class ProjectFilesPage extends React.PureComponent< IProps, IStat
     }
 
     init = ( ) => {
-        let sub = userStore.data.userData$
+         this.sub = userStore.data.userData$
             .do( user => {
                 this.setState({
                     uid: user._id
                 })
-                setTimeout(( ) => sub.unsubscribe( ), 100)
             })
             .subscribe( )
     }

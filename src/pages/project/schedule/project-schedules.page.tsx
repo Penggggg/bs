@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Subscription } from 'rxjs';
 import * as moment from 'moment';
 import { RouteComponentProps } from 'react-router';
-import { Icon, Modal, Input, Row, Col, DatePicker, TimePicker, Button, Select ,Tooltip } from 'antd';
+import { Icon, Modal, Input, Row, Col, DatePicker, TimePicker, Button, Select ,Tooltip, Spin } from 'antd';
 
 
 
@@ -34,7 +34,8 @@ export default class ProjectSchedulesPage extends React.PureComponent< IProps, I
             formEndTime: null,
             formStartTime: null,
             formSelect: [],
-            scheduleList: []
+            scheduleList: [],
+            loading: true
         }
     }
 
@@ -112,6 +113,10 @@ export default class ProjectSchedulesPage extends React.PureComponent< IProps, I
             .combineLatest(projectStore.schedule.data$)
             .do( res => {
                 
+                this.setState({
+                    loading: true
+                })
+
                 let { scheduleList } = this.state;
                 let [ fromFetch, fromSOK ] = res;
 
@@ -119,7 +124,8 @@ export default class ProjectSchedulesPage extends React.PureComponent< IProps, I
 
                     // console.log('首次加载')
                     this.setState({
-                        scheduleList: fromFetch
+                        scheduleList: fromFetch,
+                        loading: false
                     })
 
                 } else {
@@ -130,19 +136,22 @@ export default class ProjectSchedulesPage extends React.PureComponent< IProps, I
                     if ( fromFetch.length === 0 ) {
                         // console.log('首次数据来自于SOK')
                         return this.setState({
-                            scheduleList: [ fromSOK, ...scheduleList ]
+                            scheduleList: [ fromSOK, ...scheduleList ],
+                            loading: false
                         })
                     }
 
                     if ( fromSOK._id !== lastFromFetch._id ) {
                         // console.log('更新来自于SOK')
                         this.setState({
-                            scheduleList: [ fromSOK, ...fromFetch ]
+                            scheduleList: [ fromSOK, ...fromFetch ],
+                            loading: false
                         })
                     } else {
                         // console.log('二次进入')
                         this.setState({
-                            scheduleList: fromFetch
+                            scheduleList: fromFetch,
+                            loading: false
                         })
                     }
 
@@ -260,7 +269,7 @@ export default class ProjectSchedulesPage extends React.PureComponent< IProps, I
 
     render( ) {
 
-        let { showForm, dataSource, formTitle, formPlace, formStartDate, formEndDate, formStartTime, formEndTime, formSelect, scheduleList } = this.state;
+        let { loading ,showForm, dataSource, formTitle, formPlace, formStartDate, formEndDate, formStartTime, formEndTime, formSelect, scheduleList } = this.state;
 
         /**form */
         let myForm = <div>
@@ -306,11 +315,6 @@ export default class ProjectSchedulesPage extends React.PureComponent< IProps, I
 
         </div>
 
-        if ( scheduleList.length !== 0 ) {
-            console.log( moment( scheduleList[0].startDate ).toDate( ).toLocaleDateString( ) )
-            console.log( moment( scheduleList[0].startTime ).toDate( ).toLocaleTimeString( ) )
-        }
-
         return <div className="project-schedules-page">
             <div className="container">
 
@@ -319,6 +323,7 @@ export default class ProjectSchedulesPage extends React.PureComponent< IProps, I
                 </div>
 
                 <div className="content">
+                    <Spin spinning={ loading } size='large'>
                     <ul className="list">
                     {
                         scheduleList.map(( s, k ) => <li key={ k }>
@@ -351,6 +356,7 @@ export default class ProjectSchedulesPage extends React.PureComponent< IProps, I
                         </li>)
                     }
                     </ul>
+                    </Spin>
                 </div>
 
             </div>
@@ -369,6 +375,8 @@ interface IProps  extends RouteComponentProps<{id: string}, {}>{
 
 
 interface IState {
+
+    loading: boolean
     
     showForm: boolean
     dataSource: Array<{

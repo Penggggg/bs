@@ -87,12 +87,16 @@ var ProjectSchedulesPage = (function (_super) {
                 .get('/api/v1/all-schedules', { pid: pid })
                 .combineLatest(project_1.default.schedule.data$)
                 .do(function (res) {
+                _this.setState({
+                    loading: true
+                });
                 var scheduleList = _this.state.scheduleList;
                 var fromFetch = res[0], fromSOK = res[1];
                 if (!fromSOK) {
                     // console.log('首次加载')
                     _this.setState({
-                        scheduleList: fromFetch
+                        scheduleList: fromFetch,
+                        loading: false
                     });
                 }
                 else {
@@ -101,19 +105,22 @@ var ProjectSchedulesPage = (function (_super) {
                     if (fromFetch.length === 0) {
                         // console.log('首次数据来自于SOK')
                         return _this.setState({
-                            scheduleList: [fromSOK].concat(scheduleList)
+                            scheduleList: [fromSOK].concat(scheduleList),
+                            loading: false
                         });
                     }
                     if (fromSOK._id !== lastFromFetch._id) {
                         // console.log('更新来自于SOK')
                         _this.setState({
-                            scheduleList: [fromSOK].concat(fromFetch)
+                            scheduleList: [fromSOK].concat(fromFetch),
+                            loading: false
                         });
                     }
                     else {
                         // console.log('二次进入')
                         _this.setState({
-                            scheduleList: fromFetch
+                            scheduleList: fromFetch,
+                            loading: false
                         });
                     }
                 }
@@ -209,7 +216,8 @@ var ProjectSchedulesPage = (function (_super) {
             formEndTime: null,
             formStartTime: null,
             formSelect: [],
-            scheduleList: []
+            scheduleList: [],
+            loading: true
         };
         return _this;
     }
@@ -223,7 +231,7 @@ var ProjectSchedulesPage = (function (_super) {
     };
     ProjectSchedulesPage.prototype.render = function () {
         var _this = this;
-        var _a = this.state, showForm = _a.showForm, dataSource = _a.dataSource, formTitle = _a.formTitle, formPlace = _a.formPlace, formStartDate = _a.formStartDate, formEndDate = _a.formEndDate, formStartTime = _a.formStartTime, formEndTime = _a.formEndTime, formSelect = _a.formSelect, scheduleList = _a.scheduleList;
+        var _a = this.state, loading = _a.loading, showForm = _a.showForm, dataSource = _a.dataSource, formTitle = _a.formTitle, formPlace = _a.formPlace, formStartDate = _a.formStartDate, formEndDate = _a.formEndDate, formStartTime = _a.formStartTime, formEndTime = _a.formEndTime, formSelect = _a.formSelect, scheduleList = _a.scheduleList;
         /**form */
         var myForm = React.createElement("div", null,
             React.createElement("div", { className: "msg" },
@@ -246,10 +254,6 @@ var ProjectSchedulesPage = (function (_super) {
                 }))),
             React.createElement("div", { style: { marginTop: 15 } },
                 React.createElement(antd_1.Button, { type: "primary", style: { width: '100%' }, onClick: this.submit }, "\u5B8C\u6210\u5E76\u521B\u5EFA")));
-        if (scheduleList.length !== 0) {
-            console.log(moment(scheduleList[0].startDate).toDate().toLocaleDateString());
-            console.log(moment(scheduleList[0].startTime).toDate().toLocaleTimeString());
-        }
         return React.createElement("div", { className: "project-schedules-page" },
             React.createElement("div", { className: "container" },
                 React.createElement("div", { className: "header", onClick: this.showForm },
@@ -258,25 +262,26 @@ var ProjectSchedulesPage = (function (_super) {
                             React.createElement(antd_1.Icon, { type: "plus-circle", style: { fontSize: 16 } })),
                         "\u6DFB\u52A0\u65E5\u7A0B")),
                 React.createElement("div", { className: "content" },
-                    React.createElement("ul", { className: "list" }, scheduleList.map(function (s, k) { return React.createElement("li", { key: k },
-                        React.createElement("h3", { className: "start-time" }, moment(s.startDate).toDate().toLocaleDateString() + " ~ " + moment(s.endDate).toDate().toLocaleDateString()),
-                        React.createElement("div", { className: "main" },
-                            React.createElement("div", { className: "time-block" },
-                                React.createElement("p", null, moment(s.startTime).toDate().toLocaleTimeString()),
-                                React.createElement("p", null, "~"),
-                                React.createElement("p", null, moment(s.endTime).toDate().toLocaleTimeString())),
-                            React.createElement("h1", { className: "title" }, s.title),
-                            React.createElement("h3", { className: "place" },
-                                React.createElement(antd_1.Icon, { type: "environment", style: { color: '#49a9ee', marginRight: 5 } }),
-                                s.place),
-                            React.createElement("p", { style: { marginTop: 10, marginBottom: 10 } }, "\u53C2\u4E0E\u8005"),
-                            React.createElement("p", { className: "member" },
-                                React.createElement(antd_1.Tooltip, { title: "\u521B\u5EFA\u8005\uFF1A" + s.creator.name },
-                                    React.createElement("span", null,
-                                        React.createElement(Image_component_1.default, { src: "/static/touxiang.png" }))),
-                                s.member.map(function (m, k) { return React.createElement(antd_1.Tooltip, { title: m.name, key: k },
-                                    React.createElement("span", null,
-                                        React.createElement(Image_component_1.default, { src: "/static/touxiang.png" }))); })))); })))),
+                    React.createElement(antd_1.Spin, { spinning: loading, size: 'large' },
+                        React.createElement("ul", { className: "list" }, scheduleList.map(function (s, k) { return React.createElement("li", { key: k },
+                            React.createElement("h3", { className: "start-time" }, moment(s.startDate).toDate().toLocaleDateString() + " ~ " + moment(s.endDate).toDate().toLocaleDateString()),
+                            React.createElement("div", { className: "main" },
+                                React.createElement("div", { className: "time-block" },
+                                    React.createElement("p", null, moment(s.startTime).toDate().toLocaleTimeString()),
+                                    React.createElement("p", null, "~"),
+                                    React.createElement("p", null, moment(s.endTime).toDate().toLocaleTimeString())),
+                                React.createElement("h1", { className: "title" }, s.title),
+                                React.createElement("h3", { className: "place" },
+                                    React.createElement(antd_1.Icon, { type: "environment", style: { color: '#49a9ee', marginRight: 5 } }),
+                                    s.place),
+                                React.createElement("p", { style: { marginTop: 10, marginBottom: 10 } }, "\u53C2\u4E0E\u8005"),
+                                React.createElement("p", { className: "member" },
+                                    React.createElement(antd_1.Tooltip, { title: "\u521B\u5EFA\u8005\uFF1A" + s.creator.name },
+                                        React.createElement("span", null,
+                                            React.createElement(Image_component_1.default, { src: "/static/touxiang.png" }))),
+                                    s.member.map(function (m, k) { return React.createElement(antd_1.Tooltip, { title: m.name, key: k },
+                                        React.createElement("span", null,
+                                            React.createElement(Image_component_1.default, { src: "/static/touxiang.png" }))); })))); }))))),
             React.createElement(antd_1.Modal, { title: "添加日程", footer: null, visible: showForm, className: "schedules-form", onCancel: this.closeForm }, myForm));
     };
     return ProjectSchedulesPage;

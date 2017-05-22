@@ -18,6 +18,7 @@ import { addChildTask } from './project/task/add-child-task';
 import { updateChildTask } from './project/task/update-child-task';
 import { createProject } from './project/create-project';
 import { replyInvite } from './project/reply-invite';
+import { changeUserPsw, changeUserInfo } from './user/changeInfo.controller';
 import { allSchedules } from './project/schedules/query';
 import { allGroup$ } from './project/group/query-group';
 import { addTaskTalk, updateTaskContent } from './project/task/add-task-talk';
@@ -86,7 +87,10 @@ export default ( router ) => {
     router.post('/api/v1/all-user', fetchAllUserByName )
     /**用户模块：查询项目下所有成员和组长 */
     router.get('/api/v1/all-member-leader', allMemberInProject );
-    
+    /**用户模块：更改信息 */
+    router.post('/api/v1/change-info', changeUserInfo );
+    /**用户模块：更改密码 */
+    router.post('/api/v1/change-psw', changeUserPsw );
 
 
     /**消息模块：查询所有符合条件的消息 */

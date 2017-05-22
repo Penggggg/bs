@@ -1,6 +1,6 @@
 webpackJsonp([6],{
 
-/***/ 1389:
+/***/ 1383:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16,282 +16,150 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-__webpack_require__(1426);
+__webpack_require__(1422);
 var React = __webpack_require__(0);
-var moment = __webpack_require__(2);
 var antd_1 = __webpack_require__(54);
+var Image_component_1 = __webpack_require__(1400);
+var index_con_1 = __webpack_require__(44);
+var msg_1 = __webpack_require__(549);
 var user_1 = __webpack_require__(157);
 var http_service_1 = __webpack_require__(547);
-var project_1 = __webpack_require__(80);
-var local_storage_service_1 = __webpack_require__(550);
-var Image_component_1 = __webpack_require__(1399);
-var Option = antd_1.Select.Option;
-var ProjectSchedulesPage = (function (_super) {
-    __extends(ProjectSchedulesPage, _super);
-    function ProjectSchedulesPage() {
+var Header = antd_1.Layout.Header, Footer = antd_1.Layout.Footer, Sider = antd_1.Layout.Sider, Content = antd_1.Layout.Content;
+var msgAllPage = (function (_super) {
+    __extends(msgAllPage, _super);
+    function msgAllPage() {
         var _this = _super.call(this) || this;
-        /**初始化user、project数据 */
-        _this.initData = function () {
+        _this.limit = 5;
+        _this.handleChange = function (readed) {
+            _this.setState({
+                currentPage: 1,
+                selectorValue: readed === 'false' ? 'false' : 'true',
+                msgType: readed === 'false' ? '未读消息' : '所有消息'
+            });
+            _this.fetchMsgList(readed === 'false' ? false : true, 1);
+        };
+        _this.handleSelect = function (currentPage) {
+            var msgType = _this.state.msgType;
+            _this.setState({
+                currentPage: currentPage
+            });
+            _this.fetchMsgList(msgType === '未读消息' ? false : true, currentPage);
+        };
+        _this.onEnter = function (msg, key) {
+            /**路由推送 */
+            _this.props.router.push("/msgs/" + msg._id);
+            /**右上角badge刷新 */
             setTimeout(function () {
-                _this.sub = user_1.default.data.userData$
-                    .combineLatest(project_1.default.data.data$)
-                    .do(function (data) {
-                    _this.user = local_storage_service_1.default.getItem('user');
-                    _this.project = data[1];
-                })
-                    .subscribe();
-            }, 1000);
-        };
-        /**权限检查：总负责人或组长 */
-        _this.checkAuth = function () {
-            var _id = _this.user._id;
-            var _a = _this.project, creator = _a.creator, leader = _a.leader;
-            if (creator._id === _id) {
-                return true;
-            }
-            else if (leader.find(function (l) { return l._id === _id; })) {
-                return true;
-            }
-            console.log('asdasdd');
-            antd_1.Modal.warning({
-                title: '消息',
-                content: '抱歉。您还没有新增日程的权限',
-            });
-            return false;
-        };
-        /**http:获取user */
-        _this.fetchUser = function () {
-            var pid = _this.props.params.id;
-            http_service_1.default
-                .get('/api/v1/all-member-leader', { pid: pid })
-                .map(function (res) {
-                return res.map(function (_a) {
-                    var _id = _a._id, name = _a.name, phone = _a.phone;
-                    return ({
-                        value: "" + _id,
-                        text: name + " - phone: " + phone + " "
-                    });
-                });
-            })
-                .do(function (res) {
-                _this.setState({
-                    dataSource: res
-                });
-            })
-                .subscribe();
-        };
-        /**http获取schedules */
-        _this.combineFlow = function () {
-            var pid = _this.props.params.id;
-            var flow = http_service_1.default
-                .get('/api/v1/all-schedules', { pid: pid })
-                .combineLatest(project_1.default.schedule.data$)
-                .do(function (res) {
-                _this.setState({
-                    loading: true
-                });
-                var scheduleList = _this.state.scheduleList;
-                var fromFetch = res[0], fromSOK = res[1];
-                if (!fromSOK) {
-                    // console.log('首次加载')
-                    _this.setState({
-                        scheduleList: fromFetch,
-                        loading: false
-                    });
-                }
-                else {
-                    /**fetch的时候是sort: -1 */
-                    var lastFromFetch = fromFetch[0];
-                    if (fromFetch.length === 0) {
-                        // console.log('首次数据来自于SOK')
-                        return _this.setState({
-                            scheduleList: [fromSOK].concat(scheduleList),
-                            loading: false
-                        });
-                    }
-                    if (fromSOK._id !== lastFromFetch._id) {
-                        // console.log('更新来自于SOK')
-                        _this.setState({
-                            scheduleList: [fromSOK].concat(fromFetch),
-                            loading: false
-                        });
-                    }
-                    else {
-                        // console.log('二次进入')
-                        _this.setState({
-                            scheduleList: fromFetch,
-                            loading: false
-                        });
-                    }
-                }
-            })
-                .subscribe();
-        };
-        /**展示表单 */
-        _this.showForm = function () {
-            _this.setState({ showForm: true });
-            _this.fetchUser();
-        };
-        /**关闭表单 */
-        _this.closeForm = function () {
-            _this.setState({
-                showForm: false,
-                formTitle: '',
-                formPlace: '',
-                formStartDate: null,
-                formEndDate: null,
-                formEndTime: null,
-                formStartTime: null,
-                formSelect: []
-            });
-        };
-        /**开始日期 */
-        _this.changeStartDate = function (date, dateString) {
-            _this.setState({
-                formStartDate: moment(new Date(dateString))
-            });
-        };
-        /**结束日期 */
-        _this.changeEndDate = function (date, dateString) {
-            _this.setState({
-                formEndDate: moment(new Date(dateString))
-            });
-        };
-        /**开始时间 */
-        _this.changeStartTime = function (date, dateString) {
-            _this.setState({
-                formStartTime: date
-            });
-        };
-        /**结束时间 */
-        _this.changeEndTime = function (date, dateString) {
-            _this.setState({
-                formEndTime: date
-            });
-        };
-        /**选择参与者 */
-        _this.selectUser = function (value) {
-            _this.setState({
-                formSelect: value
-            });
-        };
-        /**提交表单 */
-        _this.submit = function () {
-            var _a = _this.state, formTitle = _a.formTitle, formPlace = _a.formPlace, formStartDate = _a.formStartDate, formEndDate = _a.formEndDate, formStartTime = _a.formStartTime, formEndTime = _a.formEndTime, formSelect = _a.formSelect;
-            if (!_this.checkAuth()) {
-                return;
-            }
-            if (!(formTitle && formPlace && formStartDate && formEndDate && formStartTime && formEndTime && formSelect.length !== 0)) {
-                return antd_1.Modal.warning({
-                    title: '消息',
-                    content: '请填写完整信息',
-                });
-            }
-            http_service_1.default
-                .post('/api/v1/add-schedules', {
-                title: formTitle,
-                place: formPlace,
-                startDate: formStartDate,
-                startTime: formStartTime,
-                endDate: formEndDate,
-                endTime: formEndTime,
-                member: formSelect,
-                pid: _this.props.params.id,
-                uid: _this.user._id
-            })
-                .do(function (res) {
-                if (res.status === '200') {
-                    _this.closeForm();
-                }
-            })
-                .subscribe();
+                msg_1.default.data.refresh();
+            }, 300);
         };
         _this.state = {
-            showForm: false,
-            dataSource: [],
-            formTitle: '',
-            formPlace: '',
-            formEndDate: null,
-            formStartDate: null,
-            formEndTime: null,
-            formStartTime: null,
-            formSelect: [],
-            scheduleList: [],
-            loading: true
+            total: 0,
+            msgList: [],
+            spinning: false,
+            currentPage: 1,
+            msgType: '未读消息',
+            selectorValue: 'false'
         };
         return _this;
     }
-    ProjectSchedulesPage.prototype.componentDidMount = function () {
-        this.initData();
-        this.combineFlow();
-    };
-    ProjectSchedulesPage.prototype.componentWillUnmount = function () {
-        this.sub.unsubscribe();
-        this.flow.unsubscribe();
-    };
-    ProjectSchedulesPage.prototype.render = function () {
+    msgAllPage.prototype.componentDidMount = function () {
         var _this = this;
-        var _a = this.state, loading = _a.loading, showForm = _a.showForm, dataSource = _a.dataSource, formTitle = _a.formTitle, formPlace = _a.formPlace, formStartDate = _a.formStartDate, formEndDate = _a.formEndDate, formStartTime = _a.formStartTime, formEndTime = _a.formEndTime, formSelect = _a.formSelect, scheduleList = _a.scheduleList;
-        /**form */
-        var myForm = React.createElement("div", null,
-            React.createElement("div", { className: "msg" },
-                React.createElement("input", { placeholder: "日程标题", className: "my-input title-input", value: formTitle, onChange: function (e) { return _this.setState({ formTitle: e.target.value }); } }),
-                React.createElement("input", { placeholder: "地点", className: "my-input", value: formPlace, onChange: function (e) { return _this.setState({ formPlace: e.target.value }); } })),
-            React.createElement("div", { className: "time" },
-                React.createElement(antd_1.Row, null,
-                    React.createElement(antd_1.Col, { span: 12 },
-                        React.createElement("h5", null, "\u5F00\u59CB\u65F6\u95F4"),
-                        React.createElement(antd_1.DatePicker, { placeholder: "开始日期", value: formStartDate, onChange: this.changeStartDate }),
-                        React.createElement(antd_1.TimePicker, { placeholder: "开始时间", value: formStartTime, onChange: this.changeStartTime })),
-                    React.createElement(antd_1.Col, { span: 12 },
-                        React.createElement("h5", null, "\u7ED3\u675F\u65F6\u95F4"),
-                        React.createElement(antd_1.DatePicker, { placeholder: "结束日期", value: formEndDate, onChange: this.changeEndDate }),
-                        React.createElement(antd_1.TimePicker, { placeholder: "结束时间", value: formEndTime, onChange: this.changeEndTime })))),
-            React.createElement("div", { className: "member" },
-                React.createElement("h5", null, "\u53C2\u4E0E\u8005"),
-                React.createElement(antd_1.Select, { mode: "multiple", placeholder: "请选择日程参与者", onChange: this.selectUser, value: formSelect, style: { width: 315 } }, dataSource.map(function (data, key) {
-                    return React.createElement(Option, { value: data.value, key: Math.floor(Math.random() * 999) }, data.text);
-                }))),
-            React.createElement("div", { style: { marginTop: 15 } },
-                React.createElement(antd_1.Button, { type: "primary", style: { width: '100%' }, onClick: this.submit }, "\u5B8C\u6210\u5E76\u521B\u5EFA")));
-        return React.createElement("div", { className: "project-schedules-page" },
-            React.createElement("div", { className: "container" },
-                React.createElement("div", { className: "header", onClick: this.showForm },
-                    React.createElement("h3", null,
-                        React.createElement("span", null,
-                            React.createElement(antd_1.Icon, { type: "plus-circle", style: { fontSize: 16 } })),
-                        "\u6DFB\u52A0\u65E5\u7A0B")),
-                React.createElement("div", { className: "content" },
-                    React.createElement(antd_1.Spin, { spinning: loading, size: 'large' },
-                        React.createElement("ul", { className: "list" }, scheduleList.map(function (s, k) { return React.createElement("li", { key: k },
-                            React.createElement("h3", { className: "start-time" }, moment(s.startDate).toDate().toLocaleDateString() + " ~ " + moment(s.endDate).toDate().toLocaleDateString()),
-                            React.createElement("div", { className: "main" },
-                                React.createElement("div", { className: "time-block" },
-                                    React.createElement("p", null, moment(s.startTime).toDate().toLocaleTimeString()),
-                                    React.createElement("p", null, "~"),
-                                    React.createElement("p", null, moment(s.endTime).toDate().toLocaleTimeString())),
-                                React.createElement("h1", { className: "title" }, s.title),
-                                React.createElement("h3", { className: "place" },
-                                    React.createElement(antd_1.Icon, { type: "environment", style: { color: '#49a9ee', marginRight: 5 } }),
-                                    s.place),
-                                React.createElement("p", { style: { marginTop: 10, marginBottom: 10 } }, "\u53C2\u4E0E\u8005"),
-                                React.createElement("p", { className: "member" },
-                                    React.createElement(antd_1.Tooltip, { title: "\u521B\u5EFA\u8005\uFF1A" + s.creator.name },
-                                        React.createElement("span", null,
-                                            React.createElement(Image_component_1.default, { src: "/static/touxiang.png" }))),
-                                    s.member.map(function (m, k) { return React.createElement(antd_1.Tooltip, { title: m.name, key: k },
-                                        React.createElement("span", null,
-                                            React.createElement(Image_component_1.default, { src: "/static/touxiang.png" }))); })))); }))))),
-            React.createElement(antd_1.Modal, { title: "添加日程", footer: null, visible: showForm, className: "schedules-form", onCancel: this.closeForm }, myForm));
+        if (!!this.props.children) {
+            this.setState({
+                msgType: '所有消息',
+                selectorValue: 'true'
+            });
+            this.fetchMsgList(true, 1);
+        }
+        else {
+            this.fetchMsgList(false, 1);
+        }
+        setTimeout(function () { return _this.watchSOK(); }, 200);
     };
-    return ProjectSchedulesPage;
+    msgAllPage.prototype.componentWillUnmount = function () {
+        this.sub.unsubscribe();
+    };
+    msgAllPage.prototype.watchSOK = function () {
+        var _this = this;
+        this.sub = msg_1.default.data.data$
+            .filter(function (sok) { return sok !== null; })
+            .skip(1)
+            .do(function (res) {
+            var _a = _this.state, currentPage = _a.currentPage, msgType = _a.msgType, msgList = _a.msgList;
+            _this.fetchMsgList(msgType === '所有消息' ? true : false, currentPage);
+        })
+            .subscribe();
+    };
+    msgAllPage.prototype.fetchMsgList = function (readed, currentPage) {
+        var _this = this;
+        this.setState({ spinning: true });
+        var toUID;
+        var limit = this.limit;
+        var skip = (currentPage - 1) * limit;
+        var sub = user_1.default.data.userData$
+            .do(function (user) {
+            toUID = user._id;
+            setTimeout(function () { return index_con_1.Util.cancelSubscribe(sub); }, 16);
+        }).subscribe();
+        var sub2 = http_service_1.default
+            .post('/api/v1/msg-list', { toUID: toUID, readed: readed, skip: skip, limit: limit })
+            .do(function (res) {
+            _this.setState({
+                spinning: false,
+                total: res.count,
+                msgList: res.data
+            });
+            setTimeout(function () { return index_con_1.Util.cancelSubscribe(sub2); }, 16);
+        })
+            .subscribe();
+    };
+    msgAllPage.prototype.render = function () {
+        var _this = this;
+        var _a = this.state, msgType = _a.msgType, total = _a.total, currentPage = _a.currentPage, msgList = _a.msgList, spinning = _a.spinning, selectorValue = _a.selectorValue;
+        var msgContent = React.createElement("ul", null, msgList.map(function (msg, key) { return React.createElement("li", { key: key },
+            React.createElement("a", { onClick: function () { return _this.onEnter(msg, key); } },
+                React.createElement(Image_component_1.default, { src: "/static/touxiang.png" }),
+                !msg.readed && React.createElement(antd_1.Tag, { color: "#108ee9", className: "my-tag" }, "\u672A\u8BFB"),
+                React.createElement("h3", null, msg.title),
+                React.createElement("p", null, msg.content),
+                React.createElement("span", { className: "time" }, (new Date(msg.meta.createdTime)).toLocaleString()))); }));
+        return React.createElement("div", { className: "msg-all-page" },
+            React.createElement(antd_1.Layout, null,
+                React.createElement(Header, null,
+                    React.createElement(antd_1.Breadcrumb, null,
+                        React.createElement(antd_1.Breadcrumb.Item, { href: "/#/projects" }, "\u9879\u76EE"),
+                        React.createElement(antd_1.Breadcrumb.Item, null, "\u6211\u7684\u6D88\u606F"))),
+                React.createElement(Content, null,
+                    React.createElement(antd_1.Row, null,
+                        React.createElement(antd_1.Col, { span: 10, className: "msg-list-block" },
+                            React.createElement("div", { className: "msg-list" },
+                                React.createElement("div", { className: "title" },
+                                    React.createElement(antd_1.Select, { defaultValue: "false", value: selectorValue, style: { width: 120 }, onChange: this.handleChange },
+                                        React.createElement(antd_1.Select.Option, { value: "false" },
+                                            React.createElement(antd_1.Icon, { type: "tag-o" }), " ",
+                                            "\u672A\u8BFB\u6D88\u606F"),
+                                        React.createElement(antd_1.Select.Option, { value: "true" },
+                                            React.createElement(antd_1.Icon, { type: "bell" }), " ",
+                                            "\u6240\u6709\u6D88\u606F")),
+                                    React.createElement("span", { style: { color: '#666' } },
+                                        total,
+                                        "\u6761")),
+                                React.createElement("div", { className: "content" },
+                                    React.createElement(antd_1.Spin, { spinning: spinning, tip: "Loading...", size: "large", className: "my-spin" }, msgContent)),
+                                React.createElement("div", { className: "page-content" },
+                                    React.createElement(antd_1.Pagination, { simple: true, defaultCurrent: 1, total: total, current: currentPage, defaultPageSize: 5, onChange: this.handleSelect })))),
+                        React.createElement(antd_1.Col, { span: 14, className: "msg-content" }, this.props.children ||
+                            React.createElement("h3", { className: "tips" }, "\u9009\u62E9\u5DE6\u4FA7\u6D88\u606F\uFF0C\u67E5\u770B\u6D88\u606F\u8BE6\u60C5"))))));
+    };
+    return msgAllPage;
 }(React.PureComponent));
-exports.default = ProjectSchedulesPage;
+exports.default = msgAllPage;
 
 
 /***/ }),
 
-/***/ 1392:
+/***/ 1393:
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(Buffer) {/*
@@ -370,11 +238,11 @@ function toComment(sourceMap) {
   return '/*# ' + data + ' */';
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1395).Buffer))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1396).Buffer))
 
 /***/ }),
 
-/***/ 1393:
+/***/ 1394:
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -406,7 +274,7 @@ var stylesInDom = {},
 	singletonElement = null,
 	singletonCounter = 0,
 	styleElementsInsertedAtTop = [],
-	fixUrls = __webpack_require__(1398);
+	fixUrls = __webpack_require__(1399);
 
 module.exports = function(list, options) {
 	if(typeof DEBUG !== "undefined" && DEBUG) {
@@ -666,7 +534,7 @@ function updateLink(linkElement, options, obj) {
 
 /***/ }),
 
-/***/ 1394:
+/***/ 1395:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -788,7 +656,7 @@ function fromByteArray (uint8) {
 
 /***/ }),
 
-/***/ 1395:
+/***/ 1396:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -802,9 +670,9 @@ function fromByteArray (uint8) {
 
 
 
-var base64 = __webpack_require__(1394)
-var ieee754 = __webpack_require__(1397)
-var isArray = __webpack_require__(1396)
+var base64 = __webpack_require__(1395)
+var ieee754 = __webpack_require__(1398)
+var isArray = __webpack_require__(1397)
 
 exports.Buffer = Buffer
 exports.SlowBuffer = SlowBuffer
@@ -2586,7 +2454,7 @@ function isnan (val) {
 
 /***/ }),
 
-/***/ 1396:
+/***/ 1397:
 /***/ (function(module, exports) {
 
 var toString = {}.toString;
@@ -2598,7 +2466,7 @@ module.exports = Array.isArray || function (arr) {
 
 /***/ }),
 
-/***/ 1397:
+/***/ 1398:
 /***/ (function(module, exports) {
 
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
@@ -2689,7 +2557,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 
 /***/ }),
 
-/***/ 1398:
+/***/ 1399:
 /***/ (function(module, exports) {
 
 
@@ -2785,7 +2653,7 @@ module.exports = function (css) {
 
 /***/ }),
 
-/***/ 1399:
+/***/ 1400:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2802,7 +2670,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
-__webpack_require__(1401);
+__webpack_require__(1402);
 var Image = (function (_super) {
     __extends(Image, _super);
     function Image() {
@@ -2829,10 +2697,10 @@ exports.default = Image;
 
 /***/ }),
 
-/***/ 1400:
+/***/ 1401:
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(1392)(undefined);
+exports = module.exports = __webpack_require__(1393)(undefined);
 // imports
 
 
@@ -2844,16 +2712,16 @@ exports.push([module.i, ".my-img {\n  opacity: 0;\n  transition: all 0.4s ease;\
 
 /***/ }),
 
-/***/ 1401:
+/***/ 1402:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1400);
+var content = __webpack_require__(1401);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(1393)(content, {});
+var update = __webpack_require__(1394)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -2871,38 +2739,38 @@ if(false) {
 
 /***/ }),
 
-/***/ 1413:
+/***/ 1408:
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(1392)(undefined);
+exports = module.exports = __webpack_require__(1393)(undefined);
 // imports
 
 
 // module
-exports.push([module.i, ".project-schedules-page {\n  padding-top: 20px;\n  padding-bottom: 20px;\n}\n.project-schedules-page .container {\n  width: 70%;\n  margin: 0 auto;\n  border-radius: 5px;\n  border: 1px solid #e9e9e9;\n  background-color: #fff;\n  box-shadow: 0px 5px 40px 5px #d9d9d9;\n}\n.project-schedules-page .container .header {\n  height: 50px;\n  border-radius: 5px 5px 0 0 ;\n  margin-bottom: 40px;\n  background-color: #fff;\n  border: 1px solid #e9e9e9;\n  box-shadow: 0px 5px 25px 3px #f5f5f5;\n}\n.project-schedules-page .container .header h3 {\n  font-size: 16px;\n  font-weight: 500;\n  color: #49a9ee;\n  line-height: 50px;\n  cursor: pointer;\n  text-align: center;\n}\n.project-schedules-page .container .header h3 span {\n  margin-right: 10px;\n}\n.project-schedules-page .container .content {\n  height: 370px;\n  border: 1px solid #e9e9e9;\n  background-color: #fff;\n  border-radius: 0 0  5px 5px;\n  box-shadow: 0px -5px 25px 3px #f5f5f5;\n}\n.project-schedules-page .container .content ul.list {\n  height: 100%;\n  width: 100%;\n  overflow-y: scroll;\n  box-sizing: border-box;\n  padding: 10px 10px;\n}\n.project-schedules-page .container .content ul.list li {\n  position: relative;\n}\n.project-schedules-page .container .content ul.list li .start-time {\n  padding-left: 8px;\n  color: #666;\n  font-size: 21px;\n  font-weight: 500;\n  padding: 0px 0px 10px 8px;\n  border-bottom: 1px solid #e9e9e9;\n}\n.project-schedules-page .container .content ul.list li .main {\n  position: relative;\n  box-sizing: border-box;\n  padding: 15px 0 15px 150px;\n  margin-bottom: 15px;\n}\n.project-schedules-page .container .content ul.list li .main .time-block {\n  left: 12px;\n  top: 25px;\n  height: 80px;\n  width: 100px;\n  position: absolute;\n}\n.project-schedules-page .container .content ul.list li .main .time-block p {\n  color: #A6A6A6;\n}\n.project-schedules-page .container .content ul.list li .main .title {\n  font-weight: 400;\n}\n.project-schedules-page .container .content ul.list li .main .place {\n  font-size: 18px;\n  font-weight: 400;\n}\n.project-schedules-page .container .content ul.list li .main .member img {\n  width: 35px;\n  height: 35px;\n  border-radius: 50%;\n  margin-right: 8px;\n}\n.project-schedules-page .container .content ul.list li ul::-webkit-scrollbar {\n  display: none;\n}\n.project-schedules-page .container .content ul.list li .main::-webkit-scrollbar {\n  display: none;\n}\n.project-schedules-page .container .content ul.list::-webkit-scrollbar {\n  display: none;\n}\n.schedules-form {\n  width: 580px !important;\n}\n.schedules-form .ant-modal-title {\n  font-size: 18px;\n}\n.schedules-form .ant-modal-header {\n  background: #f7f7f7;\n}\n.schedules-form .ant-modal-content {\n  background: #f7f7f7;\n}\n.schedules-form .msg {\n  padding: 10px;\n  background: #fff;\n  margin-bottom: 15px;\n  border-radius: 5px;\n  border: 1px solid #d9d9d9;\n  padding: 8px 0 8px 0;\n}\n.schedules-form .msg .title-input {\n  margin-bottom: 10px;\n}\n.schedules-form .msg input {\n  width: 100%;\n  padding: 8px 15px;\n  display: block;\n}\n.schedules-form .msg .my-input {\n  border: none;\n  font-size: 14px;\n  outline: none !important;\n}\n.schedules-form .msg .my-input:focus {\n  border: none;\n  outline: none !important;\n}\n.schedules-form .msg .my-input:hover {\n  border: none;\n  outline: none !important;\n}\n.schedules-form .msg .my-input:active {\n  border: none;\n  outline: none !important;\n}\n.schedules-form .time {\n  padding: 10px;\n  background: #fff;\n  margin-bottom: 15px;\n  border-radius: 5px;\n  border: 1px solid #d9d9d9;\n}\n.schedules-form .time input {\n  border: none;\n}\n.schedules-form .time h5 {\n  margin-bottom: 8px;\n}\n.schedules-form .member {\n  padding: 10px;\n  background: #fff;\n  margin-bottom: 15px;\n  border-radius: 5px;\n  border: 1px solid #d9d9d9;\n}\n.schedules-form .member .ant-select {\n  margin-top: 10px;\n  width: 100% !important;\n}\n.schedules-form .member .ant-select-selection {\n  border: none;\n}\ninput:focus {\n  outline: none !important;\n}\n", ""]);
+exports.push([module.i, "div {\n  box-sizing: border-box;\n}\n.msg-all-page .ant-layout {\n  background: #fff;\n}\n.msg-all-page .ant-layout .ant-layout-header {\n  height: 50px;\n  line-height: 50px;\n  margin-top: 6px;\n  border-bottom: 1px solid #e9e9e9;\n  background-color: #f5f5f5 !important;\n}\n.msg-all-page .ant-layout .ant-layout-content {\n  padding-bottom: 20px;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block {\n  padding-left: 80px;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list {\n  width: 400px;\n  margin-top: 20px;\n  border-radius: 8px;\n  position: relative;\n  padding: 10px 10px 50px;\n  border: 1px solid #e9e9e9;\n  box-shadow: 0px 5px 40px 5px #d9d9d9;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list .title {\n  padding: 12px 10px;\n  border-bottom: 1px solid #e9e9e9;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list .title .ant-select-selection {\n  border: none;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list .content {\n  height: 400px;\n  overflow: scroll;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list .content .my-spin {\n  top: 100px;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list .content ul li {\n  position: relative;\n  padding: 10px 20px 10px 70px;\n  border-bottom: 1px solid #e9e9e9;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list .content ul li .my-tag {\n  top: 5px;\n  left: 0;\n  position: absolute;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list .content ul li img {\n  left: 10px;\n  top: 15px;\n  width: 50px;\n  height: 50px;\n  position: absolute;\n  margin: 4px 8px 0 0;\n  border-radius: 50%;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list .content ul li h3 {\n  padding-bottom: 5px;\n  color: #666;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list .content ul li p {\n  color: #666;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list .content ul li span.time {\n  position: absolute;\n  right: 25px;\n  top: 9px;\n  color: #666;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list .content::-webkit-scrollbar {\n  display: none;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list .page-content {\n  left: 0;\n  bottom: 0px;\n  width: 100%;\n  height: 40px;\n  text-align: center;\n  position: absolute;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-list-block .msg-list .page-content .ant-pagination {\n  display: inline-block;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-content {\n  position: relative;\n}\n.msg-all-page .ant-layout .ant-layout-content .msg-content .tips {\n  font-size: 30px;\n  position: absolute;\n  top: 240px;\n  left: 120px;\n  font-weight: 500;\n  color: #919191;\n}\n", ""]);
 
 // exports
 
 
 /***/ }),
 
-/***/ 1426:
+/***/ 1422:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1413);
+var content = __webpack_require__(1408);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(1393)(content, {});
+var update = __webpack_require__(1394)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
 	// When the styles change, update the <style> tags
 	if(!content.locals) {
-		module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/less-loader/index.js!./index.less", function() {
-			var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/less-loader/index.js!./index.less");
+		module.hot.accept("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./msg-all.less", function() {
+			var newContent = require("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./msg-all.less");
 			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 			update(newContent);
 		});

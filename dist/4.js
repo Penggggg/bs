@@ -1,6 +1,6 @@
 webpackJsonp([4],{
 
-/***/ 1385:
+/***/ 1387:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16,145 +16,183 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-__webpack_require__(1422);
+__webpack_require__(1426);
 var React = __webpack_require__(0);
 var antd_1 = __webpack_require__(54);
-var Image_component_1 = __webpack_require__(1399);
 var user_1 = __webpack_require__(157);
-var project_1 = __webpack_require__(80);
 var http_service_1 = __webpack_require__(547);
-var ProjectChatPage = (function (_super) {
-    __extends(ProjectChatPage, _super);
-    function ProjectChatPage() {
+var project_1 = __webpack_require__(80);
+var auth_login_service_1 = __webpack_require__(548);
+var Image_component_1 = __webpack_require__(1400);
+var notification_service_1 = __webpack_require__(242);
+var FormItem = antd_1.Form.Item;
+var ProjectAllPage = (function (_super) {
+    __extends(ProjectAllPage, _super);
+    function ProjectAllPage() {
         var _this = _super.call(this) || this;
-        _this.uid = null;
-        _this.init = function () {
-            var sub = user_1.default.data.userData$
-                .do(function (user) {
-                _this.uid = user._id;
-                setTimeout(function () { return sub.unsubscribe(); }, 100);
-            })
+        _this.watchingRole = false;
+        _this.formProjectName = 'projectName';
+        _this.formProjectInfo = 'projectInfo';
+        _this.userData = auth_login_service_1.default.userData();
+        _this.userStore = user_1.default;
+        _this.projectStore = project_1.default;
+        _this.fetchAllProject = function () {
+            http_service_1.default
+                .get('/api/v1/all-project')
+                .do(function (res) { return _this.setState({
+                projectAll: res.data
+            }); })
                 .subscribe();
         };
-        _this.dealChatList = function () {
-            var a = document.querySelector('#chatList');
-            a.scrollTop = 100000;
-            a = null;
-        };
-        _this.combineFlow = function () {
-            var pid = _this.props.params.id;
-            _this.sub = http_service_1.default
-                .get('/api/v1/chat-list', { pid: pid })
-                .combineLatest(project_1.default.chat.data$)
-                .do(function (res) {
-                var chatList = _this.state.chatList;
-                var chatData = res[0], SOK = res[1];
-                if (!SOK) {
-                    // 首次加载
-                    console.log("\u9996\u6B21\u52A0\u8F7D");
-                    _this.setState({
-                        chatList: chatData
-                    });
-                }
-                else {
-                    var lastChatFromFetch = chatData[chatData.length - 1];
-                    if (!lastChatFromFetch && chatData.length === 0) {
-                        // 首次数据来自于SOK
-                        console.log("\u9996\u6B21\u6570\u636E\u6765\u81EA\u4E8ESOK");
-                        return _this.setState({
-                            chatList: chatList.concat([SOK])
-                        });
-                    }
-                    if (SOK._id !== lastChatFromFetch._id) {
-                        // 更新来自于SOK
-                        console.log("\u66F4\u65B0\u6765\u81EA\u4E8ESOK");
-                        _this.setState({
-                            chatList: chatList.concat([SOK])
-                        });
-                    }
-                    else {
-                        // 二次进入
-                        console.log("\u4E8C\u6B21\u8FDB\u5165");
-                        _this.setState({
-                            chatList: chatData
-                        });
-                    }
-                }
-                setTimeout(function () { return _this.dealChatList(); }, 100);
-            })
-                .subscribe();
-        };
-        _this.postChat = function () {
-            var data;
-            var sub = user_1.default.data.userData$
-                .combineLatest(project_1.default.data.data$)
-                .do(function (res) {
-                data = res;
-                setTimeout(function () { return sub.unsubscribe(); }, 100);
-            })
-                .subscribe();
-            var inputValue = _this.state.inputValue;
-            var user = data[0], project = data[1];
-            var sub2 = http_service_1.default
-                .post('/api/v1/chat-record', { pid: project._id, uid: user._id, content: inputValue })
-                .do(function (res) {
-                _this.analyseResult(res);
-                setTimeout(function () { return sub2.unsubscribe(); }, 100);
-            })
-                .subscribe();
-        };
-        _this.analyseResult = function (_a) {
-            var msg = _a.msg, status = _a.status;
-            if (status === '200') {
-                _this.setState({
-                    inputValue: ''
-                });
+        _this.onEnterProject = function (project) {
+            /**保存project数据 */
+            _this.projectStore.data.save(project);
+            /**项目角色判断 */
+            if (!_this.watchingRole) {
+                _this.watchingRole = true;
+                _this.watchRole();
             }
         };
+        _this.watchRole = function () {
+            _this.sub = _this.projectStore.data.data$
+                .combineLatest(_this.userStore.data.userData$)
+                .debounceTime(500)
+                .do(function (res) {
+                console.log('权限判断中...');
+                var isLeader = false;
+                var isMember = false;
+                var isCreator = false;
+                var project = res[0], user = res[1];
+                var userID = user._id;
+                /**creator判断 */
+                if (userID === project.creator._id) {
+                    isCreator = true;
+                    _this.projectStore.role.save('creator');
+                    return _this.props.router.push("/project/" + project._id + "/tasks");
+                }
+                /**leader判断 */
+                if (project.leader.find(function (leader) { return leader._id === userID; })) {
+                    isLeader = true;
+                    _this.projectStore.role.save('leader');
+                    return _this.props.router.push("/project/" + project._id + "/tasks");
+                }
+                /**member判断 */
+                if (project.member.find(function (member) { return member._id === userID; })) {
+                    isMember = true;
+                    _this.projectStore.role.save('member');
+                    return _this.props.router.push("/project/" + project._id + "/tasks");
+                }
+                /**没有权限 */
+                return antd_1.Modal.warning({
+                    title: 'Warning',
+                    content: '您没有该项目的权限！请先申请权限'
+                });
+            })
+                .subscribe();
+        };
+        _this.renderToJsx = function (project) {
+            return React.createElement(antd_1.Card, { key: project._id, className: "project-card", bodyStyle: { padding: 0, height: '100%' } },
+                React.createElement("div", { className: "image", onClick: function () { return _this.onEnterProject(project); } },
+                    React.createElement(Image_component_1.default, { src: project.cover })),
+                React.createElement("div", { className: "info", onClick: function () { return _this.onEnterProject(project); } },
+                    React.createElement("h3", null, project.name),
+                    React.createElement("p", null, project.info)));
+        };
+        _this.newProjectSubmit = function () {
+            var _a = _this, formProjectName = _a.formProjectName, formProjectInfo = _a.formProjectInfo;
+            _this.props.form.validateFields([formProjectName, formProjectInfo], function (err, values) {
+                if (!err) {
+                    _this.setState({
+                        formSubmiting: true
+                    });
+                    http_service_1.default.post('/api/v1/create-project', Object.assign(values, { creatorID: auth_login_service_1.default.userData()._id }))
+                        .do(_this.analyseProjectSubmit)
+                        .subscribe();
+                }
+            });
+        };
+        _this.analyseProjectSubmit = function (res) {
+            notification_service_1.default.open({
+                title: '系统消息',
+                msg: res.msg,
+                type: res.status === '200' ? 'ok' : 'error'
+            });
+            setTimeout(function () {
+                _this.setState({
+                    formSubmiting: false,
+                    dynamicFormShow: false
+                });
+                _this.props.form.resetFields();
+                _this.fetchAllProject();
+            }, 1500);
+        };
         _this.state = {
-            loading: false,
-            inputValue: '',
-            chatList: []
+            dynamicFormShow: false,
+            formSubmiting: false,
+            projectAll: []
         };
         return _this;
     }
-    ProjectChatPage.prototype.componentDidMount = function () {
-        this.init();
-        this.combineFlow();
-        // this.setState({
-        //     loading: true
-        // })
+    ProjectAllPage.prototype.componentDidMount = function () {
+        this.fetchAllProject();
     };
-    ProjectChatPage.prototype.componentWillUnmount = function () {
-        this.sub.unsubscribe();
+    ProjectAllPage.prototype.componentWillUnmount = function () {
+        if (this.sub) {
+            this.sub.unsubscribe();
+        }
     };
-    ProjectChatPage.prototype.render = function () {
+    ProjectAllPage.prototype.render = function () {
         var _this = this;
-        var _a = this.state, inputValue = _a.inputValue, chatList = _a.chatList, loading = _a.loading;
-        var list = this.uid ?
-            React.createElement(antd_1.Spin, { spinning: loading },
-                React.createElement("ul", null, chatList.map(function (chat, key) { return React.createElement("li", { key: key, className: _this.uid === chat.uid._id ? 'me' : 'other' },
-                    React.createElement(Image_component_1.default, { src: "/static/touxiang.png" }),
-                    React.createElement("h3", null, _this.uid === chat.uid._id ? '我' : chat.uid.name),
-                    React.createElement("p", { className: "content" }, chat.content),
-                    React.createElement("p", { className: "time" }, (new Date(chat.createdTime)).toLocaleString())); })))
-            :
-                React.createElement("ul", null);
-        return React.createElement("div", { className: "project-chat-page" },
-            React.createElement("div", { className: "chat-block" },
-                React.createElement("div", { className: "chat-list", id: "chatList" }, list),
-                React.createElement("div", { className: "chat-input" },
-                    React.createElement("textarea", { type: "textarea", className: "ant-input my-input", rows: 4, value: inputValue, onChange: function (e) { return _this.setState({ inputValue: e.target.value }); } }),
-                    React.createElement(antd_1.Button, { type: "primary", className: "my-btn", onClick: this.postChat }, "\u53D1\u9001"))));
+        var getFieldDecorator = this.props.form.getFieldDecorator;
+        var _a = this, formProjectName = _a.formProjectName, formProjectInfo = _a.formProjectInfo;
+        var _b = this.state, dynamicFormShow = _b.dynamicFormShow, formSubmiting = _b.formSubmiting, projectAll = _b.projectAll;
+        /**新增项目表单 */
+        var dynamicForm = React.createElement("div", { className: "modal-resetpsw-form" },
+            React.createElement("div", { className: "modal-img" },
+                React.createElement("img", { src: "/static/reset-psw.png", alt: "" }),
+                React.createElement("p", null, "\u521B\u5EFA\u4E00\u4E2A\u65B0\u9879\u76EE")),
+            React.createElement(antd_1.Form, { className: "reset-form" },
+                React.createElement(FormItem, null, getFieldDecorator(formProjectName, {
+                    rules: [{ required: true, message: '项目名称不能为空' }],
+                })(React.createElement(antd_1.Input, { prefix: React.createElement(antd_1.Icon, { type: "file-text", style: { fontSize: 16 } }), placeholder: "项目名称" }))),
+                React.createElement(FormItem, null, getFieldDecorator(formProjectInfo, {})(React.createElement(antd_1.Input, { prefix: React.createElement(antd_1.Icon, { type: "link", style: { fontSize: 16 } }), placeholder: "项目简介（选项）" }))),
+                React.createElement(FormItem, null,
+                    React.createElement(antd_1.Button, { type: "primary", size: 'large', style: { width: '100%' }, loading: formSubmiting, onClick: this.newProjectSubmit }, "\u5B8C\u6210\u5E76\u521B\u5EFA"))));
+        return React.createElement("div", { className: "project-all-page" },
+            React.createElement("div", { className: "my-project" },
+                React.createElement("div", { className: "title" },
+                    React.createElement("h2", null, "\u6211\u5DF2\u62E5\u6709\u7684\u9879\u76EE"),
+                    React.createElement("span", null)),
+                React.createElement("div", { className: "projects-block" },
+                    projectAll.map(function (project) {
+                        if (_this.userData._id === project.creator._id) {
+                            return _this.renderToJsx(project);
+                        }
+                        if (project.leader.find(function (leader) { return leader._id === _this.userData._id; })) {
+                            return _this.renderToJsx(project);
+                        }
+                        if (project.member.find(function (member) { return member._id === _this.userData._id; })) {
+                            return _this.renderToJsx(project);
+                        }
+                    }),
+                    React.createElement(antd_1.Card, { className: "project-card add-project-card", bodyStyle: { padding: 0, height: '100%' } },
+                        React.createElement(antd_1.Icon, { type: "plus-circle", className: "icon", onClick: function () { return _this.setState({ dynamicFormShow: true }); } }),
+                        React.createElement("p", null, "\u521B\u5EFA\u65B0\u9879\u76EE")))),
+            React.createElement("div", { className: "all-project" },
+                React.createElement("div", { className: "title" },
+                    React.createElement("h2", null, "\u5168\u90E8\u7684\u9879\u76EE"),
+                    React.createElement("span", null)),
+                React.createElement("div", { className: "projects-block" }, projectAll.map(this.renderToJsx))),
+            React.createElement(antd_1.Modal, { title: "创建新项目", footer: null, visible: dynamicFormShow, onCancel: function () { return _this.setState({ dynamicFormShow: false }); }, style: { width: '400px !import', padding: '0 85px' } }, dynamicForm));
     };
-    return ProjectChatPage;
+    return ProjectAllPage;
 }(React.PureComponent));
-exports.default = ProjectChatPage;
+exports.default = antd_1.Form.create()(ProjectAllPage);
 
 
 /***/ }),
 
-/***/ 1392:
+/***/ 1393:
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(Buffer) {/*
@@ -233,11 +271,11 @@ function toComment(sourceMap) {
   return '/*# ' + data + ' */';
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1395).Buffer))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1396).Buffer))
 
 /***/ }),
 
-/***/ 1393:
+/***/ 1394:
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -269,7 +307,7 @@ var stylesInDom = {},
 	singletonElement = null,
 	singletonCounter = 0,
 	styleElementsInsertedAtTop = [],
-	fixUrls = __webpack_require__(1398);
+	fixUrls = __webpack_require__(1399);
 
 module.exports = function(list, options) {
 	if(typeof DEBUG !== "undefined" && DEBUG) {
@@ -529,7 +567,7 @@ function updateLink(linkElement, options, obj) {
 
 /***/ }),
 
-/***/ 1394:
+/***/ 1395:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -651,7 +689,7 @@ function fromByteArray (uint8) {
 
 /***/ }),
 
-/***/ 1395:
+/***/ 1396:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -665,9 +703,9 @@ function fromByteArray (uint8) {
 
 
 
-var base64 = __webpack_require__(1394)
-var ieee754 = __webpack_require__(1397)
-var isArray = __webpack_require__(1396)
+var base64 = __webpack_require__(1395)
+var ieee754 = __webpack_require__(1398)
+var isArray = __webpack_require__(1397)
 
 exports.Buffer = Buffer
 exports.SlowBuffer = SlowBuffer
@@ -2449,7 +2487,7 @@ function isnan (val) {
 
 /***/ }),
 
-/***/ 1396:
+/***/ 1397:
 /***/ (function(module, exports) {
 
 var toString = {}.toString;
@@ -2461,7 +2499,7 @@ module.exports = Array.isArray || function (arr) {
 
 /***/ }),
 
-/***/ 1397:
+/***/ 1398:
 /***/ (function(module, exports) {
 
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
@@ -2552,7 +2590,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 
 /***/ }),
 
-/***/ 1398:
+/***/ 1399:
 /***/ (function(module, exports) {
 
 
@@ -2648,7 +2686,7 @@ module.exports = function (css) {
 
 /***/ }),
 
-/***/ 1399:
+/***/ 1400:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2665,7 +2703,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
-__webpack_require__(1401);
+__webpack_require__(1402);
 var Image = (function (_super) {
     __extends(Image, _super);
     function Image() {
@@ -2692,10 +2730,10 @@ exports.default = Image;
 
 /***/ }),
 
-/***/ 1400:
+/***/ 1401:
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(1392)(undefined);
+exports = module.exports = __webpack_require__(1393)(undefined);
 // imports
 
 
@@ -2707,16 +2745,16 @@ exports.push([module.i, ".my-img {\n  opacity: 0;\n  transition: all 0.4s ease;\
 
 /***/ }),
 
-/***/ 1401:
+/***/ 1402:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1400);
+var content = __webpack_require__(1401);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(1393)(content, {});
+var update = __webpack_require__(1394)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -2734,38 +2772,38 @@ if(false) {
 
 /***/ }),
 
-/***/ 1409:
+/***/ 1412:
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(1392)(undefined);
+exports = module.exports = __webpack_require__(1393)(undefined);
 // imports
 
 
 // module
-exports.push([module.i, ".project-chat-page {\n  padding-bottom: 20px;\n  margin-top: 20px;\n  box-sizing: border-box;\n}\n.project-chat-page .chat-block {\n  width: 70%;\n  margin: 0 auto;\n  border-radius: 8px;\n  position: relative;\n  box-sizing: border-box;\n  padding: 10px;\n  border: 1px solid #e9e9e9;\n  box-shadow: 0px 5px 40px 5px #d9d9d9;\n}\n.project-chat-page .chat-block .chat-list {\n  height: 360px;\n  overflow: scroll;\n  transition: all ease 0.4s;\n}\n.project-chat-page .chat-block .chat-list li.other {\n  position: relative;\n  padding: 10px 20px 30px 90px;\n}\n.project-chat-page .chat-block .chat-list li.other img {\n  width: 60px;\n  left: 10px;\n  top: 15px;\n  position: absolute;\n  border-radius: 50%;\n}\n.project-chat-page .chat-block .chat-list li.other h3 {\n  margin-bottom: 10px;\n}\n.project-chat-page .chat-block .chat-list li.other p.content {\n  color: #fff;\n  display: inline-block;\n  max-width: 480px;\n  border-radius: 10px;\n  padding: 8px 10px;\n  background-color: #108ee9;\n}\n.project-chat-page .chat-block .chat-list li.other p.time {\n  position: absolute;\n  top: 10px;\n  left: 150px;\n}\n.project-chat-page .chat-block .chat-list li.me {\n  text-align: right;\n  position: relative;\n  padding: 10px 90px 30px 20px;\n}\n.project-chat-page .chat-block .chat-list li.me img {\n  width: 60px;\n  top: 10px;\n  right: 10px;\n  position: absolute;\n  border-radius: 50%;\n}\n.project-chat-page .chat-block .chat-list li.me h3 {\n  margin-bottom: 15px;\n  text-align: right;\n}\n.project-chat-page .chat-block .chat-list li.me p.content {\n  color: #fff;\n  text-align: right;\n  display: inline-block;\n  max-width: 480px;\n  border-radius: 10px;\n  padding: 8px 10px;\n  background-color: #108ee9;\n}\n.project-chat-page .chat-block .chat-list li.me p.time {\n  position: absolute;\n  top: 10px;\n  right: 125px;\n}\n.project-chat-page .chat-block .chat-input {\n  height: 100px;\n  overflow: scroll;\n  position: relative;\n  padding: 10px 0 0 0;\n}\n.project-chat-page .chat-block .chat-input textarea {\n  padding: 4px 85px 10px 10px;\n}\n.project-chat-page .chat-block .chat-input textarea::-webkit-scrollbar {\n  display: none;\n}\n.project-chat-page .chat-block .chat-input .my-btn {\n  right: 10px;\n  bottom: 20px;\n  position: absolute;\n}\n.project-chat-page .chat-block .chat-list::-webkit-scrollbar {\n  display: none;\n}\n.project-chat-page .chat-block .chat-input::-webkit-scrollbar {\n  display: none;\n}\n", ""]);
+exports.push([module.i, "/**2个大block */\n/**标题 */\n/**展示区 */\n/**card */\n/**card: hover */\n.project-all-page {\n  padding: 30px 100px;\n}\n.project-all-page .my-project {\n  margin-bottom: 30px;\n}\n.project-all-page .my-project .title {\n  position: relative;\n}\n.project-all-page .my-project .title h2 {\n  position: relative;\n  font-size: 24px;\n  font-weight: 400;\n  color: #666;\n  padding-bottom: 30px;\n}\n.project-all-page .my-project .title span {\n  display: block;\n  position: absolute;\n  height: 1px;\n  width: 80%;\n  left: 16%;\n  top: 30%;\n  background: linear-gradient(to right, #d9d9d9, #e9e9e9);\n}\n.project-all-page .my-project .projects-block .project-card {\n  width: 240px;\n  padding: 0;\n  display: inline-block;\n  margin: 10px 20px 10px;\n  position: relative;\n  cursor: pointer;\n  transition: all ease 0.4s;\n}\n.project-all-page .my-project .projects-block .project-card .image {\n  display: block;\n  width: 100%;\n}\n.project-all-page .my-project .projects-block .project-card .image img {\n  width: 100%;\n  display: block;\n}\n.project-all-page .my-project .projects-block .project-card .image p {\n  padding-top: 10px;\n}\n.project-all-page .my-project .projects-block .project-card .info {\n  position: absolute;\n  padding: 10px 16px;\n  background: rgba(0, 0, 0, 0.2);\n  width: 100%;\n  left: 0;\n  bottom: 0px;\n  border-radius: 0 0 4px 4px;\n}\n.project-all-page .my-project .projects-block .project-card .info h3 {\n  color: #fff;\n}\n.project-all-page .my-project .projects-block .project-card .info p {\n  color: #fff;\n}\n.project-all-page .my-project .projects-block .project-card:hover {\n  box-shadow: 10px 10px 10px #d9d9d9;\n  border: 1px solid #e9e9e9;\n}\n.project-all-page .my-project .projects-block .add-project-card {\n  min-height: 126px;\n  text-align: center;\n}\n.project-all-page .my-project .projects-block .add-project-card .icon {\n  transition: all 0.4s ease;\n  font-size: 45px;\n  color: #d9d9d9;\n  padding: 20px 0;\n  cursor: pointer;\n}\n.project-all-page .my-project .projects-block .add-project-card p {\n  transition: all 0.4s ease;\n  color: #999;\n  font-size: 16px;\n}\n.project-all-page .my-project .projects-block .add-project-card .ant-card-body:hover .icon,\n.project-all-page .my-project .projects-block .add-project-card .ant-card-body:hover p {\n  color: #49a9ee;\n}\n.project-all-page .all-project {\n  margin-bottom: 30px;\n}\n.project-all-page .all-project .title {\n  position: relative;\n}\n.project-all-page .all-project .title h2 {\n  position: relative;\n  font-size: 24px;\n  font-weight: 400;\n  color: #666;\n  padding-bottom: 30px;\n}\n.project-all-page .all-project .title span {\n  display: block;\n  position: absolute;\n  height: 1px;\n  width: 80%;\n  left: 16%;\n  top: 30%;\n  background: linear-gradient(to right, #d9d9d9, #e9e9e9);\n}\n.project-all-page .all-project .projects-block .project-card {\n  width: 240px;\n  padding: 0;\n  display: inline-block;\n  margin: 10px 20px 10px;\n  position: relative;\n  cursor: pointer;\n  transition: all ease 0.4s;\n}\n.project-all-page .all-project .projects-block .project-card .image {\n  display: block;\n  width: 100%;\n}\n.project-all-page .all-project .projects-block .project-card .image img {\n  width: 100%;\n  display: block;\n}\n.project-all-page .all-project .projects-block .project-card .image p {\n  padding-top: 10px;\n}\n.project-all-page .all-project .projects-block .project-card .info {\n  position: absolute;\n  padding: 10px 16px;\n  background: rgba(0, 0, 0, 0.2);\n  width: 100%;\n  left: 0;\n  bottom: 0px;\n  border-radius: 0 0 4px 4px;\n}\n.project-all-page .all-project .projects-block .project-card .info h3 {\n  color: #fff;\n}\n.project-all-page .all-project .projects-block .project-card .info p {\n  color: #fff;\n}\n.project-all-page .all-project .projects-block .project-card:hover {\n  box-shadow: 10px 10px 10px #d9d9d9;\n  border: 1px solid #e9e9e9;\n}\n", ""]);
 
 // exports
 
 
 /***/ }),
 
-/***/ 1422:
+/***/ 1426:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1409);
+var content = __webpack_require__(1412);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(1393)(content, {});
+var update = __webpack_require__(1394)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
 	// When the styles change, update the <style> tags
 	if(!content.locals) {
-		module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/less-loader/index.js!./project-chat.less", function() {
-			var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/less-loader/index.js!./project-chat.less");
+		module.hot.accept("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./project-all.less", function() {
+			var newContent = require("!!../../../node_modules/css-loader/index.js!../../../node_modules/less-loader/index.js!./project-all.less");
 			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 			update(newContent);
 		});

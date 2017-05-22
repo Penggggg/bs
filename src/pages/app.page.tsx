@@ -45,6 +45,18 @@ export default class AppPage extends React.PureComponent< RouteComponentProps<{}
         })
     }
 
+    onEnter = ( p ) => {
+
+        switch( p.key ) {
+            case "5": {
+                this.props.router.push('/user');
+                break;
+            };
+            default: return 
+        }
+
+    }
+
     render( ) {
         let { showBar } = this.state;
         return <div className="app-page">
@@ -60,14 +72,14 @@ export default class AppPage extends React.PureComponent< RouteComponentProps<{}
                                         onSearch={value => console.log(value)}/>
                                 </Col>
                                 <Col span={6} >
-                                    <Menu theme="light" mode="horizontal" className="my-menu">
+                                    <Menu theme="light" mode="horizontal" className="my-menu" onClick={this.onEnter}>
                                         <Menu.Item key="1">我的</Menu.Item>
                                         <Menu.Item key="2">帮助</Menu.Item>
                                         <Menu.Item key="3"><Icon type="exception" /></Menu.Item>
                                         <Menu.Item key="4">
                                             <MsgPopBadge content={<Icon type="aliwangwang-o" />} />
                                         </Menu.Item>
-                                        <Menu.Item key="5"><img src="/static/touxiang.png" /></Menu.Item>
+                                        <Menu.Item key="5"><img src="/static/touxiang.png"  /></Menu.Item>
                                     </Menu>
                                 </Col>
                             </Row>

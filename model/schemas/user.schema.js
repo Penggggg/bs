@@ -71,6 +71,20 @@ exports.UserSchema.statics.updatePsw = function (phone, password) {
         model.update({ phone: phone }, { password: password }, function (err) { return returnData(err, resolve, reject); });
     });
 };
+exports.UserSchema.statics.updateInfo = function (_id, name, phone) {
+    var _this = this;
+    return new Promise(function (resolve, reject) {
+        var model = _this.model('User');
+        model.update({ _id: _id }, { name: name, phone: phone }, function (err) { return returnData(err, resolve, reject); });
+    });
+};
+exports.UserSchema.statics.updatePsw2 = function (_id, newPassword) {
+    var _this = this;
+    return new Promise(function (resolve, reject) {
+        var model = _this.model('User');
+        model.update({ _id: _id }, { password: newPassword }, function (err) { return returnData(err, resolve, reject); });
+    });
+};
 function returnData(err, resolve, reject, result) {
     if (err) {
         console.log("\u6570\u636E\u5E93\u67E5\u8BE2\u9519\u8BEF: " + err);

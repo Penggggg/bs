@@ -366,6 +366,7 @@ declare namespace APP {
     export interface User {
         _id: string
         name: string,
+        password?: string
         phone: string,
         meta?: {
             createdTime: string

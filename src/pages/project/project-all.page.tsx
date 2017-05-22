@@ -42,7 +42,9 @@ class ProjectAllPage extends React.PureComponent< IProps, IState > {
     }
 
     componentWillUnmount( ) {
-       this.sub.unsubscribe( );
+       if ( this.sub ) {
+           this.sub.unsubscribe( );
+       }
     }
 
     private fetchAllProject = ( ) => {

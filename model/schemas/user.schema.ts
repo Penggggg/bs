@@ -71,6 +71,19 @@ UserSchema.statics.updatePsw = function( phone, password ) {
     })
 }
 
+UserSchema.statics.updateInfo = function( _id, name, phone ) {
+    return new Promise(( resolve, reject ) => {
+        let model = this.model('User');
+        model.update({ _id }, { name, phone }, ( err ) => returnData( err, resolve, reject ))
+    })
+}
+
+UserSchema.statics.updatePsw2 = function( _id, newPassword ) {
+    return new Promise(( resolve, reject ) => {
+        let model = this.model('User');
+        model.update({ _id }, { password: newPassword }, ( err ) => returnData( err, resolve, reject ))
+    })
+}
 
 function returnData ( err, resolve, reject, result? ) {
     if ( err ) { 

@@ -102,6 +102,14 @@ export default {
                     }              
                 }
             ]    
+        },{
+            path: 'user',
+            onEnter: auth.requireLogin,
+            getComponent: ( nextstate: RouterState , cb: Function ) => {
+                System.import('./user/user.page').then( module => { 
+                    cb( null, module.default )}
+                ).catch(( err: Error ) => showMessage( err, './user.page' ))
+            }           
         }
     ]
 }

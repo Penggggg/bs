@@ -51,6 +51,7 @@ var add_child_task_1 = require("./project/task/add-child-task");
 var update_child_task_1 = require("./project/task/update-child-task");
 var create_project_1 = require("./project/create-project");
 var reply_invite_1 = require("./project/reply-invite");
+var changeInfo_controller_1 = require("./user/changeInfo.controller");
 var query_1 = require("./project/schedules/query");
 var query_group_1 = require("./project/group/query-group");
 var add_task_talk_1 = require("./project/task/add-task-talk");
@@ -111,6 +112,10 @@ exports.default = function (router) {
     router.post('/api/v1/all-user', query_controller_1.fetchAllUserByName);
     /**用户模块：查询项目下所有成员和组长 */
     router.get('/api/v1/all-member-leader', query_controller_1.allMemberInProject);
+    /**用户模块：更改信息 */
+    router.post('/api/v1/change-info', changeInfo_controller_1.changeUserInfo);
+    /**用户模块：更改密码 */
+    router.post('/api/v1/change-psw', changeInfo_controller_1.changeUserPsw);
     /**消息模块：查询所有符合条件的消息 */
     router.post('/api/v1/msg-list', query_msg_1.fetchAllMsgList);
     /**消息模块：所有消息的伪查询 */
